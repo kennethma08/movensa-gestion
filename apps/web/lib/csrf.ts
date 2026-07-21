@@ -12,7 +12,8 @@ export function validateRequestOrigin(request: { headers: { get(name: string): s
   // rejecting forms submitted from any unrelated origin.
   const requestHost = request.headers.get('x-forwarded-host') || request.headers.get('host');
   if (requestHost) {
-    allowedHosts.add(requestHost.split(',')[0].trim());
+    const forwardedHost = requestHost.split(',')[0]?.trim();
+    if (forwardedHost) allowedHosts.add(forwardedHost);
   }
 
   for (const envVar of [
