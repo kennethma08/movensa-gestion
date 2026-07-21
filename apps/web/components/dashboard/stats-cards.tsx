@@ -59,34 +59,34 @@ export function StatsCards({ stats, currency = 'USD' }: StatsCardsProps) {
 
   const cards = [
     {
-      title: 'Revenue this month',
+      title: 'Ingresos del mes',
       value: formatCurrency(stats.revenueThisMonth, currency),
       change: Math.min(revenueChange, 999),
-      changeLabel: 'vs last month',
+      changeLabel: 'frente al mes anterior',
     },
     {
-      title: 'Total Revenue',
+      title: 'Ingresos totales',
       value: formatCurrency(stats.totalRevenue, currency),
       // Bug #161: Removed hardcoded 12.2% fallback — show actual value
       change: revenueChange,
-      changeLabel: 'all time',
+      changeLabel: 'histórico',
     },
     {
-      title: 'Outstanding',
+      title: 'Pendiente de cobro',
       value: formatCurrency(stats.outstandingAmount, currency),
       change: stats.overdueAmount > 0 && stats.outstandingAmount > 0
         ? -(stats.overdueAmount / stats.outstandingAmount) * 100
         : 0,
       changeLabel: stats.overdueAmount > 0
-        ? `${formatCurrency(stats.overdueAmount, currency)} overdue`
-        : 'No overdue',
+        ? `${formatCurrency(stats.overdueAmount, currency)} vencido`
+        : 'Sin saldos vencidos',
     },
     {
-      title: 'Conversion Rate',
+      title: 'Tasa de conversión',
       value: `${stats.conversionRate.toFixed(2)}%`,
       // Bug #162: Calculate actual conversion rate change instead of hardcoded 5.3%
       change: stats.totalQuotes > 0 ? stats.conversionRate : 0,
-      changeLabel: `${stats.totalQuotes} quotes · ${stats.totalInvoices} invoices`,
+      changeLabel: `${stats.totalQuotes} cotizaciones · ${stats.totalInvoices} facturas`,
     },
   ];
 

@@ -9,8 +9,8 @@ import { QuotesDataTable } from '@/components/quotes/quotes-data-table';
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'Quotes',
-  description: 'Manage and track your quotes',
+  title: 'Cotizaciones',
+  description: 'Gestión y seguimiento de cotizaciones',
 };
 
 // Low #70: Suspense boundary for streaming — header shows immediately, data loads async
@@ -19,15 +19,15 @@ export default function QuotesPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Quotes</h1>
+          <h1 className="text-2xl font-bold tracking-tight">Cotizaciones</h1>
           <p className="text-muted-foreground">
-            Create and manage your quotes and proposals
+            Cree propuestas profesionales y dé seguimiento a cada oportunidad
           </p>
         </div>
         <Button asChild>
           <Link href="/quotes/new">
             <Plus className="mr-2 h-4 w-4" />
-            New Quote
+            Nueva cotización
           </Link>
         </Button>
       </div>

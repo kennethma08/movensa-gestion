@@ -12,7 +12,6 @@ import {
   Mail,
   Users,
   Settings2,
-  Wallet,
   UserCircle,
   Eye,
   ListChecks,
@@ -38,23 +37,22 @@ export interface SettingsNavItem {
 }
 
 export const settingsNavItems: SettingsNavItem[] = [
-  { href: '/settings/account', icon: UserCircle, label: 'Account' },
-  { href: '/settings/business', icon: Building2, label: 'Business Profile' },
-  { href: '/settings/branding', icon: Palette, label: 'Branding' },
-  { href: '/settings/appearance', icon: Eye, label: 'Appearance' },
-  { href: '/settings/billing', icon: Wallet, label: 'Subscription' },
-  { href: '/settings/payments', icon: CreditCard, label: 'Payments' },
-  { href: '/settings/team', icon: Users, label: 'Team' },
-  { href: '/settings/quotes', icon: FileText, label: 'Quotes' },
-  { href: '/settings/contracts', icon: PenLine, label: 'Contracts' },
-  { href: '/settings/invoices', icon: Receipt, label: 'Invoices' },
-  { href: '/settings/tax-rates', icon: Percent, label: 'Tax Rates' },
-  { href: '/settings/custom-fields', icon: ListChecks, label: 'Custom Fields' },
-  { href: '/settings/emails', icon: Mail, label: 'Email Settings' },
+  { href: '/settings/account', icon: UserCircle, label: 'Cuenta' },
+  { href: '/settings/business', icon: Building2, label: 'Datos del negocio' },
+  { href: '/settings/branding', icon: Palette, label: 'Identidad visual' },
+  { href: '/settings/appearance', icon: Eye, label: 'Apariencia' },
+  { href: '/settings/payments', icon: CreditCard, label: 'Pagos' },
+  { href: '/settings/team', icon: Users, label: 'Equipo' },
+  { href: '/settings/quotes', icon: FileText, label: 'Cotizaciones' },
+  { href: '/settings/contracts', icon: PenLine, label: 'Contratos' },
+  { href: '/settings/invoices', icon: Receipt, label: 'Facturas' },
+  { href: '/settings/tax-rates', icon: Percent, label: 'Impuestos' },
+  { href: '/settings/custom-fields', icon: ListChecks, label: 'Campos personalizados' },
+  { href: '/settings/emails', icon: Mail, label: 'Correos' },
   { href: '/settings/webhooks', icon: Webhook, label: 'Webhooks' },
-  { href: '/settings/integrations', icon: Blocks, label: 'Integrations' },
-  { href: '/settings/api', icon: KeyRound, label: 'API Keys' },
-  { href: '/settings/workspace', icon: Settings2, label: 'Workspace' },
+  { href: '/settings/integrations', icon: Blocks, label: 'Integraciones' },
+  { href: '/settings/api', icon: KeyRound, label: 'Claves API' },
+  { href: '/settings/workspace', icon: Settings2, label: 'Espacio de trabajo' },
 ];
 
 export function SettingsNav() {
@@ -79,7 +77,7 @@ export function SettingsNav() {
           onValueChange={(value) => router.push(value)}
         >
           <SelectTrigger className="w-full">
-            <SelectValue placeholder="Select settings" />
+            <SelectValue placeholder="Seleccione una sección" />
           </SelectTrigger>
           <SelectContent>
             {settingsNavItems.map((item) => (

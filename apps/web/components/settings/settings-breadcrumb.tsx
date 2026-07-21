@@ -15,7 +15,7 @@ export function SettingsBreadcrumb() {
     return pathname.startsWith(item.href);
   });
 
-  const pageLabel = currentItem?.label ?? 'Settings';
+  const pageLabel = currentItem?.label ?? 'Configuración';
 
   return (
     <div className="flex items-center gap-1.5 text-lg">
@@ -23,7 +23,7 @@ export function SettingsBreadcrumb() {
         href="/settings/account"
         className="font-semibold text-muted-foreground hover:text-foreground transition-colors"
       >
-        Settings
+        Configuración
       </Link>
       {currentItem && (
         <>

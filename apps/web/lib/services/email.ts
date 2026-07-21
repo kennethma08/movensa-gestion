@@ -1,4 +1,5 @@
 import { Resend } from 'resend';
+import nodemailer, { type Transporter } from 'nodemailer';
 import { checkRateLimit } from '@/lib/rate-limit';
 import { logger } from '@/lib/logger';
 
@@ -48,6 +49,25 @@ export interface EmailResult {
 
 // Initialize email client
 let resend: Resend | null = null;
+let smtpTransporter: Transporter | null = null;
+
+function getSmtpClient(): Transporter | null {
+  if (smtpTransporter) return smtpTransporter;
+
+  const host = process.env.SMTP_HOST;
+  const user = process.env.SMTP_USER;
+  const password = process.env.SMTP_PASSWORD;
+  if (!host || !user || !password) return null;
+
+  const port = Number(process.env.SMTP_PORT || 587);
+  smtpTransporter = nodemailer.createTransport({
+    host,
+    port,
+    secure: process.env.SMTP_SECURE === 'true' || port === 465,
+    auth: { user, pass: password },
+  });
+  return smtpTransporter;
+}
 
 function getEmailClient(): Resend | null {
   if (resend) return resend;
@@ -66,14 +86,14 @@ function getEmailClient(): Resend | null {
 // Get default config
 function getDefaultConfig(): EmailConfig {
   return {
-    from: process.env.EMAIL_FROM || 'Oreko <noreply@oreko.app>',
+    from: process.env.EMAIL_FROM || 'Grupo Movensa <info@grupomovensa.com>',
     replyTo: process.env.EMAIL_REPLY_TO,
   };
 }
 
 // Check if email is enabled
 export function isEmailEnabled(): boolean {
-  return getEmailClient() !== null;
+  return getSmtpClient() !== null || getEmailClient() !== null;
 }
 
 // Send email (with optional rate limiting by key)
@@ -93,9 +113,10 @@ export async function sendEmail(
     }
   }
 
-  const client = getEmailClient();
+  const smtpClient = getSmtpClient();
+  const client = smtpClient ? null : getEmailClient();
 
-  if (!client) {
+  if (!smtpClient && !client) {
     logger.warn({ subject: options.subject }, 'Email client not configured. Email not sent');
     return {
       success: false,
@@ -127,7 +148,23 @@ export async function sendEmail(
       .replace(/\n{3,}/g, '\n\n')
       .trim();
 
-    const { data, error } = await client.emails.send({
+    if (smtpClient) {
+      const result = await smtpClient.sendMail({
+        from: config.from,
+        to: options.to,
+        subject: safeSubject,
+        html: htmlContent,
+        text: textContent,
+        replyTo: options.replyTo ?? config.replyTo,
+        cc: options.cc,
+        bcc: options.bcc,
+        attachments: options.attachments,
+      });
+
+      return { success: true, messageId: result.messageId };
+    }
+
+    const { data, error } = await client!.emails.send({
       from: config.from,
       to: Array.isArray(options.to) ? options.to : [options.to],
       subject: safeSubject,
@@ -196,27 +233,27 @@ export async function sendQuoteSentEmail(params: {
 
   const html = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-      <h2>New Quote from ${safeBusinessName}</h2>
-      <p>Hi ${safeClientName},</p>
-      <p>${safeBusinessName} has sent you a quote: <strong>${safeQuoteName}</strong></p>
+      <h2 style="color: #232323;">Nueva cotización de ${safeBusinessName}</h2>
+      <p>Hola ${safeClientName},</p>
+      <p>${safeBusinessName} le ha enviado la cotización: <strong>${safeQuoteName}</strong>.</p>
       ${safeMessage ? `<p>${safeMessage}</p>` : ''}
-      ${validUntil ? `<p>This quote is valid until ${validUntil.toLocaleDateString()}.</p>` : ''}
+      ${validUntil ? `<p>Esta cotización es válida hasta el ${validUntil.toLocaleDateString('es-CR')}.</p>` : ''}
       <p style="margin: 24px 0;">
         <a href="${safeQuoteUrl}" style="background-color: #3B82F6; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">
-          View Quote
+          Ver cotización
         </a>
       </p>
-      <p>Or copy this link: ${safeQuoteUrl}</p>
+      <p>También puede copiar este enlace: ${safeQuoteUrl}</p>
       <hr style="margin: 24px 0; border: none; border-top: 1px solid #eee;" />
       <p style="color: #666; font-size: 14px;">
-        Sent via Oreko on behalf of ${safeBusinessName}
+        Enviado por ${safeBusinessName} · Nos movemos con la tecnología
       </p>
     </div>
   `;
 
   return sendEmail({
     to,
-    subject: `Quote: ${quoteName} from ${businessName}`,
+    subject: `Cotización: ${quoteName} | ${businessName}`,
     html,
     tags: [
       { name: 'type', value: 'quote_sent' },
@@ -246,31 +283,31 @@ export async function sendInvoiceSentEmail(params: {
 
   const html = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-      <h2>Invoice from ${safeBusinessName}</h2>
-      <p>Hi ${safeClientName},</p>
-      <p>${safeBusinessName} has sent you an invoice:</p>
+      <h2 style="color: #232323;">Factura de ${safeBusinessName}</h2>
+      <p>Hola ${safeClientName},</p>
+      <p>${safeBusinessName} le ha enviado una factura:</p>
       <div style="background: #f9fafb; padding: 16px; border-radius: 8px; margin: 16px 0;">
-        <p style="margin: 0;"><strong>Invoice:</strong> ${safeInvoiceNumber}</p>
-        <p style="margin: 8px 0 0;"><strong>Amount:</strong> ${safeAmount}</p>
-        <p style="margin: 8px 0 0;"><strong>Due Date:</strong> ${dueDate.toLocaleDateString()}</p>
+        <p style="margin: 0;"><strong>Factura:</strong> ${safeInvoiceNumber}</p>
+        <p style="margin: 8px 0 0;"><strong>Monto:</strong> ${safeAmount}</p>
+        <p style="margin: 8px 0 0;"><strong>Fecha de vencimiento:</strong> ${dueDate.toLocaleDateString('es-CR')}</p>
       </div>
       ${safeMessage ? `<p>${safeMessage}</p>` : ''}
       <p style="margin: 24px 0;">
         <a href="${safeInvoiceUrl}" style="background-color: #10B981; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">
-          View & Pay Invoice
+          Ver factura
         </a>
       </p>
-      <p>Or copy this link: ${safeInvoiceUrl}</p>
+      <p>También puede copiar este enlace: ${safeInvoiceUrl}</p>
       <hr style="margin: 24px 0; border: none; border-top: 1px solid #eee;" />
       <p style="color: #666; font-size: 14px;">
-        Sent via Oreko on behalf of ${safeBusinessName}
+        Enviado por ${safeBusinessName} · Nos movemos con la tecnología
       </p>
     </div>
   `;
 
   return sendEmail({
     to,
-    subject: `Invoice ${invoiceNumber} from ${businessName} - ${amount}`,
+    subject: `Factura ${invoiceNumber} de ${businessName} - ${amount}`,
     html,
     tags: [
       { name: 'type', value: 'invoice_sent' },
@@ -296,26 +333,26 @@ export async function sendPaymentReceivedEmail(params: {
 
   const html = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-      <h2>Payment Received</h2>
-      <p>Hi ${safeClientName},</p>
-      <p>Thank you! We have received your payment of <strong>${safeAmount}</strong> for invoice ${safeInvoiceNumber}.</p>
+      <h2 style="color: #232323;">Pago recibido</h2>
+      <p>Hola ${safeClientName},</p>
+      <p>Gracias. Recibimos su pago de <strong>${safeAmount}</strong> correspondiente a la factura ${safeInvoiceNumber}.</p>
       ${receiptUrl ? `
         <p style="margin: 24px 0;">
           <a href="${validateEmailUrl(receiptUrl)}" style="background-color: #3B82F6; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">
-            View Receipt
+            Ver comprobante
           </a>
         </p>
       ` : ''}
       <hr style="margin: 24px 0; border: none; border-top: 1px solid #eee;" />
       <p style="color: #666; font-size: 14px;">
-        Sent via Oreko on behalf of ${safeBusinessName}
+        Enviado por ${safeBusinessName} · Nos movemos con la tecnología
       </p>
     </div>
   `;
 
   return sendEmail({
     to,
-    subject: `Payment Received - Invoice ${invoiceNumber}`,
+    subject: `Pago recibido - Factura ${invoiceNumber}`,
     html,
     tags: [
       { name: 'type', value: 'payment_received' },
@@ -340,27 +377,27 @@ export async function sendQuoteAcceptedEmail(params: {
 
   const html = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-      <h2 style="color: #10B981;">Quote Accepted!</h2>
-      <p>Great news! <strong>${safeClientName}</strong> has accepted your quote.</p>
+      <h2 style="color: #10B981;">¡Cotización aceptada!</h2>
+      <p><strong>${safeClientName}</strong> aceptó la cotización.</p>
       <div style="background: #f0fdf4; padding: 16px; border-radius: 8px; margin: 16px 0; border-left: 4px solid #10B981;">
-        <p style="margin: 0;"><strong>Quote:</strong> ${safeQuoteName}</p>
-        <p style="margin: 8px 0 0;"><strong>Amount:</strong> ${safeAmount}</p>
+        <p style="margin: 0;"><strong>Cotización:</strong> ${safeQuoteName}</p>
+        <p style="margin: 8px 0 0;"><strong>Monto:</strong> ${safeAmount}</p>
       </div>
       <p style="margin: 24px 0;">
         <a href="${safeQuoteUrl}" style="background-color: #3B82F6; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">
-          View Quote
+          Ver cotización
         </a>
       </p>
       <hr style="margin: 24px 0; border: none; border-top: 1px solid #eee;" />
       <p style="color: #666; font-size: 14px;">
-        Sent via Oreko
+        Grupo Movensa · Nos movemos con la tecnología
       </p>
     </div>
   `;
 
   return sendEmail({
     to,
-    subject: `Quote Accepted: ${quoteName} - ${amount}`,
+    subject: `Cotización aceptada: ${quoteName} - ${amount}`,
     html,
     tags: [
       { name: 'type', value: 'quote_accepted' },
@@ -389,34 +426,34 @@ export async function sendInvoiceReminderEmail(params: {
 
   const isOverdue = daysOverdue !== undefined && daysOverdue > 0;
   const subject = isOverdue
-    ? `Overdue: Invoice ${invoiceNumber} - ${amount} (${daysOverdue} days past due)`
-    : `Reminder: Invoice ${invoiceNumber} from ${businessName}`;
+    ? `Vencida: Factura ${invoiceNumber} - ${amount} (${daysOverdue} días de atraso)`
+    : `Recordatorio: Factura ${invoiceNumber} de ${businessName}`;
 
   const html = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
       <h2 style="color: ${isOverdue ? '#EF4444' : '#F59E0B'};">
-        ${isOverdue ? 'Invoice Overdue' : 'Invoice Reminder'}
+        ${isOverdue ? 'Factura vencida' : 'Recordatorio de factura'}
       </h2>
-      <p>Hi ${safeClientName},</p>
+      <p>Hola ${safeClientName},</p>
       <p>
         ${isOverdue
-          ? `This is a reminder that invoice ${safeInvoiceNumber} is now ${daysOverdue} days past due.`
-          : `This is a friendly reminder that invoice ${safeInvoiceNumber} is due on ${dueDate.toLocaleDateString()}.`
+          ? `Le recordamos que la factura ${safeInvoiceNumber} tiene ${daysOverdue} días de atraso.`
+          : `Le recordamos que la factura ${safeInvoiceNumber} vence el ${dueDate.toLocaleDateString('es-CR')}.`
         }
       </p>
       <div style="background: ${isOverdue ? '#fef2f2' : '#fffbeb'}; padding: 16px; border-radius: 8px; margin: 16px 0; border-left: 4px solid ${isOverdue ? '#EF4444' : '#F59E0B'};">
-        <p style="margin: 0;"><strong>Invoice:</strong> ${safeInvoiceNumber}</p>
-        <p style="margin: 8px 0 0;"><strong>Amount:</strong> ${safeAmount}</p>
-        <p style="margin: 8px 0 0;"><strong>Due Date:</strong> ${dueDate.toLocaleDateString()}</p>
+        <p style="margin: 0;"><strong>Factura:</strong> ${safeInvoiceNumber}</p>
+        <p style="margin: 8px 0 0;"><strong>Monto:</strong> ${safeAmount}</p>
+        <p style="margin: 8px 0 0;"><strong>Fecha de vencimiento:</strong> ${dueDate.toLocaleDateString('es-CR')}</p>
       </div>
       <p style="margin: 24px 0;">
         <a href="${safeInvoiceUrl}" style="background-color: ${isOverdue ? '#EF4444' : '#F59E0B'}; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">
-          Pay Now
+          Ver factura
         </a>
       </p>
       <hr style="margin: 24px 0; border: none; border-top: 1px solid #eee;" />
       <p style="color: #666; font-size: 14px;">
-        Sent via Oreko on behalf of ${safeBusinessName}
+        Enviado por ${safeBusinessName} · Nos movemos con la tecnología
       </p>
     </div>
   `;
@@ -451,25 +488,25 @@ export async function sendInvitationEmail(params: {
 
   const html = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-      <h2 style="color: #3B82F6;">You've been invited!</h2>
-      <p>${safeInviterName} has invited you to join <strong>${safeWorkspaceName}</strong> as a <strong>${safeRole}</strong>.</p>
-      <p>Oreko is a visual quote and invoice management tool that helps teams create professional quotes and invoices.</p>
+      <h2 style="color: #F57A1F;">Invitación a Grupo Movensa</h2>
+      <p>${safeInviterName} le invitó a unirse a <strong>${safeWorkspaceName}</strong> con el rol <strong>${safeRole}</strong>.</p>
+      <p>Desde este sistema podrá colaborar en la gestión comercial y administrativa.</p>
       <p style="margin: 24px 0;">
         <a href="${safeInviteUrl}" style="background-color: #3B82F6; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">
-          Accept Invitation
+          Aceptar invitación
         </a>
       </p>
-      <p style="color: #666; font-size: 14px;">This invitation expires in 7 days. If you don't have an account yet, you'll be able to create one.</p>
+      <p style="color: #666; font-size: 14px;">La invitación vence en 7 días. Si todavía no tiene una cuenta, podrá crearla al aceptar.</p>
       <hr style="margin: 24px 0; border: none; border-top: 1px solid #eee;" />
       <p style="color: #666; font-size: 14px;">
-        Sent via Oreko
+        Grupo Movensa · Nos movemos con la tecnología
       </p>
     </div>
   `;
 
   return sendEmail({
     to,
-    subject: `You've been invited to ${workspaceName} - Oreko`,
+    subject: `Invitación a ${workspaceName}`,
     html,
     tags: [{ name: 'type', value: 'workspace_invitation' }],
   }, rateLimitKey);
@@ -490,25 +527,25 @@ export async function sendVerificationEmail(params: {
 
   const html = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-      <h2 style="color: #3B82F6;">Verify your email</h2>
-      <p>Hi ${safeName},</p>
-      <p>Thanks for creating an account with Oreko! Please click the button below to verify your email address:</p>
+      <h2 style="color: #F57A1F;">Verifique su correo electrónico</h2>
+      <p>Hola ${safeName},</p>
+      <p>Gracias por crear su cuenta en el sistema de Grupo Movensa. Use el siguiente botón para verificar su correo electrónico:</p>
       <p style="margin: 24px 0;">
         <a href="${safeVerifyUrl}" style="background-color: #3B82F6; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">
-          Verify Email
+          Verificar correo
         </a>
       </p>
-      <p style="color: #666; font-size: 14px;">This link expires in 24 hours. If you didn't create an account, you can safely ignore this email.</p>
+      <p style="color: #666; font-size: 14px;">Este enlace vence en 24 horas. Si no creó esta cuenta, puede ignorar este mensaje.</p>
       <hr style="margin: 24px 0; border: none; border-top: 1px solid #eee;" />
       <p style="color: #666; font-size: 14px;">
-        Sent via Oreko
+        Grupo Movensa · Nos movemos con la tecnología
       </p>
     </div>
   `;
 
   return sendEmail({
     to,
-    subject: 'Verify your email - Oreko',
+    subject: 'Verifique su correo | Grupo Movensa',
     html,
     tags: [{ name: 'type', value: 'email_verification' }],
   });

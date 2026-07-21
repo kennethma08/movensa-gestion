@@ -21,7 +21,7 @@ import { COMMON_TIMEZONES, COMMON_CURRENCIES } from '@/lib/settings/types';
 import { toast } from 'sonner';
 
 const businessProfileSchema = z.object({
-  businessName: z.string().min(1, 'Business name is required').max(200),
+  businessName: z.string().min(1, 'El nombre del negocio es obligatorio').max(200),
   email: z.string().email().optional().or(z.literal('')),
   phone: z.string().max(50).optional(),
   website: z.string().url().optional().or(z.literal('')),
@@ -73,9 +73,9 @@ export function BusinessProfileForm({ initialData }: BusinessProfileFormProps) {
         timezone: data.timezone,
         address: data.address,
       });
-      toast.success('Business profile updated');
+      toast.success('Datos del negocio actualizados');
     } catch {
-      toast.error('Failed to update business profile');
+      toast.error('No se pudieron actualizar los datos');
     } finally {
       setIsSaving(false);
     }
@@ -85,18 +85,18 @@ export function BusinessProfileForm({ initialData }: BusinessProfileFormProps) {
     <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle>Business Information</CardTitle>
+          <CardTitle>Información del negocio</CardTitle>
           <CardDescription>
-            This information will appear on your quotes and invoices.
+            Estos datos aparecerán en sus cotizaciones, contratos y facturas.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="businessName">Business Name *</Label>
+            <Label htmlFor="businessName">Nombre del negocio *</Label>
             <Input
               id="businessName"
               {...form.register('businessName')}
-              placeholder="Your Business Name"
+              placeholder="Grupo Movensa"
             />
             {form.formState.errors.businessName && (
               <p className="text-sm text-destructive">
@@ -107,7 +107,7 @@ export function BusinessProfileForm({ initialData }: BusinessProfileFormProps) {
 
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">Correo electrónico</Label>
               <Input
                 id="email"
                 type="email"
@@ -117,7 +117,7 @@ export function BusinessProfileForm({ initialData }: BusinessProfileFormProps) {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="phone">Phone</Label>
+              <Label htmlFor="phone">Teléfono</Label>
               <Input
                 id="phone"
                 {...form.register('phone')}
@@ -128,7 +128,7 @@ export function BusinessProfileForm({ initialData }: BusinessProfileFormProps) {
 
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="website">Website</Label>
+              <Label htmlFor="website">Sitio web</Label>
               <Input
                 id="website"
                 {...form.register('website')}
@@ -137,7 +137,7 @@ export function BusinessProfileForm({ initialData }: BusinessProfileFormProps) {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="taxId">Tax ID / VAT Number</Label>
+              <Label htmlFor="taxId">Identificación tributaria</Label>
               <Input
                 id="taxId"
                 {...form.register('taxId')}
@@ -150,44 +150,44 @@ export function BusinessProfileForm({ initialData }: BusinessProfileFormProps) {
 
       <Card>
         <CardHeader>
-          <CardTitle>Address</CardTitle>
+          <CardTitle>Dirección</CardTitle>
           <CardDescription>
-            Your business address for invoices.
+            Dirección que aparecerá en los documentos comerciales.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="street">Street Address</Label>
+            <Label htmlFor="street">Dirección exacta</Label>
             <Input
               id="street"
               {...form.register('address.street')}
-              placeholder="123 Business Street"
+              placeholder="Dulce Nombre"
             />
           </div>
 
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="city">City</Label>
+              <Label htmlFor="city">Ciudad</Label>
               <Input
                 id="city"
                 {...form.register('address.city')}
-                placeholder="City"
+                placeholder="Cartago"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="state">State / Province</Label>
+              <Label htmlFor="state">Provincia</Label>
               <Input
                 id="state"
                 {...form.register('address.state')}
-                placeholder="State"
+                placeholder="Cartago"
               />
             </div>
           </div>
 
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="postalCode">Postal Code</Label>
+              <Label htmlFor="postalCode">Código postal</Label>
               <Input
                 id="postalCode"
                 {...form.register('address.postalCode')}
@@ -196,11 +196,11 @@ export function BusinessProfileForm({ initialData }: BusinessProfileFormProps) {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="country">Country</Label>
+              <Label htmlFor="country">País</Label>
               <Input
                 id="country"
                 {...form.register('address.country')}
-                placeholder="Country"
+                placeholder="Costa Rica"
               />
             </div>
           </div>
@@ -209,15 +209,15 @@ export function BusinessProfileForm({ initialData }: BusinessProfileFormProps) {
 
       <Card>
         <CardHeader>
-          <CardTitle>Regional Settings</CardTitle>
+          <CardTitle>Configuración regional</CardTitle>
           <CardDescription>
-            Configure your default currency and timezone.
+            Defina la moneda y la zona horaria predeterminadas.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="currency">Currency</Label>
+              <Label htmlFor="currency">Moneda</Label>
               <Select
                 value={form.watch('currency')}
                 onValueChange={(value) => form.setValue('currency', value)}
@@ -236,7 +236,7 @@ export function BusinessProfileForm({ initialData }: BusinessProfileFormProps) {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="timezone">Timezone</Label>
+              <Label htmlFor="timezone">Zona horaria</Label>
               <Select
                 value={form.watch('timezone')}
                 onValueChange={(value) => form.setValue('timezone', value)}
@@ -259,7 +259,7 @@ export function BusinessProfileForm({ initialData }: BusinessProfileFormProps) {
 
       <div className="flex justify-end">
         <Button type="submit" disabled={isSaving}>
-          {isSaving ? 'Saving...' : 'Save Changes'}
+          {isSaving ? 'Guardando...' : 'Guardar cambios'}
         </Button>
       </div>
     </form>

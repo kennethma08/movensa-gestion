@@ -68,12 +68,12 @@ interface NavItemWithSub extends NavItem {
 
 const reportingNavItems: NavItemWithSub[] = [
   {
-    title: 'Dashboard',
+    title: 'Panel general',
     href: '/dashboard',
     icon: LayoutDashboard,
   },
   {
-    title: 'Analytics',
+    title: 'Analítica',
     href: '/analytics',
     icon: BarChart3,
   },
@@ -81,27 +81,27 @@ const reportingNavItems: NavItemWithSub[] = [
 
 const workspaceNavItems: NavItemWithSub[] = [
   {
-    title: 'Clients',
+    title: 'Clientes',
     href: '/clients',
     icon: Users,
   },
   {
-    title: 'Projects',
+    title: 'Proyectos',
     href: '/projects',
     icon: FolderKanban,
   },
   {
-    title: 'Invoices',
+    title: 'Facturas',
     href: '/invoices',
     icon: Receipt,
   },
   {
-    title: 'Quotes',
+    title: 'Cotizaciones',
     href: '/quotes',
     icon: FileText,
   },
   {
-    title: 'Contracts',
+    title: 'Contratos',
     href: '/contracts',
     icon: ScrollText,
   },
@@ -109,17 +109,17 @@ const workspaceNavItems: NavItemWithSub[] = [
 
 const resourceNavItems: NavItemWithSub[] = [
   {
-    title: 'Templates',
+    title: 'Plantillas',
     href: '/templates',
     icon: FileStack,
   },
   {
-    title: 'Help & Support',
+    title: 'Ayuda y soporte',
     href: '/help',
     icon: HelpCircle,
   },
   {
-    title: 'Settings',
+    title: 'Configuración',
     href: '/settings',
     icon: Settings,
   },
@@ -176,7 +176,7 @@ export function AppSidebar({ user, workspaces, activeWorkspace }: AppSidebarProp
       <SidebarContent>
         {/* Reporting */}
         <SidebarGroup>
-          <SidebarGroupLabel>Reporting</SidebarGroupLabel>
+          <SidebarGroupLabel>Resumen</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {reportingNavItems.map((item) => (
@@ -199,7 +199,7 @@ export function AppSidebar({ user, workspaces, activeWorkspace }: AppSidebarProp
 
         {/* Workspace */}
         <SidebarGroup>
-          <SidebarGroupLabel>Workspace</SidebarGroupLabel>
+          <SidebarGroupLabel>Gestión</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {workspaceNavItems.map((item) =>
@@ -266,7 +266,7 @@ export function AppSidebar({ user, workspaces, activeWorkspace }: AppSidebarProp
 
         {/* Resources */}
         <SidebarGroup>
-          <SidebarGroupLabel>Resources</SidebarGroupLabel>
+          <SidebarGroupLabel>Administración</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {resourceNavItems.map((item) => (
@@ -335,19 +335,19 @@ export function AppSidebar({ user, workspaces, activeWorkspace }: AppSidebarProp
                 <DropdownMenuItem asChild className="cursor-pointer">
                   <Link href="/settings/account">
                     <User className="mr-2 size-4" />
-                    Profile
+                    Mi perfil
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild className="cursor-pointer">
                   <Link href="/settings">
                     <Settings className="mr-2 size-4" />
-                    Settings
+                    Configuración
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem className="cursor-pointer" onClick={() => signOut({ callbackUrl: '/login' })}>
                     <LogOut className="mr-2 size-4" />
-                    Log out
+                    Cerrar sesión
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

@@ -1,11 +1,11 @@
 {
-  "name": "Oreko",
-  "short_name": "Oreko",
-  "description": "Beautiful invoices. No expensive subscription. The open-source quote and invoice builder.",
+  "name": "Movensa Gestión",
+  "short_name": "Movensa",
+  "description": "Sistema privado de gestión comercial y administrativa de Grupo Movensa.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#3B82F6",
+  "theme_color": "#F57A1F",
   "icons": [
     {
       "src": "/favicon.svg",

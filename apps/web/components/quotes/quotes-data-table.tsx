@@ -243,14 +243,14 @@ export function QuotesDataTable({ data: initialData }: QuotesDataTableProps) {
   const emptyState = (
     <div className="flex flex-col items-center justify-center py-16">
       <FileText className="h-12 w-12 text-muted-foreground mb-4" />
-      <h3 className="text-lg font-medium">No quotes yet</h3>
+      <h3 className="text-lg font-medium">Aún no hay cotizaciones</h3>
       <p className="text-muted-foreground mb-4">
-        Create your first quote to get started
+        Cree la primera cotización para comenzar
       </p>
       <Button asChild>
         <Link href="/quotes/new">
           <Plus className="mr-2 h-4 w-4" />
-          Create Quote
+          Crear cotización
         </Link>
       </Button>
     </div>
@@ -276,7 +276,7 @@ export function QuotesDataTable({ data: initialData }: QuotesDataTableProps) {
         columns={columns}
         data={data}
         filterKey="client"
-        filterPlaceholder="Search quotes..."
+        filterPlaceholder="Buscar cotizaciones..."
         statusOptions={quoteStatusOptions}
         statusFilterKey="status"
         pageSizes={[10, 25, 50, 100]}

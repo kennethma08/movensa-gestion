@@ -7,7 +7,7 @@ import { ProjectsDataTable } from '@/components/projects';
 import { getProjects } from '@/lib/projects/actions';
 
 export const metadata = {
-  title: 'Projects',
+  title: 'Proyectos',
 };
 
 export default async function ProjectsPage() {
@@ -15,13 +15,13 @@ export default async function ProjectsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Projects</h1>
-          <p className="text-muted-foreground">Organize your work by client projects</p>
+          <h1 className="text-2xl font-bold">Proyectos</h1>
+          <p className="text-muted-foreground">Organice el trabajo y los entregables de cada cliente</p>
         </div>
         <Button asChild>
           <Link href="/projects/new">
             <Plus className="mr-2 h-4 w-4" />
-            New Project
+            Nuevo proyecto
           </Link>
         </Button>
       </div>

@@ -237,19 +237,19 @@ export function InvoicesDataTable({ data: initialData, recurringInvoiceIds: serv
   const emptyState = (
     <div className="flex flex-col items-center justify-center py-16">
       <Receipt className="h-12 w-12 text-muted-foreground mb-4" />
-      <h3 className="text-lg font-medium">No invoices yet</h3>
+      <h3 className="text-lg font-medium">Aún no hay facturas</h3>
       <p className="text-muted-foreground mb-4">
-        Create your first invoice or convert a quote to an invoice
+        Cree la primera factura o convierta una cotización aceptada
       </p>
       <div className="flex gap-3">
         <Button asChild>
           <Link href="/invoices/new">
             <Plus className="mr-2 h-4 w-4" />
-            Create Invoice
+            Crear factura
           </Link>
         </Button>
         <Button variant="outline" asChild>
-          <Link href="/quotes">View Quotes</Link>
+          <Link href="/quotes">Ver cotizaciones</Link>
         </Button>
       </div>
     </div>
@@ -263,7 +263,7 @@ export function InvoicesDataTable({ data: initialData, recurringInvoiceIds: serv
         columns={columns}
         data={data}
         filterKey="client"
-        filterPlaceholder="Search invoices..."
+        filterPlaceholder="Buscar facturas..."
         statusOptions={invoiceStatusOptions}
         statusFilterKey="status"
         pageSizes={[10, 25, 50, 100]}
@@ -274,7 +274,7 @@ export function InvoicesDataTable({ data: initialData, recurringInvoiceIds: serv
       {/* Invoice View Dialog -- Payment Page Style */}
       <Dialog open={!!viewingInvoice} onOpenChange={(open) => !open && handleCloseView()}>
         <DialogContent className="!flex !flex-col !max-w-[520px] !max-h-[90vh] !p-0 !gap-0 overflow-hidden">
-          <DialogTitle className="sr-only">Invoice Preview</DialogTitle>
+          <DialogTitle className="sr-only">Vista previa de la factura</DialogTitle>
           {invoice && (
             <>
               {/* Scrollable content */}

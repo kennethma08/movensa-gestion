@@ -105,29 +105,29 @@ export async function POST(request: NextRequest) {
     // Send email
     const html = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-        <h2>Reset your password</h2>
-        <p>Hi${user.name ? ` ${escapeHtml(user.name)}` : ''},</p>
-        <p>We received a request to reset your password. Click the button below to create a new password:</p>
+        <h2 style="color: #232323;">Restablecer contraseña</h2>
+        <p>Hola${user.name ? ` ${escapeHtml(user.name)}` : ''},</p>
+        <p>Recibimos una solicitud para restablecer su contraseña. Use el siguiente botón para crear una nueva:</p>
         <p style="margin: 24px 0;">
-          <a href="${resetUrl}" style="background-color: #3B82F6; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">
-            Reset Password
+          <a href="${resetUrl}" style="background-color: #F57A1F; color: white; padding: 12px 24px; text-decoration: none; border-radius: 999px; display: inline-block;">
+            Restablecer contraseña
           </a>
         </p>
-        <p>Or copy and paste this link into your browser:</p>
+        <p>También puede copiar este enlace en su navegador:</p>
         <p style="word-break: break-all; color: #3B82F6;">${resetUrl}</p>
         <p style="margin-top: 24px; color: #666; font-size: 14px;">
-          This link will expire in 1 hour. If you didn't request this, you can safely ignore this email.
+          El enlace vence en una hora. Si no realizó esta solicitud, puede ignorar este mensaje.
         </p>
         <hr style="margin: 24px 0; border: none; border-top: 1px solid #eee;" />
         <p style="color: #666; font-size: 12px;">
-          Sent by Oreko
+          Grupo Movensa · Nos movemos con la tecnología
         </p>
       </div>
     `;
 
     await sendEmail({
       to: user.email,
-      subject: 'Reset your password - Oreko',
+      subject: 'Restablecer contraseña | Grupo Movensa',
       html,
       tags: [{ name: 'type', value: 'password_reset' }],
     });

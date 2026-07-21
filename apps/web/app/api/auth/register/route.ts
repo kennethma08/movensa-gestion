@@ -61,6 +61,14 @@ export async function POST(request: Request) {
     const email = parsed.email.toLowerCase();
     const password = parsed.password;
 
+    const allowedRegistrationEmail = process.env.ALLOWED_REGISTRATION_EMAIL?.trim().toLowerCase();
+    if (allowedRegistrationEmail && email !== allowedRegistrationEmail) {
+      return NextResponse.json(
+        { error: 'Registration is restricted for this installation.' },
+        { status: 403 }
+      );
+    }
+
     // Check if user already exists
     const existingUser = await prisma.user.findUnique({
       where: { email },

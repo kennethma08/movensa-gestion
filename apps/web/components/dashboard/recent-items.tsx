@@ -36,15 +36,28 @@ const statusDot: Record<string, string> = {
   void: 'bg-muted-foreground/30',
 };
 
+const statusLabel: Record<string, string> = {
+  draft: 'borrador',
+  sent: 'enviada',
+  viewed: 'vista',
+  accepted: 'aceptada',
+  declined: 'rechazada',
+  expired: 'vencida',
+  paid: 'pagada',
+  partial: 'pago parcial',
+  overdue: 'vencida',
+  void: 'anulada',
+};
+
 export function RecentQuotes({ quotes, currency = 'USD' }: RecentQuotesProps) {
   return (
     <Card className="h-full flex flex-col">
       <CardHeader className="pb-0">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-sm font-medium">Recent Quotes</CardTitle>
+          <CardTitle className="text-sm font-medium">Cotizaciones recientes</CardTitle>
           <Button variant="ghost" size="sm" className="h-7 text-xs text-muted-foreground" asChild>
             <Link href="/quotes">
-              View all
+              Ver todas
               <ArrowUpRight className="ml-1 h-3 w-3" />
             </Link>
           </Button>
@@ -53,7 +66,7 @@ export function RecentQuotes({ quotes, currency = 'USD' }: RecentQuotesProps) {
       <CardContent className="pt-3 flex-1 overflow-y-auto">
         {quotes.length === 0 ? (
           <p className="py-6 text-center text-sm text-muted-foreground">
-            No quotes yet
+            Aún no hay cotizaciones
           </p>
         ) : (
           <div className="space-y-0">
@@ -82,7 +95,7 @@ export function RecentQuotes({ quotes, currency = 'USD' }: RecentQuotesProps) {
                     variant="outline"
                     className="text-[10px] capitalize font-normal px-1.5 py-0"
                   >
-                    {quote.status}
+                    {statusLabel[quote.status] || quote.status}
                   </Badge>
                 </div>
               </Link>
@@ -99,10 +112,10 @@ export function RecentInvoices({ invoices, currency = 'USD' }: RecentInvoicesPro
     <Card className="h-full flex flex-col">
       <CardHeader className="pb-0">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-sm font-medium">Recent Invoices</CardTitle>
+          <CardTitle className="text-sm font-medium">Facturas recientes</CardTitle>
           <Button variant="ghost" size="sm" className="h-7 text-xs text-muted-foreground" asChild>
             <Link href="/invoices">
-              View all
+              Ver todas
               <ArrowUpRight className="ml-1 h-3 w-3" />
             </Link>
           </Button>
@@ -111,7 +124,7 @@ export function RecentInvoices({ invoices, currency = 'USD' }: RecentInvoicesPro
       <CardContent className="pt-3 flex-1 overflow-y-auto">
         {invoices.length === 0 ? (
           <p className="py-6 text-center text-sm text-muted-foreground">
-            No invoices yet
+            Aún no hay facturas
           </p>
         ) : (
           <div className="space-y-0">
@@ -142,7 +155,7 @@ export function RecentInvoices({ invoices, currency = 'USD' }: RecentInvoicesPro
                     variant="outline"
                     className="text-[10px] capitalize font-normal px-1.5 py-0"
                   >
-                    {invoice.status}
+                    {statusLabel[invoice.status] || invoice.status}
                   </Badge>
                 </div>
               </Link>

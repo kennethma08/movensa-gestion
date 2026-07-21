@@ -37,11 +37,11 @@ export function ClientsDataTable({ data }: ClientsDataTableProps) {
     setIsDeleting(true);
     try {
       await deleteClient(deleteId);
-      toast.success('Client deleted successfully');
+      toast.success('Cliente eliminado correctamente');
       setDeleteId(null);
       router.refresh();
     } catch {
-      toast.error('Failed to delete client');
+      toast.error('No se pudo eliminar el cliente');
     } finally {
       setIsDeleting(false);
     }
@@ -56,12 +56,12 @@ export function ClientsDataTable({ data }: ClientsDataTableProps) {
     setIsDeleting(true);
     try {
       const result = await deleteClients(selectedRows.map((c) => c.id));
-      toast.success(`${result.deleted} clients deleted successfully`);
+      toast.success(`${result.deleted} clientes eliminados correctamente`);
       setSelectedRows([]);
       setShowBulkDeleteConfirm(false);
       router.refresh();
     } catch {
-      toast.error('Failed to delete clients');
+      toast.error('No se pudieron eliminar los clientes');
     } finally {
       setIsDeleting(false);
     }
@@ -88,14 +88,14 @@ export function ClientsDataTable({ data }: ClientsDataTableProps) {
   const emptyState = (
     <div className="flex flex-col items-center justify-center py-16">
       <User className="h-12 w-12 text-muted-foreground mb-4" />
-      <h3 className="text-lg font-medium">No clients found</h3>
+      <h3 className="text-lg font-medium">No hay clientes</h3>
       <p className="text-muted-foreground mb-4">
-        Add your first client to get started
+        Agregue el primer cliente para comenzar
       </p>
       <Button asChild>
         <Link href="/clients/new">
           <Plus className="mr-2 h-4 w-4" />
-          Add Client
+          Agregar cliente
         </Link>
       </Button>
     </div>
@@ -106,13 +106,13 @@ export function ClientsDataTable({ data }: ClientsDataTableProps) {
       {selectedRows.length > 0 && (
         <div className="flex items-center gap-2 mb-4">
           <span className="text-sm text-muted-foreground">
-            {selectedRows.length} selected
+            {selectedRows.length} seleccionado(s)
           </span>
           {/* Bug #214: Confirmation before bulk delete */}
           {showBulkDeleteConfirm ? (
             <div className="flex items-center gap-2">
               <span className="text-sm text-destructive font-medium">
-                Delete {selectedRows.length} clients?
+                ¿Eliminar {selectedRows.length} clientes?
               </span>
               <Button
                 variant="destructive"
@@ -120,7 +120,7 @@ export function ClientsDataTable({ data }: ClientsDataTableProps) {
                 onClick={handleBulkDelete}
                 disabled={isDeleting}
               >
-                {isDeleting ? 'Deleting...' : 'Confirm'}
+                {isDeleting ? 'Eliminando...' : 'Confirmar'}
               </Button>
               <Button
                 variant="outline"
@@ -128,7 +128,7 @@ export function ClientsDataTable({ data }: ClientsDataTableProps) {
                 onClick={() => setShowBulkDeleteConfirm(false)}
                 disabled={isDeleting}
               >
-                Cancel
+                Cancelar
               </Button>
             </div>
           ) : (
@@ -139,7 +139,7 @@ export function ClientsDataTable({ data }: ClientsDataTableProps) {
               disabled={isDeleting}
             >
               <Trash2 className="mr-2 h-4 w-4" />
-              Delete Selected
+              Eliminar seleccionados
             </Button>
           )}
         </div>
@@ -149,7 +149,7 @@ export function ClientsDataTable({ data }: ClientsDataTableProps) {
         columns={columns}
         data={data.data}
         filterKey="name"
-        filterPlaceholder="Search clients..."
+        filterPlaceholder="Buscar clientes..."
         statusOptions={clientTypeOptions}
         statusFilterKey="type"
         pageSizes={[10, 25, 50, 100]}
@@ -161,21 +161,21 @@ export function ClientsDataTable({ data }: ClientsDataTableProps) {
       <AlertDialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Client</AlertDialogTitle>
+            <AlertDialogTitle>Eliminar cliente</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete this client? This action cannot be
-              undone. All associated quotes and invoices will remain but will no
-              longer be linked to this client.
+              ¿Desea eliminar este cliente? Esta acción no se puede deshacer.
+              Las cotizaciones y facturas asociadas se conservarán, pero dejarán
+              de estar vinculadas con el cliente.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDelete}
               disabled={isDeleting}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              Delete
+              Eliminar
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

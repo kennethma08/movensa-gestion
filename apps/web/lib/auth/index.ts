@@ -28,7 +28,10 @@ const nextAuth = NextAuth({
     maxAge: 7 * 24 * 60 * 60, // 7 days — Bug #15: sessions expire instead of lasting forever
   },
   // Bug #87: Only trust host header in environments with known-good reverse proxies
-  trustHost: process.env.VERCEL === '1' || process.env.NODE_ENV === 'development' || process.env.TRUST_HOST === 'true',
+  trustHost:
+    process.env.VERCEL === '1' ||
+    process.env.NODE_ENV === 'development' ||
+    process.env.AUTH_TRUST_HOST === 'true',
   ...authConfig,
 });
 

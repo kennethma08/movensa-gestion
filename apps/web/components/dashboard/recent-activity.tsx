@@ -59,12 +59,12 @@ export function RecentActivity({ activities, currency = 'USD' }: RecentActivityP
   return (
     <Card className="h-full flex flex-col">
       <CardHeader className="pb-4">
-        <CardTitle className="text-sm font-medium">Recent Activity</CardTitle>
+        <CardTitle className="text-sm font-medium">Actividad reciente</CardTitle>
       </CardHeader>
       <CardContent className="pt-0 flex-1 overflow-y-auto">
         {activities.length === 0 ? (
           <p className="py-8 text-center text-sm text-muted-foreground">
-            No recent activity
+            No hay actividad reciente
           </p>
         ) : (
           <div className="relative">

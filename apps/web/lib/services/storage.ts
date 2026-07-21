@@ -2,6 +2,7 @@ import { writeFile, readFile, unlink, mkdir } from 'fs/promises';
 import { join, dirname, resolve } from 'path';
 import { existsSync } from 'fs';
 import crypto from 'crypto';
+import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 
 // Validate that resolved path stays within base directory (prevents path traversal)
 function assertSafePath(basePath: string, key: string): string {
@@ -15,11 +16,34 @@ function assertSafePath(basePath: string, key: string): string {
 
 // Storage configuration
 export interface StorageConfig {
-  provider: 'local' | 's3' | 'cloudflare';
+  provider: 'local' | 'supabase' | 's3' | 'cloudflare';
   basePath?: string; // For local storage
   bucket?: string; // For S3/Cloudflare
   region?: string;
   publicUrl?: string;
+}
+
+let supabaseStorageClient: SupabaseClient | null = null;
+
+function getSupabaseStorageClient(): SupabaseClient {
+  if (supabaseStorageClient) return supabaseStorageClient;
+
+  const url = process.env.SUPABASE_URL;
+  const secretKey = process.env.SUPABASE_SECRET_KEY;
+  if (!url || !secretKey) {
+    throw new Error('Supabase Storage requires SUPABASE_URL and SUPABASE_SECRET_KEY');
+  }
+
+  supabaseStorageClient = createClient(url, secretKey, {
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
+  return supabaseStorageClient;
+}
+
+function getRequiredBucket(): string {
+  const bucket = process.env.STORAGE_BUCKET;
+  if (!bucket) throw new Error('STORAGE_BUCKET is required');
+  return bucket;
 }
 
 export interface UploadOptions {
@@ -97,6 +121,41 @@ async function deleteLocal(key: string): Promise<void> {
   const config = getStorageConfig();
   const filePath = assertSafePath(config.basePath || './uploads', key);
   await unlink(filePath);
+}
+
+async function uploadSupabase(
+  buffer: Buffer,
+  options: UploadOptions
+): Promise<UploadResult> {
+  const client = getSupabaseStorageClient();
+  const bucket = getRequiredBucket();
+  const filename = options.filename || generateFilename('upload');
+  const folder = options.folder || 'files';
+  const key = `${folder}/${filename}`;
+  const contentType = options.contentType || 'application/octet-stream';
+
+  const { error } = await client.storage.from(bucket).upload(key, buffer, {
+    contentType,
+    cacheControl: '3600',
+    upsert: false,
+  });
+  if (error) throw new Error(`Supabase upload failed: ${error.message}`);
+
+  const { data } = client.storage.from(bucket).getPublicUrl(key);
+  return { key, url: data.publicUrl, size: buffer.length, contentType };
+}
+
+async function getSupabaseFile(key: string): Promise<Buffer> {
+  const client = getSupabaseStorageClient();
+  const { data, error } = await client.storage.from(getRequiredBucket()).download(key);
+  if (error) throw new Error(`Supabase download failed: ${error.message}`);
+  return Buffer.from(await data.arrayBuffer());
+}
+
+async function deleteSupabaseFile(key: string): Promise<void> {
+  const client = getSupabaseStorageClient();
+  const { error } = await client.storage.from(getRequiredBucket()).remove([key]);
+  if (error) throw new Error(`Supabase delete failed: ${error.message}`);
 }
 
 // S3 storage implementation (stub — install @aws-sdk/client-s3 to enable)
@@ -192,6 +251,8 @@ export async function uploadFile(
   switch (config.provider) {
     case 'local':
       return uploadLocal(bufferData, options);
+    case 'supabase':
+      return uploadSupabase(bufferData, options);
     case 's3':
       return uploadS3(bufferData, options);
     case 'cloudflare':
@@ -207,6 +268,8 @@ export async function getFile(key: string): Promise<Buffer> {
   switch (config.provider) {
     case 'local':
       return getLocal(key);
+    case 'supabase':
+      return getSupabaseFile(key);
     case 's3':
       return getS3(key);
     case 'cloudflare':
@@ -222,6 +285,8 @@ export async function deleteFile(key: string): Promise<void> {
   switch (config.provider) {
     case 'local':
       return deleteLocal(key);
+    case 'supabase':
+      return deleteSupabaseFile(key);
     case 's3':
       return deleteS3(key);
     case 'cloudflare':
@@ -234,6 +299,9 @@ export async function deleteFile(key: string): Promise<void> {
 // Helper to get public URL for a file
 export function getPublicUrl(key: string): string {
   const config = getStorageConfig();
+  if (config.provider === 'supabase') {
+    return getSupabaseStorageClient().storage.from(getRequiredBucket()).getPublicUrl(key).data.publicUrl;
+  }
   return `${config.publicUrl}/${key}`;
 }
 

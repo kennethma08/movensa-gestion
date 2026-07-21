@@ -1,27 +1,18 @@
-<p align="center">
-  <b>Oreko</b>
-</p>
+# Movensa Gestión
 
-<h2 align="center">The invoicing platform you actually own.</h2>
+Sistema privado de Grupo Movensa para administrar clientes, proyectos,
+cotizaciones, contratos, facturas, pagos, documentos y analítica comercial.
 
-<p align="center">
-  Open-source. Self-hosted. Quotes, invoices, contracts, payments, and analytics in one place.<br/>
-  Zero subscription fees. Zero lock-in.
-</p>
+Esta adaptación integra PostgreSQL y almacenamiento de archivos en Supabase,
+correo SMTP corporativo, identidad visual de Grupo Movensa, configuración para
+Costa Rica y despliegue en Vercel.
 
-<p align="center">
-  <a href="https://oreko.app">Website</a> · <a href="https://oreko.app/docs">Documentation</a> · <a href="https://github.com/orekoapp/oreko/issues">Issues</a>
-</p>
+## Licencia y proyecto base
 
-<br />
+Este proyecto es una adaptación de [Oreko](https://github.com/orekoapp/oreko),
+distribuido bajo la licencia GNU Affero General Public License v3.0. El código
+derivado conserva la misma licencia; consulte [LICENSE](./LICENSE).
 
-<p align="center">
-  <a href="https://oreko.app">
-    <img src="docs/images/hero.png" alt="Oreko — Visual Invoice Builder" />
-  </a>
-</p>
-
-<br />
 
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 [![CI](https://github.com/orekoapp/oreko/actions/workflows/ci.yml/badge.svg)](https://github.com/orekoapp/oreko/actions/workflows/ci.yml)

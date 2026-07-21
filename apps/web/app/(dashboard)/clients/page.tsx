@@ -9,8 +9,8 @@ import { getClients } from '@/lib/clients/actions';
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'Clients',
-  description: 'Manage your client database and relationships',
+  title: 'Clientes',
+  description: 'Gestión de clientes y contactos',
 };
 
 export default async function ClientsPage() {
@@ -19,13 +19,13 @@ export default async function ClientsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Clients</h1>
-          <p className="text-muted-foreground">Manage your clients and contacts</p>
+          <h1 className="text-2xl font-bold">Clientes</h1>
+          <p className="text-muted-foreground">Administre clientes, empresas y personas de contacto</p>
         </div>
         <Button asChild>
           <Link href="/clients/new">
             <Plus className="mr-2 h-4 w-4" />
-            Add Client
+            Agregar cliente
           </Link>
         </Button>
       </div>

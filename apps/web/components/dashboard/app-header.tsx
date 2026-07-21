@@ -28,12 +28,6 @@ import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
-import { BETA_TOOLTIP_MESSAGE } from '@/lib/constants/beta';
-import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
@@ -80,39 +74,39 @@ function formatTimeAgo(date: Date): string {
   const now = new Date();
   const diff = now.getTime() - new Date(date).getTime();
   const minutes = Math.floor(diff / 60000);
-  if (minutes < 1) return 'just now';
-  if (minutes < 60) return `${minutes}m ago`;
+  if (minutes < 1) return 'ahora';
+  if (minutes < 60) return `hace ${minutes} min`;
   const hours = Math.floor(minutes / 60);
-  if (hours < 24) return `${hours}h ago`;
+  if (hours < 24) return `hace ${hours} h`;
   const days = Math.floor(hours / 24);
-  if (days < 7) return `${days}d ago`;
-  return new Date(date).toLocaleDateString();
+  if (days < 7) return `hace ${days} d`;
+  return new Date(date).toLocaleDateString('es-CR');
 }
 
 const pathNameMap: Record<string, string> = {
-  dashboard: 'Dashboard',
-  quotes: 'Quotes',
-  invoices: 'Invoices',
-  clients: 'Clients',
+  dashboard: 'Panel general',
+  quotes: 'Cotizaciones',
+  invoices: 'Facturas',
+  clients: 'Clientes',
 
-  templates: 'Templates',
-  settings: 'Settings',
-  help: 'Help & Support',
-  new: 'New',
-  edit: 'Edit',
-  builder: 'Builder',
-  analytics: 'Analytics',
-  projects: 'Projects',
-  contracts: 'Contracts',
-  account: 'Account',
-  business: 'Business Profile',
-  branding: 'Branding',
-  team: 'Team Members',
-  workspace: 'Workspace',
-  billing: 'Billing & Subscription',
-  'tax-rates': 'Tax Rates',
-  emails: 'Email Templates',
-  payments: 'Payment Settings',
+  templates: 'Plantillas',
+  settings: 'Configuración',
+  help: 'Ayuda y soporte',
+  new: 'Nuevo',
+  edit: 'Editar',
+  builder: 'Constructor',
+  analytics: 'Analítica',
+  projects: 'Proyectos',
+  contracts: 'Contratos',
+  account: 'Cuenta',
+  business: 'Datos del negocio',
+  branding: 'Marca',
+  team: 'Equipo',
+  workspace: 'Espacio de trabajo',
+  billing: 'Facturación y suscripción',
+  'tax-rates': 'Impuestos',
+  emails: 'Plantillas de correo',
+  payments: 'Configuración de pagos',
   editor: 'Editor',
 };
 
@@ -140,7 +134,7 @@ function generateBreadcrumbs(pathname: string) {
       label = pathNameMap[segment];
     } else if (isUUID(segment) || isEntityId(segment)) {
       // For UUIDs and demo IDs, show "Details" as the label
-      label = 'Details';
+      label = 'Detalle';
     } else {
       // Capitalize first letter of each word
       label = segment
@@ -193,23 +187,13 @@ export function AppHeader({ user, unreadCount = 0, notifications = [] }: AppHead
         {/* Left: Sidebar trigger + Breadcrumbs */}
         <div className="flex items-center gap-4">
           <SidebarTrigger className="[&_svg]:!size-5" />
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <span className="cursor-default rounded-full border border-blue-400 px-2 py-0.5 text-[11px] font-medium text-blue-500">
-                Beta
-              </span>
-            </TooltipTrigger>
-            <TooltipContent side="bottom" className="max-w-[220px] text-center leading-relaxed">
-              {BETA_TOOLTIP_MESSAGE}
-            </TooltipContent>
-          </Tooltip>
           <Separator orientation="vertical" className="hidden !h-4 md:block" />
 
           {/* Breadcrumbs - hidden on mobile */}
           <Breadcrumb className="hidden md:block">
             <BreadcrumbList>
               <BreadcrumbItem>
-                <BreadcrumbLink href="/dashboard">Home</BreadcrumbLink>
+                <BreadcrumbLink href="/dashboard">Inicio</BreadcrumbLink>
               </BreadcrumbItem>
               {breadcrumbs.map((crumb, index) => (
                 <span key={crumb.href} className="flex items-center gap-1.5">
@@ -231,7 +215,7 @@ export function AppHeader({ user, unreadCount = 0, notifications = [] }: AppHead
             <div className="relative md:hidden">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
-                placeholder="Search..."
+                placeholder="Buscar..."
                 className="w-40 pl-9"
                 autoFocus
                 onBlur={() => setSearchOpen(false)}
@@ -262,7 +246,7 @@ export function AppHeader({ user, unreadCount = 0, notifications = [] }: AppHead
             onClick={() => setCommandOpen(true)}
           >
             <Search className="h-4 w-4 mr-2" />
-            <span>Search</span>
+            <span>Buscar</span>
             <kbd className="ml-4 rounded bg-muted px-2 py-0.5 text-xs text-muted-foreground">
               ⌘K
             </kbd>
@@ -277,7 +261,7 @@ export function AppHeader({ user, unreadCount = 0, notifications = [] }: AppHead
           {/* Notifications */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="relative" aria-label="Notifications">
+              <Button variant="ghost" size="icon" className="relative" aria-label="Notificaciones">
                 <Bell className="h-4 w-4" />
                 {unreadCount > 0 && (
                   <span className="absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-destructive text-[10px] font-bold text-destructive-foreground">
@@ -288,7 +272,7 @@ export function AppHeader({ user, unreadCount = 0, notifications = [] }: AppHead
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-80" align="end" forceMount>
               <DropdownMenuLabel className="flex items-center justify-between">
-                <span>Notifications</span>
+                <span>Notificaciones</span>
                 {unreadCount > 0 && (
                   <Button
                     variant="ghost"
@@ -296,7 +280,7 @@ export function AppHeader({ user, unreadCount = 0, notifications = [] }: AppHead
                     className="h-auto p-0 text-xs text-muted-foreground hover:text-foreground"
                     onClick={() => markAllNotificationsRead()}
                   >
-                    Mark all as read
+                    Marcar todo como leído
                   </Button>
                 )}
               </DropdownMenuLabel>
@@ -305,9 +289,9 @@ export function AppHeader({ user, unreadCount = 0, notifications = [] }: AppHead
                 {notifications.length === 0 ? (
                   <div className="flex flex-col items-center justify-center py-8 text-center">
                     <Bell className="h-8 w-8 text-muted-foreground mb-2" />
-                    <p className="text-sm font-medium">No new notifications</p>
+                    <p className="text-sm font-medium">No hay notificaciones nuevas</p>
                     <p className="text-xs text-muted-foreground">
-                      We&apos;ll notify you when something arrives
+                      Aquí aparecerán las novedades de su gestión
                     </p>
                   </div>
                 ) : (
@@ -359,7 +343,7 @@ export function AppHeader({ user, unreadCount = 0, notifications = [] }: AppHead
                 size="icon"
                 className="relative size-9"
                 data-testid="user-menu"
-                aria-label="User menu"
+                aria-label="Menú de usuario"
               >
                 <Avatar className="size-9 rounded-md">
                   <AvatarImage src={user.avatarUrl || undefined} alt={user.name || 'User'} />
@@ -383,19 +367,19 @@ export function AppHeader({ user, unreadCount = 0, notifications = [] }: AppHead
                 <DropdownMenuItem asChild>
                   <Link href="/settings/account">
                     <User className="mr-2 h-4 w-4" />
-                    Profile
+                    Mi perfil
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link href="/settings">
                     <Settings className="mr-2 h-4 w-4" />
-                    Settings
+                    Configuración
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link href="/settings/billing">
                     <CreditCard className="mr-2 h-4 w-4" />
-                    Billing
+                    Facturación
                   </Link>
                 </DropdownMenuItem>
               </DropdownMenuGroup>
@@ -403,7 +387,7 @@ export function AppHeader({ user, unreadCount = 0, notifications = [] }: AppHead
               <DropdownMenuItem asChild>
                 <Link href="/help">
                   <HelpCircle className="mr-2 h-4 w-4" />
-                  Help & Support
+                  Ayuda y soporte
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
@@ -412,7 +396,7 @@ export function AppHeader({ user, unreadCount = 0, notifications = [] }: AppHead
                 onClick={() => signOut({ callbackUrl: '/login' })}
               >
                 <LogOut className="mr-2 h-4 w-4" />
-                Log out
+                Cerrar sesión
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

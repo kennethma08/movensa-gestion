@@ -6,12 +6,8 @@
   "regions": ["iad1"],
   "crons": [
     {
-      "path": "/api/cron/reset-demo",
-      "schedule": "0 0 * * *"
-    },
-    {
       "path": "/api/cron/recurring-invoices",
-      "schedule": "0 * * * *"
+      "schedule": "0 12 * * *"
     }
   ],
   "headers": [

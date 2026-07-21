@@ -2,10 +2,10 @@
   "name": "oreko",
   "version": "0.1.0",
   "private": true,
-  "description": "Open-source quote and invoice tool for freelancers and small businesses",
+  "description": "Sistema privado de gestión comercial y administrativa de Grupo Movensa",
   "repository": {
     "type": "git",
-    "url": "https://github.com/orekoapp/oreko.git"
+    "url": "https://github.com/kennethma08/movensa-gestion.git"
   },
   "license": "AGPL-3.0-only",
   "packageManager": "pnpm@9.15.0",

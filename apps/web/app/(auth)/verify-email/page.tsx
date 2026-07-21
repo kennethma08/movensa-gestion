@@ -19,10 +19,10 @@ export default function VerifyEmailPage() {
       if (res.ok) {
         setResent(true);
       } else {
-        setError(data.error || 'Failed to resend');
+        setError(data.error || 'No se pudo reenviar el mensaje');
       }
     } catch {
-      setError('Failed to resend verification email');
+      setError('No se pudo reenviar el correo de verificación');
     } finally {
       setIsResending(false);
     }
@@ -39,16 +39,16 @@ export default function VerifyEmailPage() {
         </div>
 
         <div className="space-y-2">
-          <h1 className="text-2xl font-bold">Check your email</h1>
+          <h1 className="text-2xl font-bold">Revise su correo</h1>
           <p className="text-muted-foreground">
-            We sent you a verification link. Please check your inbox and click the link to verify your email address.
+            Le enviamos un enlace de verificación. Revise su bandeja de entrada y úselo para confirmar su correo electrónico.
           </p>
         </div>
 
         {resent ? (
           <div className="flex items-center justify-center gap-2 text-green-600">
             <CheckCircle className="h-4 w-4" />
-            <p className="text-sm">Verification email sent!</p>
+            <p className="text-sm">Correo de verificación enviado.</p>
           </div>
         ) : (
           <div className="space-y-3">
@@ -61,14 +61,14 @@ export default function VerifyEmailPage() {
               disabled={isResending}
             >
               {isResending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Resend verification email
+              Reenviar correo de verificación
             </Button>
           </div>
         )}
 
         <p className="text-sm text-muted-foreground">
           <Link href="/login" className="text-primary hover:underline">
-            Back to login
+            Volver al inicio de sesión
           </Link>
         </p>
       </div>

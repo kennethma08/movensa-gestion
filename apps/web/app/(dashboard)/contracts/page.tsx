@@ -7,8 +7,8 @@ import { ContractsDataTable } from '@/components/contracts';
 import { getContractInstances } from '@/lib/contracts/actions';
 
 export const metadata = {
-  title: 'Contracts',
-  description: 'Manage your contract instances',
+  title: 'Contratos',
+  description: 'Gestión de contratos y firmas',
 };
 
 interface PageProps {
@@ -48,15 +48,15 @@ export default async function ContractsPage({ searchParams }: PageProps) {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Contracts</h1>
+          <h1 className="text-2xl font-bold tracking-tight">Contratos</h1>
           <p className="text-muted-foreground">
-            Manage your contracts and track signatures
+            Administre documentos, versiones y estado de las firmas
           </p>
         </div>
         <Button asChild>
           <Link href="/contracts/new">
             <Plus className="mr-2 h-4 w-4" />
-            New Contract
+            Nuevo contrato
           </Link>
         </Button>
       </div>

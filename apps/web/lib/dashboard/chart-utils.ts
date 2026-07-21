@@ -229,9 +229,9 @@ export function getYTDDateRange(): AnalyticsDateRange {
 export function formatDateRange(range: AnalyticsDateRange): string {
   if (range.preset && range.preset !== 'custom') {
     const presetLabels: Record<string, string> = {
-      '7d': 'Last 7 days',
-      '30d': 'Last 30 days',
-      '90d': 'Last 90 days',
+      '7d': 'Últimos 7 días',
+      '30d': 'Últimos 30 días',
+      '90d': 'Últimos 90 días',
       '12m': 'Last 12 months',
       'ytd': 'Year to date',
       'all': 'All time',

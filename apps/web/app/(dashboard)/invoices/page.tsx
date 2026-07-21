@@ -11,8 +11,8 @@ import { InvoicesDataTable } from '@/components/invoices/invoices-data-table';
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'Invoices',
-  description: 'Create, send, and track invoices for your clients.',
+  title: 'Facturas',
+  description: 'Creación, envío y seguimiento de facturas',
 };
 
 // Low #71: Suspense boundary for streaming — header shows immediately, data loads async
@@ -21,15 +21,15 @@ export default function InvoicesPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Invoices</h1>
+          <h1 className="text-2xl font-bold tracking-tight">Facturas</h1>
           <p className="text-muted-foreground">
-            Manage your invoices and track payments
+            Administre facturas, vencimientos y pagos recibidos
           </p>
         </div>
         <Button asChild>
           <Link href="/invoices/new">
             <Plus className="mr-2 h-4 w-4" />
-            New Invoice
+            Nueva factura
           </Link>
         </Button>
       </div>

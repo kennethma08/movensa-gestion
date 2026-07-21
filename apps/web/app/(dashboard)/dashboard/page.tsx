@@ -10,19 +10,19 @@ import { getWorkspaceCurrency } from '@/lib/settings/actions';
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'Dashboard',
-  description: 'Your Oreko dashboard',
+  title: 'Panel general',
+  description: 'Resumen de la gestión de Grupo Movensa',
 };
 
 function getGreeting() {
   const hour = new Date().getHours();
-  if (hour < 12) return 'Good morning';
-  if (hour < 17) return 'Good afternoon';
-  return 'Good evening';
+  if (hour < 12) return 'Buenos días';
+  if (hour < 18) return 'Buenas tardes';
+  return 'Buenas noches';
 }
 
 function formatToday() {
-  return new Date().toLocaleDateString('en-US', {
+  return new Date().toLocaleDateString('es-CR', {
     weekday: 'long',
     month: 'long',
     day: 'numeric',
@@ -93,7 +93,7 @@ export default function DashboardPage() {
           {getGreeting()}
         </h1>
         <p className="text-sm text-muted-foreground mt-1">
-          {formatToday()} &mdash; Here&apos;s how your business is doing.
+          {formatToday()} &mdash; Este es el estado de la gestión de Grupo Movensa.
         </p>
       </div>
 

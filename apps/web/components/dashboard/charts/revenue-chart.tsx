@@ -40,16 +40,16 @@ interface RevenueChartProps {
 
 const chartConfig = {
   revenue: {
-    label: 'Revenue',
+    label: 'Ingresos',
     color: 'var(--primary-500)',
   },
 } satisfies ChartConfig;
 
 const PERIOD_OPTIONS: { value: DashboardPeriod; label: string }[] = [
-  { value: '7d', label: '7 Days' },
-  { value: '30d', label: '30 Days' },
-  { value: '90d', label: '90 Days' },
-  { value: '12m', label: '12 Months' },
+  { value: '7d', label: '7 días' },
+  { value: '30d', label: '30 días' },
+  { value: '90d', label: '90 días' },
+  { value: '12m', label: '12 meses' },
 ];
 
 export function RevenueChart({
@@ -139,7 +139,7 @@ export function RevenueChart({
     <Card className={className}>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <div>
-          <CardTitle className="text-sm font-medium">Revenue</CardTitle>
+          <CardTitle className="text-sm font-medium">Ingresos</CardTitle>
           {!isEmpty && (
             <p className="text-2xl font-semibold tracking-tight mt-1">
               {formatFullCurrency(totalRevenue, currency)}
@@ -164,7 +164,7 @@ export function RevenueChart({
       <CardContent className="pt-0">
         {isEmpty ? (
           <div className="flex h-[280px] items-center justify-center">
-            <p className="text-sm text-muted-foreground">No revenue data for this period</p>
+            <p className="text-sm text-muted-foreground">No hay datos de ingresos para este periodo</p>
           </div>
         ) : (
           <ChartContainer config={chartConfig} className="h-[280px] w-full">

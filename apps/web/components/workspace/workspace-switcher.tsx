@@ -54,7 +54,7 @@ export function WorkspaceSwitcher({
           <div className="grid flex-1 text-left text-sm leading-tight">
             <span className="truncate font-semibold">{activeWorkspace.name}</span>
             <span className="truncate text-xs text-muted-foreground capitalize">
-              {activeWorkspace.role}
+              {activeWorkspace.role === 'owner' ? 'Propietario' : activeWorkspace.role === 'admin' ? 'Administrador' : 'Miembro'}
             </span>
           </div>
           <ChevronsUpDown className="ml-auto size-4" />
@@ -67,7 +67,7 @@ export function WorkspaceSwitcher({
         sideOffset={4}
       >
         <DropdownMenuLabel className="text-xs text-muted-foreground">
-          Workspaces
+          Espacios de trabajo
         </DropdownMenuLabel>
         {workspaces.map((workspace) => (
           <DropdownMenuItem
@@ -95,7 +95,7 @@ export function WorkspaceSwitcher({
               <div className="flex size-6 items-center justify-center rounded-md border bg-background">
                 <Plus className="size-4" />
               </div>
-              <span className="text-muted-foreground">Add workspace</span>
+              <span className="text-muted-foreground">Agregar espacio</span>
             </DropdownMenuItem>
           }
           onSuccess={() => setIsOpen(false)}

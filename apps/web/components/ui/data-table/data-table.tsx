@@ -45,7 +45,7 @@ export function DataTable<TData, TValue>({
   columns,
   data,
   filterKey,
-  filterPlaceholder = 'Search...',
+  filterPlaceholder = 'Buscar...',
   statusOptions,
   statusFilterKey = 'status',
   onRowSelect,
@@ -152,7 +152,7 @@ export function DataTable<TData, TValue>({
             ) : (
               <TableRow>
                 <TableCell colSpan={columns.length} className="h-24 text-center">
-                  {emptyState || 'No results.'}
+                  {emptyState || 'No hay resultados.'}
                 </TableCell>
               </TableRow>
             )}

@@ -22,7 +22,7 @@ const resetPasswordSchema = z
     confirmPassword: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: 'Passwords do not match',
+    message: 'Las contraseñas no coinciden',
     path: ['confirmPassword'],
   });
 
@@ -57,7 +57,7 @@ export function ResetPasswordForm() {
 
   async function onSubmit(data: ResetPasswordFormData) {
     if (!token) {
-      toast.error('Invalid reset link');
+      toast.error('El enlace no es válido');
       return;
     }
 
@@ -79,20 +79,20 @@ export function ResetPasswordForm() {
         if (result.error === 'Invalid or expired token') {
           setIsInvalidToken(true);
         } else {
-          toast.error(result.error || 'Something went wrong');
+          toast.error(result.error || 'No se pudo restablecer la contraseña');
         }
         return;
       }
 
       setIsSuccess(true);
-      toast.success('Password reset successfully!');
+      toast.success('Contraseña restablecida correctamente');
 
       // Redirect to login after 2 seconds
       setTimeout(() => {
         router.push('/login');
       }, 2000);
     } catch {
-      toast.error('Something went wrong. Please try again.');
+      toast.error('Ocurrió un error. Inténtelo de nuevo.');
     } finally {
       setIsLoading(false);
     }
@@ -105,23 +105,23 @@ export function ResetPasswordForm() {
           <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/20">
             <XCircle className="h-6 w-6 text-red-600 dark:text-red-400" />
           </div>
-          <CardTitle>Invalid or expired link</CardTitle>
+          <CardTitle>Enlace inválido o vencido</CardTitle>
           <CardDescription>
-            This password reset link is invalid or has expired.
+            Este enlace para restablecer la contraseña no es válido o ya venció.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <p className="text-center text-sm text-muted-foreground">
-            Password reset links expire after 1 hour for security reasons. Please request a new one.
+            Por seguridad, los enlaces vencen después de una hora. Solicite uno nuevo.
           </p>
           <div className="flex flex-col gap-2">
             <Button asChild>
-              <Link href="/forgot-password">Request new link</Link>
+              <Link href="/forgot-password">Solicitar otro enlace</Link>
             </Button>
             <Button variant="ghost" asChild>
               <Link href="/login">
                 <ArrowLeft className="mr-2 h-4 w-4" />
-                Back to login
+                Volver al inicio de sesión
               </Link>
             </Button>
           </div>
@@ -137,14 +137,14 @@ export function ResetPasswordForm() {
           <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/20">
             <CheckCircle className="h-6 w-6 text-green-600 dark:text-green-400" />
           </div>
-          <CardTitle>Password reset successful</CardTitle>
+          <CardTitle>Contraseña restablecida</CardTitle>
           <CardDescription>
-            Your password has been reset. You can now log in with your new password.
+            Ya puede iniciar sesión con su nueva contraseña.
           </CardDescription>
         </CardHeader>
         <CardContent>
           <Button className="w-full" asChild>
-            <Link href="/login">Go to login</Link>
+            <Link href="/login">Ir al inicio de sesión</Link>
           </Button>
         </CardContent>
       </Card>
@@ -154,15 +154,15 @@ export function ResetPasswordForm() {
   return (
     <Card className="w-full max-w-md">
       <CardHeader className="text-center">
-        <CardTitle>Reset your password</CardTitle>
+        <CardTitle>Restablecer contraseña</CardTitle>
         <CardDescription>
-          Enter your new password below.
+          Ingrese su nueva contraseña.
         </CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="password">New password</Label>
+            <Label htmlFor="password">Nueva contraseña</Label>
             <Input
               id="password"
               type="password"
@@ -176,7 +176,7 @@ export function ResetPasswordForm() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="confirmPassword">Confirm new password</Label>
+            <Label htmlFor="confirmPassword">Confirmar nueva contraseña</Label>
             <Input
               id="confirmPassword"
               type="password"
@@ -190,24 +190,24 @@ export function ResetPasswordForm() {
           </div>
 
           <div className="rounded-md bg-muted p-3 text-sm text-muted-foreground">
-            <p className="font-medium">Password requirements:</p>
+            <p className="font-medium">Requisitos de la contraseña:</p>
             <ul className="mt-1 list-inside list-disc space-y-0.5">
-              <li>At least 8 characters</li>
-              <li>One uppercase letter</li>
-              <li>One lowercase letter</li>
-              <li>One number</li>
+              <li>Al menos 8 caracteres</li>
+              <li>Una letra mayúscula</li>
+              <li>Una letra minúscula</li>
+              <li>Un número</li>
             </ul>
           </div>
 
           <Button type="submit" className="w-full" disabled={isLoading}>
             {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            Reset password
+            Restablecer contraseña
           </Button>
 
           <Button variant="ghost" className="w-full" asChild>
             <Link href="/login">
               <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to login
+              Volver al inicio de sesión
             </Link>
           </Button>
         </form>

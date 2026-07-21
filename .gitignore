@@ -76,6 +76,7 @@ apps/web/e2e/.auth/
 
 # Build debug output
 build_output.txt
+.corepack/
 
 # PDF files
 *.pdf

@@ -41,7 +41,7 @@ interface DataTableToolbarProps<TData> {
 export function DataTableToolbar<TData>({
   table,
   filterKey,
-  filterPlaceholder = 'Search...',
+  filterPlaceholder = 'Buscar...',
   statusOptions,
   statusFilterKey = 'status',
   pageSizes = [10, 25, 50, 100],
@@ -93,7 +93,7 @@ export function DataTableToolbar<TData>({
         {/* Show dropdown - page size selector */}
         {showPageSizeSelector && (
           <div className="flex items-center space-x-2">
-            <span className="text-sm text-muted-foreground">Show</span>
+            <span className="text-sm text-muted-foreground">Mostrar</span>
             <Select
               value={`${table.getState().pagination.pageSize}`}
               onValueChange={(value) => table.setPageSize(Number(value))}
@@ -134,10 +134,10 @@ export function DataTableToolbar<TData>({
             }}
           >
             <SelectTrigger className="h-9 w-[150px]">
-              <SelectValue placeholder="All status" />
+              <SelectValue placeholder="Todos los estados" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All status</SelectItem>
+              <SelectItem value="all">Todos los estados</SelectItem>
               {statusOptions.map((option) => (
                 <SelectItem key={option.value} value={option.value}>
                   {option.label}
@@ -155,7 +155,7 @@ export function DataTableToolbar<TData>({
             }}
             className="h-9 px-2 lg:px-3"
           >
-            Reset
+            Limpiar
             <X className="ml-2 h-4 w-4" />
           </Button>
         )}
@@ -164,7 +164,7 @@ export function DataTableToolbar<TData>({
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size="sm" className="h-9">
               <Columns3 className="mr-2 h-4 w-4" />
-              Columns
+              Columnas
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
@@ -188,8 +188,8 @@ export function DataTableToolbar<TData>({
         {table.getFilteredSelectedRowModel().rows.length > 0 && (
           <>
             <div className="text-sm text-muted-foreground">
-              {table.getFilteredSelectedRowModel().rows.length} of{' '}
-              {table.getFilteredRowModel().rows.length} row(s) selected.
+              {table.getFilteredSelectedRowModel().rows.length} de{' '}
+              {table.getFilteredRowModel().rows.length} fila(s) seleccionada(s).
             </div>
             {bulkActions?.map((action) => (
               <Button

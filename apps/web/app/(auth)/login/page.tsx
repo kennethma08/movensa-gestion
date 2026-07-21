@@ -7,8 +7,8 @@ import { auth } from '@/lib/auth';
 import { LoginForm } from './login-form';
 
 export const metadata: Metadata = {
-  title: 'Login',
-  description: 'Login to your Oreko account',
+  title: 'Iniciar sesión',
+  description: 'Acceso al sistema de gestión de Grupo Movensa',
   robots: { index: false, follow: false },
 };
 
@@ -29,9 +29,9 @@ export default async function LoginPage() {
   return (
     <div className="flex flex-col space-y-6">
       <div className="flex flex-col space-y-2 text-center">
-        <h1 className="text-2xl font-semibold tracking-tight">Welcome back</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">Bienvenido</h1>
         <p className="text-sm text-muted-foreground">
-          Enter your email to sign in to your account
+          Ingrese sus datos para acceder al sistema de gestión
         </p>
       </div>
 
@@ -40,9 +40,9 @@ export default async function LoginPage() {
       </Suspense>
 
       <p className="px-8 text-center text-sm text-muted-foreground">
-        Don&apos;t have an account?{' '}
+        ¿Aún no ha creado la cuenta administrativa?{' '}
         <Link href="/register" className="underline underline-offset-4 hover:text-primary">
-          Sign up
+          Crear cuenta
         </Link>
       </p>
     </div>
