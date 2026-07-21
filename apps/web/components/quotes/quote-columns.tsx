@@ -13,6 +13,7 @@ import type { QuoteListItem, QuoteStatus } from '@/lib/quotes/types';
 
 const statusColors: Record<QuoteStatus, { variant: 'default' | 'secondary' | 'destructive' | 'outline'; className?: string }> = {
   draft: { variant: 'secondary' },
+  under_review: { variant: 'default', className: 'bg-amber-500 hover:bg-amber-600' },
   sent: { variant: 'default', className: 'bg-blue-500 hover:bg-blue-600' },
   viewed: { variant: 'default', className: 'bg-yellow-500 hover:bg-yellow-600' },
   accepted: { variant: 'default', className: 'bg-green-500 hover:bg-green-600' },
@@ -135,7 +136,7 @@ export function createQuoteColumns({
 
         return (
           <Badge variant={statusConfig.variant} className={statusConfig.className}>
-            {{ draft: 'Borrador', sent: 'Enviada', viewed: 'Vista', accepted: 'Aceptada', declined: 'Rechazada', expired: 'Vencida', converted: 'Convertida' }[status]}
+            {{ draft: 'Borrador', under_review: 'En estudio', sent: 'Enviada', viewed: 'Vista', accepted: 'Aceptada', declined: 'Denegada', expired: 'Vencida', converted: 'Convertida' }[status]}
           </Badge>
         );
       },

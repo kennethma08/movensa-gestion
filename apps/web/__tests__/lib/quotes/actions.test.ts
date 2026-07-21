@@ -27,7 +27,7 @@ vi.mock('next/cache', () => ({ revalidatePath: vi.fn() }));
 vi.mock('next/navigation', () => ({ redirect: vi.fn() }));
 vi.mock('@/lib/services/email', () => ({ sendQuoteSentEmail: vi.fn().mockResolvedValue(undefined) }));
 vi.mock('@/lib/notifications/actions', () => ({ createNotification: vi.fn().mockResolvedValue(undefined) }));
-vi.mock('@/lib/routes', () => ({ ROUTES: { quotes: '/quotes', invoices: '/invoices', quoteDetail: (id: string) => `/quotes/${id}`, invoiceDetail: (id: string) => `/invoices/${id}` } }));
+vi.mock('@/lib/routes', () => ({ ROUTES: { dashboard: '/dashboard', quotes: '/quotes', invoices: '/invoices', quoteDetail: (id: string) => `/quotes/${id}`, invoiceDetail: (id: string) => `/invoices/${id}` } }));
 vi.mock('@/lib/events/emitter', () => ({ domainEvents: { emit: vi.fn() } }));
 vi.mock('@/lib/workspace/get-current-workspace', () => ({ getCurrentUserWorkspace: mockGetCurrentUserWorkspace }));
 vi.mock('@oreko/database', () => ({
@@ -168,6 +168,25 @@ describe('Quote Actions', () => {
       expect(createCall.data.subtotal).toBe(200);
       expect(createCall.data.taxTotal).toBe(20);
       expect(createCall.data.total).toBe(220);
+    });
+
+    it('always creates a draft until the email is actually sent', async () => {
+      mockPrisma.client.findFirst.mockResolvedValue({ id: 'client-1', workspaceId: WORKSPACE_ID });
+      mockPrisma.quote.create.mockImplementation(async ({ data }: any) => ({
+        id: 'quote-1',
+        ...data,
+        lineItems: [],
+        client: { id: 'client-1' },
+        project: null,
+      }));
+
+      await createQuote({
+        title: 'Cotización sin enviar',
+        clientId: 'client-1',
+        isDraft: false,
+      });
+
+      expect(mockPrisma.quote.create.mock.calls[0]![0].data.status).toBe('draft');
     });
 
     it('throws when user is not authenticated', async () => {
@@ -424,7 +443,7 @@ describe('Quote Actions', () => {
       expect(result.success).toBe(true);
     });
 
-    it('rejects invalid transition from draft to accepted', async () => {
+    it('allows manually marking a draft as accepted', async () => {
       mockPrisma.quote.findFirst.mockResolvedValue({
         id: 'quote-1',
         workspaceId: WORKSPACE_ID,
@@ -433,8 +452,26 @@ describe('Quote Actions', () => {
 
       const result = await updateQuoteStatus('quote-1', 'accepted');
 
-      expect(result.success).toBe(false);
-      expect(result.error).toContain('Cannot change status');
+      expect(result.success).toBe(true);
+      expect(mockPrisma.quote.update).toHaveBeenCalledWith(expect.objectContaining({
+        data: expect.objectContaining({ status: 'accepted', acceptedAt: expect.any(Date) }),
+      }));
+    });
+
+    it('allows marking a draft as under review without sending it', async () => {
+      mockPrisma.quote.findFirst.mockResolvedValue({
+        id: 'quote-1',
+        workspaceId: WORKSPACE_ID,
+        status: 'draft',
+      });
+      mockPrisma.quote.update.mockResolvedValue({ id: 'quote-1', status: 'under_review' });
+
+      const result = await updateQuoteStatus('quote-1', 'under_review');
+
+      expect(result.success).toBe(true);
+      expect(mockPrisma.quote.update).toHaveBeenCalledWith(expect.objectContaining({
+        data: expect.objectContaining({ status: 'under_review' }),
+      }));
     });
 
     it('returns error when quote not found', async () => {
@@ -443,7 +480,7 @@ describe('Quote Actions', () => {
       const result = await updateQuoteStatus('nonexistent', 'sent');
 
       expect(result.success).toBe(false);
-      expect(result.error).toContain('Quote not found');
+      expect(result.error).toContain('No se encontró');
     });
   });
 });

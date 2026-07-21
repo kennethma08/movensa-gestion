@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
   const search = searchParams.get('search') || undefined;
 
   const where: Record<string, unknown> = { workspaceId, deletedAt: null };
-  const validQuoteStatuses = ['draft', 'sent', 'viewed', 'accepted', 'declined', 'expired', 'converted'];
+  const validQuoteStatuses = ['draft', 'under_review', 'sent', 'viewed', 'accepted', 'declined', 'expired', 'converted'];
   if (status) {
     if (!validQuoteStatuses.includes(status)) return apiError(`Invalid status: ${status}`, 400);
     where.status = status;

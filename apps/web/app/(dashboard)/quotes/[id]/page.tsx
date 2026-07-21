@@ -8,7 +8,7 @@ import { formatCurrency } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ConvertToInvoiceButton } from '@/components/quotes/convert-to-invoice-button';
-import { SendQuoteButton, DuplicateQuoteButton } from '@/components/quotes/quote-detail-actions';
+import { SendQuoteButton, DuplicateQuoteButton, ChangeQuoteStatusButton } from '@/components/quotes/quote-detail-actions';
 
 interface QuoteDetailPageProps {
   params: Promise<{ id: string }>;
@@ -31,12 +31,24 @@ export async function generateMetadata({ params }: QuoteDetailPageProps) {
 
 const statusColors: Record<string, { bg: string; text: string }> = {
   draft: { bg: 'bg-gray-100 dark:bg-gray-800', text: 'text-gray-700 dark:text-gray-300' },
+  under_review: { bg: 'bg-amber-100 dark:bg-amber-900', text: 'text-amber-700 dark:text-amber-300' },
   sent: { bg: 'bg-blue-100 dark:bg-blue-900', text: 'text-blue-700 dark:text-blue-300' },
   viewed: { bg: 'bg-yellow-100 dark:bg-yellow-900', text: 'text-yellow-700 dark:text-yellow-300' },
   accepted: { bg: 'bg-green-100 dark:bg-green-900', text: 'text-green-700 dark:text-green-300' },
   declined: { bg: 'bg-red-100 dark:bg-red-900', text: 'text-red-700 dark:text-red-300' },
   expired: { bg: 'bg-orange-100 dark:bg-orange-900', text: 'text-orange-700 dark:text-orange-300' },
   converted: { bg: 'bg-purple-100 dark:bg-purple-900', text: 'text-purple-700 dark:text-purple-300' },
+};
+
+const statusLabels: Record<string, string> = {
+  draft: 'Borrador',
+  under_review: 'En estudio',
+  sent: 'Enviada',
+  viewed: 'Vista',
+  accepted: 'Aceptada',
+  declined: 'Denegada',
+  expired: 'Vencida',
+  converted: 'Convertida',
 };
 
 export default async function QuoteDetailPage({ params }: QuoteDetailPageProps) {
@@ -62,24 +74,25 @@ export default async function QuoteDetailPage({ params }: QuoteDetailPageProps) 
             <span
               className={`rounded-full px-2 py-0.5 text-xs font-medium ${statusStyle.bg} ${statusStyle.text}`}
             >
-              {quote.status.charAt(0).toUpperCase() + quote.status.slice(1)}
+              {statusLabels[quote.status] || quote.status}
             </span>
           </div>
           <p className="text-muted-foreground">
-            {quote.quoteNumber} &bull; Created on{' '}
-            {new Date(quote.issueDate).toLocaleDateString()}
+            {quote.quoteNumber} &bull; Creada el{' '}
+            {new Date(quote.issueDate).toLocaleDateString('es-CR')}
           </p>
         </div>
 
         <div className="flex items-center gap-2">
           <DuplicateQuoteButton quoteId={id} />
+          <ChangeQuoteStatusButton quoteId={id} currentStatus={quote.status} />
           <Button variant="outline" size="sm" asChild>
             <a href={`/api/download/quote/${id}`} target="_blank" rel="noopener noreferrer">
               <Download className="mr-2 h-4 w-4" />
               Descargar PDF
             </a>
           </Button>
-          {quote.status === 'draft' && (
+          {(quote.status === 'draft' || quote.status === 'under_review') && (
             <Button variant="outline" size="sm" asChild>
               <Link href={`/quotes/${id}/edit`}>
                 <Edit className="mr-2 h-4 w-4" />
@@ -87,7 +100,7 @@ export default async function QuoteDetailPage({ params }: QuoteDetailPageProps) 
               </Link>
             </Button>
           )}
-          {quote.status === 'draft' && (
+          {(quote.status === 'draft' || quote.status === 'under_review') && (
             <SendQuoteButton quoteId={id} />
           )}
           {quote.status === 'accepted' && !quote.linkedInvoice && (
@@ -136,7 +149,7 @@ export default async function QuoteDetailPage({ params }: QuoteDetailPageProps) 
 
                 {/* Line Items */}
                 <div className="mb-8">
-                  <h3 className="mb-4 font-semibold">Services</h3>
+                    <h3 className="mb-4 font-semibold">Servicios</h3>
                   <div className="space-y-4">
                     {quote.blocks
                       .filter((b) => b.type === 'service-item')
@@ -236,7 +249,7 @@ export default async function QuoteDetailPage({ params }: QuoteDetailPageProps) 
                 <span
                   className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${statusStyle.bg} ${statusStyle.text}`}
                 >
-                  {quote.status}
+                  {statusLabels[quote.status] || quote.status}
                 </span>
               </div>
               <div>
@@ -315,7 +328,7 @@ export default async function QuoteDetailPage({ params }: QuoteDetailPageProps) 
               <CardHeader>
                 <CardTitle className="text-base flex items-center gap-2">
                   <PenLine className="h-4 w-4" />
-                  Signature
+                  Firma
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
@@ -328,7 +341,7 @@ export default async function QuoteDetailPage({ params }: QuoteDetailPageProps) 
                       className="max-h-20 mx-auto"
                     />
                   ) : (
-                    <p className="text-sm text-muted-foreground text-center">Invalid signature data</p>
+                    <p className="text-sm text-muted-foreground text-center">Los datos de la firma no son válidos</p>
                   )}
                 </div>
                 <div className="space-y-1 text-sm">
@@ -364,11 +377,13 @@ async function QuoteActivity({ quoteId }: { quoteId: string }) {
     if (eventType.includes('sent') || eventType.includes('quote_sent')) return <Mail className="h-4 w-4 text-blue-500" />;
     if (eventType.includes('accepted')) return <CheckCircle className="h-4 w-4 text-green-500" />;
     if (eventType.includes('declined')) return <XCircle className="h-4 w-4 text-red-500" />;
+    if (eventType.includes('under_review')) return <Clock className="h-4 w-4 text-amber-500" />;
     if (eventType.includes('viewed')) return <Eye className="h-4 w-4 text-yellow-500" />;
     return <Clock className="h-4 w-4 text-muted-foreground" />;
   };
 
   const getEventLabel = (eventType: string) => {
+    if (eventType.includes('under_review')) return 'Cotización en estudio';
     if (eventType.includes('sent') || eventType === 'quote_sent') return 'Cotización enviada';
     if (eventType.includes('accepted')) return 'Cotización aceptada';
     if (eventType.includes('declined')) return 'Cotización rechazada';

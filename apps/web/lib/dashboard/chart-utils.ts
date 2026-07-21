@@ -27,6 +27,7 @@ export const CHART_COLORS = {
 // Status colors using theme primary gradient shades
 export const QUOTE_STATUS_COLORS: Record<string, string> = {
   draft: 'oklch(0.554 0.0246 234.94)',      // base-500 (muted)
+  under_review: 'oklch(0.769 0.189 70.08)', // warning
   sent: 'oklch(0.6898 0.1101 233.96)',      // primary-500
   viewed: 'oklch(0.769 0.189 70.08)',       // warning
   accepted: 'oklch(0.648 0.150 160)',       // success
@@ -328,18 +329,19 @@ export function generateForecast(
  */
 export function getStatusLabel(status: string): string {
   const labels: Record<string, string> = {
-    draft: 'Draft',
-    sent: 'Sent',
-    viewed: 'Viewed',
-    accepted: 'Accepted',
-    declined: 'Declined',
-    expired: 'Expired',
-    signed: 'Signed',
-    converted: 'Converted',
-    paid: 'Paid',
-    partial: 'Partially Paid',
-    overdue: 'Overdue',
-    voided: 'Voided',
+    draft: 'Borrador',
+    under_review: 'En estudio',
+    sent: 'Enviada',
+    viewed: 'Vista',
+    accepted: 'Aceptada',
+    declined: 'Denegada',
+    expired: 'Vencida',
+    signed: 'Firmada',
+    converted: 'Convertida',
+    paid: 'Pagada',
+    partial: 'Pago parcial',
+    overdue: 'Vencida',
+    voided: 'Anulada',
   };
   return labels[status] || status.charAt(0).toUpperCase() + status.slice(1);
 }

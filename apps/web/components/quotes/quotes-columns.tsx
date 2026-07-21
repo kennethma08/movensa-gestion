@@ -6,10 +6,11 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { DataTableColumnHeader } from '@/components/ui/data-table/data-table-column-header';
 import { DataTableRowActions, RowAction } from '@/components/ui/data-table/data-table-row-actions';
 import { QuoteListItem } from '@/lib/quotes/types';
-import { Pencil, Send, Link2, FileOutput, Copy, Download, Trash2 } from 'lucide-react';
+import { Pencil, Send, Link2, FileOutput, Copy, Download, Trash2, Clock3, CheckCircle2, XCircle } from 'lucide-react';
 
 const statusColors: Record<string, string> = {
   draft: 'border-gray-300 text-gray-600 bg-gray-50 dark:border-gray-600 dark:text-gray-400 dark:bg-gray-900',
+  under_review: 'border-amber-300 text-amber-700 bg-amber-50 dark:border-amber-600 dark:text-amber-300 dark:bg-amber-950',
   sent: 'border-blue-300 text-blue-600 bg-blue-50 dark:border-blue-600 dark:text-blue-400 dark:bg-blue-950',
   viewed: 'border-yellow-300 text-yellow-700 bg-yellow-50 dark:border-yellow-600 dark:text-yellow-400 dark:bg-yellow-950',
   accepted: 'border-green-300 text-green-600 bg-green-50 dark:border-green-600 dark:text-green-400 dark:bg-green-950',
@@ -46,12 +47,13 @@ interface QuoteColumnsOptions {
   onSend?: (quote: QuoteListItem) => void;
   onCopyLink?: (quote: QuoteListItem) => void;
   onConvertToInvoice?: (quote: QuoteListItem) => void;
+  onChangeStatus?: (quote: QuoteListItem, status: 'under_review' | 'accepted' | 'declined') => void;
 }
 
 export function getQuoteColumns(options: QuoteColumnsOptions = {}): ColumnDef<QuoteListItem>[] {
   const {
     onView, onEdit, onDuplicate, onDelete, onDownload,
-    onSend, onCopyLink, onConvertToInvoice,
+    onSend, onCopyLink, onConvertToInvoice, onChangeStatus,
   } = options;
 
   return [
@@ -113,7 +115,7 @@ export function getQuoteColumns(options: QuoteColumnsOptions = {}): ColumnDef<Qu
             variant="outline"
             className={`capitalize ${statusColors[status] || statusColors.draft}`}
           >
-            {{ draft: 'Borrador', sent: 'Enviada', viewed: 'Vista', accepted: 'Aceptada', declined: 'Rechazada', expired: 'Vencida', converted: 'Convertida' }[status] || status}
+            {{ draft: 'Borrador', under_review: 'En estudio', sent: 'Enviada', viewed: 'Vista', accepted: 'Aceptada', declined: 'Denegada', expired: 'Vencida', converted: 'Convertida' }[status] || status}
           </Badge>
         );
       },
@@ -213,14 +215,14 @@ export function getQuoteColumns(options: QuoteColumnsOptions = {}): ColumnDef<Qu
         const quote = row.original;
         const actions: RowAction<QuoteListItem>[] = [];
 
-        if (onEdit && quote.status === 'draft') {
+        if (onEdit && (quote.status === 'draft' || quote.status === 'under_review')) {
           actions.push({
             label: 'Editar',
             icon: <Pencil className="mr-2 h-4 w-4" />,
             onClick: onEdit,
           });
         }
-        if (onSend && (quote.status === 'draft' || quote.status === 'sent')) {
+        if (onSend && ['draft', 'under_review', 'sent', 'viewed'].includes(quote.status)) {
           actions.push({
             label: quote.status === 'sent' ? 'Reenviar cotización' : 'Enviar cotización',
             icon: <Send className="mr-2 h-4 w-4" />,
@@ -235,7 +237,32 @@ export function getQuoteColumns(options: QuoteColumnsOptions = {}): ColumnDef<Qu
             onClick: onCopyLink,
           });
         }
-        if (onConvertToInvoice && quote.status !== 'converted' && quote.status !== 'declined') {
+        if (onChangeStatus && quote.status !== 'converted') {
+          if (quote.status !== 'under_review') {
+            actions.push({
+              label: 'Marcar en estudio',
+              icon: <Clock3 className="mr-2 h-4 w-4" />,
+              onClick: (item) => onChangeStatus(item, 'under_review'),
+              separator: true,
+            });
+          }
+          if (quote.status !== 'accepted') {
+            actions.push({
+              label: 'Marcar como aceptada',
+              icon: <CheckCircle2 className="mr-2 h-4 w-4" />,
+              onClick: (item) => onChangeStatus(item, 'accepted'),
+            });
+          }
+          if (quote.status !== 'declined') {
+            actions.push({
+              label: 'Marcar como denegada',
+              icon: <XCircle className="mr-2 h-4 w-4" />,
+              onClick: (item) => onChangeStatus(item, 'declined'),
+              variant: 'destructive',
+            });
+          }
+        }
+        if (onConvertToInvoice && quote.status === 'accepted') {
           actions.push({
             label: 'Convertir en factura',
             icon: <FileOutput className="mr-2 h-4 w-4" />,
@@ -248,7 +275,7 @@ export function getQuoteColumns(options: QuoteColumnsOptions = {}): ColumnDef<Qu
             label: 'Duplicar',
             icon: <Copy className="mr-2 h-4 w-4" />,
             onClick: onDuplicate,
-            separator: !onConvertToInvoice || quote.status === 'converted' || quote.status === 'declined',
+            separator: quote.status !== 'accepted',
           });
         }
         if (onDownload) {
@@ -281,10 +308,11 @@ export function getQuoteColumns(options: QuoteColumnsOptions = {}): ColumnDef<Qu
 
 export const quoteStatusOptions = [
   { value: 'draft', label: 'Borrador' },
+  { value: 'under_review', label: 'En estudio' },
   { value: 'sent', label: 'Enviada' },
   { value: 'viewed', label: 'Vista' },
   { value: 'accepted', label: 'Aceptada' },
-  { value: 'declined', label: 'Rechazada' },
+  { value: 'declined', label: 'Denegada' },
   { value: 'expired', label: 'Vencida' },
   { value: 'converted', label: 'Convertida' },
 ];

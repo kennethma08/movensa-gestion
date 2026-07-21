@@ -16,7 +16,7 @@ import {
 import { DataTable } from '@/components/ui/data-table/data-table';
 import { BulkAction } from '@/components/ui/data-table/data-table-toolbar';
 import { getQuoteColumns, quoteStatusOptions } from './quotes-columns';
-import { QuoteListItem } from '@/lib/quotes/types';
+import { QuoteListItem, QuoteStatus } from '@/lib/quotes/types';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import {
@@ -30,7 +30,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import Link from 'next/link';
-import { duplicateQuote, deleteQuote, getQuote } from '@/lib/quotes/actions';
+import { duplicateQuote, deleteQuote, getQuote, updateQuoteStatus } from '@/lib/quotes/actions';
 import { getBusinessProfile } from '@/lib/settings/actions';
 import { createInvoiceFromQuote } from '@/lib/invoices/actions';
 import { cn } from '@/lib/utils';
@@ -155,6 +155,35 @@ export function QuotesDataTable({ data: initialData }: QuotesDataTableProps) {
     setSendTarget(null);
   }, [sendTarget]);
 
+  const handleChangeStatus = useCallback(async (
+    quote: QuoteListItem,
+    status: 'under_review' | 'accepted' | 'declined'
+  ) => {
+    const statusLabels: Partial<Record<QuoteStatus, string>> = {
+      draft: 'borrador',
+      under_review: 'en estudio',
+      accepted: 'aceptada',
+      declined: 'denegada',
+    };
+
+    toast.loading('Actualizando estado...', { id: `quote-status-${quote.id}` });
+    try {
+      const result = await updateQuoteStatus(quote.id, status);
+      if (!result.success) {
+        toast.error(result.error || 'No se pudo cambiar el estado.', { id: `quote-status-${quote.id}` });
+        return;
+      }
+
+      setData((current) => current.map((item) => (
+        item.id === quote.id ? { ...item, status } : item
+      )));
+      toast.success(`Cotización marcada como ${statusLabels[status] || status}.`, { id: `quote-status-${quote.id}` });
+      router.refresh();
+    } catch {
+      toast.error('No se pudo cambiar el estado.', { id: `quote-status-${quote.id}` });
+    }
+  }, [router]);
+
   // Bug #75: Copy Link — use access token URL (not quoteNumber).
   // QuoteListItem doesn't include accessToken, so we fall back to the quote detail page.
   const handleCopyLink = useCallback(async (quote: QuoteListItem) => {
@@ -210,6 +239,7 @@ export function QuotesDataTable({ data: initialData }: QuotesDataTableProps) {
     onSend: handleSend,
     onCopyLink: handleCopyLink,
     onConvertToInvoice: handleConvertToInvoice,
+    onChangeStatus: handleChangeStatus,
   });
 
   const bulkActions: BulkAction<QuoteListItem>[] = [

@@ -123,20 +123,22 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
     if (terms !== undefined) updateData.terms = terms;
     if (status !== undefined) {
       const validTransitions: Record<string, string[]> = {
-        draft: ['sent'],
-        sent: ['viewed', 'accepted', 'declined', 'expired'],
-        viewed: ['accepted', 'declined', 'expired'],
-        accepted: [],
-        declined: ['draft'],
-        expired: ['draft'],
+        draft: ['under_review', 'sent', 'accepted', 'declined'],
+        under_review: ['draft', 'sent', 'accepted', 'declined'],
+        sent: ['draft', 'under_review', 'viewed', 'accepted', 'declined', 'expired'],
+        viewed: ['draft', 'under_review', 'accepted', 'declined', 'expired'],
+        accepted: ['draft', 'under_review', 'declined'],
+        declined: ['draft', 'under_review', 'accepted'],
+        expired: ['draft', 'under_review', 'accepted', 'declined'],
+        converted: [],
       };
       const allowed = validTransitions[quote.status];
       if (!allowed || !allowed.includes(status)) {
         return { error: `Cannot transition from '${quote.status}' to '${status}'`, status: 400 } as const;
       }
       updateData.status = status;
-      if (status === 'accepted') updateData.acceptedAt = new Date();
-      if (status === 'declined') updateData.declinedAt = new Date();
+      updateData.acceptedAt = status === 'accepted' ? new Date() : null;
+      updateData.declinedAt = status === 'declined' ? new Date() : null;
       if (status === 'sent') updateData.sentAt = new Date();
     }
 

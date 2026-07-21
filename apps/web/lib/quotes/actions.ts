@@ -236,7 +236,9 @@ export async function createQuote(data: {
       projectId: data.projectId || null,
       quoteNumber,
       title: data.title,
-      status: data.isDraft !== false ? 'draft' : 'sent',
+      // Creating a quote never means it was delivered. The sendQuote action is
+      // the only place that promotes it to "sent", and only after email succeeds.
+      status: 'draft',
       currency,
       expirationDate: data.expirationDate ? new Date(data.expirationDate) : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
       accessToken: generateAccessToken(),
@@ -272,6 +274,7 @@ export async function createQuote(data: {
   });
 
   revalidatePath(ROUTES.quotes);
+  revalidatePath(ROUTES.dashboard);
 
   try {
     domainEvents.emit({ type: 'quote.created', payload: { quoteId: quote.id, workspaceId: workspace.id } });
@@ -790,24 +793,26 @@ export async function duplicateQuote(quoteId: string) {
  */
 export async function updateQuoteStatus(
   quoteId: string,
-  status: 'draft' | 'sent' | 'viewed' | 'accepted' | 'declined' | 'expired'
+  status: 'draft' | 'under_review' | 'sent' | 'viewed' | 'accepted' | 'declined' | 'expired'
 ) {
   const { userId, workspace } = await getActiveWorkspace();
   const { role } = await getCurrentUserWorkspace();
 
   // Bug #455: RBAC — viewers cannot change quote status
   if (role === 'viewer') {
-    return { success: false, error: 'Insufficient permissions: viewers cannot change quote status' };
+    return { success: false, error: 'No tiene permisos para cambiar el estado de la cotización.' };
   }
 
   // Validate state transitions
   const validTransitions: Record<string, string[]> = {
-    draft: ['sent'],
-    sent: ['viewed', 'accepted', 'declined', 'expired'],
-    viewed: ['accepted', 'declined', 'expired'],
-    accepted: [], // converted is set internally via createInvoiceFromQuote
-    declined: ['draft'], // allow re-drafting
-    expired: ['draft'], // allow re-drafting
+    draft: ['under_review', 'sent', 'accepted', 'declined'],
+    under_review: ['draft', 'sent', 'accepted', 'declined'],
+    sent: ['draft', 'under_review', 'viewed', 'accepted', 'declined', 'expired'],
+    viewed: ['draft', 'under_review', 'accepted', 'declined', 'expired'],
+    accepted: ['draft', 'under_review', 'declined'],
+    declined: ['draft', 'under_review', 'accepted'],
+    expired: ['draft', 'under_review', 'accepted', 'declined'],
+    converted: [],
   };
 
   const existingQuote = await prisma.quote.findFirst({
@@ -815,21 +820,13 @@ export async function updateQuoteStatus(
   });
 
   if (!existingQuote) {
-    return { success: false, error: 'Quote not found' };
+    return { success: false, error: 'No se encontró la cotización.' };
   }
 
   const allowed = validTransitions[existingQuote.status] || [];
   if (!allowed.includes(status)) {
-    return { success: false, error: `Cannot change status from '${existingQuote.status}' to '${status}'` };
+    return { success: false, error: 'No se puede realizar ese cambio de estado.' };
   }
-
-  const statusTimestamps: Record<string, string> = {
-    sent: 'sentAt',
-    accepted: 'acceptedAt',
-    declined: 'declinedAt',
-  };
-
-  const timestampField = statusTimestamps[status];
 
   await prisma.quote.update({
     where: {
@@ -838,7 +835,9 @@ export async function updateQuoteStatus(
     },
     data: {
       status,
-      ...(timestampField && { [timestampField]: new Date() }),
+      acceptedAt: status === 'accepted' ? new Date() : null,
+      declinedAt: status === 'declined' ? new Date() : null,
+      ...(status === 'sent' && { sentAt: new Date() }),
     },
   });
 
@@ -854,6 +853,7 @@ export async function updateQuoteStatus(
 
   revalidatePath(ROUTES.quotes);
   revalidatePath(ROUTES.quoteDetail(quoteId));
+  revalidatePath(ROUTES.dashboard);
 
   try {
     if (status === 'accepted') {
@@ -903,7 +903,7 @@ export async function sendQuote(quoteId: string, emailOptions?: SendEmailOptions
   }
 
   // HIGH #8: Validate that the current status allows transition to 'sent'
-  const validSendStatuses = ['draft', 'sent', 'viewed']; // Can send/resend from these states
+  const validSendStatuses = ['draft', 'under_review', 'sent', 'viewed']; // Can send/resend from these states
   if (!validSendStatuses.includes(quote.status)) {
     return { success: false, error: 'Cannot send a quote with status: ' + quote.status };
   }
@@ -1005,6 +1005,7 @@ export async function sendQuote(quoteId: string, emailOptions?: SendEmailOptions
 
   revalidatePath(ROUTES.quotes);
   revalidatePath(ROUTES.quoteDetail(quoteId));
+  revalidatePath(ROUTES.dashboard);
 
   try {
     domainEvents.emit({ type: 'quote.sent', payload: { quoteId, workspaceId: workspace.id, clientEmail: quote.client.email } });

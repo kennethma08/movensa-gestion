@@ -13,7 +13,7 @@ import {
 } from '@/lib/validations/quote';
 
 describe('quoteStatusSchema', () => {
-  const validStatuses = ['draft', 'sent', 'viewed', 'accepted', 'declined', 'expired', 'converted'];
+  const validStatuses = ['draft', 'under_review', 'sent', 'viewed', 'accepted', 'declined', 'expired', 'converted'];
 
   it.each(validStatuses)('accepts valid status: %s', (status) => {
     const result = quoteStatusSchema.safeParse(status);

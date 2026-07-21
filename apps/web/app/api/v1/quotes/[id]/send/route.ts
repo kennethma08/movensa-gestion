@@ -51,7 +51,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
     if (!quote) return apiError('Quote not found', 404);
 
     // Validate status allows sending
-    const validSendStatuses = ['draft', 'sent', 'viewed'];
+    const validSendStatuses = ['draft', 'under_review', 'sent', 'viewed'];
     if (!validSendStatuses.includes(quote.status)) {
       return apiError(`Cannot send a quote with status: ${quote.status}`, 400);
     }

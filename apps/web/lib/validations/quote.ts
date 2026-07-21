@@ -4,6 +4,7 @@ import { idSchema, moneySchema, percentageSchema, listQuerySchema, emailSchema }
 // Quote status enum
 export const quoteStatusSchema = z.enum([
   'draft',
+  'under_review',
   'sent',
   'viewed',
   'accepted',

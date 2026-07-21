@@ -217,6 +217,7 @@ export interface QuoteDocument {
 
 export type QuoteStatus =
   | 'draft'
+  | 'under_review'
   | 'sent'
   | 'viewed'
   | 'accepted'

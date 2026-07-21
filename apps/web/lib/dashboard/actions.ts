@@ -213,6 +213,7 @@ export async function getQuoteStatusCounts(): Promise<QuoteStatusCounts> {
 
   return {
     draft: statusMap.get('draft') || 0,
+    under_review: statusMap.get('under_review') || 0,
     sent: statusMap.get('sent') || 0,
     viewed: statusMap.get('viewed') || 0,
     accepted: statusMap.get('accepted') || 0,
@@ -300,7 +301,9 @@ export async function getRecentQuotes(limit = 5): Promise<RecentQuote[]> {
     include: {
       client: { select: { name: true, company: true } },
     },
-    orderBy: { createdAt: 'desc' },
+    // A recently reviewed/accepted quote belongs on the dashboard even if it
+    // was originally created before newer drafts.
+    orderBy: { updatedAt: 'desc' },
     take: limit,
   });
 
@@ -310,7 +313,7 @@ export async function getRecentQuotes(limit = 5): Promise<RecentQuote[]> {
     clientName: q.client?.company || q.client?.name || 'Cliente desconocido',
     total: toNumber(q.total),
     status: q.status,
-    createdAt: q.createdAt,
+    createdAt: q.updatedAt,
     expiresAt: q.expirationDate,
   }));
 }
@@ -451,6 +454,13 @@ export async function getRecentActivity(limit = 10): Promise<ActivityItem[]> {
 }
 
 function mapQuoteEventType(type: string): ActivityItem['type'] {
+  if (type.includes('under_review')) return 'quote_under_review';
+  if (type.includes('accepted')) return 'quote_accepted';
+  if (type.includes('declined')) return 'quote_declined';
+  if (type.includes('viewed')) return 'quote_viewed';
+  if (type.includes('sent')) return 'quote_sent';
+  if (type.includes('expired')) return 'quote_expired';
+
   switch (type) {
     case 'created':
       return 'quote_created';
@@ -487,6 +497,13 @@ function mapInvoiceEventType(type: string): ActivityItem['type'] {
 }
 
 function getEventTitle(type: string, reference: string): string {
+  if (type.includes('under_review')) return `${reference} quedó en estudio`;
+  if (type.includes('accepted')) return `${reference} fue aceptada`;
+  if (type.includes('declined')) return `${reference} fue denegada`;
+  if (type.includes('viewed')) return `${reference} fue vista`;
+  if (type.includes('sent')) return `${reference} fue enviada`;
+  if (type.includes('expired')) return `${reference} venció`;
+
   switch (type) {
     case 'created':
       return `${reference} fue creada`;

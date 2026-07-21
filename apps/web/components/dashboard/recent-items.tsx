@@ -25,6 +25,7 @@ interface RecentInvoicesProps {
 
 const statusDot: Record<string, string> = {
   draft: 'bg-muted-foreground/40',
+  under_review: 'bg-amber-500',
   sent: 'bg-blue-500',
   viewed: 'bg-amber-500',
   accepted: 'bg-emerald-500',
@@ -38,10 +39,11 @@ const statusDot: Record<string, string> = {
 
 const statusLabel: Record<string, string> = {
   draft: 'borrador',
+  under_review: 'en estudio',
   sent: 'enviada',
   viewed: 'vista',
   accepted: 'aceptada',
-  declined: 'rechazada',
+  declined: 'denegada',
   expired: 'vencida',
   paid: 'pagada',
   partial: 'pago parcial',

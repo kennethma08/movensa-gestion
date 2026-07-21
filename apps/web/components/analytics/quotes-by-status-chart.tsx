@@ -7,10 +7,11 @@ import type { QuoteStatusCounts } from '@/lib/dashboard/types';
 
 const STATUS_CONFIG: { key: keyof QuoteStatusCounts; label: string; color: string; bg: string }[] = [
   { key: 'accepted', label: 'Aceptadas', color: 'bg-emerald-500', bg: 'bg-emerald-500/15' },
+  { key: 'under_review', label: 'En estudio', color: 'bg-amber-500', bg: 'bg-amber-500/15' },
   { key: 'sent', label: 'Enviadas', color: 'bg-blue-500', bg: 'bg-blue-500/15' },
   { key: 'viewed', label: 'Vistas', color: 'bg-amber-500', bg: 'bg-amber-500/15' },
   { key: 'draft', label: 'Borradores', color: 'bg-muted-foreground/40', bg: 'bg-muted-foreground/10' },
-  { key: 'declined', label: 'Rechazadas', color: 'bg-red-500', bg: 'bg-red-500/15' },
+  { key: 'declined', label: 'Denegadas', color: 'bg-red-500', bg: 'bg-red-500/15' },
   { key: 'expired', label: 'Vencidas', color: 'bg-orange-500', bg: 'bg-orange-500/15' },
 ];
 
@@ -37,7 +38,7 @@ export function QuotesByStatusChart({ data }: QuotesByStatusChartProps) {
         </CardHeader>
         <CardContent>
           <div className="h-[200px] flex items-center justify-center text-sm text-muted-foreground">
-            No quote data available
+            No hay datos de cotizaciones disponibles
           </div>
         </CardContent>
       </Card>

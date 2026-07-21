@@ -2,10 +2,16 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Send, Copy, Loader2 } from 'lucide-react';
+import { Send, Copy, Loader2, ListChecks, Clock3, CheckCircle2, XCircle, FileEdit } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { toast } from 'sonner';
-import { sendQuote, duplicateQuote } from '@/lib/quotes/actions';
+import { sendQuote, duplicateQuote, updateQuoteStatus } from '@/lib/quotes/actions';
 
 interface QuoteDetailActionsProps {
   quoteId: string;
@@ -75,7 +81,84 @@ export function DuplicateQuoteButton({ quoteId }: { quoteId: string }) {
       ) : (
         <Copy className="mr-2 h-4 w-4" />
       )}
-      Duplicate
+      Duplicar
     </Button>
+  );
+}
+
+type ManualQuoteStatus = 'draft' | 'under_review' | 'accepted' | 'declined';
+
+const manualStatuses: Array<{
+  value: ManualQuoteStatus;
+  label: string;
+  icon: typeof Clock3;
+  className?: string;
+}> = [
+  { value: 'draft', label: 'Borrador', icon: FileEdit },
+  { value: 'under_review', label: 'En estudio', icon: Clock3 },
+  { value: 'accepted', label: 'Aceptada', icon: CheckCircle2, className: 'text-emerald-600' },
+  { value: 'declined', label: 'Denegada', icon: XCircle, className: 'text-red-600' },
+];
+
+export function ChangeQuoteStatusButton({
+  quoteId,
+  currentStatus,
+}: {
+  quoteId: string;
+  currentStatus: string;
+}) {
+  const router = useRouter();
+  const [isUpdating, setIsUpdating] = useState(false);
+
+  if (currentStatus === 'converted') return null;
+
+  const handleChange = async (status: ManualQuoteStatus) => {
+    setIsUpdating(true);
+    try {
+      const result = await updateQuoteStatus(quoteId, status);
+      if (!result.success) {
+        toast.error(result.error || 'No se pudo cambiar el estado.');
+        return;
+      }
+      const label = manualStatuses.find((item) => item.value === status)?.label.toLowerCase() || status;
+      toast.success(`Cotización marcada como ${label}.`);
+      router.refresh();
+    } catch {
+      toast.error('No se pudo cambiar el estado.');
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="outline" size="sm" disabled={isUpdating}>
+          {isUpdating ? (
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          ) : (
+            <ListChecks className="mr-2 h-4 w-4" />
+          )}
+          Cambiar estado
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        {manualStatuses
+          .filter((item) => item.value !== currentStatus)
+          .map((item) => {
+            const Icon = item.icon;
+            return (
+              <DropdownMenuItem
+                key={item.value}
+                onClick={() => handleChange(item.value)}
+                className={item.className}
+              >
+                <Icon className="mr-2 h-4 w-4" />
+                {item.label}
+              </DropdownMenuItem>
+            );
+          })}
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }

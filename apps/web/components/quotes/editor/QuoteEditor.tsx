@@ -134,7 +134,7 @@ export function QuoteEditor() {
             disabled={isLoading || isSaving}
           >
             <Save className="mr-2 h-4 w-4" />
-            {isLoading ? 'Guardando...' : 'Guardar borrador'}
+            {isLoading ? 'Guardando...' : 'Guardar sin enviar'}
           </Button>
           <Button
             onClick={() => setShowSendConfirm(true)}

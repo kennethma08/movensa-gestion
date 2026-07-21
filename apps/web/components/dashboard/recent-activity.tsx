@@ -29,6 +29,7 @@ interface RecentActivityProps {
 
 const activityIcons: Record<ActivityItem['type'], typeof FileText> = {
   quote_created: FileText,
+  quote_under_review: Clock,
   quote_sent: Send,
   quote_accepted: CheckCircle,
   quote_declined: XCircle,
@@ -44,6 +45,7 @@ const activityIcons: Record<ActivityItem['type'], typeof FileText> = {
 
 const activityColors: Record<ActivityItem['type'], string> = {
   quote_created: 'text-[var(--primary-500)]',
+  quote_under_review: 'text-amber-500',
   quote_sent: 'text-[var(--primary-400)]',
   quote_accepted: 'text-emerald-500',
   quote_declined: 'text-destructive',

@@ -58,10 +58,11 @@ function formatDate(date: string): string {
 function formatStatus(status: string): string {
   const labels: Record<string, string> = {
     draft: 'Borrador',
+    under_review: 'En estudio',
     sent: 'Enviado',
     viewed: 'Visto',
     accepted: 'Aceptado',
-    declined: 'Rechazado',
+    declined: 'Denegado',
     expired: 'Vencido',
     converted: 'Convertido',
     pending: 'Pendiente',

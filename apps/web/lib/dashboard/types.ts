@@ -17,6 +17,7 @@ export interface DashboardStats {
 // Quote status counts
 export interface QuoteStatusCounts {
   draft: number;
+  under_review: number;
   sent: number;
   viewed: number;
   accepted: number;
@@ -48,6 +49,7 @@ export interface ActivityItem {
   id: string;
   type:
     | 'quote_created'
+    | 'quote_under_review'
     | 'quote_sent'
     | 'quote_accepted'
     | 'quote_declined'

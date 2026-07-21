@@ -1351,14 +1351,14 @@ export default function EditQuoteForm({ quote }: EditQuoteFormProps) {
                         className="text-xs text-muted-foreground hover:text-primary transition-colors"
                         onClick={loadDefaultTerms}
                       >
-                        Use Default
+                        Usar texto predeterminado
                       </button>
                     </div>
                     <Textarea
                       value={terms}
                       onChange={(e) => setTerms(e.target.value)}
                       className="resize-none min-h-[100px] text-sm"
-                      placeholder="Terms and conditions..."
+                      placeholder="Términos y condiciones..."
                     />
                   </div>
                 </div>
@@ -1367,7 +1367,7 @@ export default function EditQuoteForm({ quote }: EditQuoteFormProps) {
               {/* ─── Bottom Action Bar ────────────────── */}
               <div className="flex items-center gap-3 pt-4 pb-8 border-t">
                 <Button
-                  onClick={() => handleSubmit(false)}
+                  onClick={() => handleSubmit(true)}
                   disabled={loading}
                   size="lg"
                   className="px-8"
@@ -1375,15 +1375,15 @@ export default function EditQuoteForm({ quote }: EditQuoteFormProps) {
                   {loading && (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   )}
-                  Guardar y enviar
+                  Guardar cambios sin enviar
                 </Button>
                 <Button
                   variant="outline"
                   size="lg"
-                  onClick={() => handleSubmit(true)}
+                  onClick={() => handleSubmit(false)}
                   disabled={loading}
                 >
-                  Guardar cambios
+                  Guardar y enviar
                 </Button>
               </div>
             </div>
@@ -1404,19 +1404,19 @@ export default function EditQuoteForm({ quote }: EditQuoteFormProps) {
                     value="quote"
                     className="text-xs data-[state=active]:text-foreground"
                   >
-                    Quote Page
+                    Cotización
                   </TabsTrigger>
                   <TabsTrigger
                     value="email"
                     className="text-xs data-[state=active]:text-foreground"
                   >
-                    Email Preview
+                    Vista del correo
                   </TabsTrigger>
                   <TabsTrigger
                     value="pdf"
                     className="text-xs data-[state=active]:text-foreground"
                   >
-                    Quote PDF
+                    PDF
                   </TabsTrigger>
                 </TabsList>
               </Tabs>

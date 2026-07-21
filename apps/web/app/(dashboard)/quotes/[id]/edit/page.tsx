@@ -25,8 +25,8 @@ export default async function EditQuotePage({ params }: EditQuotePageProps) {
     notFound();
   }
 
-  // Only draft quotes can be edited
-  if (quote.status !== 'draft') {
+  // Draft and under-review quotes can still be adjusted before approval.
+  if (!['draft', 'under_review'].includes(quote.status)) {
     redirect(`/quotes/${id}`);
   }
 
