@@ -7,6 +7,14 @@ export function validateRequestOrigin(request: { headers: { get(name: string): s
   // Build set of allowed hosts from all known URL env vars
   const allowedHosts = new Set<string>();
 
+  // Always trust the host that received the request. This keeps same-origin
+  // requests working across Vercel aliases and the custom domain while still
+  // rejecting forms submitted from any unrelated origin.
+  const requestHost = request.headers.get('x-forwarded-host') || request.headers.get('host');
+  if (requestHost) {
+    allowedHosts.add(requestHost.split(',')[0].trim());
+  }
+
   for (const envVar of [
     process.env.NEXT_PUBLIC_APP_URL,
     process.env.NEXTAUTH_URL,
