@@ -89,7 +89,7 @@ export function ContractSigningView({
         router.refresh();
       } catch (error) {
         console.error('Failed to sign contract:', error);
-        setSignError('Failed to sign the contract. Please try again or contact the business directly.');
+        setSignError('No se pudo firmar el contrato. Inténtelo nuevamente o comuníquese directamente con la empresa.');
       }
     });
   };
@@ -125,39 +125,39 @@ export function ContractSigningView({
           <div className="p-6 space-y-6">
             {/* Contract Details */}
             <div>
-              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-3">Details</p>
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-3">Detalles</p>
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 <div>
-                  <p className="text-xs text-muted-foreground mb-0.5">Client</p>
+                  <p className="text-xs text-muted-foreground mb-0.5">Cliente</p>
                   <p className="font-medium text-sm">{contract.clientName}</p>
                 </div>
                 {contract.quoteName && (
                   <div>
-                    <p className="text-xs text-muted-foreground mb-0.5">Related Quote</p>
+                    <p className="text-xs text-muted-foreground mb-0.5">Cotización relacionada</p>
                     <p className="font-medium text-sm">{contract.quoteName}</p>
                   </div>
                 )}
                 <div>
-                  <p className="text-xs text-muted-foreground mb-0.5">Sent</p>
+                  <p className="text-xs text-muted-foreground mb-0.5">Enviado</p>
                   <p className="font-medium text-sm">
-                    {contract.sentAt ? formatDate(contract.sentAt) : 'Not sent'}
+                    {contract.sentAt ? formatDate(contract.sentAt) : 'No enviado'}
                   </p>
                 </div>
                 <div>
-                  <p className="text-xs text-muted-foreground mb-0.5">Viewed</p>
+                  <p className="text-xs text-muted-foreground mb-0.5">Visto</p>
                   <p className="font-medium text-sm">
-                    {contract.viewedAt ? formatDate(contract.viewedAt) : 'Not viewed'}
+                    {contract.viewedAt ? formatDate(contract.viewedAt) : 'No visto'}
                   </p>
                 </div>
                 <div>
-                  <p className="text-xs text-muted-foreground mb-0.5">Signed</p>
+                  <p className="text-xs text-muted-foreground mb-0.5">Firmado</p>
                   <p className="font-medium text-sm">
-                    {contract.signedAt ? formatDate(contract.signedAt) : 'Not signed'}
+                    {contract.signedAt ? formatDate(contract.signedAt) : 'No firmado'}
                   </p>
                 </div>
                 {contract.signerIpAddress && (
                   <div>
-                    <p className="text-xs text-muted-foreground mb-0.5">Client IP</p>
+                    <p className="text-xs text-muted-foreground mb-0.5">IP del cliente</p>
                     <p className="font-medium text-sm font-mono">{contract.signerIpAddress}</p>
                   </div>
                 )}
@@ -169,11 +169,11 @@ export function ContractSigningView({
               <>
                 <Separator className="bg-border/60" />
                 <div>
-                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-3">Signatures</p>
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-3">Firmas</p>
                   <div className="grid gap-4 sm:grid-cols-2">
                     {/* Client Signature */}
                     <div className="rounded-lg border bg-background p-4">
-                      <p className="text-xs font-medium text-muted-foreground mb-2">Client Signature</p>
+                      <p className="text-xs font-medium text-muted-foreground mb-2">Firma del cliente</p>
                       {contract.signatureData ? (
                         <>
                           {contract.signatureData.type === 'drawn' ? (
@@ -192,20 +192,20 @@ export function ContractSigningView({
                             </p>
                           )}
                           <p className="text-xs text-muted-foreground mt-2">
-                            Signed by {contract.signatureData.name} on{' '}
+                            Firmado por {contract.signatureData.name} el{' '}
                             {formatDate(new Date(contract.signatureData.date))}
                           </p>
                         </>
                       ) : (
                         <div className="h-16 border-2 border-dashed rounded flex items-center justify-center text-sm text-muted-foreground">
-                          Awaiting signature
+                          Firma pendiente
                         </div>
                       )}
                     </div>
 
                     {/* Business Signature */}
                     <div className="rounded-lg border bg-background p-4">
-                      <p className="text-xs font-medium text-muted-foreground mb-2">Business Signature</p>
+                      <p className="text-xs font-medium text-muted-foreground mb-2">Firma de la empresa</p>
                       {contract.countersignatureData ? (
                         <>
                           {contract.countersignatureData.type === 'drawn' ? (
@@ -224,13 +224,13 @@ export function ContractSigningView({
                             </p>
                           )}
                           <p className="text-xs text-muted-foreground mt-2">
-                            Countersigned by {contract.countersignatureData.name} on{' '}
+                            Contrafirmado por {contract.countersignatureData.name} el{' '}
                             {formatDate(new Date(contract.countersignatureData.date))}
                           </p>
                         </>
                       ) : (
                         <div className="h-16 border-2 border-dashed rounded flex items-center justify-center text-sm text-muted-foreground">
-                          Awaiting countersignature
+                          Contrafirma pendiente
                         </div>
                       )}
                     </div>
@@ -243,7 +243,7 @@ export function ContractSigningView({
 
             {/* Contract Content */}
             <div>
-              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-3">Contract Content</p>
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-3">Contenido del contrato</p>
               <div className="rounded-lg border bg-background p-4 [&_.ProseMirror]:!min-h-[100px] [&_.ProseMirror]:!max-h-[400px] [&_.ProseMirror]:overflow-y-auto [&_.prose]:!prose-sm">
                 <ContractEditor
                   key={contract.id}
@@ -271,7 +271,7 @@ export function ContractSigningView({
               <>
                 <Separator className="bg-border/60" />
                 <div>
-                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-3">Your Signature</p>
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-3">Su firma</p>
                   <SignaturePad
                     onSignatureChange={setSignature}
                     signerName={contract.clientName}
@@ -305,7 +305,7 @@ export function ContractSigningView({
                 ) : (
                   <>
                     <PenLine className="h-4 w-4" />
-                    Sign Contract
+                    Firmar contrato
                   </>
                 )}
               </button>

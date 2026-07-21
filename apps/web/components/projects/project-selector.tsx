@@ -28,7 +28,7 @@ export function ProjectSelector({
   value,
   onChange,
   disabled = false,
-  placeholder = 'Select project (optional)',
+  placeholder = 'Seleccionar proyecto (opcional)',
 }: ProjectSelectorProps) {
   const [projects, setProjects] = React.useState<ProjectListItem[]>([]);
   const [isLoading, setIsLoading] = React.useState(false);
@@ -51,7 +51,7 @@ export function ProjectSelector({
       } catch {
         if (!cancelled) {
           setProjects([]);
-          toast.error('Failed to load projects');
+          toast.error('No se pudieron cargar los proyectos');
         }
       } finally {
         if (!cancelled) setIsLoading(false);
@@ -70,7 +70,7 @@ export function ProjectSelector({
         disabled
       >
         <FolderKanban className="mr-2 h-4 w-4" />
-        Select a client first
+        Seleccione primero un cliente
       </Button>
     );
   }
@@ -85,12 +85,12 @@ export function ProjectSelector({
         <SelectTrigger className="w-full">
           <div className="flex items-center gap-2">
             <FolderKanban className="h-4 w-4" />
-            <SelectValue placeholder={isLoading ? 'Loading projects...' : placeholder} />
+            <SelectValue placeholder={isLoading ? 'Cargando proyectos...' : placeholder} />
           </div>
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="__none__">
-            <span className="text-muted-foreground">No project</span>
+            <span className="text-muted-foreground">Sin proyecto</span>
           </SelectItem>
           {projects.map((project) => (
             <SelectItem key={project.id} value={project.id}>
@@ -111,7 +111,7 @@ export function ProjectSelector({
         <Button variant="outline" size="sm" asChild className="w-full">
           <Link href={`/projects/new?clientId=${clientId}`}>
             <Plus className="mr-2 h-4 w-4" />
-            Create new project
+            Crear proyecto
           </Link>
         </Button>
       )}

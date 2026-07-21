@@ -28,15 +28,15 @@ function ConfirmEmailContent() {
       .then((data) => {
         if (data.success) {
           setStatus('success');
-          setMessage(data.message || 'Email verified successfully!');
+          setMessage(data.message || '¡Correo verificado correctamente!');
         } else {
           setStatus('error');
-          setMessage(data.error || 'Verification failed');
+          setMessage(data.error || 'No se pudo verificar el correo');
         }
       })
       .catch(() => {
         setStatus('error');
-        setMessage('Something went wrong. Please try again.');
+        setMessage('Ocurrió un error. Inténtelo nuevamente.');
       });
   }, [token]);
 
@@ -45,7 +45,7 @@ function ConfirmEmailContent() {
       {status === 'loading' && (
         <>
           <Loader2 className="mx-auto h-12 w-12 animate-spin text-primary" />
-          <p className="text-muted-foreground">Verifying your email...</p>
+          <p className="text-muted-foreground">Verificando su correo...</p>
         </>
       )}
 
@@ -57,11 +57,11 @@ function ConfirmEmailContent() {
             </div>
           </div>
           <div className="space-y-2">
-            <h1 className="text-2xl font-bold">Email Verified!</h1>
+            <h1 className="text-2xl font-bold">¡Correo verificado!</h1>
             <p className="text-muted-foreground">{message}</p>
           </div>
           <Button asChild>
-            <Link href="/login">Continue to Login</Link>
+            <Link href="/login">Continuar al inicio de sesión</Link>
           </Button>
         </>
       )}
@@ -74,15 +74,15 @@ function ConfirmEmailContent() {
             </div>
           </div>
           <div className="space-y-2">
-            <h1 className="text-2xl font-bold text-destructive">Verification Failed</h1>
+            <h1 className="text-2xl font-bold text-destructive">La verificación falló</h1>
             <p className="text-muted-foreground">{message}</p>
           </div>
           <div className="flex gap-3 justify-center">
             <Button variant="outline" asChild>
-              <Link href="/verify-email">Resend Verification</Link>
+              <Link href="/verify-email">Reenviar verificación</Link>
             </Button>
             <Button asChild>
-              <Link href="/login">Back to Login</Link>
+              <Link href="/login">Volver al inicio de sesión</Link>
             </Button>
           </div>
         </>
@@ -98,7 +98,7 @@ export default function ConfirmEmailPage() {
         fallback={
           <div className="mx-auto max-w-md text-center space-y-6 p-8">
             <Loader2 className="mx-auto h-12 w-12 animate-spin text-primary" />
-            <p className="text-muted-foreground">Loading...</p>
+            <p className="text-muted-foreground">Cargando...</p>
           </div>
         }
       >

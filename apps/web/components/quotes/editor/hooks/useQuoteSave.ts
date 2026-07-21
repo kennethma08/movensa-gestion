@@ -41,7 +41,7 @@ export function useQuoteSave({ document, client }: UseQuoteSaveOptions) {
         });
 
         if (result.success && result.quote) {
-          toast.success('Quote saved as draft');
+          toast.success('Cotización guardada como borrador');
           router.push(`/quotes/${result.quote.id}`);
         }
       } else {
@@ -54,11 +54,11 @@ export function useQuoteSave({ document, client }: UseQuoteSaveOptions) {
         });
 
         if (result.success) {
-          toast.success('Quote saved successfully');
+          toast.success('Cotización guardada correctamente');
         }
       }
     } catch {
-      toast.error('Failed to save quote');
+      toast.error('No se pudo guardar la cotización');
     } finally {
       setIsLoading(false);
     }
@@ -81,7 +81,7 @@ export function useQuoteSave({ document, client }: UseQuoteSaveOptions) {
         });
 
         if (!createResult.success || !createResult.quote) {
-          throw new Error('Failed to create quote');
+          throw new Error('No se pudo crear la cotización');
         }
         quoteId = createResult.quote.id;
       }
@@ -90,16 +90,16 @@ export function useQuoteSave({ document, client }: UseQuoteSaveOptions) {
 
       if (result.success) {
         if (result.emailSent) {
-          toast.success('Quote sent and email delivered');
+          toast.success('Cotización enviada y correo entregado');
         } else {
-          toast.warning('Quote marked as sent, but email delivery failed. Please check your email configuration.');
+          toast.warning('La cotización quedó marcada como enviada, pero el correo no pudo entregarse. Revise la configuración de correo.');
         }
         router.push(`/quotes/${quoteId}`);
       } else {
-        throw new Error(result.error || 'Failed to send quote');
+        throw new Error(result.error || 'No se pudo enviar la cotización');
       }
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Failed to send quote');
+      toast.error(error instanceof Error ? error.message : 'No se pudo enviar la cotización');
     } finally {
       setIsSending(false);
       setShowSendConfirm(false);

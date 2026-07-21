@@ -2,7 +2,7 @@ import NewQuoteForm from './new-quote-form';
 import { getWorkspaceCurrency } from '@/lib/settings/actions';
 
 export const metadata = {
-  title: 'New Quote',
+  title: 'Nueva cotización',
 };
 
 export default async function NewQuotePage() {

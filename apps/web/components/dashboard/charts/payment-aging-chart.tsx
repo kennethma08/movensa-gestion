@@ -58,7 +58,7 @@ export function PaymentAgingChart({
       description={
         isEmpty
           ? undefined
-          : `Total Outstanding: ${formatFullCurrency(data.totalOutstanding)}`
+          : `Saldo pendiente total: ${formatFullCurrency(data.totalOutstanding)}`
       }
       className={className}
       isLoading={isLoading}
@@ -105,7 +105,7 @@ export function PaymentAgingChart({
                       <span className="font-medium">{item.name}</span>
                     </div>
                     <p className="text-sm">
-                      Amount: <span className="font-medium">{formatFullCurrency(item.value)}</span>
+                      Monto: <span className="font-medium">{formatFullCurrency(item.value)}</span>
                     </p>
                     <p className="text-sm text-muted-foreground">
                       {percentage}% of total

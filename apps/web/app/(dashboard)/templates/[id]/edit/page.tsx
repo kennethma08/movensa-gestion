@@ -12,8 +12,8 @@ export async function generateMetadata({ params }: PageProps) {
   const { id } = await params;
   const template = await getContractTemplateById(id);
   return {
-    title: `Edit ${template?.name || 'Contract Template'}`,
-    description: 'Edit contract template',
+    title: `Editar ${template?.name || 'plantilla de contrato'}`,
+    description: 'Editar plantilla de contrato',
   };
 }
 
@@ -32,7 +32,7 @@ export default async function EditTemplatePage({ params }: PageProps) {
           <BackButton />
         </div>
 
-        <h1 className="text-2xl font-bold">Edit Template</h1>
+        <h1 className="text-2xl font-bold">Editar plantilla</h1>
         <p className="text-muted-foreground">
           Update your contract template details and content.
         </p>

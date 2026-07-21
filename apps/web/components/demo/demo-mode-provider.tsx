@@ -34,7 +34,7 @@ export async function getDemoStatus(): Promise<{
   return {
     isDemo,
     message: isDemo
-      ? 'You are using a demo account. Data resets daily.'
+      ? 'Está usando una cuenta de demostración. Los datos se restablecen diariamente.'
       : null,
   };
 }

@@ -36,7 +36,7 @@ export function CountersignDialog({
 
   const handleSubmit = async () => {
     if (!signature) {
-      toast.error('Please provide your signature');
+      toast.error('Ingrese su firma');
       return;
     }
 
@@ -44,14 +44,14 @@ export function CountersignDialog({
     try {
       const result = await counterSignContract(contractId, signature);
       if (!result.success) {
-        toast.error(result.error || 'Failed to countersign contract');
+        toast.error(result.error || 'No se pudo refrendar el contrato');
         return;
       }
-      toast.success('Contract countersigned successfully');
+      toast.success('Contrato refrendado correctamente');
       onOpenChange(false);
       onCountersigned?.();
     } catch {
-      toast.error('Failed to countersign contract');
+      toast.error('No se pudo refrendar el contrato');
     } finally {
       setIsSubmitting(false);
     }
@@ -62,10 +62,10 @@ export function CountersignDialog({
       <DialogContent className="!max-w-[600px] !max-h-[85vh] !p-0 !gap-0 !flex !flex-col overflow-hidden">
         <div className="p-6 pb-3 shrink-0">
           <DialogHeader>
-            <DialogTitle>Countersign Contract</DialogTitle>
+            <DialogTitle>Refrendar contrato</DialogTitle>
             <DialogDescription>
-              Apply your business signature to &quot;{contractName}&quot;.
-              The client has already signed this contract.
+              Aplique la firma de su empresa a &quot;{contractName}&quot;.
+              El cliente ya firmó este contrato.
             </DialogDescription>
           </DialogHeader>
         </div>
@@ -74,9 +74,8 @@ export function CountersignDialog({
           <SignaturePad onSignatureChange={setSignature} />
 
           <p className="text-xs text-muted-foreground">
-            By countersigning, you confirm that you have reviewed and agree to the terms
-            of this contract. Your signature will be recorded along with a timestamp
-            for verification purposes.
+            Al refrendar, confirma que revisó y acepta los términos del contrato.
+            Su firma y la fecha se conservarán como registro de verificación.
           </p>
         </div>
 
@@ -88,7 +87,7 @@ export function CountersignDialog({
               onClick={() => onOpenChange(false)}
               disabled={isSubmitting}
             >
-              Cancel
+              Cancelar
             </Button>
             <Button
               onClick={handleSubmit}
@@ -96,7 +95,7 @@ export function CountersignDialog({
             >
               {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               <PenLine className="mr-2 h-4 w-4" />
-              Countersign
+              Refrendar
             </Button>
           </DialogFooter>
         </div>

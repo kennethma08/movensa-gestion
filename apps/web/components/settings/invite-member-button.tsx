@@ -45,7 +45,7 @@ export function InviteMemberButton() {
         setRole('member');
         router.refresh();
       } else {
-        setError(result.error || 'Failed to invite member');
+        setError(result.error || 'No se pudo invitar al miembro');
       }
     } finally {
       setIsSubmitting(false);
@@ -57,41 +57,41 @@ export function InviteMemberButton() {
       <DialogTrigger asChild>
         <Button>
           <Plus className="mr-2 h-4 w-4" />
-          Invite Member
+          Invitar miembro
         </Button>
       </DialogTrigger>
       <DialogContent>
         <form onSubmit={handleSubmit}>
           <DialogHeader>
-            <DialogTitle>Invite Team Member</DialogTitle>
+            <DialogTitle>Invitar miembro del equipo</DialogTitle>
             <DialogDescription>
-              Invite someone to join your workspace
+              Invite a una persona a colaborar en este espacio de trabajo.
             </DialogDescription>
           </DialogHeader>
 
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
-              <Label htmlFor="email">Email Address</Label>
+              <Label htmlFor="email">Correo electrónico</Label>
               <Input
                 id="email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="colleague@company.com"
+                placeholder="persona@ejemplo.com"
                 required
               />
             </div>
 
             <div className="grid gap-2">
-              <Label htmlFor="role">Role</Label>
+              <Label htmlFor="role">Rol</Label>
               <Select value={role} onValueChange={(v) => setRole(v as WorkspaceMemberRole)}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="admin">Admin - Full access</SelectItem>
-                  <SelectItem value="member">Member - Create & edit</SelectItem>
-                  <SelectItem value="viewer">Viewer - Read only</SelectItem>
+                  <SelectItem value="admin">Administrador - acceso completo</SelectItem>
+                  <SelectItem value="member">Miembro - crear y editar</SelectItem>
+                  <SelectItem value="viewer">Observador - solo lectura</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -108,11 +108,11 @@ export function InviteMemberButton() {
               onClick={() => setOpen(false)}
               disabled={isSubmitting}
             >
-              Cancel
+              Cancelar
             </Button>
             <Button type="submit" disabled={isSubmitting}>
               {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Send Invite
+              Enviar invitación
             </Button>
           </DialogFooter>
         </form>

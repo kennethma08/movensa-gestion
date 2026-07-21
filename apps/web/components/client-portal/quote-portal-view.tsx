@@ -97,7 +97,7 @@ export function QuotePortalView({ quote, accessToken }: QuotePortalViewProps) {
           {formatCurrency(quote.totals.total, currency)}
         </p>
         <p className="mt-1 text-xs text-muted-foreground">
-          Quote #{quote.quoteNumber} &middot;{' '}
+          Cotización #{quote.quoteNumber} &middot;{' '}
           {quote.expirationDate
             ? `Valid until ${formatDate(quote.expirationDate)}`
             : `Issued ${formatDate(quote.issueDate)}`}
@@ -142,7 +142,7 @@ export function QuotePortalView({ quote, accessToken }: QuotePortalViewProps) {
                     >
                       <div className="min-w-0 flex-1">
                         <p className="truncate text-sm font-medium">
-                          {item.name || 'Untitled Item'}
+                          {item.name || 'Concepto sin título'}
                         </p>
                         <p className="mt-0.5 truncate text-xs text-muted-foreground">
                           {item.quantity} &times; {formatCurrency(item.rate, currency)}
@@ -171,7 +171,7 @@ export function QuotePortalView({ quote, accessToken }: QuotePortalViewProps) {
                     <span className="tabular-nums">{formatCurrency(quote.totals.subtotal, currency)}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Discount</span>
+                    <span className="text-muted-foreground">Descuento</span>
                     <span className="tabular-nums text-green-600">-{formatCurrency(quote.totals.discountAmount, currency)}</span>
                   </div>
                 </div>
@@ -187,7 +187,7 @@ export function QuotePortalView({ quote, accessToken }: QuotePortalViewProps) {
                     </div>
                   )}
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Tax</span>
+                    <span className="text-muted-foreground">Impuesto</span>
                     <span className="tabular-nums">{formatCurrency(quote.totals.taxTotal, currency)}</span>
                   </div>
                 </div>
@@ -212,7 +212,7 @@ export function QuotePortalView({ quote, accessToken }: QuotePortalViewProps) {
                 <div className="mt-2 rounded-lg border border-dashed px-3 py-2">
                   <p className="text-xs font-medium">
                     Deposit: {quote.settings.depositType === 'percentage' ? `${quote.settings.depositValue}%` : formatCurrency(quote.settings.depositValue, currency)}{' '}
-                    ({formatCurrency(depositAmount, currency)}) due upon acceptance
+                    ({formatCurrency(depositAmount, currency)}) vence al aceptar
                   </p>
                 </div>
               )}
@@ -250,7 +250,7 @@ export function QuotePortalView({ quote, accessToken }: QuotePortalViewProps) {
         <>
           <Separator className="border-gray-100" />
           <div className="px-6 py-5">
-            <p className="mb-1 text-xs font-medium text-muted-foreground">Terms & Conditions</p>
+            <p className="mb-1 text-xs font-medium text-muted-foreground">Términos y condiciones</p>
             <p className="text-sm text-muted-foreground">{quote.terms}</p>
           </div>
         </>
@@ -266,7 +266,7 @@ export function QuotePortalView({ quote, accessToken }: QuotePortalViewProps) {
               style={{ backgroundColor: accentColor }}
             >
               <CheckCircle2 className="h-4 w-4" />
-              Accept Quote
+              Aceptar cotización
             </button>
             <button
               onClick={() => setShowDeclineDialog(true)}
@@ -279,19 +279,19 @@ export function QuotePortalView({ quote, accessToken }: QuotePortalViewProps) {
         ) : quoteStatus === 'accepted' ? (
           <div className="py-4 text-center">
             <CheckCircle2 className="mx-auto h-8 w-8 text-green-500" />
-            <p className="mt-2 text-sm font-medium text-green-700 dark:text-green-400">Quote Accepted</p>
-            <p className="mt-0.5 text-xs text-muted-foreground">Thank you! Next steps will follow shortly.</p>
+            <p className="mt-2 text-sm font-medium text-green-700 dark:text-green-400">Cotización aceptada</p>
+            <p className="mt-0.5 text-xs text-muted-foreground">¡Gracias! Pronto le comunicaremos los siguientes pasos.</p>
           </div>
         ) : quoteStatus === 'declined' ? (
           <div className="py-4 text-center">
             <XCircle className="mx-auto h-8 w-8 text-red-500" />
-            <p className="mt-2 text-sm font-medium text-red-700 dark:text-red-400">Quote Declined</p>
-            <p className="mt-0.5 text-xs text-muted-foreground">If you change your mind, please get in touch.</p>
+            <p className="mt-2 text-sm font-medium text-red-700 dark:text-red-400">Cotización rechazada</p>
+            <p className="mt-0.5 text-xs text-muted-foreground">Si cambia de opinión, comuníquese con nosotros.</p>
           </div>
         ) : quote.isExpired ? (
           <div className="py-4 text-center">
             <p className="text-sm text-muted-foreground">
-              This quote has expired. Please contact the business to request a new one.
+              Esta cotización venció. Comuníquese con la empresa para solicitar una nueva.
             </p>
           </div>
         ) : (
@@ -301,7 +301,7 @@ export function QuotePortalView({ quote, accessToken }: QuotePortalViewProps) {
             style={{ backgroundColor: accentColor }}
           >
             <Download className="h-4 w-4" />
-            Download Quote
+            Descargar cotización
           </button>
         )}
       </div>

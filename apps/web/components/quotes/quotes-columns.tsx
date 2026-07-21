@@ -30,7 +30,7 @@ function formatCurrency(amount: number, currency: string = 'USD'): string {
 }
 
 function formatDate(dateString: string): string {
-  return new Date(dateString).toLocaleDateString('en-US', {
+  return new Date(dateString).toLocaleDateString('es-CR', {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
@@ -64,7 +64,7 @@ export function getQuoteColumns(options: QuoteColumnsOptions = {}): ColumnDef<Qu
             (table.getIsSomePageRowsSelected() && 'indeterminate')
           }
           onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label="Select all"
+          aria-label="Seleccionar todo"
           className="translate-y-[2px]"
         />
       ),
@@ -72,7 +72,7 @@ export function getQuoteColumns(options: QuoteColumnsOptions = {}): ColumnDef<Qu
         <Checkbox
           checked={row.getIsSelected()}
           onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label="Select row"
+          aria-label="Seleccionar fila"
           className="translate-y-[2px]"
         />
       ),
@@ -83,7 +83,7 @@ export function getQuoteColumns(options: QuoteColumnsOptions = {}): ColumnDef<Qu
       id: 'Quote ID',
       accessorKey: 'quoteNumber',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Quote ID" />
+        <DataTableColumnHeader column={column} title="Cotización" />
       ),
       cell: ({ row }) => {
         return (
@@ -103,7 +103,7 @@ export function getQuoteColumns(options: QuoteColumnsOptions = {}): ColumnDef<Qu
     {
       accessorKey: 'status',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Status" />
+        <DataTableColumnHeader column={column} title="Estado" />
       ),
       cell: ({ row }) => {
         const status = row.getValue('status') as string;
@@ -113,7 +113,7 @@ export function getQuoteColumns(options: QuoteColumnsOptions = {}): ColumnDef<Qu
             variant="outline"
             className={`capitalize ${statusColors[status] || statusColors.draft}`}
           >
-            {status}
+            {{ draft: 'Borrador', sent: 'Enviada', viewed: 'Vista', accepted: 'Aceptada', declined: 'Rechazada', expired: 'Vencida', converted: 'Convertida' }[status] || status}
           </Badge>
         );
       },
@@ -124,14 +124,14 @@ export function getQuoteColumns(options: QuoteColumnsOptions = {}): ColumnDef<Qu
     {
       accessorKey: 'client',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Client" />
+        <DataTableColumnHeader column={column} title="Cliente" />
       ),
       cell: ({ row }) => {
         const client = row.original.client;
 
         if (!client) {
           return (
-            <div className="text-muted-foreground italic">No client</div>
+            <div className="text-muted-foreground italic">Sin cliente</div>
           );
         }
 
@@ -169,7 +169,7 @@ export function getQuoteColumns(options: QuoteColumnsOptions = {}): ColumnDef<Qu
     {
       accessorKey: 'total',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Amount" />
+        <DataTableColumnHeader column={column} title="Monto" />
       ),
       // Bug #62: Use quote's currency field instead of hardcoded USD
       cell: ({ row }) => {
@@ -182,7 +182,7 @@ export function getQuoteColumns(options: QuoteColumnsOptions = {}): ColumnDef<Qu
       id: 'Issue Date',
       accessorKey: 'issueDate',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Issue Date" />
+        <DataTableColumnHeader column={column} title="Fecha de emisión" />
       ),
       cell: ({ row }) => {
         return (
@@ -196,7 +196,7 @@ export function getQuoteColumns(options: QuoteColumnsOptions = {}): ColumnDef<Qu
       id: 'Expires',
       accessorKey: 'expirationDate',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Expires" />
+        <DataTableColumnHeader column={column} title="Vence" />
       ),
       cell: ({ row }) => {
         const expirationDate = row.original.expirationDate as string | null;
@@ -215,14 +215,14 @@ export function getQuoteColumns(options: QuoteColumnsOptions = {}): ColumnDef<Qu
 
         if (onEdit && quote.status === 'draft') {
           actions.push({
-            label: 'Edit',
+            label: 'Editar',
             icon: <Pencil className="mr-2 h-4 w-4" />,
             onClick: onEdit,
           });
         }
         if (onSend && (quote.status === 'draft' || quote.status === 'sent')) {
           actions.push({
-            label: quote.status === 'sent' ? 'Resend Quote' : 'Send Quote',
+            label: quote.status === 'sent' ? 'Reenviar cotización' : 'Enviar cotización',
             icon: <Send className="mr-2 h-4 w-4" />,
             onClick: onSend,
             separator: true,
@@ -230,14 +230,14 @@ export function getQuoteColumns(options: QuoteColumnsOptions = {}): ColumnDef<Qu
         }
         if (onCopyLink) {
           actions.push({
-            label: 'Copy Link',
+            label: 'Copiar enlace',
             icon: <Link2 className="mr-2 h-4 w-4" />,
             onClick: onCopyLink,
           });
         }
         if (onConvertToInvoice && quote.status !== 'converted' && quote.status !== 'declined') {
           actions.push({
-            label: 'Convert to Invoice',
+            label: 'Convertir en factura',
             icon: <FileOutput className="mr-2 h-4 w-4" />,
             onClick: onConvertToInvoice,
             separator: true,
@@ -245,7 +245,7 @@ export function getQuoteColumns(options: QuoteColumnsOptions = {}): ColumnDef<Qu
         }
         if (onDuplicate) {
           actions.push({
-            label: 'Duplicate',
+            label: 'Duplicar',
             icon: <Copy className="mr-2 h-4 w-4" />,
             onClick: onDuplicate,
             separator: !onConvertToInvoice || quote.status === 'converted' || quote.status === 'declined',
@@ -253,14 +253,14 @@ export function getQuoteColumns(options: QuoteColumnsOptions = {}): ColumnDef<Qu
         }
         if (onDownload) {
           actions.push({
-            label: 'Download PDF',
+            label: 'Descargar PDF',
             icon: <Download className="mr-2 h-4 w-4" />,
             onClick: onDownload,
           });
         }
         if (onDelete) {
           actions.push({
-            label: 'Delete',
+            label: 'Eliminar',
             icon: <Trash2 className="mr-2 h-4 w-4" />,
             onClick: onDelete,
             variant: 'destructive',
@@ -280,11 +280,11 @@ export function getQuoteColumns(options: QuoteColumnsOptions = {}): ColumnDef<Qu
 }
 
 export const quoteStatusOptions = [
-  { value: 'draft', label: 'Draft' },
-  { value: 'sent', label: 'Sent' },
-  { value: 'viewed', label: 'Viewed' },
-  { value: 'accepted', label: 'Accepted' },
-  { value: 'declined', label: 'Declined' },
-  { value: 'expired', label: 'Expired' },
-  { value: 'converted', label: 'Converted' },
+  { value: 'draft', label: 'Borrador' },
+  { value: 'sent', label: 'Enviada' },
+  { value: 'viewed', label: 'Vista' },
+  { value: 'accepted', label: 'Aceptada' },
+  { value: 'declined', label: 'Rechazada' },
+  { value: 'expired', label: 'Vencida' },
+  { value: 'converted', label: 'Convertida' },
 ];

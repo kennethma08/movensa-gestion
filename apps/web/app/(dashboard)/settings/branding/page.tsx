@@ -4,7 +4,7 @@ import { getBrandingSettings, getBusinessProfile } from '@/lib/settings/actions'
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'Branding - Settings',
+  title: 'Marca - Configuración',
 };
 
 export default async function BrandingSettingsPage() {

@@ -59,13 +59,13 @@ type StatusConfigItem = {
 };
 
 const statusConfig: Record<string, StatusConfigItem> = {
-  pending: { icon: Clock, variant: 'secondary', label: 'Pending' },
-  sent: { icon: CheckCircle, variant: 'default', label: 'Sent' },
+  pending: { icon: Clock, variant: 'secondary', label: 'Pendiente' },
+  sent: { icon: CheckCircle, variant: 'default', label: 'Enviado' },
   failed: { icon: AlertCircle, variant: 'destructive', label: 'Failed' },
-  cancelled: { icon: XCircle, variant: 'secondary', label: 'Cancelled' },
+  cancelled: { icon: XCircle, variant: 'secondary', label: 'Cancelado' },
 };
 
-const defaultConfig: StatusConfigItem = { icon: Clock, variant: 'secondary', label: 'Pending' };
+const defaultConfig: StatusConfigItem = { icon: Clock, variant: 'secondary', label: 'Pendiente' };
 
 export function ScheduledEmailList({ emails }: ScheduledEmailListProps) {
   const router = useRouter();
@@ -90,7 +90,7 @@ export function ScheduledEmailList({ emails }: ScheduledEmailListProps) {
       <Card>
         <CardContent className="flex flex-col items-center justify-center py-12">
           <Mail className="h-12 w-12 text-muted-foreground mb-4" />
-          <h3 className="text-lg font-semibold">No scheduled emails</h3>
+          <h3 className="text-lg font-semibold">No hay correos programados</h3>
           <p className="text-muted-foreground text-center mt-1">
             Scheduled emails will appear here when you set up automated reminders.
           </p>
@@ -103,7 +103,7 @@ export function ScheduledEmailList({ emails }: ScheduledEmailListProps) {
     <div className="space-y-4">
       <Card>
         <CardHeader>
-          <CardTitle>Scheduled Emails</CardTitle>
+          <CardTitle>Correos programados</CardTitle>
           <CardDescription>
             View and manage scheduled email notifications
           </CardDescription>
@@ -112,10 +112,10 @@ export function ScheduledEmailList({ emails }: ScheduledEmailListProps) {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Recipient</TableHead>
-                <TableHead>Subject</TableHead>
-                <TableHead>Scheduled For</TableHead>
-                <TableHead>Status</TableHead>
+                <TableHead>Destinatario</TableHead>
+                <TableHead>Asunto</TableHead>
+                <TableHead>Programado para</TableHead>
+                <TableHead>Estado</TableHead>
                 <TableHead className="w-12"></TableHead>
               </TableRow>
             </TableHeader>
@@ -127,7 +127,7 @@ export function ScheduledEmailList({ emails }: ScheduledEmailListProps) {
                   <TableRow key={email.id}>
                     <TableCell>
                       <div>
-                        <p className="font-medium">{email.recipientName || 'Unknown'}</p>
+                        <p className="font-medium">{email.recipientName || 'Desconocido'}</p>
                         <p className="text-sm text-muted-foreground">
                           {email.recipientEmail}
                         </p>
@@ -149,7 +149,7 @@ export function ScheduledEmailList({ emails }: ScheduledEmailListProps) {
                       {email.status === 'pending' && (
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="More actions">
+                            <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="Más acciones">
                               <MoreHorizontal className="h-4 w-4" />
                             </Button>
                           </DropdownMenuTrigger>
@@ -159,7 +159,7 @@ export function ScheduledEmailList({ emails }: ScheduledEmailListProps) {
                               className="text-destructive focus:text-destructive"
                             >
                               <X className="mr-2 h-4 w-4" />
-                              Cancel
+                              Cancelar
                             </DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
@@ -176,19 +176,19 @@ export function ScheduledEmailList({ emails }: ScheduledEmailListProps) {
       <AlertDialog open={!!cancelId} onOpenChange={() => setCancelId(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Cancel Scheduled Email</AlertDialogTitle>
+            <AlertDialogTitle>Cancelar correo programado</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to cancel this scheduled email? This action
-              cannot be undone.
+              ¿Confirma que desea cancelar este correo programado? Esta acción
+              no se puede deshacer.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Keep Scheduled</AlertDialogCancel>
+            <AlertDialogCancel>Conservar programación</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleCancel}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              Cancel Email
+              Cancelar correo
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

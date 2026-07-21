@@ -54,11 +54,11 @@ interface RecurringSettingsDialogProps {
 }
 
 const frequencies = [
-  { value: 'weekly', label: 'Weekly' },
-  { value: 'biweekly', label: 'Bi-weekly' },
-  { value: 'monthly', label: 'Monthly' },
-  { value: 'quarterly', label: 'Quarterly' },
-  { value: 'yearly', label: 'Yearly' },
+  { value: 'weekly', label: 'Semanal' },
+  { value: 'biweekly', label: 'Quincenal' },
+  { value: 'monthly', label: 'Mensual' },
+  { value: 'quarterly', label: 'Trimestral' },
+  { value: 'yearly', label: 'Anual' },
 ];
 
 function getDefaults(): RecurringSettings {
@@ -126,7 +126,7 @@ export function RecurringSettingsDialog({
         }
       })
       .catch(() => {
-        toast.error('Failed to load recurring settings');
+        toast.error('No se pudo cargar la configuración recurrente');
       })
       .finally(() => {
         setIsLoading(false);
@@ -157,16 +157,16 @@ export function RecurringSettingsDialog({
       if (result.success) {
         toast.success(
           settings.enabled
-            ? 'Recurring settings saved successfully'
-            : 'Recurring disabled'
+            ? 'Configuración recurrente guardada correctamente'
+            : 'Recurrencia desactivada'
         );
         onSave?.(settings);
         onOpenChange(false);
       } else {
-        toast.error(result.error || 'Failed to save recurring settings');
+        toast.error(result.error || 'No se pudo guardar la configuración recurrente');
       }
     } catch {
-      toast.error('Failed to save recurring settings');
+      toast.error('No se pudo guardar la configuración recurrente');
     } finally {
       setIsSaving(false);
     }
@@ -178,10 +178,10 @@ export function RecurringSettingsDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <RefreshCw className="h-5 w-5" />
-            Recurring Settings
+            Configuración recurrente
           </DialogTitle>
           <DialogDescription>
-            Configure this invoice to repeat automatically on a schedule.
+            Configure esta factura para generarla automáticamente según una frecuencia.
           </DialogDescription>
         </DialogHeader>
 
@@ -194,9 +194,9 @@ export function RecurringSettingsDialog({
             {/* Enable Toggle */}
             <div className="flex items-center justify-between">
               <div>
-                <Label className="text-sm font-medium">Enable Recurring</Label>
+                <Label className="text-sm font-medium">Activar recurrencia</Label>
                 <p className="text-xs text-muted-foreground mt-0.5">
-                  Automatically generate this invoice on schedule
+                  Genere esta factura automáticamente según la programación
                 </p>
               </div>
               <Switch checked={enabled} onCheckedChange={setEnabled} />
@@ -206,10 +206,10 @@ export function RecurringSettingsDialog({
               <>
                 {/* Frequency */}
                 <div className="grid gap-2">
-                  <Label>Frequency</Label>
+                  <Label>Frecuencia</Label>
                   <Select value={frequency} onValueChange={setFrequency}>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select frequency" />
+                      <SelectValue placeholder="Seleccione la frecuencia" />
                     </SelectTrigger>
                     <SelectContent>
                       {frequencies.map((f) => (
@@ -223,7 +223,7 @@ export function RecurringSettingsDialog({
 
                 {/* Start Date */}
                 <div className="grid gap-2">
-                  <Label>Start Date</Label>
+                  <Label>Fecha de inicio</Label>
                   <Popover>
                     <PopoverTrigger asChild>
                       <Button
@@ -234,7 +234,7 @@ export function RecurringSettingsDialog({
                         )}
                       >
                         <CalendarIcon className="mr-2 h-4 w-4" />
-                        {startDate ? format(startDate, 'PPP') : 'Pick a date'}
+                        {startDate ? format(startDate, 'dd/MM/yyyy') : 'Seleccione una fecha'}
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0" align="start">
@@ -250,7 +250,7 @@ export function RecurringSettingsDialog({
 
                 {/* End Date */}
                 <div className="grid gap-2">
-                  <Label>End Date</Label>
+                  <Label>Fecha de finalización</Label>
                   <div className="flex items-center gap-2 mb-2">
                     <Checkbox
                       id="no-end-date"
@@ -258,7 +258,7 @@ export function RecurringSettingsDialog({
                       onCheckedChange={(checked) => setNoEndDate(!!checked)}
                     />
                     <label htmlFor="no-end-date" className="text-sm text-muted-foreground cursor-pointer">
-                      No end date
+                      Sin fecha de finalización
                     </label>
                   </div>
                   {!noEndDate && (
@@ -272,7 +272,7 @@ export function RecurringSettingsDialog({
                           )}
                         >
                           <CalendarIcon className="mr-2 h-4 w-4" />
-                          {endDate ? format(endDate, 'PPP') : 'Pick an end date'}
+                          {endDate ? format(endDate, 'dd/MM/yyyy') : 'Seleccione una fecha final'}
                         </Button>
                       </PopoverTrigger>
                       <PopoverContent className="w-auto p-0" align="start">
@@ -291,9 +291,9 @@ export function RecurringSettingsDialog({
                 {/* Auto-send */}
                 <div className="flex items-center justify-between">
                   <div>
-                    <Label className="text-sm font-medium">Auto-send to Client</Label>
+                    <Label className="text-sm font-medium">Enviar automáticamente al cliente</Label>
                     <p className="text-xs text-muted-foreground mt-0.5">
-                      Automatically email the invoice when generated
+                      Envíe la factura por correo al generarla
                     </p>
                   </div>
                   <Switch checked={autoSend} onCheckedChange={setAutoSend} />
@@ -310,11 +310,11 @@ export function RecurringSettingsDialog({
             onClick={() => onOpenChange(false)}
             disabled={isSaving}
           >
-            Cancel
+            Cancelar
           </Button>
           <Button onClick={handleSave} disabled={isSaving || isLoading}>
             {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            Save Settings
+            Guardar configuración
           </Button>
         </DialogFooter>
       </DialogContent>

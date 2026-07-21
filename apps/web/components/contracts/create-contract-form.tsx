@@ -49,8 +49,8 @@ interface CreateContractFormProps {
 }
 
 const createContractSchema = z.object({
-  contractId: z.string().min(1, 'Please select a template'),
-  clientId: z.string().min(1, 'Please select a client'),
+  contractId: z.string().min(1, 'Seleccione una plantilla'),
+  clientId: z.string().min(1, 'Seleccione un cliente'),
   quoteId: z.string().optional(),
 });
 
@@ -112,7 +112,7 @@ export function CreateContractForm({
         .filter((v) => v.required && !variableValues[v.key]?.trim())
         .map((v) => v.label);
       if (missingRequired.length > 0) {
-        toast.error(`Please fill in required fields: ${missingRequired.join(', ')}`);
+        toast.error(`Complete los campos obligatorios: ${missingRequired.join(', ')}`);
         return;
       }
     }
@@ -128,7 +128,7 @@ export function CreateContractForm({
         router.push(`/contracts/${instance.id}`);
         router.refresh();
       } catch (error) {
-        toast.error('Failed to create contract. Please try again.');
+        toast.error('No se pudo crear el contrato. Inténtelo nuevamente.');
       }
     });
   };
@@ -137,20 +137,20 @@ export function CreateContractForm({
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle>Create Contract</CardTitle>
+          <CardTitle>Crear contrato</CardTitle>
           <CardDescription>
-            Create a new contract from a template for your client.
+            Cree un contrato para su cliente a partir de una plantilla.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="template">Contract Template</Label>
+            <Label htmlFor="template">Plantilla de contrato</Label>
             <Select
               value={selectedContractId}
               onValueChange={handleTemplateChange}
             >
               <SelectTrigger id="template">
-                <SelectValue placeholder="Select a template" />
+                <SelectValue placeholder="Seleccione una plantilla" />
               </SelectTrigger>
               <SelectContent>
                 {templates.map((template) => (
@@ -166,13 +166,13 @@ export function CreateContractForm({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="client">Client</Label>
+            <Label htmlFor="client">Cliente</Label>
             <Select
               value={selectedClientId}
               onValueChange={(value) => setValue('clientId', value)}
             >
               <SelectTrigger id="client">
-                <SelectValue placeholder="Select a client" />
+                <SelectValue placeholder="Seleccione un cliente" />
               </SelectTrigger>
               <SelectContent>
                 {clients.map((client) => (
@@ -188,7 +188,7 @@ export function CreateContractForm({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="quote">Related Quote (Optional)</Label>
+            <Label htmlFor="quote">Cotización relacionada (opcional)</Label>
             <Select
               value={watch('quoteId') || 'none'}
               onValueChange={(value) =>
@@ -196,13 +196,13 @@ export function CreateContractForm({
               }
             >
               <SelectTrigger id="quote">
-                <SelectValue placeholder="Select a quote (optional)" />
+                <SelectValue placeholder="Seleccione una cotización (opcional)" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="none">No linked quote</SelectItem>
+                <SelectItem value="none">Sin cotización vinculada</SelectItem>
                 {quotes.map((quote) => (
                   <SelectItem key={quote.id} value={quote.id}>
-                    {quote.title || 'Untitled Quote'}
+                    {quote.title || 'Cotización sin título'}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -214,9 +214,9 @@ export function CreateContractForm({
       {selectedTemplate && selectedTemplate.variables.length > 0 && (
         <Card>
           <CardHeader>
-            <CardTitle>Variable Values</CardTitle>
+            <CardTitle>Valores de las variables</CardTitle>
             <CardDescription>
-              Customize the values for this contract&apos;s variables.
+              Personalice los valores de las variables del contrato.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -242,7 +242,7 @@ export function CreateContractForm({
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="true">Yes</SelectItem>
+                      <SelectItem value="true">Sí</SelectItem>
                       <SelectItem value="false">No</SelectItem>
                     </SelectContent>
                   </Select>
@@ -257,7 +257,7 @@ export function CreateContractForm({
                         [variable.key]: e.target.value,
                       }))
                     }
-                    placeholder={variable.defaultValue || `Enter ${variable.label.toLowerCase()}`}
+                    placeholder={variable.defaultValue || `Ingrese ${variable.label.toLowerCase()}`}
                   />
                 )}
               </div>
@@ -273,11 +273,11 @@ export function CreateContractForm({
           onClick={() => router.push('/contracts')}
           disabled={isPending}
         >
-          Cancel
+          Cancelar
         </Button>
         <Button type="submit" disabled={isPending || !selectedContractId || !selectedClientId}>
           {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          Create Contract
+          Crear contrato
         </Button>
       </div>
     </form>

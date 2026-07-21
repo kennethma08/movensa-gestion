@@ -33,16 +33,16 @@ const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12
 export async function generateMetadata({ params }: PageProps) {
   const { id } = await params;
   if (!UUID_REGEX.test(id)) {
-    return { title: 'Contract Not Found' };
+    return { title: 'Contrato no encontrado' };
   }
   try {
     const instance = await getContractInstanceById(id);
     return {
-      title: instance?.contractName || 'Contract',
-      description: 'View contract details',
+      title: instance?.contractName || 'Contrato',
+      description: 'Ver detalles del contrato',
     };
   } catch {
-    return { title: 'Contract Not Found' };
+    return { title: 'Contrato no encontrado' };
   }
 }
 
@@ -51,17 +51,17 @@ const statusConfig: Record<
   { label: string; variant: 'default' | 'secondary' | 'destructive' | 'outline'; icon: React.ReactNode }
 > = {
   draft: {
-    label: 'Draft',
+    label: 'Borrador',
     variant: 'secondary',
     icon: <FileText className="h-4 w-4" />,
   },
   sent: {
-    label: 'Sent',
+    label: 'Enviado',
     variant: 'default',
     icon: <Mail className="h-4 w-4" />,
   },
   viewed: {
-    label: 'Viewed',
+    label: 'Visto',
     variant: 'outline',
     icon: <Eye className="h-4 w-4" />,
   },
@@ -76,7 +76,7 @@ const statusConfig: Record<
     icon: <CheckCircle2 className="h-4 w-4" />,
   },
   expired: {
-    label: 'Expired',
+    label: 'Vencido',
     variant: 'destructive',
     icon: <Clock className="h-4 w-4" />,
   },
@@ -98,7 +98,7 @@ export default async function ContractDetailPage({ params }: PageProps) {
         <Button variant="ghost" size="sm" asChild className="mb-4">
           <Link href="/contracts">
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Contracts
+            Volver a contratos
           </Link>
         </Button>
 
@@ -128,40 +128,40 @@ export default async function ContractDetailPage({ params }: PageProps) {
       <div className="space-y-6">
         <Card>
           <CardHeader>
-            <CardTitle>Contract Details</CardTitle>
+            <CardTitle>Detalles del contrato</CardTitle>
           </CardHeader>
           <CardContent className="grid gap-4 sm:grid-cols-2">
             <div>
-              <p className="text-sm text-muted-foreground">Client</p>
+              <p className="text-sm text-muted-foreground">Cliente</p>
               <p className="font-medium">{instance.clientName}</p>
             </div>
             {instance.quoteName && (
               <div>
-                <p className="text-sm text-muted-foreground">Related Quote</p>
+                <p className="text-sm text-muted-foreground">Cotización relacionada</p>
                 <p className="font-medium">{instance.quoteName}</p>
               </div>
             )}
             <div>
-              <p className="text-sm text-muted-foreground">Sent</p>
+              <p className="text-sm text-muted-foreground">Enviado</p>
               <p className="font-medium">
-                {instance.sentAt ? formatDate(instance.sentAt) : 'Not sent'}
+                {instance.sentAt ? formatDate(instance.sentAt) : 'No enviado'}
               </p>
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">Viewed</p>
+              <p className="text-sm text-muted-foreground">Visto</p>
               <p className="font-medium">
-                {instance.viewedAt ? formatDate(instance.viewedAt) : 'Not viewed'}
+                {instance.viewedAt ? formatDate(instance.viewedAt) : 'No visto'}
               </p>
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">Signed</p>
+              <p className="text-sm text-muted-foreground">Firmado</p>
               <p className="font-medium">
-                {instance.signedAt ? formatDate(instance.signedAt) : 'Not signed'}
+                {instance.signedAt ? formatDate(instance.signedAt) : 'No firmado'}
               </p>
             </div>
             {instance.signerIpAddress && (
               <div>
-                <p className="text-sm text-muted-foreground">Client IP</p>
+                <p className="text-sm text-muted-foreground">IP del cliente</p>
                 <p className="font-medium font-mono text-sm">
                   {instance.signerIpAddress}
                 </p>
@@ -173,23 +173,23 @@ export default async function ContractDetailPage({ params }: PageProps) {
         {(instance.signatureData || instance.status === 'pending' || instance.status === 'signed') && (
           <Card>
             <CardHeader>
-              <CardTitle>Signatures</CardTitle>
+              <CardTitle>Firmas</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid gap-4 sm:grid-cols-2">
                 {/* Client Signature */}
                 <div>
-                  <p className="text-sm font-medium mb-2">Client Signature</p>
+                  <p className="text-sm font-medium mb-2">Firma del cliente</p>
                   {instance.signatureData ? (
                     <div className="border rounded-lg p-4 bg-card">
                       {instance.signatureData.type === 'drawn' && (instance.signatureData.value.startsWith('data:image/') || instance.signatureData.value.startsWith('https://')) ? (
                         <img
                           src={instance.signatureData.value}
-                          alt="Client Signature"
+                          alt="Firma del cliente"
                           className="max-h-24"
                         />
                       ) : instance.signatureData.type === 'drawn' ? (
-                        <p className="text-sm text-muted-foreground">Invalid signature data</p>
+                        <p className="text-sm text-muted-foreground">Los datos de la firma no son válidos</p>
                       ) : (
                         <p
                           className="text-3xl"
@@ -199,20 +199,20 @@ export default async function ContractDetailPage({ params }: PageProps) {
                         </p>
                       )}
                       <p className="text-xs text-muted-foreground mt-2">
-                        Signed by {instance.signatureData.name} on{' '}
+                        Firmado por {instance.signatureData.name} el{' '}
                         {formatDate(new Date(instance.signatureData.date))}
                       </p>
                     </div>
                   ) : (
                     <div className="border-2 border-dashed rounded-lg p-4 h-24 flex items-center justify-center text-sm text-muted-foreground">
-                      Awaiting client signature
+                      Firma del cliente pendiente
                     </div>
                   )}
                 </div>
 
                 {/* Business Signature */}
                 <div>
-                  <p className="text-sm font-medium mb-2">Business Signature</p>
+                  <p className="text-sm font-medium mb-2">Firma de la empresa</p>
                   {instance.countersignatureData ? (
                     <div className="border rounded-lg p-4 bg-card">
                       {instance.countersignatureData.type === 'drawn' && (instance.countersignatureData.value.startsWith('data:image/') || instance.countersignatureData.value.startsWith('https://')) ? (
@@ -222,7 +222,7 @@ export default async function ContractDetailPage({ params }: PageProps) {
                           className="max-h-24"
                         />
                       ) : instance.countersignatureData.type === 'drawn' ? (
-                        <p className="text-sm text-muted-foreground">Invalid signature data</p>
+                        <p className="text-sm text-muted-foreground">Los datos de la firma no son válidos</p>
                       ) : (
                         <p
                           className="text-3xl"
@@ -232,13 +232,13 @@ export default async function ContractDetailPage({ params }: PageProps) {
                         </p>
                       )}
                       <p className="text-xs text-muted-foreground mt-2">
-                        Countersigned by {instance.countersignatureData.name} on{' '}
+                        Contrafirmado por {instance.countersignatureData.name} el{' '}
                         {formatDate(new Date(instance.countersignatureData.date))}
                       </p>
                     </div>
                   ) : (
                     <div className="border-2 border-dashed rounded-lg p-4 h-24 flex items-center justify-center text-sm text-muted-foreground">
-                      Awaiting business countersignature
+                      Contrafirma de la empresa pendiente
                     </div>
                   )}
                 </div>
@@ -249,7 +249,7 @@ export default async function ContractDetailPage({ params }: PageProps) {
 
         <Card>
           <CardHeader>
-            <CardTitle>Contract Content</CardTitle>
+            <CardTitle>Contenido del contrato</CardTitle>
           </CardHeader>
           <CardContent>
             <ContractEditor

@@ -150,20 +150,19 @@ export function SignaturePad({ onSignatureChange, signerName = '' }: SignaturePa
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Sign Contract</CardTitle>
+        <CardTitle>Firmar contrato</CardTitle>
         <CardDescription>
-          Please sign below to indicate your agreement to the terms of this
-          contract.
+          Firme a continuación para confirmar que acepta los términos de este contrato.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="signerName">Full Legal Name</Label>
+          <Label htmlFor="signerName">Nombre legal completo</Label>
           <Input
             id="signerName"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="Enter your full name"
+            placeholder="Ingrese su nombre completo"
           />
         </div>
 
@@ -174,29 +173,29 @@ export function SignaturePad({ onSignatureChange, signerName = '' }: SignaturePa
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="typed" className="gap-2">
               <Type className="h-4 w-4" />
-              Type Signature
+              Escribir firma
             </TabsTrigger>
             <TabsTrigger value="drawn" className="gap-2">
               <PenTool className="h-4 w-4" />
-              Draw Signature
+              Dibujar firma
             </TabsTrigger>
           </TabsList>
 
           <TabsContent value="typed" className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="typedSig">Type Your Signature</Label>
+              <Label htmlFor="typedSig">Escriba su firma</Label>
               <Input
                 id="typedSig"
                 value={typedSignature}
                 onChange={(e) => setTypedSignature(e.target.value)}
-                placeholder="Type your signature"
+                placeholder="Escriba su firma"
                 className="font-signature text-2xl h-14"
                 style={{ fontFamily: "'Brush Script MT', cursive" }}
               />
             </div>
             {typedSignature && (
               <div className="border rounded-lg p-4 bg-muted/30">
-                <p className="text-sm text-muted-foreground mb-2">Preview:</p>
+                <p className="text-sm text-muted-foreground mb-2">Vista previa:</p>
                 <p
                   className="text-3xl"
                   style={{ fontFamily: "'Brush Script MT', cursive" }}
@@ -210,7 +209,7 @@ export function SignaturePad({ onSignatureChange, signerName = '' }: SignaturePa
           <TabsContent value="drawn" className="space-y-4">
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <Label>Draw Your Signature</Label>
+                <Label>Dibuje su firma</Label>
                 <Button
                   type="button"
                   variant="outline"
@@ -218,7 +217,7 @@ export function SignaturePad({ onSignatureChange, signerName = '' }: SignaturePa
                   onClick={clearCanvas}
                 >
                   <Eraser className="mr-2 h-4 w-4" />
-                  Clear
+                  Limpiar
                 </Button>
               </div>
               <div className="border rounded-lg overflow-hidden bg-white">
@@ -237,16 +236,15 @@ export function SignaturePad({ onSignatureChange, signerName = '' }: SignaturePa
                 />
               </div>
               <p className="text-xs text-muted-foreground">
-                Use your mouse or finger to draw your signature above.
+                Use el mouse o el dedo para dibujar su firma arriba.
               </p>
             </div>
           </TabsContent>
         </Tabs>
 
         <div className="text-xs text-muted-foreground">
-          By signing, you agree to the terms and conditions of this contract. Your
-          signature will be recorded along with a timestamp and your IP address for
-          verification purposes.
+          Al firmar, acepta los términos y condiciones de este contrato. Su firma,
+          fecha y dirección IP quedarán registradas con fines de verificación.
         </div>
       </CardContent>
     </Card>

@@ -33,9 +33,9 @@ export function PendingInvitations({ invitations: initialInvitations }: PendingI
     startTransition(async () => {
       const result = await resendInvitation(id);
       if (result.success) {
-        toast.success('Invitation resent successfully');
+        toast.success('Invitación reenviada correctamente');
       } else {
-        toast.error(result.error || 'Failed to resend invitation');
+        toast.error(result.error || 'No se pudo reenviar la invitación');
       }
       setActionId(null);
     });
@@ -45,7 +45,7 @@ export function PendingInvitations({ invitations: initialInvitations }: PendingI
 
   return (
     <div>
-      <h2 className="text-lg font-semibold mb-4">Pending Invitations</h2>
+      <h2 className="text-lg font-semibold mb-4">Invitaciones pendientes</h2>
       <div className="space-y-3">
         {invitations.map((inv) => (
           <div
@@ -59,7 +59,7 @@ export function PendingInvitations({ invitations: initialInvitations }: PendingI
               <div>
                 <p className="text-sm font-medium">{inv.email}</p>
                 <p className="text-xs text-muted-foreground">
-                  Expires {new Date(inv.expiresAt).toLocaleDateString()}
+                  Vence el {new Date(inv.expiresAt).toLocaleDateString('es-CR')}
                 </p>
               </div>
             </div>
@@ -70,7 +70,7 @@ export function PendingInvitations({ invitations: initialInvitations }: PendingI
                 size="icon"
                 onClick={() => handleResend(inv.id)}
                 disabled={isPending && actionId === inv.id}
-                title="Resend invitation"
+                title="Reenviar invitación"
               >
                 {isPending && actionId === inv.id ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
@@ -83,7 +83,7 @@ export function PendingInvitations({ invitations: initialInvitations }: PendingI
                 size="icon"
                 onClick={() => handleCancel(inv.id)}
                 disabled={isPending && actionId === inv.id}
-                title="Cancel invitation"
+                title="Cancelar invitación"
               >
                 <X className="h-4 w-4" />
               </Button>

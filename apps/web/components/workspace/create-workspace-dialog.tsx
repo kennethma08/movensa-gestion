@@ -42,7 +42,7 @@ export function CreateWorkspaceDialog({ trigger, onSuccess }: CreateWorkspaceDia
       onSuccess?.();
       router.refresh();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create workspace');
+      setError(err instanceof Error ? err.message : 'No se pudo crear el espacio de trabajo');
     } finally {
       setIsLoading(false);
     }
@@ -54,24 +54,24 @@ export function CreateWorkspaceDialog({ trigger, onSuccess }: CreateWorkspaceDia
         {trigger || (
           <Button variant="outline" size="sm">
             <Plus className="mr-2 h-4 w-4" />
-            New Workspace
+            Nuevo espacio de trabajo
           </Button>
         )}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
-            <DialogTitle>Create Workspace</DialogTitle>
+            <DialogTitle>Crear espacio de trabajo</DialogTitle>
             <DialogDescription>
-              Create a new workspace to organize your quotes, invoices, and clients separately.
+              Cree un espacio para organizar por separado sus clientes, cotizaciones y facturas.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
-              <Label htmlFor="name">Workspace Name</Label>
+              <Label htmlFor="name">Nombre del espacio de trabajo</Label>
               <Input
                 id="name"
-                placeholder="My Business"
+                placeholder="Mi negocio"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 disabled={isLoading}
@@ -87,11 +87,11 @@ export function CreateWorkspaceDialog({ trigger, onSuccess }: CreateWorkspaceDia
               onClick={() => setOpen(false)}
               disabled={isLoading}
             >
-              Cancel
+              Cancelar
             </Button>
             <Button type="submit" disabled={isLoading || name.trim().length < 2}>
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Create Workspace
+              Crear espacio de trabajo
             </Button>
           </DialogFooter>
         </form>

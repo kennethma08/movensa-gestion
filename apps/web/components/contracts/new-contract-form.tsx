@@ -121,7 +121,7 @@ export default function NewContractForm({
     return content;
   }, [contractContent, selectedTemplate, variableValues]);
 
-  const businessName = 'Your Business';
+  const businessName = 'Su empresa';
 
   // Handlers
   const handleTemplateChange = (templateId: string) => {
@@ -130,7 +130,7 @@ export default function NewContractForm({
 
   const handleSubmit = async (isDraft: boolean) => {
     if (!selectedTemplateId || !selectedClientId) {
-      toast.error('Please select a template and a signee.');
+      toast.error('Seleccione una plantilla y una persona firmante.');
       return;
     }
 
@@ -140,7 +140,7 @@ export default function NewContractForm({
         .filter((v) => v.required && !variableValues[v.key]?.trim())
         .map((v) => v.label);
       if (missing.length > 0) {
-        toast.error(`Please fill in: ${missing.join(', ')}`);
+        toast.error(`Complete los campos obligatorios: ${missing.join(', ')}`);
         return;
       }
     }
@@ -157,12 +157,12 @@ export default function NewContractForm({
       });
       toast.success(
         isDraft
-          ? 'Contract saved as a draft.'
-          : `Contract sent to ${selectedClient?.name || 'the client'}.`
+          ? 'Contrato guardado como borrador.'
+          : `Contrato enviado a ${selectedClient?.name || 'la persona cliente'}.`
       );
       router.push(`/contracts/${instance.id}`);
     } catch {
-      toast.error('Failed to create contract.');
+      toast.error('No se pudo crear el contrato.');
     } finally {
       setLoading(false);
     }
@@ -179,15 +179,15 @@ export default function NewContractForm({
               {/* Contract Details Section */}
               <div className="pb-8">
                 <h3 className="text-xl font-semibold tracking-tight font-display mb-6">
-                  Contract Details
+                  Detalles del contrato
                 </h3>
 
                 {/* Template Selector */}
                 <div className="mb-5 space-y-1.5">
-                  <Label className="text-xs text-muted-foreground">Contract Template</Label>
+                  <Label className="text-xs text-muted-foreground">Plantilla de contrato</Label>
                   <Select value={selectedTemplateId} onValueChange={handleTemplateChange}>
                     <SelectTrigger className="h-11">
-                      <SelectValue placeholder="Select a contract template" />
+                      <SelectValue placeholder="Seleccione una plantilla" />
                     </SelectTrigger>
                     <SelectContent>
                       {templates.map((template) => (
@@ -196,7 +196,7 @@ export default function NewContractForm({
                             <FileText className="h-3.5 w-3.5 text-muted-foreground" />
                             <span>{template.name}</span>
                             <span className="text-muted-foreground text-xs">
-                              ({template.instanceCount} used)
+                              ({template.instanceCount} usos)
                             </span>
                           </div>
                         </SelectItem>
@@ -244,10 +244,10 @@ export default function NewContractForm({
                     </div>
                   ) : (
                     <div className="space-y-1.5">
-                      <Label className="text-xs text-muted-foreground">Signee</Label>
+                      <Label className="text-xs text-muted-foreground">Persona firmante</Label>
                       <Select value={selectedClientId} onValueChange={setSelectedClientId}>
                         <SelectTrigger className="h-11">
-                          <SelectValue placeholder="Select a signee" />
+                          <SelectValue placeholder="Seleccione una persona firmante" />
                         </SelectTrigger>
                         <SelectContent>
                           {clients.map((client) => (
@@ -270,19 +270,19 @@ export default function NewContractForm({
 
                 {/* Related Quote (Optional) */}
                 <div className="space-y-1.5">
-                  <Label className="text-xs text-muted-foreground">Related Quote (Optional)</Label>
+                  <Label className="text-xs text-muted-foreground">Cotización relacionada (opcional)</Label>
                   <Select
                     value={selectedQuoteId || 'none'}
                     onValueChange={(v) => setSelectedQuoteId(v === 'none' ? '' : v)}
                   >
                     <SelectTrigger className="h-11">
-                      <SelectValue placeholder="No linked quote" />
+                      <SelectValue placeholder="Sin cotización vinculada" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="none">No linked quote</SelectItem>
+                      <SelectItem value="none">Sin cotización vinculada</SelectItem>
                       {quotes.map((quote) => (
                         <SelectItem key={quote.id} value={quote.id}>
-                          {quote.title || 'Untitled Quote'}
+                          {quote.title || 'Cotización sin título'}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -296,10 +296,10 @@ export default function NewContractForm({
               {selectedTemplate && selectedTemplate.variables.length > 0 && (
                 <div className="py-8">
                   <h3 className="text-xl font-semibold tracking-tight font-display mb-2">
-                    Contract Variables
+                    Variables del contrato
                   </h3>
                   <p className="text-[13px] text-muted-foreground mb-5">
-                    Fill in the values for this contract&apos;s merge fields.
+                    Complete los valores que se insertarán en el contrato.
                   </p>
 
                   <div className="space-y-4">
@@ -322,7 +322,7 @@ export default function NewContractForm({
                               <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="true">Yes</SelectItem>
+                              <SelectItem value="true">Sí</SelectItem>
                               <SelectItem value="false">No</SelectItem>
                             </SelectContent>
                           </Select>
@@ -344,7 +344,7 @@ export default function NewContractForm({
                             }
                             className="h-10"
                             placeholder={
-                              variable.defaultValue || `Enter ${variable.label.toLowerCase()}`
+                              variable.defaultValue || `Ingrese ${variable.label.toLowerCase()}`
                             }
                           />
                         )}
@@ -360,10 +360,10 @@ export default function NewContractForm({
               {selectedTemplateId && contractContent && (
                 <div className="py-8">
                   <h3 className="text-xl font-semibold tracking-tight font-display mb-2">
-                    Contract Content
+                    Contenido del contrato
                   </h3>
                   <p className="text-[13px] text-muted-foreground mb-5">
-                    Edit the contract content or leave as-is from the template.
+                    Edite el contenido o conserve el texto de la plantilla.
                   </p>
                   <ContractEditor
                     key={selectedTemplateId}
@@ -384,7 +384,7 @@ export default function NewContractForm({
                 >
                   {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                   <Send className="mr-2 h-4 w-4" />
-                  Send Contract
+                  Enviar contrato
                 </Button>
                 <Button
                   variant="outline"
@@ -392,7 +392,7 @@ export default function NewContractForm({
                   onClick={() => handleSubmit(true)}
                   disabled={loading}
                 >
-                  Save Draft
+                  Guardar borrador
                 </Button>
               </div>
             </div>
@@ -411,19 +411,19 @@ export default function NewContractForm({
                     value="contract"
                     className="text-xs data-[state=active]:text-foreground"
                   >
-                    Contract Page
+                    Página del contrato
                   </TabsTrigger>
                   <TabsTrigger
                     value="email"
                     className="text-xs data-[state=active]:text-foreground"
                   >
-                    Email Preview
+                    Vista del correo
                   </TabsTrigger>
                   <TabsTrigger
                     value="pdf"
                     className="text-xs data-[state=active]:text-foreground"
                   >
-                    Contract PDF
+                    PDF del contrato
                   </TabsTrigger>
                 </TabsList>
               </Tabs>
@@ -440,12 +440,12 @@ export default function NewContractForm({
                     </div>
                     <h3 className="text-base font-semibold tracking-tight">{businessName}</h3>
                     <p className="text-lg font-bold tracking-tight mt-1 text-primary">
-                      {selectedTemplate?.name || 'Select a Template'}
+                      {selectedTemplate?.name || 'Seleccione una plantilla'}
                     </p>
                     <p className="text-xs text-muted-foreground mt-1">
                       {selectedClient
-                        ? `Prepared for ${selectedClient.name}`
-                        : 'Select a signee'}
+                        ? `Preparado para ${selectedClient.name}`
+                        : 'Seleccione una persona firmante'}
                       {' \u00B7 '}
                       {format(new Date(), 'MMM dd, yyyy')}
                     </p>
@@ -464,7 +464,7 @@ export default function NewContractForm({
                       <div className="py-12 text-center">
                         <FileText className="h-8 w-8 mx-auto text-muted-foreground/40 mb-3" />
                         <p className="text-sm text-muted-foreground">
-                          Select a contract template to see the preview
+                          Seleccione una plantilla para ver la vista previa
                         </p>
                       </div>
                     )}
@@ -476,14 +476,14 @@ export default function NewContractForm({
                   <div className="px-6 py-5">
                     <div className="flex items-center gap-3 mb-4">
                       <PenLine className="h-4 w-4 text-muted-foreground" />
-                      <span className="text-sm font-medium">Signature</span>
+                      <span className="text-sm font-medium">Firma</span>
                     </div>
                     <div className="border-2 border-dashed rounded-lg p-6 text-center bg-muted/10">
                       <p className="text-sm text-muted-foreground">
-                        {selectedClient?.name || 'Signee'} will sign here
+                        {selectedClient?.name || 'La persona firmante'} firmará aquí
                       </p>
                       <p className="text-xs text-muted-foreground/60 mt-1">
-                        Draw or type signature
+                        Dibuje o escriba la firma
                       </p>
                     </div>
                   </div>
@@ -492,7 +492,7 @@ export default function NewContractForm({
                   <div className="px-6 pb-6 pt-2">
                     <button className="w-full h-12 rounded-lg font-medium text-sm flex items-center justify-center gap-2 bg-primary text-primary-foreground">
                       <PenLine className="h-4 w-4" />
-                      Sign Contract
+                      Firmar contrato
                     </button>
                   </div>
 
@@ -501,7 +501,7 @@ export default function NewContractForm({
                     <div className="flex items-center gap-2 justify-center">
                       <div className="h-px flex-1 bg-border/40" />
                       <p className="text-[10px] text-muted-foreground/50 whitespace-nowrap">
-                        Powered by Oreko
+                        Gestionado por Oreko
                       </p>
                       <div className="h-px flex-1 bg-border/40" />
                     </div>
@@ -522,7 +522,7 @@ export default function NewContractForm({
                       </div>
                       <div className="text-right">
                         <p className="text-xs text-muted-foreground">{businessName}</p>
-                        <p className="font-bold text-lg mt-0.5 text-primary">Contract</p>
+                        <p className="font-bold text-lg mt-0.5 text-primary">Contrato</p>
                         <p className="text-xs text-muted-foreground mt-0.5">
                           {format(new Date(), 'MMM dd, yyyy')}
                         </p>
@@ -533,10 +533,10 @@ export default function NewContractForm({
                   {/* CTA Buttons */}
                   <div className="px-6 pb-4 flex gap-3">
                     <button className="flex-1 h-11 rounded-lg font-medium text-sm flex items-center justify-center gap-2 bg-primary text-primary-foreground">
-                      View & Sign Contract
+                      Ver y firmar contrato
                     </button>
                     <button className="flex-1 h-11 rounded-lg font-medium text-sm flex items-center justify-center gap-2 border border-border hover:bg-muted transition-colors">
-                      Download PDF
+                      Descargar PDF
                     </button>
                   </div>
 
@@ -545,21 +545,21 @@ export default function NewContractForm({
                   {/* Contract Summary */}
                   <div className="px-6 py-4 space-y-3">
                     <p className="text-sm font-medium">
-                      {selectedTemplate?.name || 'Contract'}
+                      {selectedTemplate?.name || 'Contrato'}
                     </p>
                     <p className="text-sm text-muted-foreground">
-                      Hi {selectedClient?.name || '[Client Name]'},
+                      Hola {selectedClient?.name || '[Nombre del cliente]'},
                     </p>
                     <p className="text-sm text-muted-foreground">
-                      Please review and sign the attached contract at your earliest convenience.
-                      Click the button above to view the full contract and add your signature.
+                      Revise y firme el contrato adjunto. Use el botón anterior para consultar
+                      el documento completo y agregar su firma.
                     </p>
                     {selectedTemplate?.variables && selectedTemplate.variables.length > 0 && (
                       <>
                         <Separator />
                         <div>
                           <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">
-                            Key Details
+                            Detalles principales
                           </p>
                           <div className="space-y-1.5">
                             {selectedTemplate.variables.slice(0, 4).map((v) => (
@@ -581,9 +581,8 @@ export default function NewContractForm({
                   {/* Legal Footer */}
                   <div className="px-6 py-4 bg-muted/30 border-t">
                     <p className="text-[10px] text-muted-foreground leading-relaxed">
-                      This email and any attachments are intended solely for the use of the individual
-                      or entity to whom they are addressed. If you have received this message in error,
-                      please notify {businessName} immediately.
+                      Este correo y sus adjuntos están dirigidos exclusivamente a su destinatario.
+                      Si lo recibió por error, notifíquelo de inmediato a {businessName}.
                     </p>
                   </div>
                 </div>
@@ -594,7 +593,7 @@ export default function NewContractForm({
             {previewTab === 'pdf' && (
               <div className="p-4 flex-1 flex flex-col items-center">
                 <p className="text-xs text-muted-foreground mb-3 w-full">
-                  A4 Preview · {selectedTemplate?.name || 'No template selected'}
+                  Vista previa A4 · {selectedTemplate?.name || 'Ninguna plantilla seleccionada'}
                 </p>
 
                 <div className="w-full overflow-hidden flex-1 flex items-start justify-center">
@@ -626,7 +625,7 @@ export default function NewContractForm({
                             className="text-2xl font-bold tracking-tight"
                             style={{ color: '#3786b3' }}
                           >
-                            CONTRACT
+                            CONTRATO
                           </h1>
                           <p className="text-xs mt-1" style={{ color: '#666' }}>
                             {format(new Date(), 'MMM dd, yyyy')}
@@ -640,10 +639,10 @@ export default function NewContractForm({
                           className="text-[10px] uppercase tracking-wider font-semibold mb-1"
                           style={{ color: '#999' }}
                         >
-                          Prepared For
+                          Preparado para
                         </p>
                         <p className="text-sm font-medium" style={{ color: '#111' }}>
-                          {selectedClient?.name || 'Client Name'}
+                          {selectedClient?.name || 'Nombre del cliente'}
                         </p>
                         {selectedClient?.company && (
                           <p className="text-xs" style={{ color: '#666' }}>
@@ -658,7 +657,7 @@ export default function NewContractForm({
                           className="text-sm font-semibold"
                           style={{ color: '#3786b3' }}
                         >
-                          {selectedTemplate?.name || 'Contract'}
+                          {selectedTemplate?.name || 'Contrato'}
                         </p>
                       </div>
 
@@ -675,7 +674,7 @@ export default function NewContractForm({
                             className="text-xs py-8 text-center"
                             style={{ color: '#999' }}
                           >
-                            Select a template to preview
+                            Seleccione una plantilla para ver la vista previa
                           </p>
                         )}
                       </div>
@@ -692,10 +691,10 @@ export default function NewContractForm({
                                 className="text-[10px] font-medium"
                                 style={{ color: '#333' }}
                               >
-                                {selectedClient?.name || 'Client'}
+                                {selectedClient?.name || 'Cliente'}
                               </p>
                               <p className="text-[9px]" style={{ color: '#999' }}>
-                                Signature / Date
+                                Firma / Fecha
                               </p>
                             </div>
                           </div>
@@ -711,7 +710,7 @@ export default function NewContractForm({
                                 {businessName}
                               </p>
                               <p className="text-[9px]" style={{ color: '#999' }}>
-                                Signature / Date
+                                Firma / Fecha
                               </p>
                             </div>
                           </div>

@@ -16,7 +16,7 @@ export function OnboardingCompleteStep({ onComplete, isLoading }: OnboardingComp
       </div>
 
       <div>
-        <h3 className="text-xl font-semibold mb-2">You&apos;re all set!</h3>
+        <h3 className="text-xl font-semibold mb-2">¡Todo está listo!</h3>
         <p className="text-muted-foreground">
           Your account is ready. Here are some things you can do next:
         </p>
@@ -25,7 +25,7 @@ export function OnboardingCompleteStep({ onComplete, isLoading }: OnboardingComp
       <div className="grid gap-4 sm:grid-cols-2 text-left">
         <div className="border rounded-lg p-4 hover:bg-muted/50 transition-colors">
           <FileText className="h-5 w-5 text-primary mb-2" />
-          <h4 className="font-medium">Create your first quote</h4>
+          <h4 className="font-medium">Cree su primera cotización</h4>
           <p className="text-sm text-muted-foreground">
             Build a professional quote with our visual editor
           </p>
@@ -33,7 +33,7 @@ export function OnboardingCompleteStep({ onComplete, isLoading }: OnboardingComp
 
         <div className="border rounded-lg p-4 hover:bg-muted/50 transition-colors">
           <Users className="h-5 w-5 text-primary mb-2" />
-          <h4 className="font-medium">Add your clients</h4>
+          <h4 className="font-medium">Agregue sus clientes</h4>
           <p className="text-sm text-muted-foreground">
             Import or create client profiles to get started
           </p>
@@ -41,7 +41,7 @@ export function OnboardingCompleteStep({ onComplete, isLoading }: OnboardingComp
 
         <div className="border rounded-lg p-4 hover:bg-muted/50 transition-colors">
           <Rocket className="h-5 w-5 text-primary mb-2" />
-          <h4 className="font-medium">Explore the dashboard</h4>
+          <h4 className="font-medium">Explore el panel</h4>
           <p className="text-sm text-muted-foreground">
             Get insights into your quotes and invoices
           </p>

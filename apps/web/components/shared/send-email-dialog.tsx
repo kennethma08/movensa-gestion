@@ -100,7 +100,7 @@ export function SendEmailDialog({
   documentNumber,
   recipientEmail,
   recipientName,
-  businessName = 'Your Business',
+  businessName = 'Su empresa',
   total = 0,
   currency: docCurrency = 'USD',
   dueDate,
@@ -109,8 +109,8 @@ export function SendEmailDialog({
   contractName,
   onSent,
 }: SendEmailDialogProps) {
-  const label = type === 'invoice' ? 'Invoice' : type === 'quote' ? 'Quote' : 'Contract';
-  const actionLabel = type === 'invoice' ? 'Pay this Invoice' : type === 'quote' ? 'Accept Quote' : 'Review & Sign';
+  const label = type === 'invoice' ? 'Factura' : type === 'quote' ? 'Cotización' : 'Contrato';
+  const actionLabel = type === 'invoice' ? 'Pagar esta factura' : type === 'quote' ? 'Aceptar cotización' : 'Revisar y firmar';
 
   // Recipients
   const [recipients, setRecipients] = useState<Recipient[]>([
@@ -196,12 +196,12 @@ export function SendEmailDialog({
       .replace(/\{\{quote_name\}\}/gi, contractName || documentNumber || '')
       .replace(/\{\{quoteName\}\}/gi, contractName || documentNumber || '')
       .replace(/\{\{#if\s+\w+\}\}[\s\S]*?\{\{\/if\}\}/gi, '')
-      .replace(/\{\{quote_url\}\}/gi, '[Link will be included automatically]')
-      .replace(/\{\{quoteUrl\}\}/gi, '[Link will be included automatically]')
-      .replace(/\{\{invoice_url\}\}/gi, '[Link will be included automatically]')
-      .replace(/\{\{invoiceUrl\}\}/gi, '[Link will be included automatically]')
-      .replace(/\{\{contract_url\}\}/gi, '[Link will be included automatically]')
-      .replace(/\{\{contractUrl\}\}/gi, '[Link will be included automatically]')
+      .replace(/\{\{quote_url\}\}/gi, '[El enlace se incluirá automáticamente]')
+      .replace(/\{\{quoteUrl\}\}/gi, '[El enlace se incluirá automáticamente]')
+      .replace(/\{\{invoice_url\}\}/gi, '[El enlace se incluirá automáticamente]')
+      .replace(/\{\{invoiceUrl\}\}/gi, '[El enlace se incluirá automáticamente]')
+      .replace(/\{\{contract_url\}\}/gi, '[El enlace se incluirá automáticamente]')
+      .replace(/\{\{contractUrl\}\}/gi, '[El enlace se incluirá automáticamente]')
       .replace(/\{\{message\}\}/gi, '');
   };
 
@@ -210,12 +210,12 @@ export function SendEmailDialog({
     if (detail) {
       setSubject(replaceVariables(detail.subject));
       setMessage(replaceVariables(stripHtml(detail.body)));
-      toast.success('Template imported');
+      toast.success('Plantilla importada');
     }
   };
 
-  const effectiveSubject = subject || `${label} #${documentNumber} from ${businessName}`;
-  const effectiveMessage = message || `Your message preview will appear here...`;
+  const effectiveSubject = subject || `${label} #${documentNumber} de ${businessName}`;
+  const effectiveMessage = message || 'La vista previa de su mensaje aparecerá aquí...';
 
   const handleAddRecipient = () => {
     const email = newRecipientEmail.trim();
@@ -223,7 +223,7 @@ export function SendEmailDialog({
     // Validate email format before adding
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) return;
-    const name = email.split('@')[0] || 'Recipient';
+    const name = email.split('@')[0] || 'Destinatario';
     setRecipients((prev) => [
       ...prev,
       { id: Date.now().toString(), name, email: newRecipientEmail.trim() },
@@ -240,7 +240,7 @@ export function SendEmailDialog({
   // Bug #105: Pass custom recipients, subject, and message to server actions
   const handleSend = async () => {
     if (recipients.length === 0) {
-      toast.error('Please add at least one recipient');
+      toast.error('Agregue al menos un destinatario');
       return;
     }
 
@@ -265,17 +265,17 @@ export function SendEmailDialog({
 
       if (result.success) {
         if (result.emailSent) {
-          toast.success(`${label} sent successfully!`);
+          toast.success(`${label} enviada correctamente`);
         } else {
-          toast.success(`${label} status updated to sent, but email delivery failed. Check email settings.`);
+          toast.success(`El estado de ${label.toLowerCase()} cambió a enviado, pero el correo no pudo entregarse. Revise la configuración del correo.`);
         }
         onOpenChange(false);
         onSent?.();
       } else {
-        toast.error(result.error || `Failed to send ${label.toLowerCase()}`);
+        toast.error(result.error || `No se pudo enviar ${label.toLowerCase()}`);
       }
     } catch (err) {
-      const msg = err instanceof Error ? err.message : `Failed to send ${label.toLowerCase()}`;
+      const msg = err instanceof Error ? err.message : `No se pudo enviar ${label.toLowerCase()}`;
       toast.error(msg);
     } finally {
       setIsSending(false);
@@ -299,7 +299,7 @@ export function SendEmailDialog({
         {/* ─── Header ───────────────────────────────── */}
         <div className="flex items-center justify-between px-6 py-4 border-b bg-background shrink-0">
           <div>
-            <DialogTitle className="text-xl font-semibold tracking-tight">Send {label}</DialogTitle>
+            <DialogTitle className="text-xl font-semibold tracking-tight">Enviar {label.toLowerCase()}</DialogTitle>
             <DialogDescription className="text-sm text-muted-foreground mt-0.5">
               {label} #{documentNumber}
             </DialogDescription>
@@ -316,14 +316,14 @@ export function SendEmailDialog({
               {/* Recipients */}
               <div>
                 <div className="flex items-center justify-between mb-3">
-                  <h3 className="text-base font-semibold">Recipients</h3>
+                  <h3 className="text-base font-semibold">Destinatarios</h3>
                   <button
                     type="button"
                     className="text-sm text-primary hover:text-primary/80 transition-colors flex items-center gap-1 font-medium"
                     onClick={() => setShowAddRecipient(true)}
                   >
                     <Plus className="h-3.5 w-3.5" />
-                    Add Recipient
+                    Agregar destinatario
                   </button>
                 </div>
 
@@ -367,7 +367,7 @@ export function SendEmailDialog({
                     <div className="flex items-center gap-2">
                       <Input
                         type="email"
-                        placeholder="email@example.com"
+                        placeholder="correo@ejemplo.com"
                         value={newRecipientEmail}
                         onChange={(e) => setNewRecipientEmail(e.target.value)}
                         className="h-10 flex-1"
@@ -375,7 +375,7 @@ export function SendEmailDialog({
                         autoFocus
                       />
                       <Button size="sm" onClick={handleAddRecipient} disabled={!newRecipientEmail.trim()}>
-                        Add
+                        Agregar
                       </Button>
                       <Button
                         size="sm"
@@ -393,11 +393,11 @@ export function SendEmailDialog({
 
               {/* Subject */}
               <div>
-                <h3 className="text-base font-semibold mb-2">Subject</h3>
+                <h3 className="text-base font-semibold mb-2">Asunto</h3>
                 <Input
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
-                  placeholder={`${label} #${documentNumber} from ${businessName}`}
+                  placeholder={`${label} #${documentNumber} de ${businessName}`}
                   className="h-10"
                 />
               </div>
@@ -407,7 +407,7 @@ export function SendEmailDialog({
               {/* Body */}
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-base font-semibold">Body</h3>
+                  <h3 className="text-base font-semibold">Mensaje</h3>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="outline" size="icon" className="h-8 w-8 shadow-none">
@@ -416,12 +416,12 @@ export function SendEmailDialog({
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="w-64">
                       <DropdownMenuLabel className="text-xs text-muted-foreground font-normal">
-                        Select a template to import
+                        Seleccione una plantilla para importar
                       </DropdownMenuLabel>
                       <DropdownMenuSeparator />
                       {emailTemplates.length === 0 ? (
                         <div className="px-2 py-3 text-xs text-muted-foreground text-center">
-                          No templates available
+                          No hay plantillas disponibles
                         </div>
                       ) : (
                         emailTemplates.map((tmpl) => (
@@ -444,7 +444,7 @@ export function SendEmailDialog({
                   <textarea
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
-                    placeholder="Enter a message..."
+                    placeholder="Escriba un mensaje..."
                     className="w-full min-h-[200px] p-4 text-sm resize-none focus:outline-none bg-background"
                   />
                 </div>
@@ -463,7 +463,7 @@ export function SendEmailDialog({
                   ) : (
                     <Send className="mr-2 h-4 w-4" />
                   )}
-                  Send Email
+                  Enviar correo
                 </Button>
               </div>
             </div>
@@ -476,7 +476,7 @@ export function SendEmailDialog({
               <div className="mb-4 px-4 py-3 bg-muted/50 rounded-lg border border-border/40">
                 <p className="text-sm text-muted-foreground">
                   {subject ? subject : (
-                    <span className="italic">Your subject preview will appear here...</span>
+                    <span className="italic">La vista previa del asunto aparecerá aquí...</span>
                   )}
                 </p>
               </div>
@@ -533,7 +533,7 @@ export function SendEmailDialog({
                         </span>
                       ));
                     })() : (
-                      <span className="italic">Your message preview will appear here...</span>
+                      <span className="italic">La vista previa del mensaje aparecerá aquí...</span>
                     )}
                   </p>
                 </div>
@@ -547,7 +547,7 @@ export function SendEmailDialog({
                     {actionLabel}
                   </button>
                   <button className="flex-1 h-11 rounded-lg font-medium text-sm flex items-center justify-center gap-2 border border-border hover:bg-muted transition-colors">
-                    Download PDF
+                    Descargar PDF
                   </button>
                 </div>
 
@@ -558,10 +558,10 @@ export function SendEmailDialog({
                   <div className="flex items-center justify-between">
                     <p className="text-sm font-semibold">
                       {type === 'contract'
-                        ? (contractName || `Contract #${documentNumber}`)
+                        ? (contractName || `Contrato #${documentNumber}`)
                         : type === 'invoice'
-                          ? `Invoice #${documentNumber}`
-                          : `Quote #${documentNumber}`}
+                          ? `Factura #${documentNumber}`
+                          : `Cotización #${documentNumber}`}
                     </p>
                     {dueDate && (
                       <p className="text-xs text-muted-foreground">
@@ -577,7 +577,7 @@ export function SendEmailDialog({
                         <div key={i} className="flex items-center justify-between py-1.5 text-sm">
                           <div className="flex-1 min-w-0">
                             <p className="font-medium text-sm truncate">
-                              {item.name || 'Untitled Item'}
+                              {item.name || 'Concepto sin título'}
                             </p>
                             <p className="text-xs text-muted-foreground truncate">
                               {item.quantity} &times; {formatCurrency(item.rate, docCurrency)}
@@ -600,7 +600,7 @@ export function SendEmailDialog({
                   {/* Total (invoices/quotes only) */}
                   {type !== 'contract' && (
                     <div className="flex justify-between text-sm font-semibold">
-                      <span>{type === 'invoice' ? 'Total Due' : 'Total'}</span>
+                      <span>{type === 'invoice' ? 'Saldo pendiente' : 'Total'}</span>
                       <span className="tabular-nums" style={{ color: ACCENT }}>
                         {formatCurrency(total, docCurrency)}
                       </span>

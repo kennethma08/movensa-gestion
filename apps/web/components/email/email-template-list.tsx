@@ -95,9 +95,9 @@ export function EmailTemplateList({ templates }: EmailTemplateListProps) {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Subject</TableHead>
-                  <TableHead>Status</TableHead>
+                  <TableHead>Nombre</TableHead>
+                  <TableHead>Asunto</TableHead>
+                  <TableHead>Estado</TableHead>
                   <TableHead className="w-12"></TableHead>
                 </TableRow>
               </TableHeader>
@@ -141,7 +141,7 @@ export function EmailTemplateList({ templates }: EmailTemplateListProps) {
                           <DropdownMenuItem asChild>
                             <Link href={`/settings/emails/${template.id}`}>
                               <Pencil className="mr-2 h-4 w-4" />
-                              Edit
+                              Editar
                             </Link>
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
@@ -150,7 +150,7 @@ export function EmailTemplateList({ templates }: EmailTemplateListProps) {
                             className="text-destructive focus:text-destructive"
                           >
                             <Trash2 className="mr-2 h-4 w-4" />
-                            Delete
+                            Eliminar
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
@@ -167,9 +167,9 @@ export function EmailTemplateList({ templates }: EmailTemplateListProps) {
         <Card>
           <CardContent className="flex flex-col items-center justify-center py-12">
             <Mail className="h-12 w-12 text-muted-foreground mb-4" />
-            <h3 className="text-lg font-semibold">No email templates</h3>
+            <h3 className="text-lg font-semibold">No hay plantillas de correo</h3>
             <p className="text-muted-foreground text-center mt-1">
-              Create custom email templates for your business communications.
+              Cree plantillas personalizadas para las comunicaciones de su negocio.
             </p>
           </CardContent>
         </Card>
@@ -178,19 +178,19 @@ export function EmailTemplateList({ templates }: EmailTemplateListProps) {
       <AlertDialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Template</AlertDialogTitle>
+            <AlertDialogTitle>Eliminar plantilla</AlertDialogTitle>
             <AlertDialogDescription>
               Are you sure you want to delete this email template? This action
               cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDelete}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              Delete
+              Eliminar
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

@@ -19,16 +19,16 @@ export default function InvoicesError({
   return (
     <div className="flex flex-col items-center justify-center py-16 text-center">
       <AlertTriangle className="h-10 w-10 text-destructive mb-4" />
-      <h2 className="text-lg font-semibold mb-2">Something went wrong</h2>
+      <h2 className="text-lg font-semibold mb-2">Ocurrió un error</h2>
       <p className="text-sm text-muted-foreground mb-6 max-w-md">
-        {process.env.NODE_ENV === 'development' ? error.message : 'An error occurred loading this page.'}
+        {process.env.NODE_ENV === 'development' ? error.message : 'Ocurrió un error al cargar esta página.'}
       </p>
       {error.digest && (
-        <p className="text-xs text-muted-foreground mb-4">Reference: {error.digest}</p>
+        <p className="text-xs text-muted-foreground mb-4">Referencia: {error.digest}</p>
       )}
       <Button onClick={reset}>
         <RefreshCw className="mr-2 h-4 w-4" />
-        Try again
+        Intentar de nuevo
       </Button>
     </div>
   );

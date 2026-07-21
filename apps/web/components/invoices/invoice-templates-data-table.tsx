@@ -58,7 +58,7 @@ import {
 } from '@/components/ui/select';
 
 const paymentTermsLabel: Record<string, string> = {
-  due_on_receipt: 'Due on Receipt',
+  due_on_receipt: 'Al recibir',
   net7: 'Net 7',
   net15: 'Net 15',
   net30: 'Net 30',
@@ -135,7 +135,7 @@ export function InvoiceTemplatesDataTable({ data }: InvoiceTemplatesDataTablePro
 
   const handleSaveTemplate = async () => {
     if (!editName.trim()) {
-      toast.error('Template name is required');
+      toast.error('El nombre de la plantilla es obligatorio');
       return;
     }
     setIsSaving(true);
@@ -149,10 +149,10 @@ export function InvoiceTemplatesDataTable({ data }: InvoiceTemplatesDataTablePro
           terms: editTerms || undefined,
         });
         if (!result.success) {
-          toast.error(result.error || 'Failed to create template');
+          toast.error(result.error || 'No se pudo crear la plantilla');
           return;
         }
-        toast.success('Template created');
+        toast.success('Plantilla creada');
       } else if (editingTemplate) {
         const result = await updateInvoiceTemplate({
           id: editingTemplate.id,
@@ -166,15 +166,15 @@ export function InvoiceTemplatesDataTable({ data }: InvoiceTemplatesDataTablePro
           isDefault: editingTemplate.isDefault,
         });
         if (!result.success) {
-          toast.error(result.error || 'Failed to update template');
+          toast.error(result.error || 'No se pudo actualizar la plantilla');
           return;
         }
-        toast.success('Template updated');
+        toast.success('Plantilla actualizada');
       }
       handleCloseEdit();
       router.refresh();
     } catch {
-      toast.error('Failed to save template');
+      toast.error('No se pudo guardar la plantilla');
     } finally {
       setIsSaving(false);
     }
@@ -189,8 +189,8 @@ export function InvoiceTemplatesDataTable({ data }: InvoiceTemplatesDataTablePro
   const handleAddLineItem = () => {
     const newItem: TemplateLineItem = {
       id: `li-new-${Date.now()}`,
-      name: 'New Item',
-      description: 'Item description',
+      name: 'Nuevo concepto',
+      description: 'Descripción del concepto',
       rate: 0,
       qty: 1,
       taxable: true,
@@ -213,11 +213,11 @@ export function InvoiceTemplatesDataTable({ data }: InvoiceTemplatesDataTablePro
     setIsDeleting(true);
     try {
       await deleteInvoiceTemplate(deleteId);
-      toast.success('Template deleted');
+      toast.success('Plantilla eliminada');
       setDeleteId(null);
       router.refresh();
     } catch {
-      toast.error('Failed to delete template');
+      toast.error('No se pudo eliminar la plantilla');
     } finally {
       setIsDeleting(false);
     }
@@ -228,11 +228,11 @@ export function InvoiceTemplatesDataTable({ data }: InvoiceTemplatesDataTablePro
     setIsDeleting(true);
     try {
       await Promise.all(selectedRows.map((t) => deleteInvoiceTemplate(t.id)));
-      toast.success(`${selectedRows.length} template(s) deleted`);
+      toast.success(`${selectedRows.length} plantilla(s) eliminada(s)`);
       setSelectedRows([]);
       router.refresh();
     } catch {
-      toast.error('Failed to delete templates');
+      toast.error('No se pudieron eliminar las plantillas');
     } finally {
       setIsDeleting(false);
     }
@@ -242,11 +242,11 @@ export function InvoiceTemplatesDataTable({ data }: InvoiceTemplatesDataTablePro
     if (selectedRows.length === 0) return;
     try {
       await Promise.all(selectedRows.map((t) => duplicateInvoiceTemplate(t.id)));
-      toast.success(`${selectedRows.length} template(s) duplicated`);
+      toast.success(`${selectedRows.length} plantilla(s) duplicada(s)`);
       setSelectedRows([]);
       router.refresh();
     } catch {
-      toast.error('Failed to duplicate templates');
+      toast.error('No se pudieron duplicar las plantillas');
     }
   };
 
@@ -260,7 +260,7 @@ export function InvoiceTemplatesDataTable({ data }: InvoiceTemplatesDataTablePro
             (table.getIsSomePageRowsSelected() && 'indeterminate')
           }
           onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label="Select all"
+          aria-label="Seleccionar todo"
           className="translate-y-[2px]"
         />
       ),
@@ -268,7 +268,7 @@ export function InvoiceTemplatesDataTable({ data }: InvoiceTemplatesDataTablePro
         <Checkbox
           checked={row.getIsSelected()}
           onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label="Select row"
+          aria-label="Seleccionar fila"
           className="translate-y-[2px]"
         />
       ),
@@ -278,7 +278,7 @@ export function InvoiceTemplatesDataTable({ data }: InvoiceTemplatesDataTablePro
     {
       accessorKey: 'name',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Name" />
+        <DataTableColumnHeader column={column} title="Nombre" />
       ),
       cell: ({ row }) => (
         <button
@@ -293,7 +293,7 @@ export function InvoiceTemplatesDataTable({ data }: InvoiceTemplatesDataTablePro
     {
       accessorKey: 'paymentTerms',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Payment Terms" />
+        <DataTableColumnHeader column={column} title="Condiciones de pago" />
       ),
       cell: ({ row }) => (
         <Badge variant="outline" className="text-xs">
@@ -304,18 +304,18 @@ export function InvoiceTemplatesDataTable({ data }: InvoiceTemplatesDataTablePro
     {
       accessorKey: 'usageCount',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Used" />
+        <DataTableColumnHeader column={column} title="Usos" />
       ),
       cell: ({ row }) => (
         <div className="text-muted-foreground">
-          {row.original.usageCount} time{row.original.usageCount !== 1 ? 's' : ''}
+          {row.original.usageCount} vez{row.original.usageCount !== 1 ? 'es' : ''}
         </div>
       ),
     },
     {
       accessorKey: 'updatedAt',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Updated" />
+        <DataTableColumnHeader column={column} title="Actualizada" />
       ),
       cell: ({ row }) => (
         <div className="text-muted-foreground">
@@ -332,9 +332,9 @@ export function InvoiceTemplatesDataTable({ data }: InvoiceTemplatesDataTablePro
           onEdit={(t) => handleOpenEdit(t)}
           onDuplicate={(t) => {
             duplicateInvoiceTemplate(t.id).then(() => {
-              toast.success('Template duplicated');
+              toast.success('Plantilla duplicada');
               router.refresh();
-            }).catch(() => toast.error('Failed to duplicate'));
+            }).catch(() => toast.error('No se pudo duplicar'));
           }}
           onDelete={(t) => setDeleteId(t.id)}
         />
@@ -345,13 +345,13 @@ export function InvoiceTemplatesDataTable({ data }: InvoiceTemplatesDataTablePro
   const emptyState = (
     <div className="flex flex-col items-center justify-center py-16">
       <Receipt className="h-12 w-12 text-muted-foreground mb-4" />
-      <h3 className="text-lg font-medium">No invoice templates</h3>
+      <h3 className="text-lg font-medium">No hay plantillas de factura</h3>
       <p className="text-muted-foreground mb-4">
-        Create your first invoice template to streamline your billing workflow.
+        Cree su primera plantilla para agilizar la facturación.
       </p>
       <Button onClick={handleOpenCreate}>
         <Plus className="mr-2 h-4 w-4" />
-        Create Template
+        Crear plantilla
       </Button>
     </div>
   );
@@ -362,14 +362,14 @@ export function InvoiceTemplatesDataTable({ data }: InvoiceTemplatesDataTablePro
         <div />
         <Button onClick={handleOpenCreate} size="sm">
           <Plus className="mr-2 h-4 w-4" />
-          Create Template
+          Crear plantilla
         </Button>
       </div>
 
       {selectedRows.length > 0 && (
         <div className="flex items-center gap-2 mb-4">
           <span className="text-sm text-muted-foreground">
-            {selectedRows.length} selected
+            {selectedRows.length} seleccionada(s)
           </span>
           <Button
             variant="outline"
@@ -377,7 +377,7 @@ export function InvoiceTemplatesDataTable({ data }: InvoiceTemplatesDataTablePro
             onClick={handleBulkDuplicate}
           >
             <Copy className="mr-2 h-4 w-4" />
-            Duplicate
+            Duplicar
           </Button>
           <Button
             variant="destructive"
@@ -386,7 +386,7 @@ export function InvoiceTemplatesDataTable({ data }: InvoiceTemplatesDataTablePro
             disabled={isDeleting}
           >
             <Trash2 className="mr-2 h-4 w-4" />
-            Delete Selected
+            Eliminar seleccionadas
           </Button>
         </div>
       )}
@@ -395,7 +395,7 @@ export function InvoiceTemplatesDataTable({ data }: InvoiceTemplatesDataTablePro
         columns={columns}
         data={data}
         filterKey="name"
-        filterPlaceholder="Search templates..."
+        filterPlaceholder="Buscar plantillas..."
         pageSizes={[10, 25, 50, 100]}
         emptyState={emptyState}
         onRowSelect={setSelectedRows}
@@ -407,12 +407,12 @@ export function InvoiceTemplatesDataTable({ data }: InvoiceTemplatesDataTablePro
           {/* Header */}
           <div className="p-8 pb-2">
             <h2 className="text-2xl font-bold tracking-tight">
-              {isCreating ? 'New Invoice Template' : 'Invoice Template'}
+              {isCreating ? 'Nueva plantilla de factura' : 'Plantilla de factura'}
             </h2>
             <p className="text-muted-foreground mt-1">
               {isCreating
-                ? 'Create a reusable template to speed up invoice creation.'
-                : 'Your invoice templates are available when creating invoices.'}
+                ? 'Cree una plantilla reutilizable para agilizar la creación de facturas.'
+                : 'Esta plantilla estará disponible al crear facturas.'}
             </p>
           </div>
 
@@ -423,11 +423,11 @@ export function InvoiceTemplatesDataTable({ data }: InvoiceTemplatesDataTablePro
             <div className="p-8 space-y-8">
               {/* Template Name */}
               <div className="space-y-3">
-                <Label className="text-base font-semibold">Template Name</Label>
+                <Label className="text-base font-semibold">Nombre de la plantilla</Label>
                 <Input
                   value={editName}
                   onChange={(e) => setEditName(e.target.value)}
-                  placeholder="e.g. Coaching Invoice"
+                  placeholder="Ej.: Factura de soporte mensual"
                   className="h-11"
                 />
               </div>
@@ -439,15 +439,15 @@ export function InvoiceTemplatesDataTable({ data }: InvoiceTemplatesDataTablePro
                     type="button"
                     className="inline-flex items-center gap-1.5 text-sm font-semibold hover:opacity-70 transition-opacity"
                   >
-                    Add Enhancements
+                    Agregar opciones
                     <ChevronDown className="h-4 w-4" />
                   </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start" className="w-[200px]">
-                  <DropdownMenuItem disabled={showDiscount} onClick={() => setShowDiscount(true)}>Discount</DropdownMenuItem>
-                  <DropdownMenuItem disabled={showTax} onClick={() => setShowTax(true)}>Tax</DropdownMenuItem>
-                  <DropdownMenuItem disabled={showLateFee} onClick={() => setShowLateFee(true)}>Late Fee</DropdownMenuItem>
-                  <DropdownMenuItem disabled={showNotes} onClick={() => setShowNotes(true)}>Notes</DropdownMenuItem>
+                  <DropdownMenuItem disabled={showDiscount} onClick={() => setShowDiscount(true)}>Descuento</DropdownMenuItem>
+                  <DropdownMenuItem disabled={showTax} onClick={() => setShowTax(true)}>Impuesto</DropdownMenuItem>
+                  <DropdownMenuItem disabled={showLateFee} onClick={() => setShowLateFee(true)}>Cargo por mora</DropdownMenuItem>
+                  <DropdownMenuItem disabled={showNotes} onClick={() => setShowNotes(true)}>Notas</DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
 
@@ -455,50 +455,50 @@ export function InvoiceTemplatesDataTable({ data }: InvoiceTemplatesDataTablePro
               {showDiscount && (
                 <div className="space-y-2 rounded-lg border p-4 bg-muted/20">
                   <div className="flex items-center justify-between">
-                    <Label className="text-sm font-semibold">Discount</Label>
-                    <button type="button" className="text-xs text-muted-foreground hover:text-destructive" onClick={() => setShowDiscount(false)}>Remove</button>
+                    <Label className="text-sm font-semibold">Descuento</Label>
+                    <button type="button" className="text-xs text-muted-foreground hover:text-destructive" onClick={() => setShowDiscount(false)}>Quitar</button>
                   </div>
-                  <p className="text-xs text-muted-foreground">Discounts are applied when creating individual invoices from this template.</p>
+                  <p className="text-xs text-muted-foreground">El descuento se aplicará al crear facturas desde esta plantilla.</p>
                 </div>
               )}
 
               {showTax && (
                 <div className="space-y-2 rounded-lg border p-4 bg-muted/20">
                   <div className="flex items-center justify-between">
-                    <Label className="text-sm font-semibold">Tax</Label>
-                    <button type="button" className="text-xs text-muted-foreground hover:text-destructive" onClick={() => setShowTax(false)}>Remove</button>
+                    <Label className="text-sm font-semibold">Impuesto</Label>
+                    <button type="button" className="text-xs text-muted-foreground hover:text-destructive" onClick={() => setShowTax(false)}>Quitar</button>
                   </div>
-                  <p className="text-xs text-muted-foreground">Tax rates from your settings will be applied when creating invoices. Mark line items as taxable above.</p>
+                  <p className="text-xs text-muted-foreground">Se aplicarán las tasas configuradas al crear la factura.</p>
                 </div>
               )}
 
               {showLateFee && (
                 <div className="space-y-2 rounded-lg border p-4 bg-muted/20">
                   <div className="flex items-center justify-between">
-                    <Label className="text-sm font-semibold">Late Fee</Label>
-                    <button type="button" className="text-xs text-muted-foreground hover:text-destructive" onClick={() => setShowLateFee(false)}>Remove</button>
+                    <Label className="text-sm font-semibold">Cargo por mora</Label>
+                    <button type="button" className="text-xs text-muted-foreground hover:text-destructive" onClick={() => setShowLateFee(false)}>Quitar</button>
                   </div>
-                  <p className="text-xs text-muted-foreground">Late fees are configured in your payment settings and applied automatically to overdue invoices.</p>
+                  <p className="text-xs text-muted-foreground">Los cargos por mora se configuran en pagos y se aplican a facturas vencidas.</p>
                 </div>
               )}
 
               {showNotes && (
                 <div className="space-y-3 rounded-lg border p-4 bg-muted/20">
                   <div className="flex items-center justify-between">
-                    <Label className="text-sm font-semibold">Notes & Terms</Label>
-                    <button type="button" className="text-xs text-muted-foreground hover:text-destructive" onClick={() => { setShowNotes(false); setEditNotes(''); setEditTerms(''); }}>Remove</button>
+                    <Label className="text-sm font-semibold">Notas y condiciones</Label>
+                    <button type="button" className="text-xs text-muted-foreground hover:text-destructive" onClick={() => { setShowNotes(false); setEditNotes(''); setEditTerms(''); }}>Quitar</button>
                   </div>
                   <div className="space-y-2">
                     <Input
                       value={editNotes}
                       onChange={(e) => setEditNotes(e.target.value)}
-                      placeholder="Notes (visible to client)"
+                      placeholder="Notas visibles para el cliente"
                       className="h-9 text-sm"
                     />
                     <Input
                       value={editTerms}
                       onChange={(e) => setEditTerms(e.target.value)}
-                      placeholder="Terms & conditions"
+                      placeholder="Términos y condiciones"
                       className="h-9 text-sm"
                     />
                   </div>
@@ -507,7 +507,7 @@ export function InvoiceTemplatesDataTable({ data }: InvoiceTemplatesDataTablePro
 
               {/* Items Section */}
               <div>
-                <h3 className="text-base font-semibold mb-4">Items</h3>
+                <h3 className="text-base font-semibold mb-4">Conceptos</h3>
 
                 {/* Items Table Header */}
                 {editLineItems.length > 0 && (
@@ -516,10 +516,10 @@ export function InvoiceTemplatesDataTable({ data }: InvoiceTemplatesDataTablePro
                       Items
                     </span>
                     <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest">
-                      Rate
+                      Precio
                     </span>
                     <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest">
-                      Qty
+                      Cant.
                     </span>
                     <span />
                   </div>
@@ -540,7 +540,7 @@ export function InvoiceTemplatesDataTable({ data }: InvoiceTemplatesDataTablePro
                           value={item.name}
                           onChange={(e) => handleUpdateLineItem(item.id, 'name', e.target.value)}
                           className="h-9 border-0 shadow-none px-0 text-sm font-medium focus-visible:ring-0 !bg-transparent"
-                          placeholder="Item name"
+                          placeholder="Nombre del concepto"
                         />
                         <Input
                           type="number"
@@ -572,7 +572,7 @@ export function InvoiceTemplatesDataTable({ data }: InvoiceTemplatesDataTablePro
                         value={item.description}
                         onChange={(e) => handleUpdateLineItem(item.id, 'description', e.target.value)}
                         className="h-7 text-xs text-muted-foreground border-0 shadow-none px-0 mt-0.5 focus-visible:ring-0 !bg-transparent"
-                        placeholder="Add a description..."
+                        placeholder="Agregar una descripción..."
                       />
                     </div>
                   ))}
@@ -591,7 +591,7 @@ export function InvoiceTemplatesDataTable({ data }: InvoiceTemplatesDataTablePro
 
               {/* Payment Method Section */}
               <div className="space-y-2">
-                <h3 className="text-base font-semibold">Payment Method</h3>
+                <h3 className="text-base font-semibold">Método de pago</h3>
                 <p className="text-sm text-muted-foreground">
                   Payment methods are setup in your settings page.
                 </p>
@@ -599,10 +599,10 @@ export function InvoiceTemplatesDataTable({ data }: InvoiceTemplatesDataTablePro
 
               {/* Payment Terms */}
               <div className="space-y-3">
-                <Label className="text-base font-semibold">Payment Terms</Label>
+                <Label className="text-base font-semibold">Condiciones de pago</Label>
                 <Select value={editPaymentTerms} onValueChange={setEditPaymentTerms}>
                   <SelectTrigger className="h-11">
-                    <SelectValue placeholder="Select terms" />
+                    <SelectValue placeholder="Seleccione las condiciones" />
                   </SelectTrigger>
                   <SelectContent>
                     {Object.entries(paymentTermsLabel).map(([value, label]) => (
@@ -625,7 +625,7 @@ export function InvoiceTemplatesDataTable({ data }: InvoiceTemplatesDataTablePro
                     onClick={handleDeleteFromDialog}
                   >
                     <Trash2 className="h-4 w-4" />
-                    Delete template
+                    Eliminar plantilla
                   </button>
                 ) : <div />}
                 <div className="flex items-center gap-2">
@@ -634,14 +634,14 @@ export function InvoiceTemplatesDataTable({ data }: InvoiceTemplatesDataTablePro
                     onClick={handleCloseEdit}
                     disabled={isSaving}
                   >
-                    Cancel
+                    Cancelar
                   </Button>
                   <Button
                     onClick={handleSaveTemplate}
                     disabled={isSaving}
                   >
                     {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                    {isCreating ? 'Create Template' : 'Save Template'}
+                    {isCreating ? 'Crear plantilla' : 'Guardar plantilla'}
                   </Button>
                 </div>
               </div>
@@ -654,20 +654,19 @@ export function InvoiceTemplatesDataTable({ data }: InvoiceTemplatesDataTablePro
       <AlertDialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Template</AlertDialogTitle>
+            <AlertDialogTitle>Eliminar plantilla</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete this invoice template? This action
-              cannot be undone.
+              ¿Confirma que desea eliminar esta plantilla de factura? Esta acción no se puede deshacer.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDelete}
               disabled={isDeleting}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              Delete
+              Eliminar
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

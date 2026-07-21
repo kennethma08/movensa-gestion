@@ -52,10 +52,10 @@ export function ClientDetail({ client, activities, currency = 'USD' }: ClientDet
     setIsDeleting(true);
     try {
       await deleteClient(client.id);
-      toast.success('Client deleted successfully');
+      toast.success('Cliente eliminado correctamente');
       router.push('/clients');
     } catch {
-      toast.error('Failed to delete client');
+      toast.error('No se pudo eliminar el cliente');
     } finally {
       setIsDeleting(false);
     }
@@ -87,7 +87,7 @@ export function ClientDetail({ client, activities, currency = 'USD' }: ClientDet
           className="flex items-center gap-1.5 hover:text-foreground transition-colors"
         >
           <ArrowLeft className="h-4 w-4" />
-          Clients
+          Clientes
         </Link>
         <span>/</span>
         <span className="text-foreground">{client.company || client.name}</span>
@@ -120,7 +120,7 @@ export function ClientDetail({ client, activities, currency = 'USD' }: ClientDet
           <Button variant="outline" size="sm" asChild>
             <Link href={`/clients/${client.id}/edit`}>
               <Pencil className="mr-2 h-3.5 w-3.5" />
-              Edit
+              Editar
             </Link>
           </Button>
           <DropdownMenu>
@@ -131,17 +131,17 @@ export function ClientDetail({ client, activities, currency = 'USD' }: ClientDet
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem asChild>
-                <Link href={`/quotes/new?clientId=${client.id}`}>New quote</Link>
+                <Link href={`/quotes/new?clientId=${client.id}`}>Nueva cotización</Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link href={`/invoices/new?clientId=${client.id}`}>New invoice</Link>
+                <Link href={`/invoices/new?clientId=${client.id}`}>Nueva factura</Link>
               </DropdownMenuItem>
               <DropdownMenuItem
                 className="text-destructive focus:text-destructive"
                 onClick={() => setShowDeleteDialog(true)}
               >
                 <Trash2 className="mr-2 h-4 w-4" />
-                Delete
+                Eliminar
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -190,25 +190,25 @@ export function ClientDetail({ client, activities, currency = 'USD' }: ClientDet
       <div className="rounded-lg border bg-card p-6">
         <div className="grid grid-cols-2 gap-6 sm:grid-cols-4">
           <div>
-            <p className="text-sm text-muted-foreground">Total Revenue</p>
+            <p className="text-sm text-muted-foreground">Ingresos totales</p>
             <p className="text-2xl font-semibold tracking-tight mt-1">
               {formatCurrency(totalRevenue, currency)}
             </p>
           </div>
           <div>
-            <p className="text-sm text-muted-foreground">Outstanding</p>
+            <p className="text-sm text-muted-foreground">Saldo pendiente</p>
             <p className="text-2xl font-semibold tracking-tight mt-1 text-amber-600">
               {formatCurrency(outstanding, currency)}
             </p>
           </div>
           <div>
-            <p className="text-sm text-muted-foreground">Quotes</p>
+            <p className="text-sm text-muted-foreground">Cotizaciones</p>
             <p className="text-2xl font-semibold tracking-tight mt-1">
               {client._count?.quotes || 0}
             </p>
           </div>
           <div>
-            <p className="text-sm text-muted-foreground">Invoices</p>
+            <p className="text-sm text-muted-foreground">Facturas</p>
             <p className="text-2xl font-semibold tracking-tight mt-1">
               {client._count?.invoices || 0}
             </p>
@@ -217,7 +217,7 @@ export function ClientDetail({ client, activities, currency = 'USD' }: ClientDet
         {totalRevenue > 0 && (
           <div className="mt-5">
             <div className="flex items-center justify-between text-xs text-muted-foreground mb-1.5">
-              <span>Collection progress</span>
+              <span>Progreso de cobro</span>
               <span>{Math.round(collectionProgress)}%</span>
             </div>
             <div className="h-1.5 rounded-full bg-muted overflow-hidden">
@@ -237,7 +237,7 @@ export function ClientDetail({ client, activities, currency = 'USD' }: ClientDet
           {/* Invoices */}
           <section>
             <SectionHeader
-              title="Invoices"
+              title="Facturas"
               count={client.invoices?.length || 0}
               addHref={`/invoices/new?clientId=${client.id}`}
             />
@@ -272,7 +272,7 @@ export function ClientDetail({ client, activities, currency = 'USD' }: ClientDet
           {/* Quotes */}
           <section>
             <SectionHeader
-              title="Quotes"
+              title="Cotizaciones"
               count={client.quotes?.length || 0}
               addHref={`/quotes/new?clientId=${client.id}`}
             />
@@ -310,7 +310,7 @@ export function ClientDetail({ client, activities, currency = 'USD' }: ClientDet
           {/* Additional Contacts (company-specific) */}
           {client.contacts.length > 0 && (
             <section>
-              <h2 className="text-sm font-medium text-muted-foreground mb-4">People</h2>
+              <h2 className="text-sm font-medium text-muted-foreground mb-4">Personas</h2>
               <div className="rounded-lg border divide-y">
                 {client.contacts.map((contact) => (
                   <div key={contact.id} className="px-4 py-3">
@@ -352,7 +352,7 @@ export function ClientDetail({ client, activities, currency = 'USD' }: ClientDet
           {/* Notes */}
           {client.notes && (
             <section>
-              <h2 className="text-sm font-medium text-muted-foreground mb-4">Notes</h2>
+              <h2 className="text-sm font-medium text-muted-foreground mb-4">Notas</h2>
               <div className="rounded-lg border px-4 py-3">
                 <p className="text-sm leading-relaxed whitespace-pre-wrap">{client.notes}</p>
               </div>
@@ -361,7 +361,7 @@ export function ClientDetail({ client, activities, currency = 'USD' }: ClientDet
 
           {/* Activity */}
           <section>
-            <h2 className="text-sm font-medium text-muted-foreground mb-4">Activity</h2>
+            <h2 className="text-sm font-medium text-muted-foreground mb-4">Actividad</h2>
             {activities.length > 0 ? (
               <div className="space-y-0">
                 {activities.map((item, i) => (
@@ -393,7 +393,7 @@ export function ClientDetail({ client, activities, currency = 'USD' }: ClientDet
                 ))}
               </div>
             ) : (
-              <p className="text-sm text-muted-foreground">No activity yet</p>
+              <p className="text-sm text-muted-foreground">Aún no hay actividad</p>
             )}
           </section>
         </div>
@@ -403,7 +403,7 @@ export function ClientDetail({ client, activities, currency = 'USD' }: ClientDet
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete client</AlertDialogTitle>
+            <AlertDialogTitle>Eliminar cliente</AlertDialogTitle>
             <AlertDialogDescription>
               Are you sure you want to delete {client.company || client.name}? This action
               cannot be undone. Associated quotes and invoices will remain but will no longer be
@@ -411,13 +411,13 @@ export function ClientDetail({ client, activities, currency = 'USD' }: ClientDet
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDelete}
               disabled={isDeleting}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              Delete
+              Eliminar
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

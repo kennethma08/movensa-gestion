@@ -55,14 +55,14 @@ export function InvoiceActions({ invoice, isOverdue }: InvoiceActionsProps) {
       const result = await sendInvoice(invoice.id);
       if (result.success) {
         if (result.emailSent) {
-          toast.success('Invoice sent and email delivered');
+          toast.success('Factura enviada y correo entregado');
         } else {
-          toast.warning('Invoice marked as sent, but email delivery failed. Please check your email configuration.');
+          toast.warning('La factura se marcó como enviada, pero el correo no pudo entregarse. Revise la configuración del correo.');
         }
         router.refresh();
         setShowSendDialog(false);
       } else {
-        toast.error(result.error || 'Failed to send invoice');
+        toast.error(result.error || 'No se pudo enviar la factura');
       }
     } finally {
       setIsSending(false);
@@ -74,10 +74,10 @@ export function InvoiceActions({ invoice, isOverdue }: InvoiceActionsProps) {
     try {
       const result = await deleteInvoice(invoice.id);
       if (result.success) {
-        toast.success('Invoice deleted successfully');
+        toast.success('Factura eliminada correctamente');
         router.push('/invoices');
       } else {
-        toast.error(result.error || 'Failed to delete invoice');
+        toast.error(result.error || 'No se pudo eliminar la factura');
       }
     } finally {
       setIsDeleting(false);
@@ -89,11 +89,11 @@ export function InvoiceActions({ invoice, isOverdue }: InvoiceActionsProps) {
     try {
       const result = await updateInvoiceStatus(invoice.id, 'voided');
       if (result.success) {
-        toast.success('Invoice voided successfully');
+        toast.success('Factura anulada correctamente');
         router.refresh();
         setShowVoidDialog(false);
       } else {
-        toast.error(result.error || 'Failed to void invoice');
+        toast.error(result.error || 'No se pudo anular la factura');
       }
     } finally {
       setIsVoiding(false);
@@ -105,10 +105,10 @@ export function InvoiceActions({ invoice, isOverdue }: InvoiceActionsProps) {
     try {
       const result = await duplicateInvoice(invoice.id);
       if (result.success && result.invoiceId) {
-        toast.success('Invoice duplicated successfully');
+        toast.success('Factura duplicada correctamente');
         router.push(`/invoices/${result.invoiceId}`);
       } else {
-        toast.error(result.error || 'Failed to duplicate invoice');
+        toast.error(result.error || 'No se pudo duplicar la factura');
       }
     } finally {
       setIsDuplicating(false);
@@ -131,31 +131,31 @@ export function InvoiceActions({ invoice, isOverdue }: InvoiceActionsProps) {
       <div className="flex items-center gap-2">
         <Button variant="outline" size="sm" onClick={handleDuplicate} disabled={isDuplicating}>
           {isDuplicating ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Copy className="mr-2 h-4 w-4" />}
-          Duplicate
+          Duplicar
         </Button>
         <Button variant="outline" size="sm" onClick={handleDownload}>
           <Download className="mr-2 h-4 w-4" />
-          Download PDF
+          Descargar PDF
         </Button>
         {canEdit && (
           <Button variant="outline" size="sm" asChild>
             <Link href={`/invoices/${invoice.id}/edit`}>
               <Edit className="mr-2 h-4 w-4" />
-              Edit
+              Editar
             </Link>
           </Button>
         )}
         {canSend && (
           <Button size="sm" onClick={() => setShowSendDialog(true)}>
             <Send className="mr-2 h-4 w-4" />
-            Send to Client
+            Enviar al cliente
           </Button>
         )}
         {invoice.status !== 'draft' && invoice.status !== 'voided' && invoice.accessToken && (
           <Button variant="outline" size="sm" asChild>
             <Link href={`/i/${invoice.accessToken}`} target="_blank">
               <ExternalLink className="mr-2 h-4 w-4" />
-              View Portal
+              Ver portal
             </Link>
           </Button>
         )}
@@ -171,7 +171,7 @@ export function InvoiceActions({ invoice, isOverdue }: InvoiceActionsProps) {
               {canVoid && (
                 <DropdownMenuItem onClick={() => setShowVoidDialog(true)} className="text-orange-600">
                   <Ban className="mr-2 h-4 w-4" />
-                  Void Invoice
+                  Anular factura
                 </DropdownMenuItem>
               )}
               {canDelete && (
@@ -179,7 +179,7 @@ export function InvoiceActions({ invoice, isOverdue }: InvoiceActionsProps) {
                   {canVoid && <DropdownMenuSeparator />}
                   <DropdownMenuItem onClick={() => setShowDeleteDialog(true)} className="text-red-600">
                     <Trash2 className="mr-2 h-4 w-4" />
-                    Delete Invoice
+                    Eliminar factura
                   </DropdownMenuItem>
                 </>
               )}
@@ -192,7 +192,7 @@ export function InvoiceActions({ invoice, isOverdue }: InvoiceActionsProps) {
       <Dialog open={showSendDialog} onOpenChange={setShowSendDialog}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Send Invoice</DialogTitle>
+            <DialogTitle>Enviar factura</DialogTitle>
             <DialogDescription>
               Are you sure you want to send this invoice to the client? They will receive an email
               with a link to view and pay the invoice.
@@ -200,11 +200,11 @@ export function InvoiceActions({ invoice, isOverdue }: InvoiceActionsProps) {
           </DialogHeader>
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowSendDialog(false)} disabled={isSending}>
-              Cancel
+              Cancelar
             </Button>
             <Button onClick={handleSend} disabled={isSending}>
               {isSending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Send Invoice
+              Enviar factura
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -214,7 +214,7 @@ export function InvoiceActions({ invoice, isOverdue }: InvoiceActionsProps) {
       <Dialog open={showVoidDialog} onOpenChange={setShowVoidDialog}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Void Invoice</DialogTitle>
+            <DialogTitle>Anular factura</DialogTitle>
             <DialogDescription>
               Are you sure you want to void this invoice? This action cannot be undone.
               The invoice will be marked as voided and the client will no longer be able to pay it.
@@ -222,11 +222,11 @@ export function InvoiceActions({ invoice, isOverdue }: InvoiceActionsProps) {
           </DialogHeader>
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowVoidDialog(false)} disabled={isVoiding}>
-              Cancel
+              Cancelar
             </Button>
             <Button variant="destructive" onClick={handleVoid} disabled={isVoiding}>
               {isVoiding && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Void Invoice
+              Anular factura
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -236,18 +236,18 @@ export function InvoiceActions({ invoice, isOverdue }: InvoiceActionsProps) {
       <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Delete Invoice</DialogTitle>
+            <DialogTitle>Eliminar factura</DialogTitle>
             <DialogDescription>
               Are you sure you want to delete this invoice? This action cannot be undone.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowDeleteDialog(false)} disabled={isDeleting}>
-              Cancel
+              Cancelar
             </Button>
             <Button variant="destructive" onClick={handleDelete} disabled={isDeleting}>
               {isDeleting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Delete Invoice
+              Eliminar factura
             </Button>
           </DialogFooter>
         </DialogContent>

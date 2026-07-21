@@ -39,7 +39,7 @@ export function OnboardingBrandingStep({ onNext, onSkip, onBack }: OnboardingBra
         router.refresh();
         onNext();
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to save branding settings');
+        setError(err instanceof Error ? err.message : 'No se pudo guardar la configuración de marca');
       }
     });
   };
@@ -50,7 +50,7 @@ export function OnboardingBrandingStep({ onNext, onSkip, onBack }: OnboardingBra
         <div className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 mb-4">
           <Palette className="h-6 w-6 text-primary" />
         </div>
-        <h3 className="text-lg font-semibold">Customize your branding</h3>
+        <h3 className="text-lg font-semibold">Personalice su marca</h3>
         <p className="text-sm text-muted-foreground">
           Make your quotes and invoices match your brand
         </p>
@@ -58,7 +58,7 @@ export function OnboardingBrandingStep({ onNext, onSkip, onBack }: OnboardingBra
 
       <div className="grid gap-6 sm:grid-cols-2">
         <div className="space-y-3">
-          <Label htmlFor="primaryColor">Primary Color</Label>
+          <Label htmlFor="primaryColor">Color principal</Label>
           <div className="flex gap-3">
             <div
               className="h-10 w-10 rounded-md border shadow-sm cursor-pointer"
@@ -85,7 +85,7 @@ export function OnboardingBrandingStep({ onNext, onSkip, onBack }: OnboardingBra
         </div>
 
         <div className="space-y-3">
-          <Label htmlFor="accentColor">Accent Color</Label>
+          <Label htmlFor="accentColor">Color de acento</Label>
           <div className="flex gap-3">
             <div
               className="h-10 w-10 rounded-md border shadow-sm cursor-pointer"
@@ -114,7 +114,7 @@ export function OnboardingBrandingStep({ onNext, onSkip, onBack }: OnboardingBra
 
       {/* Preview */}
       <div className="border rounded-lg p-4 bg-muted/50">
-        <p className="text-sm font-medium mb-3">Preview</p>
+        <p className="text-sm font-medium mb-3">Vista previa</p>
         <div className="flex gap-3">
           <Button style={{ backgroundColor: primaryColor }} className="text-white">
             Primary Button
@@ -126,7 +126,7 @@ export function OnboardingBrandingStep({ onNext, onSkip, onBack }: OnboardingBra
       </div>
 
       <p className="text-sm text-muted-foreground text-center">
-        You can upload your logo later in Settings → Branding
+        Puede subir el logo después en Configuración → Marca
       </p>
 
       {error && <p className="text-sm text-destructive">{error}</p>}
@@ -134,7 +134,7 @@ export function OnboardingBrandingStep({ onNext, onSkip, onBack }: OnboardingBra
       <div className="flex justify-between pt-4">
         <Button type="button" variant="ghost" onClick={onBack}>
           <ArrowLeft className="mr-2 h-4 w-4" />
-          Back
+          Atrás
         </Button>
         <div className="flex gap-2">
           <Button type="button" variant="outline" onClick={onSkip}>

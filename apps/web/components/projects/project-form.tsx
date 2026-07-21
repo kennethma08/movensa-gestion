@@ -19,9 +19,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { z } from 'zod';
 
 const projectFormSchema = z.object({
-  name: z.string().min(1, 'Project name is required').max(255),
+  name: z.string().min(1, 'El nombre del proyecto es obligatorio').max(255),
   description: z.string().optional(),
-  clientId: z.string().min(1, 'Please select a client'),
+  clientId: z.string().min(1, 'Seleccione un cliente'),
 });
 
 type ProjectFormInput = z.infer<typeof projectFormSchema>;
@@ -45,7 +45,7 @@ export function ProjectForm({
   defaultValues,
   onSubmit,
   isLoading = false,
-  submitLabel = 'Save Project',
+  submitLabel = 'Guardar proyecto',
 }: ProjectFormProps) {
   const form = useForm<ProjectFormInput>({
     resolver: zodResolver(projectFormSchema),
@@ -66,17 +66,17 @@ export function ProjectForm({
       {/* Project Information */}
       <Card>
         <CardHeader>
-          <CardTitle>Project Information</CardTitle>
+          <CardTitle>Información del proyecto</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="clientId">Client *</Label>
+            <Label htmlFor="clientId">Cliente *</Label>
             <Select
               value={form.watch('clientId')}
               onValueChange={(value) => form.setValue('clientId', value, { shouldValidate: true })}
             >
               <SelectTrigger id="clientId">
-                <SelectValue placeholder="Select a client" />
+                <SelectValue placeholder="Seleccione un cliente" />
               </SelectTrigger>
               <SelectContent>
                 {clients.map((client) => (
@@ -93,11 +93,11 @@ export function ProjectForm({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="name">Project Name *</Label>
+            <Label htmlFor="name">Nombre del proyecto *</Label>
             <Input
               id="name"
               {...form.register('name')}
-              placeholder="e.g., Website Redesign 2024"
+              placeholder="Ej.: Renovación del sitio web"
             />
             {form.formState.errors.name && (
               <p className="text-sm text-destructive">{form.formState.errors.name.message}</p>
@@ -105,11 +105,11 @@ export function ProjectForm({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="description">Description</Label>
+            <Label htmlFor="description">Descripción</Label>
             <Textarea
               id="description"
               {...form.register('description')}
-              placeholder="Brief description of the project..."
+              placeholder="Descripción breve del proyecto..."
               rows={4}
             />
             {form.formState.errors.description && (
@@ -122,7 +122,7 @@ export function ProjectForm({
       {/* Actions */}
       <div className="flex justify-end gap-4">
         <Button type="button" variant="outline" onClick={() => window.history.back()}>
-          Cancel
+          Cancelar
         </Button>
         <Button type="submit" disabled={isLoading}>
           {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}

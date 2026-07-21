@@ -45,16 +45,16 @@ export function ServiceItemBlockContent({ block }: ServiceItemBlockContentProps)
       <div className="rounded-lg border border-border bg-card text-card-foreground p-4 space-y-3">
         <div className="flex gap-4">
           <div className="flex-1">
-            <label className="text-xs font-medium text-muted-foreground">Service Name</label>
+            <label className="text-xs font-medium text-muted-foreground">Nombre del servicio</label>
             <Input
               value={block.content.name}
               onChange={(e) => handleChange('name', e.target.value)}
-              placeholder="Service name"
+              placeholder="Nombre del servicio"
               className="mt-1 text-foreground"
             />
           </div>
           <div className="w-24">
-            <label className="text-xs font-medium text-muted-foreground">Quantity</label>
+            <label className="text-xs font-medium text-muted-foreground">Cantidad</label>
             <Input
               type="number"
               value={block.content.quantity}
@@ -65,7 +65,7 @@ export function ServiceItemBlockContent({ block }: ServiceItemBlockContentProps)
             />
           </div>
           <div className="w-32">
-            <label className="text-xs font-medium text-muted-foreground">Rate</label>
+            <label className="text-xs font-medium text-muted-foreground">Precio</label>
             <Input
               type="number"
               value={block.content.rate}
@@ -78,16 +78,16 @@ export function ServiceItemBlockContent({ block }: ServiceItemBlockContentProps)
         </div>
         <div className="flex gap-4">
           <div className="flex-1">
-            <label className="text-xs font-medium text-muted-foreground">Description (optional)</label>
+            <label className="text-xs font-medium text-muted-foreground">Descripción (opcional)</label>
             <Input
               value={block.content.description}
               onChange={(e) => handleChange('description', e.target.value)}
-              placeholder="Add a description..."
+              placeholder="Agregar una descripción..."
               className="mt-1 text-foreground"
             />
           </div>
           <div className="w-24">
-            <label className="text-xs font-medium text-muted-foreground">Tax %</label>
+            <label className="text-xs font-medium text-muted-foreground">Impuesto %</label>
             <Input
               type="number"
               value={block.content.taxRate ?? ''}
@@ -103,7 +103,7 @@ export function ServiceItemBlockContent({ block }: ServiceItemBlockContentProps)
         <div className="flex items-center justify-between pt-2 border-t">
           <span className="text-sm text-muted-foreground">
             {block.content.quantity} {block.content.unit} x {formatCurrency(block.content.rate)}
-            {block.content.taxRate ? ` + ${block.content.taxRate}% tax` : ''}
+            {block.content.taxRate ? ` + ${block.content.taxRate}% de impuesto` : ''}
           </span>
           <span className="font-semibold">{formatCurrency(lineTotal)}</span>
         </div>
@@ -115,7 +115,7 @@ export function ServiceItemBlockContent({ block }: ServiceItemBlockContentProps)
     <div className="rounded-lg border bg-card p-4">
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1">
-          <h4 className="font-medium">{block.content.name || 'Untitled Service'}</h4>
+          <h4 className="font-medium">{block.content.name || 'Servicio sin título'}</h4>
           {block.content.description && (
             <p className="mt-1 text-sm text-muted-foreground">{block.content.description}</p>
           )}

@@ -122,13 +122,13 @@ export function InvoicesDataTable({ data: initialData, recurringInvoiceIds: serv
     try {
       const result = await deleteInvoice(invoice.id);
       if (result.success) {
-        toast.success('Invoice deleted successfully');
+        toast.success('Factura eliminada correctamente');
         setData((prev) => prev.filter((i) => i.id !== invoice.id));
       } else {
-        toast.error(result.error || 'Failed to delete invoice');
+        toast.error(result.error || 'No se pudo eliminar la factura');
       }
     } catch {
-      toast.error('Failed to delete invoice');
+      toast.error('No se pudo eliminar la factura');
     } finally {
       setIsProcessing(false);
     }
@@ -140,13 +140,13 @@ export function InvoicesDataTable({ data: initialData, recurringInvoiceIds: serv
     try {
       const result = await duplicateInvoice(invoice.id);
       if (result.success && result.invoiceId) {
-        toast.success('Invoice duplicated successfully');
+        toast.success('Factura duplicada correctamente');
         router.push(`/invoices/${result.invoiceId}`);
       } else {
-        toast.error(result.error || 'Failed to duplicate invoice');
+        toast.error(result.error || 'No se pudo duplicar la factura');
       }
     } catch {
-      toast.error('Failed to duplicate invoice');
+      toast.error('No se pudo duplicar la factura');
     } finally {
       setIsProcessing(false);
     }
@@ -172,15 +172,15 @@ export function InvoicesDataTable({ data: initialData, recurringInvoiceIds: serv
   // Copy Link
   const handleCopyLink = useCallback(async (invoice: InvoiceListItem) => {
     if (!invoice.accessToken) {
-      toast.error('No portal link available — send the invoice first');
+      toast.error('No hay un enlace del portal disponible; primero envíe la factura');
       return;
     }
     const url = `${window.location.origin}/i/${invoice.accessToken}`;
     try {
       await navigator.clipboard.writeText(url);
-      toast.success('Link copied to clipboard');
+      toast.success('Enlace copiado al portapapeles');
     } catch {
-      toast.error('Failed to copy link');
+      toast.error('No se pudo copiar el enlace');
     }
   }, []);
 
@@ -296,7 +296,7 @@ export function InvoicesDataTable({ data: initialData, recurringInvoiceIds: serv
                       <Check className="h-5 w-5" style={{ color: ACCENT }} />
                     </div>
                     <h3 className="text-base font-semibold tracking-tight">
-                      {invoice.client?.name || 'Invoice'}
+                      {invoice.client?.name || 'Factura'}
                     </h3>
                     <p className="text-3xl font-bold tracking-tight mt-1" style={{ color: ACCENT }}>
                       {formatCurrency(invoice.totals.total, invoice.currency)}
@@ -312,7 +312,7 @@ export function InvoicesDataTable({ data: initialData, recurringInvoiceIds: serv
                   {viewPayments.length > 0 && (
                     <>
                       <div className="px-6 py-4">
-                        <p className="text-xs font-medium text-muted-foreground mb-3">Payment History</p>
+                        <p className="text-xs font-medium text-muted-foreground mb-3">Historial de pagos</p>
                         <div className="space-y-2">
                           {viewPayments.map((pmt: any) => (
                             <div
@@ -343,7 +343,7 @@ export function InvoicesDataTable({ data: initialData, recurringInvoiceIds: serv
                       <div className="flex items-center justify-between mb-3">
                         <div>
                           <p className="font-semibold text-sm">
-                            {invoice.client?.name || 'Select a customer'}
+                            {invoice.client?.name || 'Seleccionar cliente'}
                           </p>
                           {invoice.client?.company && invoice.client.company !== invoice.client.name && (
                             <p className="text-xs text-muted-foreground">
@@ -374,7 +374,7 @@ export function InvoicesDataTable({ data: initialData, recurringInvoiceIds: serv
                             >
                               <div className="flex-1 min-w-0">
                                 <p className="font-medium text-sm truncate">
-                                  {item.name || 'Untitled Item'}
+                                  {item.name || 'Concepto sin título'}
                                 </p>
                                 <p className="text-xs text-muted-foreground truncate mt-0.5">
                                   {item.quantity} &times; {formatCurrency(item.rate, invoice.currency)}
@@ -401,7 +401,7 @@ export function InvoicesDataTable({ data: initialData, recurringInvoiceIds: serv
                                 <span className="tabular-nums">{formatCurrency(invoice.totals.subtotal, invoice.currency)}</span>
                               </div>
                               <div className="flex justify-between text-sm">
-                                <span className="text-muted-foreground">Discount</span>
+                                <span className="text-muted-foreground">Descuento</span>
                                 <span className="tabular-nums text-green-600">-{formatCurrency(invoice.totals.discountAmount, invoice.currency)}</span>
                               </div>
                             </div>
@@ -417,7 +417,7 @@ export function InvoicesDataTable({ data: initialData, recurringInvoiceIds: serv
                                 </div>
                               )}
                               <div className="flex justify-between text-sm">
-                                <span className="text-muted-foreground">Paid</span>
+                                <span className="text-muted-foreground">Pagado</span>
                                 <span className="tabular-nums text-green-600">-{formatCurrency(invoice.totals.amountPaid, invoice.currency)}</span>
                               </div>
                             </div>
@@ -431,7 +431,7 @@ export function InvoicesDataTable({ data: initialData, recurringInvoiceIds: serv
                             )}
                             style={{ borderLeftColor: ACCENT }}
                           >
-                            <span className="font-semibold text-sm">Total Due</span>
+                            <span className="font-semibold text-sm">Saldo pendiente</span>
                             <span className="text-lg font-bold tabular-nums" style={{ color: ACCENT }}>
                               {formatCurrency(invoice.totals.amountDue, invoice.currency)}
                             </span>

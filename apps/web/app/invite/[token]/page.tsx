@@ -27,7 +27,7 @@ export default async function InvitePage({ params }: InvitePageProps) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background">
         <div className="mx-auto max-w-md text-center space-y-4 p-8">
-          <h1 className="text-2xl font-bold text-destructive">Invalid Invitation</h1>
+          <h1 className="text-2xl font-bold text-destructive">Invitación inválida</h1>
           <p className="text-muted-foreground">
             This invitation link is invalid or has been removed.
           </p>
@@ -40,7 +40,7 @@ export default async function InvitePage({ params }: InvitePageProps) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background">
         <div className="mx-auto max-w-md text-center space-y-4 p-8">
-          <h1 className="text-2xl font-bold text-destructive">Invitation Cancelled</h1>
+          <h1 className="text-2xl font-bold text-destructive">Invitación cancelada</h1>
           <p className="text-muted-foreground">
             This invitation has been cancelled. Please ask the workspace owner to send a new one.
           </p>
@@ -53,7 +53,7 @@ export default async function InvitePage({ params }: InvitePageProps) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background">
         <div className="mx-auto max-w-md text-center space-y-4 p-8">
-          <h1 className="text-2xl font-bold">Already Accepted</h1>
+          <h1 className="text-2xl font-bold">Invitación ya aceptada</h1>
           <p className="text-muted-foreground">
             This invitation has already been accepted.
           </p>
@@ -69,7 +69,7 @@ export default async function InvitePage({ params }: InvitePageProps) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background">
         <div className="mx-auto max-w-md text-center space-y-4 p-8">
-          <h1 className="text-2xl font-bold text-destructive">Invitation Expired</h1>
+          <h1 className="text-2xl font-bold text-destructive">Invitación vencida</h1>
           <p className="text-muted-foreground">
             This invitation has expired. Please ask the workspace owner to send a new one.
           </p>
@@ -95,7 +95,7 @@ export default async function InvitePage({ params }: InvitePageProps) {
     <div className="flex min-h-screen items-center justify-center bg-background">
       <div className="mx-auto max-w-md space-y-6 p-8">
         <div className="text-center space-y-2">
-          <h1 className="text-2xl font-bold">Workspace Invitation</h1>
+          <h1 className="text-2xl font-bold">Invitación al espacio de trabajo</h1>
           <p className="text-muted-foreground">
             {invitation.invitedBy.name || 'A team member'} has invited you to join{' '}
             <strong>{invitation.workspace.name}</strong> as a <strong>{invitation.role}</strong>.

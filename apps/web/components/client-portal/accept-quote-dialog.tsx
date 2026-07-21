@@ -81,13 +81,13 @@ export function AcceptQuoteDialog({
       });
 
       if (result.success) {
-        toast.success('Quote accepted successfully!');
+        toast.success('Cotización aceptada correctamente');
         onAccepted();
       } else {
-        toast.error(result.error || 'Failed to accept quote');
+        toast.error(result.error || 'No se pudo aceptar la cotización');
       }
     } catch {
-      toast.error('An unexpected error occurred');
+      toast.error('Ocurrió un error inesperado');
     } finally {
       setIsSubmitting(false);
     }
@@ -110,7 +110,7 @@ export function AcceptQuoteDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <CheckCircle2 className="h-5 w-5 text-green-600" />
-            Accept Quote
+            Aceptar cotización
           </DialogTitle>
           <DialogDescription>
             Review the details below and sign to accept this quote.
@@ -121,7 +121,7 @@ export function AcceptQuoteDialog({
           {/* Quote Summary */}
           <div className="rounded-lg bg-muted/50 p-4">
             <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Quote Total</span>
+              <span className="text-muted-foreground">Total de la cotización</span>
               <span className="font-semibold">
                 {formatCurrency(quote.totals.total)}
               </span>
@@ -155,10 +155,10 @@ export function AcceptQuoteDialog({
             <>
               {/* Signer Name */}
               <div className="space-y-2">
-                <Label htmlFor="signer-name">Your Name</Label>
+                <Label htmlFor="signer-name">Su nombre</Label>
                 <Input
                   id="signer-name"
-                  placeholder="Enter your full name"
+                  placeholder="Ingrese su nombre completo"
                   value={signerName}
                   onChange={(e) => setSignerName(e.target.value)}
                   disabled={isSubmitting}
@@ -168,7 +168,7 @@ export function AcceptQuoteDialog({
               {/* Signature Pad */}
               {requiresSignature && (
                 <div className="space-y-2">
-                  <Label>Your Signature</Label>
+                  <Label>Su firma</Label>
                   <SignaturePad onChange={setSignatureData} />
                 </div>
               )}
@@ -176,7 +176,7 @@ export function AcceptQuoteDialog({
               {/* Terms */}
               {quote.terms && (
                 <div className="rounded-lg border bg-muted/30 p-3 max-h-40 overflow-y-auto">
-                  <p className="text-xs font-medium text-muted-foreground mb-1">Terms & Conditions</p>
+                  <p className="text-xs font-medium text-muted-foreground mb-1">Términos y condiciones</p>
                   <p className="text-sm whitespace-pre-wrap">{quote.terms}</p>
                 </div>
               )}
@@ -194,7 +194,7 @@ export function AcceptQuoteDialog({
                     htmlFor="agree-terms"
                     className="text-sm font-normal leading-snug"
                   >
-                    I have read and agree to the terms and conditions{quote.terms ? ' above' : ' outlined in this quote'}.
+                    He leído y acepto los términos y condiciones{quote.terms ? ' anteriores' : ' indicados en esta cotización'}.
                   </Label>
                 </div>
               </div>
@@ -204,18 +204,18 @@ export function AcceptQuoteDialog({
 
         <DialogFooter>
           <Button variant="outline" onClick={handleClose} disabled={isSubmitting}>
-            Cancel
+            Cancelar
           </Button>
           <Button onClick={handleSubmit} disabled={!canSubmit || isSubmitting}>
             {isSubmitting ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Accepting...
+                Aceptando...
               </>
             ) : (
               <>
                 <CheckCircle2 className="mr-2 h-4 w-4" />
-                Accept Quote
+                Aceptar cotización
               </>
             )}
           </Button>

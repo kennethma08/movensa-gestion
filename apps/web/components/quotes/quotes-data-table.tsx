@@ -97,13 +97,13 @@ export function QuotesDataTable({ data: initialData }: QuotesDataTableProps) {
     try {
       const result = await duplicateQuote(quote.id);
       if (result.success && result.quoteId) {
-        toast.success('Quote duplicated successfully');
+        toast.success('Cotización duplicada correctamente');
         router.push(`/quotes/${result.quoteId}`);
       } else {
-        toast.error('Failed to duplicate quote');
+        toast.error('No se pudo duplicar la cotización');
       }
     } catch {
-      toast.error('Failed to duplicate quote');
+      toast.error('No se pudo duplicar la cotización');
     } finally {
       setIsProcessing(false);
     }
@@ -115,13 +115,13 @@ export function QuotesDataTable({ data: initialData }: QuotesDataTableProps) {
     try {
       const result = await deleteQuote(quote.id);
       if (result.success) {
-        toast.success('Quote deleted successfully');
+        toast.success('Cotización eliminada correctamente');
         setData((prev) => prev.filter((q) => q.id !== quote.id));
       } else {
-        toast.error('Failed to delete quote');
+        toast.error('No se pudo eliminar la cotización');
       }
     } catch {
-      toast.error('Failed to delete quote');
+      toast.error('No se pudo eliminar la cotización');
     } finally {
       setIsProcessing(false);
     }
@@ -162,16 +162,16 @@ export function QuotesDataTable({ data: initialData }: QuotesDataTableProps) {
     const url = `${window.location.origin}/quotes/${quote.id}`;
     try {
       await navigator.clipboard.writeText(url);
-      toast.success('Link copied — share the portal link from the quote detail page');
+      toast.success('Enlace copiado; puede compartirlo desde el detalle de la cotización');
     } catch {
-      toast.error('Failed to copy link');
+      toast.error('No se pudo copiar el enlace');
     }
   }, []);
 
   // Convert to Invoice
   const handleConvertToInvoice = useCallback(async (quote: QuoteListItem) => {
     if (quote.status !== 'accepted') {
-      toast.error('Only accepted quotes can be converted to invoices');
+      toast.error('Solo las cotizaciones aceptadas se pueden convertir en facturas');
       return;
     }
 
@@ -179,7 +179,7 @@ export function QuotesDataTable({ data: initialData }: QuotesDataTableProps) {
     try {
       const result = await createInvoiceFromQuote(quote.id);
       if (result.success && result.invoice) {
-        toast.success('Quote converted to invoice!', { id: 'convert' });
+        toast.success('¡Cotización convertida en factura!', { id: 'convert' });
         setData((prev) =>
           prev.map((q) =>
             q.id === quote.id ? { ...q, status: 'converted' } : q
@@ -187,10 +187,10 @@ export function QuotesDataTable({ data: initialData }: QuotesDataTableProps) {
         );
         router.push(`/invoices/${result.invoice.id}`);
       } else {
-        toast.error(result.error || 'Failed to convert quote', { id: 'convert' });
+        toast.error(result.error || 'No se pudo convertir la cotización', { id: 'convert' });
       }
     } catch (err) {
-      const msg = err instanceof Error ? err.message : 'Failed to convert quote';
+      const msg = err instanceof Error ? err.message : 'No se pudo convertir la cotización';
       console.error('Convert to invoice error:', err);
       toast.error(msg, { id: 'convert' });
     }
@@ -213,13 +213,13 @@ export function QuotesDataTable({ data: initialData }: QuotesDataTableProps) {
 
   const bulkActions: BulkAction<QuoteListItem>[] = [
     {
-      label: 'Delete',
+      label: 'Eliminar',
       icon: <Trash2 className="mr-2 h-4 w-4" />,
       variant: 'destructive',
       onClick: async (rows) => {
         const drafts = rows.filter((r) => r.status === 'draft');
         if (drafts.length === 0) {
-          toast.error('Only draft quotes can be deleted');
+          toast.error('Solo se pueden eliminar cotizaciones en borrador');
           return;
         }
         setIsProcessing(true);
@@ -229,10 +229,10 @@ export function QuotesDataTable({ data: initialData }: QuotesDataTableProps) {
             const result = await deleteQuote(quote.id);
             if (result.success) deleted++;
           }
-          toast.success(`${deleted} quote(s) deleted`);
+          toast.success(`${deleted} cotización(es) eliminada(s)`);
           setData((prev) => prev.filter((q) => !drafts.some((d) => d.id === q.id)));
         } catch {
-          toast.error('Failed to delete quotes');
+          toast.error('No se pudieron eliminar las cotizaciones');
         } finally {
           setIsProcessing(false);
         }
@@ -263,7 +263,7 @@ export function QuotesDataTable({ data: initialData }: QuotesDataTableProps) {
     ?.filter((b: any) => b.type === 'service-item')
     ?.map((b: any) => ({
       id: b.id,
-      name: b.content.name || 'Untitled Item',
+      name: b.content.name || 'Concepto sin título',
       description: b.content.description || '',
       quantity: b.content.quantity || 0,
       rate: b.content.rate || 0,
@@ -288,7 +288,7 @@ export function QuotesDataTable({ data: initialData }: QuotesDataTableProps) {
       {/* Quote View Dialog — Payment Page Style */}
       <Dialog open={!!viewingQuote} onOpenChange={(open) => !open && handleCloseView()}>
         <DialogContent className="!flex !flex-col !max-w-[520px] !max-h-[90vh] !p-0 !gap-0 overflow-hidden">
-          <DialogTitle className="sr-only">Quote Preview</DialogTitle>
+          <DialogTitle className="sr-only">Vista previa de la cotización</DialogTitle>
           {quote && (
             <>
               {/* Scrollable content */}
@@ -310,13 +310,13 @@ export function QuotesDataTable({ data: initialData }: QuotesDataTableProps) {
                       <Check className="h-5 w-5" style={{ color: ACCENT }} />
                     </div>
                     <h3 className="text-base font-semibold tracking-tight">
-                      {quote.client?.name || 'Quote'}
+                      {quote.client?.name || 'Cotización'}
                     </h3>
                     <p className="text-3xl font-bold tracking-tight mt-1" style={{ color: ACCENT }}>
                       {formatCurrency(quote.totals.total, quote.currency)}
                     </p>
                     <p className="text-xs text-muted-foreground mt-1">
-                      Quote #{quote.quoteNumber} &middot; {quote.expirationDate ? `Valid until ${formatDate(String(quote.expirationDate))}` : `Issued ${formatDate(String(quote.issueDate))}`}
+                      Cotización #{quote.quoteNumber} &middot; {quote.expirationDate ? `Válida hasta ${formatDate(String(quote.expirationDate))}` : `Emitida ${formatDate(String(quote.issueDate))}`}
                     </p>
                   </div>
 
@@ -328,7 +328,7 @@ export function QuotesDataTable({ data: initialData }: QuotesDataTableProps) {
                       <div className="flex items-center justify-between mb-3">
                         <div>
                           <p className="font-semibold text-sm">
-                            {quote.client?.name || 'Select a customer'}
+                            {quote.client?.name || 'Seleccionar cliente'}
                           </p>
                           {quote.client?.company && quote.client.company !== quote.client.name && (
                             <p className="text-xs text-muted-foreground">
@@ -359,7 +359,7 @@ export function QuotesDataTable({ data: initialData }: QuotesDataTableProps) {
                             >
                               <div className="flex-1 min-w-0">
                                 <p className="font-medium text-sm truncate">
-                                  {item.name || 'Untitled Item'}
+                                  {item.name || 'Concepto sin título'}
                                 </p>
                                 <p className="text-xs text-muted-foreground truncate mt-0.5">
                                   {item.quantity} &times; {formatCurrency(item.rate, quote.currency)}
@@ -386,7 +386,7 @@ export function QuotesDataTable({ data: initialData }: QuotesDataTableProps) {
                                 <span className="tabular-nums">{formatCurrency(quote.totals.subtotal, quote.currency)}</span>
                               </div>
                               <div className="flex justify-between text-sm">
-                                <span className="text-muted-foreground">Discount</span>
+                                <span className="text-muted-foreground">Descuento</span>
                                 <span className="tabular-nums text-green-600">-{formatCurrency(quote.totals.discountAmount, quote.currency)}</span>
                               </div>
                             </div>
@@ -402,7 +402,7 @@ export function QuotesDataTable({ data: initialData }: QuotesDataTableProps) {
                                 </div>
                               )}
                               <div className="flex justify-between text-sm">
-                                <span className="text-muted-foreground">Tax</span>
+                                <span className="text-muted-foreground">Impuesto</span>
                                 <span className="tabular-nums">{formatCurrency(quote.totals.taxTotal, quote.currency)}</span>
                               </div>
                             </div>
@@ -441,7 +441,7 @@ export function QuotesDataTable({ data: initialData }: QuotesDataTableProps) {
                     <>
                       <Separator className="border-gray-100" />
                       <div className="px-6 py-5">
-                        <p className="text-xs font-medium text-muted-foreground mb-1">Terms & Conditions</p>
+                        <p className="text-xs font-medium text-muted-foreground mb-1">Términos y condiciones</p>
                         <p className="text-sm text-muted-foreground">{quote.terms}</p>
                       </div>
                     </>
@@ -454,14 +454,14 @@ export function QuotesDataTable({ data: initialData }: QuotesDataTableProps) {
                       style={{ backgroundColor: ACCENT }}
                     >
                       <CheckCircle2 className="h-4 w-4" />
-                      Accept Quote
+                      Aceptar cotización
                     </button>
                     <button
                       onClick={() => window.open(`/api/pdf/quote/${quote.id}`, '_blank')}
                       className="w-full h-10 rounded-lg font-medium text-sm flex items-center justify-center gap-2 transition-colors border border-border text-muted-foreground hover:bg-muted/50"
                     >
                       <Download className="h-4 w-4" />
-                      Download Quote
+                      Descargar cotización
                     </button>
                   </div>
 

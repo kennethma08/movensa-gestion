@@ -3,7 +3,7 @@ import { getQuote } from '@/lib/quotes/actions';
 import EditQuoteForm from './edit-quote-form';
 
 export const metadata = {
-  title: 'Edit Quote',
+  title: 'Editar cotización',
 };
 
 interface EditQuotePageProps {

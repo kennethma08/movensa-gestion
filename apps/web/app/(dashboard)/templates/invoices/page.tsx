@@ -4,7 +4,7 @@ import { getInvoiceTemplates } from '@/lib/invoices/actions';
 import { InvoiceTemplatesDataTable } from '@/components/invoices/invoice-templates-data-table';
 
 export const metadata = {
-  title: 'Invoice Templates',
+  title: 'Plantillas de factura',
 };
 
 async function InvoiceTemplateContent() {

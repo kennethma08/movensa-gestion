@@ -61,7 +61,7 @@ export function SearchCommand({ open, onOpenChange }: SearchCommandProps) {
       } catch {
         if (!cancelled) {
           setResults([]);
-          toast.error('Search failed. Please try again.');
+          toast.error('La búsqueda falló. Inténtelo nuevamente.');
         }
       } finally {
         if (!cancelled) {
@@ -114,7 +114,7 @@ export function SearchCommand({ open, onOpenChange }: SearchCommandProps) {
   return (
     <CommandDialog open={open} onOpenChange={onOpenChange}>
       <CommandInput
-        placeholder="Type a command or search..."
+        placeholder="Escriba para buscar o elegir una acción..."
         value={query}
         onValueChange={setQuery}
       />
@@ -123,16 +123,16 @@ export function SearchCommand({ open, onOpenChange }: SearchCommandProps) {
           {isSearching ? (
             <div className="flex items-center justify-center gap-2">
               <Loader2 className="h-4 w-4 animate-spin" />
-              <span>Searching...</span>
+              <span>Buscando...</span>
             </div>
           ) : (
-            'No results found.'
+            'No se encontraron resultados.'
           )}
         </CommandEmpty>
 
         {/* Search Results */}
         {quoteResults.length > 0 && (
-          <CommandGroup heading="Quotes">
+          <CommandGroup heading="Cotizaciones">
             {quoteResults.map((result) => (
               <CommandItem
                 key={result.id}
@@ -150,7 +150,7 @@ export function SearchCommand({ open, onOpenChange }: SearchCommandProps) {
         )}
 
         {invoiceResults.length > 0 && (
-          <CommandGroup heading="Invoices">
+          <CommandGroup heading="Facturas">
             {invoiceResults.map((result) => (
               <CommandItem
                 key={result.id}
@@ -168,7 +168,7 @@ export function SearchCommand({ open, onOpenChange }: SearchCommandProps) {
         )}
 
         {clientResults.length > 0 && (
-          <CommandGroup heading="Clients">
+          <CommandGroup heading="Clientes">
             {clientResults.map((result) => (
               <CommandItem
                 key={result.id}
@@ -186,7 +186,7 @@ export function SearchCommand({ open, onOpenChange }: SearchCommandProps) {
         )}
 
         {contractResults.length > 0 && (
-          <CommandGroup heading="Contracts">
+          <CommandGroup heading="Contratos">
             {contractResults.map((result) => (
               <CommandItem
                 key={result.id}
@@ -204,7 +204,7 @@ export function SearchCommand({ open, onOpenChange }: SearchCommandProps) {
         )}
 
         {projectResults.length > 0 && (
-          <CommandGroup heading="Projects">
+          <CommandGroup heading="Proyectos">
             {projectResults.map((result) => (
               <CommandItem
                 key={result.id}
@@ -222,7 +222,7 @@ export function SearchCommand({ open, onOpenChange }: SearchCommandProps) {
         )}
 
         {emailTemplateResults.length > 0 && (
-          <CommandGroup heading="Email Templates">
+          <CommandGroup heading="Plantillas de correo">
             {emailTemplateResults.map((result) => (
               <CommandItem
                 key={result.id}
@@ -241,67 +241,67 @@ export function SearchCommand({ open, onOpenChange }: SearchCommandProps) {
 
         {results.length > 0 && <CommandSeparator />}
 
-        <CommandGroup heading="Quick Actions">
+        <CommandGroup heading="Acciones rápidas">
           <CommandItem onSelect={() => runCommand(() => router.push('/quotes/new'))}>
             <Plus className="mr-2 h-4 w-4" />
-            <span>New Quote</span>
+            <span>Nueva cotización</span>
             <CommandShortcut>Q</CommandShortcut>
           </CommandItem>
           <CommandItem onSelect={() => runCommand(() => router.push('/invoices/new'))}>
             <Plus className="mr-2 h-4 w-4" />
-            <span>New Invoice</span>
+            <span>Nueva factura</span>
             <CommandShortcut>I</CommandShortcut>
           </CommandItem>
           <CommandItem onSelect={() => runCommand(() => router.push('/clients/new'))}>
             <Plus className="mr-2 h-4 w-4" />
-            <span>New Client</span>
+            <span>Nuevo cliente</span>
             <CommandShortcut>C</CommandShortcut>
           </CommandItem>
         </CommandGroup>
         <CommandSeparator />
-        <CommandGroup heading="Navigation">
+        <CommandGroup heading="Navegación">
           <CommandItem onSelect={() => runCommand(() => router.push('/dashboard'))}>
             <LayoutDashboard className="mr-2 h-4 w-4" />
-            <span>Dashboard</span>
+            <span>Panel general</span>
           </CommandItem>
           <CommandItem onSelect={() => runCommand(() => router.push('/quotes'))}>
             <FileText className="mr-2 h-4 w-4" />
-            <span>Quotes</span>
+            <span>Cotizaciones</span>
           </CommandItem>
           <CommandItem onSelect={() => runCommand(() => router.push('/invoices'))}>
             <Receipt className="mr-2 h-4 w-4" />
-            <span>Invoices</span>
+            <span>Facturas</span>
           </CommandItem>
           <CommandItem onSelect={() => runCommand(() => router.push('/clients'))}>
             <Users className="mr-2 h-4 w-4" />
-            <span>Clients</span>
+            <span>Clientes</span>
           </CommandItem>
           <CommandItem onSelect={() => runCommand(() => router.push('/projects'))}>
             <FolderKanban className="mr-2 h-4 w-4" />
-            <span>Projects</span>
+            <span>Proyectos</span>
           </CommandItem>
           <CommandItem onSelect={() => runCommand(() => router.push('/contracts'))}>
             <ScrollText className="mr-2 h-4 w-4" />
-            <span>Contracts</span>
+            <span>Contratos</span>
           </CommandItem>
           <CommandItem onSelect={() => runCommand(() => router.push('/settings/emails'))}>
             <Mail className="mr-2 h-4 w-4" />
-            <span>Email Templates</span>
+            <span>Plantillas de correo</span>
           </CommandItem>
-<CommandItem onSelect={() => runCommand(() => router.push('/analytics'))}>
+          <CommandItem onSelect={() => runCommand(() => router.push('/analytics'))}>
             <BarChart3 className="mr-2 h-4 w-4" />
-            <span>Analytics</span>
+            <span>Analítica</span>
           </CommandItem>
         </CommandGroup>
         <CommandSeparator />
-        <CommandGroup heading="Settings">
+        <CommandGroup heading="Configuración">
           <CommandItem onSelect={() => runCommand(() => router.push('/settings'))}>
             <Settings className="mr-2 h-4 w-4" />
-            <span>Settings</span>
+            <span>Configuración</span>
           </CommandItem>
           <CommandItem onSelect={() => runCommand(() => router.push('/help'))}>
             <HelpCircle className="mr-2 h-4 w-4" />
-            <span>Help & Support</span>
+            <span>Ayuda y soporte</span>
           </CommandItem>
         </CommandGroup>
       </CommandList>

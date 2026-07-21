@@ -26,21 +26,21 @@ import { createBlock } from '@/lib/quotes/types';
 
 // ─── Saved Line Items (from templates/invoice-items) ─────
 const savedLineItems = [
-  { id: '1', name: 'Project Fee', description: 'Flat project fee for deliverables', price: 0 },
-  { id: '2', name: 'Web Design & Development', description: 'Full website design and development services', price: 150 },
-  { id: '3', name: 'Virtual Assistant Services', description: 'Remote administrative and support tasks', price: 0 },
-  { id: '4', name: 'Travel Fees', description: 'Travel and transportation costs', price: 300 },
-  { id: '5', name: 'Studio/Office Space Rental', description: 'Hourly rental of studio or office space', price: 100 },
-  { id: '6', name: 'Studio Time', description: 'Professional studio session time', price: 400 },
-  { id: '7', name: 'Software Development', description: 'Custom software and application development', price: 0 },
-  { id: '8', name: 'Social Media Management', description: 'Social media strategy and content management', price: 75 },
-  { id: '9', name: 'Search Engine Optimization (SEO)', description: 'SEO audits, keyword research, and optimization', price: 0 },
-  { id: '10', name: 'Consulting/Coaching Session', description: 'One-on-one consulting or coaching session', price: 50 },
-  { id: '11', name: 'Production Time', description: 'Video, audio, or content production time', price: 1000 },
-  { id: '12', name: 'Processing Fee', description: 'Administrative processing and handling fee', price: 15 },
-  { id: '13', name: 'Brand Strategy Session', description: 'Brand positioning, messaging, and identity planning', price: 250 },
-  { id: '14', name: 'Photography', description: 'Professional photography services', price: 200 },
-  { id: '15', name: 'Content Writing', description: 'Blog posts, articles, and website copy', price: 85 },
+  { id: '1', name: 'Gestión de proyecto', description: 'Planificación y coordinación de entregables', price: 0 },
+  { id: '2', name: 'Diseño y desarrollo web', description: 'Diseño y desarrollo completo de un sitio web', price: 150 },
+  { id: '3', name: 'Asistencia virtual', description: 'Tareas administrativas y de soporte remoto', price: 0 },
+  { id: '4', name: 'Gastos de traslado', description: 'Costos de viaje y transporte', price: 300 },
+  { id: '5', name: 'Alquiler de espacio', description: 'Alquiler por hora de oficina o estudio', price: 100 },
+  { id: '6', name: 'Tiempo de estudio', description: 'Sesión profesional en estudio', price: 400 },
+  { id: '7', name: 'Desarrollo de software', description: 'Desarrollo de software y aplicaciones a la medida', price: 0 },
+  { id: '8', name: 'Gestión de redes sociales', description: 'Estrategia y gestión de contenido para redes sociales', price: 75 },
+  { id: '9', name: 'Optimización para buscadores (SEO)', description: 'Auditoría, palabras clave y optimización SEO', price: 0 },
+  { id: '10', name: 'Sesión de consultoría', description: 'Sesión individual de consultoría o acompañamiento', price: 50 },
+  { id: '11', name: 'Tiempo de producción', description: 'Producción de video, audio o contenido', price: 1000 },
+  { id: '12', name: 'Cargo de gestión', description: 'Procesamiento y gestión administrativa', price: 15 },
+  { id: '13', name: 'Estrategia de marca', description: 'Posicionamiento, mensajes e identidad de marca', price: 250 },
+  { id: '14', name: 'Fotografía', description: 'Servicios profesionales de fotografía', price: 200 },
+  { id: '15', name: 'Redacción de contenido', description: 'Artículos, publicaciones y contenido web', price: 85 },
 ];
 
 interface ItemsSectionProps {
@@ -92,17 +92,17 @@ export function ItemsSection({
   return (
     <Card>
       <CardHeader className="pb-4">
-        <CardTitle className="text-base">Line Items</CardTitle>
+        <CardTitle className="text-base">Líneas de detalle</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
           {/* Header */}
           <div className="grid grid-cols-12 gap-2 text-xs font-medium text-muted-foreground">
             <div className="col-span-1"></div>
-            <div className="col-span-4">ITEM</div>
-            <div className="col-span-2 text-right">RATE</div>
-            <div className="col-span-2 text-right">QTY</div>
-            <div className="col-span-2 text-right">AMOUNT</div>
+            <div className="col-span-4">CONCEPTO</div>
+            <div className="col-span-2 text-right">PRECIO</div>
+            <div className="col-span-2 text-right">CANT.</div>
+            <div className="col-span-2 text-right">IMPORTE</div>
             <div className="col-span-1"></div>
           </div>
 
@@ -117,12 +117,12 @@ export function ItemsSection({
                 </div>
                 <div className="col-span-4">
                   <Input
-                    placeholder="Item name"
+                    placeholder="Nombre del concepto"
                     value={item.content.name}
                     onChange={(e) => handleUpdateItem(item.id, 'name', e.target.value)}
                   />
                   <Input
-                    placeholder="Description (optional)"
+                    placeholder="Descripción (opcional)"
                     className="mt-1 text-sm"
                     value={item.content.description}
                     onChange={(e) => handleUpdateItem(item.id, 'description', e.target.value)}
@@ -166,8 +166,8 @@ export function ItemsSection({
             ))
           ) : (
             <div className="text-center py-8 text-muted-foreground">
-              <p>No items added yet</p>
-              <p className="text-sm">Click the button below to add your first item</p>
+              <p>Aún no hay conceptos</p>
+              <p className="text-sm">Use el botón inferior para agregar el primer concepto</p>
             </div>
           )}
 
@@ -176,7 +176,7 @@ export function ItemsSection({
             <PopoverTrigger asChild>
               <Button variant="outline" className="w-full">
                 <Plus className="mr-2 h-4 w-4" />
-                Add Item
+                Agregar concepto
                 <ChevronDown className="ml-2 h-3.5 w-3.5" />
               </Button>
             </PopoverTrigger>
@@ -186,9 +186,9 @@ export function ItemsSection({
               style={{ width: 'var(--radix-popover-trigger-width)' }}
             >
               <Command>
-                <CommandInput placeholder="Search saved items..." />
+                <CommandInput placeholder="Buscar conceptos guardados..." />
                 <CommandList className="max-h-[280px]">
-                  <CommandEmpty>No items found.</CommandEmpty>
+                  <CommandEmpty>No se encontraron conceptos.</CommandEmpty>
                   <CommandGroup>
                     <CommandItem
                       onSelect={() => {
@@ -198,11 +198,11 @@ export function ItemsSection({
                       className="py-2.5"
                     >
                       <Plus className="mr-2 h-4 w-4 text-muted-foreground" />
-                      <span className="font-medium">Blank Item</span>
+                      <span className="font-medium">Concepto en blanco</span>
                     </CommandItem>
                   </CommandGroup>
                   <CommandSeparator />
-                  <CommandGroup heading="Saved Items">
+                  <CommandGroup heading="Conceptos guardados">
                     {savedLineItems.map((saved) => (
                       <CommandItem
                         key={saved.id}

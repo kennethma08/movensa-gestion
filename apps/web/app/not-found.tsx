@@ -22,7 +22,7 @@ export default function NotFound() {
           <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-muted">
             <FileQuestion className="h-8 w-8 text-muted-foreground" />
           </div>
-          <CardTitle className="text-2xl">Page not found</CardTitle>
+          <CardTitle className="text-2xl">Página no encontrada</CardTitle>
           <CardDescription>
             The page you&apos;re looking for doesn&apos;t exist or has been moved.
           </CardDescription>
@@ -35,7 +35,7 @@ export default function NotFound() {
         <CardFooter className="flex justify-center gap-2">
           <Button variant="outline" onClick={() => router.back()}>
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Go Back
+            Regresar
           </Button>
           <Button asChild>
             <a href="/dashboard">

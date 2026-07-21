@@ -87,7 +87,7 @@ export function ConversionRateCard({ data: propData, conversionFunnel }: Convers
   return (
     <Card>
       <CardHeader className="pb-4">
-        <CardTitle className="text-sm font-medium">Conversion Rate</CardTitle>
+        <CardTitle className="text-sm font-medium">Tasa de conversión</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="flex items-center gap-5">

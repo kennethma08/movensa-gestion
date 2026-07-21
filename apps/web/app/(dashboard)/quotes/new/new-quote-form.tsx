@@ -348,15 +348,15 @@ export default function NewQuoteForm({ defaultCurrency = 'USD' }: NewQuoteFormPr
 
   const handleSubmit = async (isDraft: boolean) => {
     if (!selectedClientId) {
-      toast.error('Please select a client');
+      toast.error('Seleccione un cliente');
       return;
     }
     if (lineItems.length === 0 || !lineItems.some(i => i.name.trim())) {
-      toast.error('Please add at least one line item');
+      toast.error('Agregue al menos una línea de detalle');
       return;
     }
     if (!terms.trim()) {
-      toast.error('Please add terms and conditions');
+      toast.error('Agregue los términos y condiciones');
       return;
     }
 
@@ -380,7 +380,7 @@ export default function NewQuoteForm({ defaultCurrency = 'USD' }: NewQuoteFormPr
 
       const result = await createQuote({
         clientId: selectedClientId,
-        title: lineItems[0]?.name || 'Untitled Quote',
+        title: lineItems[0]?.name || 'Cotización sin título',
         currency,
         expirationDate: expirationDate?.toISOString(),
         blocks,
@@ -393,19 +393,19 @@ export default function NewQuoteForm({ defaultCurrency = 'USD' }: NewQuoteFormPr
         if (!isDraft) {
           const sendResult = await sendQuote(result.quote.id);
           if (!sendResult.success) {
-            toast.error(sendResult.error || 'Quote created but email could not be sent. You can resend from the quotes list.');
+            toast.error(sendResult.error || 'La cotización se creó, pero el correo no pudo enviarse. Puede reenviarlo desde la lista de cotizaciones.');
             router.push('/quotes');
             return;
           }
         }
-        toast.success(isDraft ? 'Draft Saved' : 'Quote Sent');
+        toast.success(isDraft ? 'Borrador guardado' : 'Cotización enviada');
         router.push('/quotes');
       } else {
-        toast.error(result.error || 'Failed to create quote');
+        toast.error(result.error || 'No se pudo crear la cotización');
       }
     } catch (err) {
       console.error('Create quote error:', err);
-      toast.error('Failed to create quote. Check console for details.');
+      toast.error('No se pudo crear la cotización. Revise los datos e inténtelo nuevamente.');
     } finally {
       setLoading(false);
     }
@@ -413,11 +413,11 @@ export default function NewQuoteForm({ defaultCurrency = 'USD' }: NewQuoteFormPr
 
   const loadDefaultTerms = () => {
     setTerms(
-      '1. This quote is valid for the period specified above.\n' +
-      '2. Payment terms: 50% deposit upon acceptance, balance due on completion.\n' +
-      '3. Additional work outside the scope of this quote will be billed separately.\n' +
-      `4. All prices are in ${currency} unless otherwise stated.\n` +
-      '5. By accepting this quote, you agree to these terms and conditions.'
+      '1. Esta cotización es válida durante el periodo indicado anteriormente.\n' +
+      '2. Condiciones de pago: 50 % de adelanto al aceptar y el saldo al finalizar.\n' +
+      '3. Cualquier trabajo adicional fuera del alcance de esta cotización se cobrará por separado.\n' +
+      `4. Todos los precios están expresados en ${currency}, salvo que se indique lo contrario.\n` +
+      '5. Al aceptar esta cotización, acepta estos términos y condiciones.'
     );
   };
 
@@ -445,7 +445,7 @@ export default function NewQuoteForm({ defaultCurrency = 'USD' }: NewQuoteFormPr
       pdf.save(`Quote-${quoteNumber}.pdf`);
     } catch (err) {
       console.error('PDF generation failed:', err);
-      toast.error('Failed to generate PDF. Please try again.');
+      toast.error('No se pudo generar el PDF. Inténtelo nuevamente.');
     } finally {
       setPdfGenerating(false);
     }
@@ -483,7 +483,7 @@ export default function NewQuoteForm({ defaultCurrency = 'USD' }: NewQuoteFormPr
                       >
                         <div className="flex items-center gap-2.5">
                           <Building2 className="h-4 w-4 text-muted-foreground" />
-                          <span>Bill as Company</span>
+                          <span>Facturar como empresa</span>
                         </div>
                         <Switch
                           checked={showBillAsCompany}
@@ -496,7 +496,7 @@ export default function NewQuoteForm({ defaultCurrency = 'USD' }: NewQuoteFormPr
                         onClick={() => setShowCustomField(!showCustomField)}
                       >
                         <Pencil className="h-4 w-4 text-muted-foreground" />
-                        <span>Add Custom Field</span>
+                        <span>Agregar campo personalizado</span>
                         {showCustomField && <Check className="h-3.5 w-3.5 ml-auto text-primary" />}
                       </button>
                       <div className="h-px bg-border/50 my-1" />
@@ -505,7 +505,7 @@ export default function NewQuoteForm({ defaultCurrency = 'USD' }: NewQuoteFormPr
                         onClick={() => setShowDescription(!showDescription)}
                       >
                         <FileText className="h-4 w-4 text-muted-foreground" />
-                        <span>Add Description</span>
+                        <span>Agregar descripción</span>
                         {showDescription && <Check className="h-3.5 w-3.5 ml-auto text-primary" />}
                       </button>
                       <button
@@ -513,7 +513,7 @@ export default function NewQuoteForm({ defaultCurrency = 'USD' }: NewQuoteFormPr
                         onClick={() => setShowContract(!showContract)}
                       >
                         <Link2 className="h-4 w-4 text-muted-foreground" />
-                        <span>Add Contract</span>
+                        <span>Agregar contrato</span>
                         {showContract && <Check className="h-3.5 w-3.5 ml-auto text-primary" />}
                       </button>
                       <button
@@ -521,7 +521,7 @@ export default function NewQuoteForm({ defaultCurrency = 'USD' }: NewQuoteFormPr
                         onClick={() => setShowAttachments(!showAttachments)}
                       >
                         <Paperclip className="h-4 w-4 text-muted-foreground" />
-                        <span>Add Attachments</span>
+                        <span>Agregar adjuntos</span>
                         {showAttachments && <Check className="h-3.5 w-3.5 ml-auto text-primary" />}
                       </button>
                       <button
@@ -529,7 +529,7 @@ export default function NewQuoteForm({ defaultCurrency = 'USD' }: NewQuoteFormPr
                         onClick={() => setShowEvent(!showEvent)}
                       >
                         <CalendarPlus className="h-4 w-4 text-muted-foreground" />
-                        <span>Add Event</span>
+                        <span>Agregar evento</span>
                         {showEvent && <Check className="h-3.5 w-3.5 ml-auto text-primary" />}
                       </button>
                     </PopoverContent>
@@ -587,7 +587,7 @@ export default function NewQuoteForm({ defaultCurrency = 'USD' }: NewQuoteFormPr
                         onValueChange={setSelectedClientId}
                       >
                         <SelectTrigger className="h-11">
-                          <SelectValue placeholder="Select a customer" />
+                          <SelectValue placeholder="Seleccione un cliente" />
                         </SelectTrigger>
                         <SelectContent>
                           {clients.map((client) => (
@@ -609,12 +609,12 @@ export default function NewQuoteForm({ defaultCurrency = 'USD' }: NewQuoteFormPr
                 {/* Bill as Company — shown when toggled */}
                 {showBillAsCompany && (
                   <div className="mb-4 space-y-1.5">
-                    <Label className="text-xs text-muted-foreground">Company Name</Label>
+                    <Label className="text-xs text-muted-foreground">Nombre de la empresa</Label>
                     <Input
                       value={companyName}
                       onChange={(e) => setCompanyName(e.target.value)}
                       className="h-10"
-                      placeholder="Enter company name"
+                      placeholder="Ingrese el nombre de la empresa"
                     />
                   </div>
                 )}
@@ -663,7 +663,7 @@ export default function NewQuoteForm({ defaultCurrency = 'USD' }: NewQuoteFormPr
                   </div>
                   <div className="space-y-1.5">
                     <Label className="text-xs text-muted-foreground">
-                      Tax rate
+                      Tasa de impuesto
                     </Label>
                     <Select value={taxRate} onValueChange={(v) => {
                       setTaxRate(v);
@@ -679,7 +679,7 @@ export default function NewQuoteForm({ defaultCurrency = 'USD' }: NewQuoteFormPr
                         <SelectItem value="5% - GST">5% - GST</SelectItem>
                         <SelectItem value="10% - VAT">10% - VAT</SelectItem>
                         <SelectItem value="18% - GST">18% - GST</SelectItem>
-                        <SelectItem value="custom">Set Custom Rate</SelectItem>
+                        <SelectItem value="custom">Definir tasa personalizada</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -688,7 +688,7 @@ export default function NewQuoteForm({ defaultCurrency = 'USD' }: NewQuoteFormPr
                 {/* Custom Tax Rate Input */}
                 {taxRate === 'custom' && (
                   <div className="mt-3 space-y-1.5">
-                    <Label className="text-xs text-muted-foreground">Custom Tax Rate (%)</Label>
+                    <Label className="text-xs text-muted-foreground">Tasa de impuesto personalizada (%)</Label>
                     <Input
                       type="number"
                       min="0"
@@ -704,7 +704,7 @@ export default function NewQuoteForm({ defaultCurrency = 'USD' }: NewQuoteFormPr
 
                 {/* Expiration Period */}
                 <div className="mt-3 space-y-1.5">
-                  <Label className="text-xs text-muted-foreground">Valid For</Label>
+                  <Label className="text-xs text-muted-foreground">Válida por</Label>
                   <Select value={expirationDays} onValueChange={setExpirationDays}>
                     <SelectTrigger className="h-10 max-w-[200px]">
                       <SelectValue />
@@ -722,22 +722,22 @@ export default function NewQuoteForm({ defaultCurrency = 'USD' }: NewQuoteFormPr
 
                 {/* Currency Selector */}
                 <div className="mt-3 space-y-1.5">
-                  <Label className="text-xs text-muted-foreground">Currency</Label>
+                  <Label className="text-xs text-muted-foreground">Moneda</Label>
                   <Select value={currency} onValueChange={setCurrency}>
                     <SelectTrigger className="h-10 max-w-[200px]">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="USD">USD - US Dollar</SelectItem>
+                      <SelectItem value="USD">USD - Dólar estadounidense</SelectItem>
                       <SelectItem value="EUR">EUR - Euro</SelectItem>
-                      <SelectItem value="GBP">GBP - British Pound</SelectItem>
-                      <SelectItem value="INR">INR - Indian Rupee</SelectItem>
-                      <SelectItem value="CAD">CAD - Canadian Dollar</SelectItem>
-                      <SelectItem value="AUD">AUD - Australian Dollar</SelectItem>
-                      <SelectItem value="JPY">JPY - Japanese Yen</SelectItem>
-                      <SelectItem value="SGD">SGD - Singapore Dollar</SelectItem>
-                      <SelectItem value="NZD">NZD - New Zealand Dollar</SelectItem>
-                      <SelectItem value="CHF">CHF - Swiss Franc</SelectItem>
+                      <SelectItem value="GBP">GBP - Libra esterlina</SelectItem>
+                      <SelectItem value="INR">INR - Rupia india</SelectItem>
+                      <SelectItem value="CAD">CAD - Dólar canadiense</SelectItem>
+                      <SelectItem value="AUD">AUD - Dólar australiano</SelectItem>
+                      <SelectItem value="JPY">JPY - Yen japonés</SelectItem>
+                      <SelectItem value="SGD">SGD - Dólar singapurense</SelectItem>
+                      <SelectItem value="NZD">NZD - Dólar neozelandés</SelectItem>
+                      <SelectItem value="CHF">CHF - Franco suizo</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -746,16 +746,16 @@ export default function NewQuoteForm({ defaultCurrency = 'USD' }: NewQuoteFormPr
                 {showCustomField && (
                   <div className="mt-3 grid grid-cols-2 gap-3">
                     <div className="space-y-1.5">
-                      <Label className="text-xs text-muted-foreground">Field Label</Label>
+                      <Label className="text-xs text-muted-foreground">Nombre del campo</Label>
                       <Input
                         value={customFieldLabel}
                         onChange={(e) => setCustomFieldLabel(e.target.value)}
-                        placeholder="e.g. Project Name"
+                        placeholder="Ej.: Nombre del proyecto"
                         className="h-10"
                       />
                     </div>
                     <div className="space-y-1.5">
-                      <Label className="text-xs text-muted-foreground">Field Value</Label>
+                      <Label className="text-xs text-muted-foreground">Valor del campo</Label>
                       <Input
                         value={customFieldValue}
                         onChange={(e) => setCustomFieldValue(e.target.value)}
@@ -773,7 +773,7 @@ export default function NewQuoteForm({ defaultCurrency = 'USD' }: NewQuoteFormPr
                   {showDescription && (
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
-                        <Label className="text-xs text-muted-foreground">Description</Label>
+                        <Label className="text-xs text-muted-foreground">Descripción</Label>
                         <button
                           className="text-xs text-muted-foreground hover:text-destructive transition-colors"
                           onClick={() => { setShowDescription(false); setDescription(''); }}
@@ -792,7 +792,7 @@ export default function NewQuoteForm({ defaultCurrency = 'USD' }: NewQuoteFormPr
                   {showContract && (
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
-                        <Label className="text-xs text-muted-foreground">Contract Reference</Label>
+                        <Label className="text-xs text-muted-foreground">Referencia del contrato</Label>
                         <button
                           className="text-xs text-muted-foreground hover:text-destructive transition-colors"
                           onClick={() => { setShowContract(false); setContractRef(''); }}
@@ -811,7 +811,7 @@ export default function NewQuoteForm({ defaultCurrency = 'USD' }: NewQuoteFormPr
                   {showAttachments && (
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
-                        <Label className="text-xs text-muted-foreground">Attachments</Label>
+                        <Label className="text-xs text-muted-foreground">Adjuntos</Label>
                         <button
                           className="text-xs text-muted-foreground hover:text-destructive transition-colors"
                           onClick={() => setShowAttachments(false)}
@@ -821,15 +821,15 @@ export default function NewQuoteForm({ defaultCurrency = 'USD' }: NewQuoteFormPr
                       </div>
                       <div className="border-2 border-dashed rounded-lg px-4 py-6 text-center text-muted-foreground text-sm hover:border-primary/30 transition-colors cursor-pointer bg-muted/10">
                         <Paperclip className="h-5 w-5 mx-auto mb-2 opacity-50" />
-                        <p>Click to upload or drag files here</p>
-                        <p className="text-xs mt-1">PDF, Images up to 10MB</p>
+                        <p>Haga clic o arrastre archivos aquí</p>
+                        <p className="text-xs mt-1">PDF e imágenes de hasta 10 MB</p>
                       </div>
                     </div>
                   )}
                   {showEvent && (
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
-                        <Label className="text-xs text-muted-foreground">Event Details</Label>
+                        <Label className="text-xs text-muted-foreground">Detalles del evento</Label>
                         <button
                           className="text-xs text-muted-foreground hover:text-destructive transition-colors"
                           onClick={() => { setShowEvent(false); setEventName(''); setEventDate(undefined); }}
@@ -842,7 +842,7 @@ export default function NewQuoteForm({ defaultCurrency = 'USD' }: NewQuoteFormPr
                           value={eventName}
                           onChange={(e) => setEventName(e.target.value)}
                           className="h-10"
-                          placeholder="Event name"
+                          placeholder="Nombre del evento"
                         />
                         <Popover>
                           <PopoverTrigger asChild>
@@ -888,15 +888,15 @@ export default function NewQuoteForm({ defaultCurrency = 'USD' }: NewQuoteFormPr
                       </button>
                     </PopoverTrigger>
                     <PopoverContent align="end" className="w-64 p-1">
-                      <p className="text-xs font-medium text-muted-foreground px-2 py-1.5">Load a template</p>
+                      <p className="text-xs font-medium text-muted-foreground px-2 py-1.5">Cargar una plantilla</p>
                       {invoiceTemplates.length === 0 ? (
                         <div className="py-4 text-center">
-                          <p className="text-xs text-muted-foreground">No templates yet</p>
+                          <p className="text-xs text-muted-foreground">Aún no hay plantillas</p>
                           <button
                             onClick={() => router.push('/templates/invoices')}
                             className="text-xs text-primary hover:text-primary/80 mt-1"
                           >
-                            Create templates →
+                            Crear plantillas →
                           </button>
                         </div>
                       ) : (
@@ -932,10 +932,10 @@ export default function NewQuoteForm({ defaultCurrency = 'USD' }: NewQuoteFormPr
                       Items
                     </span>
                     <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest">
-                      Rate
+                      Precio
                     </span>
                     <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest">
-                      Qty
+                      Cant.
                     </span>
                     <span />
                   </div>
@@ -953,7 +953,7 @@ export default function NewQuoteForm({ defaultCurrency = 'USD' }: NewQuoteFormPr
                     >
                       <div className="grid grid-cols-[1fr,80px,60px,32px] gap-3 items-center">
                         <Input
-                          placeholder="Item name"
+                          placeholder="Nombre del concepto"
                           value={item.name}
                           onChange={(e) =>
                             updateLineItem(item.id, 'name', e.target.value)
@@ -999,7 +999,7 @@ export default function NewQuoteForm({ defaultCurrency = 'USD' }: NewQuoteFormPr
                         </Button>
                       </div>
                       <Input
-                        placeholder="Add a description..."
+                        placeholder="Agregar una descripción..."
                         value={item.description}
                         onChange={(e) =>
                           updateLineItem(item.id, 'description', e.target.value)
@@ -1028,9 +1028,9 @@ export default function NewQuoteForm({ defaultCurrency = 'USD' }: NewQuoteFormPr
                     style={{ width: 'var(--radix-popover-trigger-width)' }}
                   >
                     <Command>
-                      <CommandInput placeholder="Search saved items..." />
+                      <CommandInput placeholder="Buscar conceptos guardados..." />
                       <CommandList className="max-h-[280px]">
-                        <CommandEmpty>No items found.</CommandEmpty>
+                        <CommandEmpty>No se encontraron conceptos.</CommandEmpty>
                         <CommandGroup>
                           <CommandItem
                             onSelect={() => {
@@ -1040,19 +1040,19 @@ export default function NewQuoteForm({ defaultCurrency = 'USD' }: NewQuoteFormPr
                             className="py-2.5"
                           >
                             <Plus className="mr-2 h-4 w-4 text-muted-foreground" />
-                            <span className="font-medium">Blank Item</span>
+                            <span className="font-medium">Concepto en blanco</span>
                           </CommandItem>
                         </CommandGroup>
                         <CommandSeparator />
                         <CommandGroup heading="Saved Items">
                           {savedItems.length === 0 ? (
                             <div className="py-4 text-center">
-                              <p className="text-xs text-muted-foreground">No saved items yet</p>
+                              <p className="text-xs text-muted-foreground">Aún no hay conceptos guardados</p>
                               <button
                                 onClick={() => { setAddItemOpen(false); router.push('/templates/invoice-items'); }}
                                 className="text-xs text-primary hover:text-primary/80 mt-1"
                               >
-                                Create saved items →
+                                Crear conceptos guardados →
                               </button>
                             </div>
                           ) : (
@@ -1117,7 +1117,7 @@ export default function NewQuoteForm({ defaultCurrency = 'USD' }: NewQuoteFormPr
                         onClick={() => setShowDeposit(!showDeposit)}
                       >
                         <Banknote className="h-4 w-4 text-muted-foreground" />
-                        <span>Deposit Required</span>
+                        <span>Depósito requerido</span>
                         {showDeposit && <Check className="h-3.5 w-3.5 ml-auto text-primary" />}
                       </button>
                       <button
@@ -1125,7 +1125,7 @@ export default function NewQuoteForm({ defaultCurrency = 'USD' }: NewQuoteFormPr
                         onClick={() => setShowDiscount(!showDiscount)}
                       >
                         <HelpCircle className="h-4 w-4 text-muted-foreground" />
-                        <span>Discount</span>
+                        <span>Descuento</span>
                         {showDiscount && <Check className="h-3.5 w-3.5 ml-auto text-primary" />}
                       </button>
                       <div
@@ -1134,7 +1134,7 @@ export default function NewQuoteForm({ defaultCurrency = 'USD' }: NewQuoteFormPr
                       >
                         <div className="flex items-center gap-2.5">
                           <PenTool className="h-4 w-4 text-muted-foreground" />
-                          <span>Require Signature</span>
+                          <span>Solicitar firma</span>
                         </div>
                         <Switch
                           checked={signatureRequired}
@@ -1152,7 +1152,7 @@ export default function NewQuoteForm({ defaultCurrency = 'USD' }: NewQuoteFormPr
                     {showDiscount && (
                       <div className="space-y-1.5">
                         <div className="flex items-center justify-between">
-                          <Label className="text-xs text-muted-foreground">Discount</Label>
+                          <Label className="text-xs text-muted-foreground">Descuento</Label>
                           <button
                             className="text-xs text-muted-foreground hover:text-destructive transition-colors"
                             onClick={() => { setShowDiscount(false); setDiscount(0); }}
@@ -1174,7 +1174,7 @@ export default function NewQuoteForm({ defaultCurrency = 'USD' }: NewQuoteFormPr
                               <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="flat">Flat</SelectItem>
+                              <SelectItem value="flat">Monto fijo</SelectItem>
                               <SelectItem value="percent">%</SelectItem>
                             </SelectContent>
                           </Select>
@@ -1184,7 +1184,7 @@ export default function NewQuoteForm({ defaultCurrency = 'USD' }: NewQuoteFormPr
                     {showDeposit && (
                       <div className="space-y-1.5">
                         <div className="flex items-center justify-between">
-                          <Label className="text-xs text-muted-foreground">Deposit Required</Label>
+                          <Label className="text-xs text-muted-foreground">Depósito requerido</Label>
                           <button
                             className="text-xs text-muted-foreground hover:text-destructive transition-colors"
                             onClick={() => { setShowDeposit(false); setDepositAmount(0); }}
@@ -1215,17 +1215,17 @@ export default function NewQuoteForm({ defaultCurrency = 'USD' }: NewQuoteFormPr
                 </h3>
                 <div className="space-y-5">
                   <div className="space-y-2">
-                    <Label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest">Notes</Label>
+                    <Label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest">Notas</Label>
                     <Textarea
                       value={notes}
                       onChange={(e) => setNotes(e.target.value)}
                       className="resize-none min-h-[80px] text-sm"
-                      placeholder="Additional notes for the client..."
+                      placeholder="Notas adicionales para el cliente..."
                     />
                   </div>
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
-                      <Label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest">Terms & Conditions</Label>
+                      <Label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest">Términos y condiciones</Label>
                       <button
                         className="text-xs text-muted-foreground hover:text-primary transition-colors"
                         onClick={loadDefaultTerms}
@@ -1262,7 +1262,7 @@ export default function NewQuoteForm({ defaultCurrency = 'USD' }: NewQuoteFormPr
                   onClick={() => handleSubmit(true)}
                   disabled={loading}
                 >
-                  Save Draft
+                  Guardar borrador
                 </Button>
               </div>
             </div>
@@ -1328,7 +1328,7 @@ export default function NewQuoteForm({ defaultCurrency = 'USD' }: NewQuoteFormPr
                     </button>
                   </PopoverTrigger>
                   <PopoverContent className="w-[280px] p-3" align="end" side="bottom">
-                    <p className="text-xs font-medium text-muted-foreground mb-2.5">Quote Style</p>
+                    <p className="text-xs font-medium text-muted-foreground mb-2.5">Estilo de cotización</p>
                     <div className="grid grid-cols-3 gap-1.5">
                       {Object.entries(QUOTE_TEMPLATES).map(([key, t]) => (
                         <button
@@ -1382,7 +1382,7 @@ export default function NewQuoteForm({ defaultCurrency = 'USD' }: NewQuoteFormPr
                     <div className="flex items-center justify-between mb-3">
                       <div>
                         <p className="font-semibold text-sm">
-                          {selectedClient?.name || 'Select a customer'}
+                          {selectedClient?.name || 'Seleccionar cliente'}
                         </p>
                         <p className="text-xs text-muted-foreground">
                           {selectedClient?.company || ''}
@@ -1412,7 +1412,7 @@ export default function NewQuoteForm({ defaultCurrency = 'USD' }: NewQuoteFormPr
                             >
                               <div className="flex-1 min-w-0">
                                 <p className="font-medium text-sm truncate">
-                                  {item.name || 'Untitled Item'}
+                                  {item.name || 'Concepto sin título'}
                                 </p>
                                 <p className="text-xs text-muted-foreground truncate mt-0.5">
                                   {item.quantity} × {formatCurrency(item.rate, currency)}
@@ -1440,7 +1440,7 @@ export default function NewQuoteForm({ defaultCurrency = 'USD' }: NewQuoteFormPr
                               <span className="tabular-nums">{formatCurrency(subtotal, currency)}</span>
                             </div>
                             <div className="flex justify-between text-sm">
-                              <span className="text-muted-foreground">Discount</span>
+                              <span className="text-muted-foreground">Descuento</span>
                               <span className="tabular-nums text-green-600">-{formatCurrency(discountAmount, currency)}</span>
                             </div>
                           </div>
@@ -1544,7 +1544,7 @@ export default function NewQuoteForm({ defaultCurrency = 'USD' }: NewQuoteFormPr
                         <p className="text-xs mt-1" style={{ color: '#666' }}>hello@company.com</p>
                       </div>
                       <div className="text-right">
-                        <h1 className="text-2xl font-bold tracking-tight" style={{ color: tpl.accent }}>QUOTE</h1>
+                        <h1 className="text-2xl font-bold tracking-tight" style={{ color: tpl.accent }}>COTIZACIÓN</h1>
                         <p className="text-xs mt-1" style={{ color: '#666' }}>#{quoteNumber}</p>
                         <p className="text-xs" style={{ color: '#666' }}>
                           Date: {issueDate ? format(issueDate, 'MMM dd, yyyy') : 'Not set'}
@@ -1558,9 +1558,9 @@ export default function NewQuoteForm({ defaultCurrency = 'USD' }: NewQuoteFormPr
                     </div>
 
                     <div className="px-10 pb-6">
-                      <p className="text-[10px] uppercase tracking-wider font-semibold mb-1" style={{ color: '#999' }}>Prepared For</p>
+                      <p className="text-[10px] uppercase tracking-wider font-semibold mb-1" style={{ color: '#999' }}>Preparada para</p>
                       <p className="text-sm font-medium" style={{ color: '#111' }}>
-                        {selectedClient?.name || 'Customer Name'}
+                        {selectedClient?.name || 'Nombre del cliente'}
                       </p>
                       {selectedClient?.company && (
                         <p className="text-xs" style={{ color: '#666' }}>{selectedClient.company}</p>
@@ -1571,17 +1571,17 @@ export default function NewQuoteForm({ defaultCurrency = 'USD' }: NewQuoteFormPr
                       <table className="w-full text-xs">
                         <thead>
                           <tr style={{ borderBottom: '2px solid #e5e7eb' }}>
-                            <th className="text-left py-2 font-semibold" style={{ color: '#333', width: '50%' }}>Description</th>
-                            <th className="text-center py-2 font-semibold" style={{ color: '#333' }}>Qty</th>
-                            <th className="text-right py-2 font-semibold" style={{ color: '#333' }}>Rate</th>
-                            <th className="text-right py-2 font-semibold" style={{ color: '#333' }}>Amount</th>
+                            <th className="text-left py-2 font-semibold" style={{ color: '#333', width: '50%' }}>Descripción</th>
+                            <th className="text-center py-2 font-semibold" style={{ color: '#333' }}>Cant.</th>
+                            <th className="text-right py-2 font-semibold" style={{ color: '#333' }}>Precio</th>
+                            <th className="text-right py-2 font-semibold" style={{ color: '#333' }}>Importe</th>
                           </tr>
                         </thead>
                         <tbody>
                           {lineItems.length > 0 ? lineItems.map((item) => (
                             <tr key={item.id} style={{ borderBottom: '1px solid #f3f4f6' }}>
                               <td className="py-2">
-                                <p className="font-medium" style={{ color: '#111' }}>{item.name || 'Untitled'}</p>
+                                <p className="font-medium" style={{ color: '#111' }}>{item.name || 'Sin título'}</p>
                                 {item.description && <p style={{ color: '#888' }}>{item.description}</p>}
                               </td>
                               <td className="py-2 text-center" style={{ color: '#333' }}>{item.quantity}</td>
@@ -1607,7 +1607,7 @@ export default function NewQuoteForm({ defaultCurrency = 'USD' }: NewQuoteFormPr
                         </div>
                         {discountAmount > 0 && (
                           <div className="flex justify-between py-1 text-xs" style={{ color: '#22c55e' }}>
-                            <span>Discount</span>
+                            <span>Descuento</span>
                             <span className="tabular-nums">-{formatCurrency(discountAmount, currency)}</span>
                           </div>
                         )}
@@ -1618,7 +1618,7 @@ export default function NewQuoteForm({ defaultCurrency = 'USD' }: NewQuoteFormPr
                         <div className="flex justify-between py-2 mt-1 rounded px-2 -mx-2"
                           style={{ background: `${tpl.accent}10` }}
                         >
-                          <span className="text-xs font-bold" style={{ color: '#111' }}>Quote Total</span>
+                          <span className="text-xs font-bold" style={{ color: '#111' }}>Total de la cotización</span>
                           <span className="text-sm font-bold tabular-nums" style={{ color: tpl.accent }}>{formatCurrency(total, currency)}</span>
                         </div>
                       </div>
@@ -1651,7 +1651,7 @@ export default function NewQuoteForm({ defaultCurrency = 'USD' }: NewQuoteFormPr
                     </div>
                     <div className="text-right">
                       <p className="text-xs text-muted-foreground">{businessName}</p>
-                      <p className="font-bold text-lg mt-0.5" style={{ color: tpl.accent }}>Quote</p>
+                      <p className="font-bold text-lg mt-0.5" style={{ color: tpl.accent }}>Cotización</p>
                       <p className="text-xs text-muted-foreground mt-0.5">
                         Valid until {expirationDate ? format(expirationDate, 'MMM dd, yyyy') : '...'}
                       </p>
@@ -1682,7 +1682,7 @@ export default function NewQuoteForm({ defaultCurrency = 'USD' }: NewQuoteFormPr
                       {lineItems.map((item) => (
                         <div key={item.id} className="flex items-center justify-between py-1.5 text-sm">
                           <div className="flex-1 min-w-0">
-                            <p className="font-medium text-sm truncate">{item.name || 'Untitled Item'}</p>
+                            <p className="font-medium text-sm truncate">{item.name || 'Concepto sin título'}</p>
                             <p className="text-xs text-muted-foreground truncate">
                               {item.quantity} × {formatCurrency(item.rate, currency)}
                               {item.description && <span className="ml-1.5 text-muted-foreground/70">· {item.description}</span>}
@@ -1703,7 +1703,7 @@ export default function NewQuoteForm({ defaultCurrency = 'USD' }: NewQuoteFormPr
                           <span className="tabular-nums">{formatCurrency(subtotal, currency)}</span>
                         </div>
                         <div className="flex justify-between text-sm">
-                          <span className="text-muted-foreground">Discount</span>
+                          <span className="text-muted-foreground">Descuento</span>
                           <span className="tabular-nums text-green-600">-{formatCurrency(discountAmount, currency)}</span>
                         </div>
                         <Separator className={tpl.separatorClass} />
@@ -1722,7 +1722,7 @@ export default function NewQuoteForm({ defaultCurrency = 'USD' }: NewQuoteFormPr
                     <div className="px-6 py-4">
                       <p className="text-sm italic text-muted-foreground">{notes}</p>
                       <p className="text-xs text-muted-foreground mt-1">
-                        Contact us at <span className="underline">hello@company.com</span>
+                        Contáctenos en <span className="underline">hello@company.com</span>
                       </p>
                     </div>
                   </>
@@ -1764,7 +1764,7 @@ export default function NewQuoteForm({ defaultCurrency = 'USD' }: NewQuoteFormPr
                   <p style={{ fontSize: '11px', color: '#666', marginTop: '4px' }}>hello@company.com</p>
                 </div>
                 <div style={{ textAlign: 'right' }}>
-                  <p style={{ fontSize: '22px', fontWeight: 700, color: tpl.accent, letterSpacing: '0.05em' }}>QUOTE</p>
+                  <p style={{ fontSize: '22px', fontWeight: 700, color: tpl.accent, letterSpacing: '0.05em' }}>COTIZACIÓN</p>
                   <p style={{ fontSize: '11px', color: '#666', marginTop: '4px' }}>#{quoteNumber}</p>
                   <p style={{ fontSize: '11px', color: '#666' }}>
                     Date: {issueDate ? format(issueDate, 'MMM dd, yyyy') : 'Not set'}
@@ -1778,9 +1778,9 @@ export default function NewQuoteForm({ defaultCurrency = 'USD' }: NewQuoteFormPr
               </div>
 
               <div style={{ padding: '0 40px 24px' }}>
-                <p style={{ fontSize: '9px', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 600, color: '#999', marginBottom: '4px' }}>Prepared For</p>
+                <p style={{ fontSize: '9px', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 600, color: '#999', marginBottom: '4px' }}>Preparada para</p>
                 <p style={{ fontSize: '13px', fontWeight: 500 }}>
-                  {selectedClient?.name || 'Customer Name'}
+                  {selectedClient?.name || 'Nombre del cliente'}
                 </p>
                 {selectedClient?.company && (
                   <p style={{ fontSize: '11px', color: '#666' }}>{selectedClient.company}</p>
@@ -1791,17 +1791,17 @@ export default function NewQuoteForm({ defaultCurrency = 'USD' }: NewQuoteFormPr
                 <table style={{ width: '100%', fontSize: '11px', borderCollapse: 'collapse' }}>
                   <thead>
                     <tr style={{ borderBottom: '2px solid #e5e7eb' }}>
-                      <th style={{ textAlign: 'left', padding: '8px 0', fontWeight: 600, color: '#333' }}>Description</th>
-                      <th style={{ textAlign: 'center', padding: '8px 0', fontWeight: 600, color: '#333' }}>Qty</th>
-                      <th style={{ textAlign: 'right', padding: '8px 0', fontWeight: 600, color: '#333' }}>Rate</th>
-                      <th style={{ textAlign: 'right', padding: '8px 0', fontWeight: 600, color: '#333' }}>Amount</th>
+                      <th style={{ textAlign: 'left', padding: '8px 0', fontWeight: 600, color: '#333' }}>Descripción</th>
+                      <th style={{ textAlign: 'center', padding: '8px 0', fontWeight: 600, color: '#333' }}>Cant.</th>
+                      <th style={{ textAlign: 'right', padding: '8px 0', fontWeight: 600, color: '#333' }}>Precio</th>
+                      <th style={{ textAlign: 'right', padding: '8px 0', fontWeight: 600, color: '#333' }}>Importe</th>
                     </tr>
                   </thead>
                   <tbody>
                     {lineItems.length > 0 ? lineItems.map((item) => (
                       <tr key={item.id} style={{ borderBottom: '1px solid #f3f4f6' }}>
                         <td style={{ padding: '8px 0' }}>
-                          <p style={{ fontWeight: 500 }}>{item.name || 'Untitled'}</p>
+                          <p style={{ fontWeight: 500 }}>{item.name || 'Sin título'}</p>
                           {item.description && <p style={{ color: '#888', marginTop: '2px' }}>{item.description}</p>}
                         </td>
                         <td style={{ textAlign: 'center', padding: '8px 0', color: '#333' }}>{item.quantity}</td>
@@ -1827,7 +1827,7 @@ export default function NewQuoteForm({ defaultCurrency = 'USD' }: NewQuoteFormPr
                   </div>
                   {discountAmount > 0 && (
                     <div style={{ display: 'flex', justifyContent: 'space-between', padding: '4px 0', fontSize: '11px', color: '#22c55e' }}>
-                      <span>Discount</span>
+                      <span>Descuento</span>
                       <span>-{formatCurrency(discountAmount, currency)}</span>
                     </div>
                   )}
@@ -1840,7 +1840,7 @@ export default function NewQuoteForm({ defaultCurrency = 'USD' }: NewQuoteFormPr
                     padding: '8px', marginTop: '4px', borderRadius: '4px',
                     background: `${tpl.accent}15`,
                   }}>
-                    <span style={{ fontSize: '11px', fontWeight: 700 }}>Quote Total</span>
+                    <span style={{ fontSize: '11px', fontWeight: 700 }}>Total de la cotización</span>
                     <span style={{ fontSize: '14px', fontWeight: 700, color: tpl.accent }}>{formatCurrency(total, currency)}</span>
                   </div>
                 </div>

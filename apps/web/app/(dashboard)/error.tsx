@@ -31,7 +31,7 @@ export default function DashboardError({
           <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-destructive/10">
             <AlertTriangle className="h-6 w-6 text-destructive" />
           </div>
-          <CardTitle>Something went wrong</CardTitle>
+          <CardTitle>Algo salió mal</CardTitle>
           <CardDescription>
             We encountered an unexpected error. Please try again.
           </CardDescription>
@@ -60,7 +60,7 @@ export default function DashboardError({
           </Button>
           <Button onClick={reset}>
             <RefreshCw className="mr-2 h-4 w-4" />
-            Try again
+            Intentar nuevamente
           </Button>
         </CardFooter>
       </Card>

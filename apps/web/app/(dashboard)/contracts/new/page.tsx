@@ -4,8 +4,8 @@ import { getClientsForSelect } from '@/lib/clients/actions';
 import { getQuotes } from '@/lib/quotes/actions';
 
 export const metadata = {
-  title: 'New Contract',
-  description: 'Create a new contract for a client',
+  title: 'Nuevo contrato',
+  description: 'Crear un nuevo contrato para un cliente',
 };
 
 interface PageProps {

@@ -23,10 +23,10 @@ export function EditClientFormWrapper({ client }: EditClientFormWrapperProps) {
     // Low #77: Use finally to always reset isSaving
     try {
       await updateClient({ ...data, id: client.id });
-      toast.success('Client updated successfully');
+      toast.success('Cliente actualizado correctamente');
       router.push(`/clients/${client.id}`);
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to update client';
+      const errorMessage = error instanceof Error ? error.message : 'No se pudo actualizar el cliente';
       setServerError(errorMessage);
       toast.error(errorMessage);
     } finally {
@@ -58,7 +58,7 @@ export function EditClientFormWrapper({ client }: EditClientFormWrapperProps) {
         }}
         onSubmit={handleSubmit}
         isLoading={isSaving}
-        submitLabel="Save Changes"
+        submitLabel="Guardar cambios"
       />
     </>
   );

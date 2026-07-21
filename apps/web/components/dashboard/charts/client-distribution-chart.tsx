@@ -62,7 +62,7 @@ export function ClientDistributionChart({
         className="h-7 text-xs"
         onClick={() => setViewMode('clients')}
       >
-        Clients
+        Clientes
       </Button>
       <Button
         variant={viewMode === 'revenue' ? 'default' : 'ghost'}
@@ -77,7 +77,7 @@ export function ClientDistributionChart({
 
   return (
     <ChartCard
-      title="Client Distribution"
+      title="Distribución de clientes"
       description={
         isEmpty
           ? undefined
@@ -86,7 +86,7 @@ export function ClientDistributionChart({
       className={className}
       isLoading={isLoading}
       isEmpty={isEmpty}
-      emptyMessage="No client location data"
+      emptyMessage="No hay datos de ubicación de clientes"
       actions={modeToggle}
     >
       <div style={{ height }} data-testid="client-distribution-chart">
@@ -127,7 +127,7 @@ export function ClientDistributionChart({
                       <span className="font-medium">{item.region}</span>
                     </div>
                     <p className="text-sm">
-                      Clients: <span className="font-medium">{item.clientCount}</span>
+                      Clientes: <span className="font-medium">{item.clientCount}</span>
                     </p>
                     <p className="text-sm">
                       Revenue: <span className="font-medium">{formatFullCurrency(item.totalRevenue)}</span>

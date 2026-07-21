@@ -74,7 +74,7 @@ export default function EditQuoteBuilderPage() {
 
         const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
         if (!uuidRegex.test(quoteId)) {
-          setError('Quote not found');
+          setError('Cotización no encontrada');
           setIsLoading(false);
           return;
         }
@@ -83,10 +83,10 @@ export default function EditQuoteBuilderPage() {
         if (quote) {
           initDocument(quote);
         } else {
-          setError('Quote not found');
+          setError('Cotización no encontrada');
         }
       } catch (err) {
-        setError('Failed to load quote');
+        setError('No se pudo cargar la cotización');
         console.error(err);
       } finally {
         setIsLoading(false);
@@ -166,7 +166,7 @@ export default function EditQuoteBuilderPage() {
       <div className="flex h-screen items-center justify-center">
         <div className="text-center">
           <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent mx-auto mb-4" />
-          <p className="text-muted-foreground">Loading quote...</p>
+          <p className="text-muted-foreground">Cargando cotización...</p>
         </div>
       </div>
     );
@@ -178,7 +178,7 @@ export default function EditQuoteBuilderPage() {
         <div className="text-center">
           <p className="text-destructive mb-4">{error}</p>
           <a href="/quotes" className="text-primary hover:underline">
-            Back to Quotes
+            Volver a cotizaciones
           </a>
         </div>
       </div>
@@ -189,7 +189,7 @@ export default function EditQuoteBuilderPage() {
     return (
       <div className="flex h-screen items-center justify-center">
         <div className="text-center">
-          <p className="text-muted-foreground">Quote not found</p>
+          <p className="text-muted-foreground">Cotización no encontrada</p>
         </div>
       </div>
     );

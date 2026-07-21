@@ -297,7 +297,7 @@ export function NewInvoiceForm({
   const defaultTaxRate = taxRates.find((t) => t.isDefault && t.isActive);
   const [taxRate, setTaxRate] = useState(defaultTaxRate ? `${defaultTaxRate.rate}%` : '0% - Default');
   const [customTaxRate, setCustomTaxRate] = useState('');
-  const [notes, setNotes] = useState('Thank you for your business!');
+  const [notes, setNotes] = useState('¡Gracias por confiar en nosotros!');
   const [discount, setDiscount] = useState(0);
   const [discountType, setDiscountType] = useState<'flat' | 'percent'>('flat');
 
@@ -458,11 +458,11 @@ export function NewInvoiceForm({
 
   const handleSubmit = async (isDraft: boolean) => {
     if (!selectedClientId) {
-      toast.error('Please select a client');
+      toast.error('Seleccione un cliente');
       return;
     }
     if (lineItems.length === 0 || lineItems.every((item) => !item.name)) {
-      toast.error('Please add at least one line item');
+      toast.error('Agregue al menos una línea de detalle');
       return;
     }
 
@@ -470,7 +470,7 @@ export function NewInvoiceForm({
     try {
       const result = await createInvoice({
         clientId: selectedClientId,
-        title: 'Invoice',
+        title: 'Factura',
         currency: selectedCurrency,
         isDraft,
         dueDate: dueDate ? dueDate.toISOString().split('T')[0]! : new Date().toISOString().split('T')[0]!,
@@ -489,19 +489,19 @@ export function NewInvoiceForm({
         if (!isDraft) {
           const sendResult = await sendInvoice(result.invoice.id);
           if (!sendResult.success) {
-            toast.error(sendResult.error || 'Invoice created but email could not be sent. You can resend from the invoices list.');
+            toast.error(sendResult.error || 'La factura se creó, pero el correo no pudo enviarse. Puede reenviarlo desde la lista de facturas.');
             router.push('/invoices');
             return;
           }
         }
-        toast.success(isDraft ? 'Draft Saved' : 'Invoice Sent');
+        toast.success(isDraft ? 'Borrador guardado' : 'Factura enviada');
         router.push('/invoices');
       } else if ('error' in result) {
         toast.error(result.error);
       }
     } catch (error) {
       const message =
-        error instanceof Error ? error.message : 'Failed to create invoice';
+        error instanceof Error ? error.message : 'No se pudo crear la factura';
       toast.error(message);
     } finally {
       setLoading(false);
@@ -530,7 +530,7 @@ export function NewInvoiceForm({
       pdf.save(`Invoice-${invoiceNumber}.pdf`);
     } catch (err) {
       console.error('PDF generation failed:', err);
-      toast.error('Failed to generate PDF. Please try again.');
+      toast.error('No se pudo generar el PDF. Inténtelo nuevamente.');
     } finally {
       setPdfGenerating(false);
     }
@@ -543,7 +543,7 @@ export function NewInvoiceForm({
       {fromQuoteNumber && (
         <div className="bg-purple-50 dark:bg-purple-950 border-b border-purple-200 dark:border-purple-800 px-6 py-3">
           <p className="text-sm text-purple-700 dark:text-purple-300 font-medium">
-            Creating invoice from Quote #{fromQuoteNumber}
+            Creando factura desde la cotización #{fromQuoteNumber}
           </p>
         </div>
       )}
@@ -560,7 +560,7 @@ export function NewInvoiceForm({
               <div className="pb-8">
                 <div className="flex items-center justify-between mb-6">
                   <h3 className="text-xl font-semibold tracking-tight font-display">
-                    Invoice Details
+                    Detalles de la factura
                   </h3>
                   <Popover>
                     <PopoverTrigger asChild>
@@ -577,7 +577,7 @@ export function NewInvoiceForm({
                       >
                         <div className="flex items-center gap-2.5">
                           <Building2 className="h-4 w-4 text-muted-foreground" />
-                          <span>Bill as Company</span>
+                          <span>Facturar como empresa</span>
                         </div>
                         <Switch
                           checked={showBillAsCompany}
@@ -590,7 +590,7 @@ export function NewInvoiceForm({
                         onClick={() => setShowIssueDate(!showIssueDate)}
                       >
                         <CalendarIcon className="h-4 w-4 text-muted-foreground" />
-                        <span>Edit Issue Date</span>
+                        <span>Editar fecha de emisión</span>
                         {showIssueDate && <Check className="h-3.5 w-3.5 ml-auto text-primary" />}
                       </button>
                       <button
@@ -598,7 +598,7 @@ export function NewInvoiceForm({
                         onClick={() => setShowPoNumber(!showPoNumber)}
                       >
                         <Hash className="h-4 w-4 text-muted-foreground" />
-                        <span>Add PO Number</span>
+                        <span>Agregar orden de compra</span>
                         {showPoNumber && <Check className="h-3.5 w-3.5 ml-auto text-primary" />}
                       </button>
                       <button
@@ -606,7 +606,7 @@ export function NewInvoiceForm({
                         onClick={() => setShowCustomField(!showCustomField)}
                       >
                         <Pencil className="h-4 w-4 text-muted-foreground" />
-                        <span>Add Custom Field</span>
+                        <span>Agregar campo personalizado</span>
                         {showCustomField && <Check className="h-3.5 w-3.5 ml-auto text-primary" />}
                       </button>
                       <div className="h-px bg-border/50 my-1" />
@@ -615,7 +615,7 @@ export function NewInvoiceForm({
                         onClick={() => setShowDescription(!showDescription)}
                       >
                         <FileText className="h-4 w-4 text-muted-foreground" />
-                        <span>Add Description</span>
+                        <span>Agregar descripción</span>
                         {showDescription && <Check className="h-3.5 w-3.5 ml-auto text-primary" />}
                       </button>
                       <button
@@ -623,7 +623,7 @@ export function NewInvoiceForm({
                         onClick={() => setShowAttachments(!showAttachments)}
                       >
                         <Paperclip className="h-4 w-4 text-muted-foreground" />
-                        <span>Add Attachments</span>
+                        <span>Agregar adjuntos</span>
                         {showAttachments && <Check className="h-3.5 w-3.5 ml-auto text-primary" />}
                       </button>
                       <button
@@ -631,7 +631,7 @@ export function NewInvoiceForm({
                         onClick={() => setShowEvent(!showEvent)}
                       >
                         <CalendarPlus className="h-4 w-4 text-muted-foreground" />
-                        <span>Add Event</span>
+                        <span>Agregar evento</span>
                         {showEvent && <Check className="h-3.5 w-3.5 ml-auto text-primary" />}
                       </button>
                     </PopoverContent>
@@ -682,19 +682,19 @@ export function NewInvoiceForm({
                   ) : (
                     <div className="space-y-1.5">
                       <Label className="text-xs text-muted-foreground">
-                        Customer
+                        Cliente
                       </Label>
                       <Select
                         value={selectedClientId}
                         onValueChange={setSelectedClientId}
                       >
                         <SelectTrigger className="h-11">
-                          <SelectValue placeholder="Select a customer" />
+                          <SelectValue placeholder="Seleccione un cliente" />
                         </SelectTrigger>
                         <SelectContent>
                           {clients.length === 0 ? (
                             <SelectItem value="_none" disabled>
-                              No clients found
+                              No se encontraron clientes
                             </SelectItem>
                           ) : (
                             clients.map((client) => (
@@ -719,12 +719,12 @@ export function NewInvoiceForm({
                 {/* Bill as Company — shown when toggled */}
                 {showBillAsCompany && (
                   <div className="mb-4 space-y-1.5">
-                    <Label className="text-xs text-muted-foreground">Company Name</Label>
+                    <Label className="text-xs text-muted-foreground">Nombre de la empresa</Label>
                     <Input
                       value={companyName}
                       onChange={(e) => setCompanyName(e.target.value)}
                       className="h-10"
-                      placeholder="Enter company name"
+                      placeholder="Ingrese el nombre de la empresa"
                     />
                   </div>
                 )}
@@ -797,7 +797,7 @@ export function NewInvoiceForm({
                   </div>
                   <div className="space-y-1.5">
                     <Label className="text-xs text-muted-foreground">
-                      Invoice Number
+                      Número de factura
                     </Label>
                     <Input
                       value={invoiceNumber}
@@ -835,7 +835,7 @@ export function NewInvoiceForm({
                             <SelectItem value="18% - GST">18% - GST</SelectItem>
                           </>
                         )}
-                        <SelectItem value="custom">Set Custom Rate</SelectItem>
+                        <SelectItem value="custom">Definir tasa personalizada</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -844,7 +844,7 @@ export function NewInvoiceForm({
                 {/* Custom Tax Rate Input */}
                 {taxRate === 'custom' && (
                   <div className="mt-3 space-y-1.5">
-                    <Label className="text-xs text-muted-foreground">Custom Tax Rate (%)</Label>
+                    <Label className="text-xs text-muted-foreground">Tasa de impuesto personalizada (%)</Label>
                     <Input
                       type="number"
                       min="0"
@@ -860,22 +860,22 @@ export function NewInvoiceForm({
 
                 {/* Currency Selector */}
                 <div className="mt-3 space-y-1.5">
-                  <Label className="text-xs text-muted-foreground">Currency</Label>
+                  <Label className="text-xs text-muted-foreground">Moneda</Label>
                   <Select value={selectedCurrency} onValueChange={setSelectedCurrency}>
                     <SelectTrigger className="h-10 max-w-[200px]">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="USD">USD - US Dollar</SelectItem>
+                      <SelectItem value="USD">USD - Dólar estadounidense</SelectItem>
                       <SelectItem value="EUR">EUR - Euro</SelectItem>
-                      <SelectItem value="GBP">GBP - British Pound</SelectItem>
-                      <SelectItem value="INR">INR - Indian Rupee</SelectItem>
-                      <SelectItem value="CAD">CAD - Canadian Dollar</SelectItem>
-                      <SelectItem value="AUD">AUD - Australian Dollar</SelectItem>
-                      <SelectItem value="JPY">JPY - Japanese Yen</SelectItem>
-                      <SelectItem value="SGD">SGD - Singapore Dollar</SelectItem>
-                      <SelectItem value="NZD">NZD - New Zealand Dollar</SelectItem>
-                      <SelectItem value="CHF">CHF - Swiss Franc</SelectItem>
+                      <SelectItem value="GBP">GBP - Libra esterlina</SelectItem>
+                      <SelectItem value="INR">INR - Rupia india</SelectItem>
+                      <SelectItem value="CAD">CAD - Dólar canadiense</SelectItem>
+                      <SelectItem value="AUD">AUD - Dólar australiano</SelectItem>
+                      <SelectItem value="JPY">JPY - Yen japonés</SelectItem>
+                      <SelectItem value="SGD">SGD - Dólar singapurense</SelectItem>
+                      <SelectItem value="NZD">NZD - Dólar neozelandés</SelectItem>
+                      <SelectItem value="CHF">CHF - Franco suizo</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -883,7 +883,7 @@ export function NewInvoiceForm({
                 {/* PO Number — shown when toggled */}
                 {showPoNumber && (
                   <div className="mt-3 space-y-1.5">
-                    <Label className="text-xs text-muted-foreground">Purchase Order #</Label>
+                    <Label className="text-xs text-muted-foreground">Orden de compra n.º</Label>
                     <Input
                       value={poNumber}
                       onChange={(e) => setPoNumber(e.target.value)}
@@ -897,16 +897,16 @@ export function NewInvoiceForm({
                 {showCustomField && (
                   <div className="mt-3 grid grid-cols-2 gap-3">
                     <div className="space-y-1.5">
-                      <Label className="text-xs text-muted-foreground">Field Label</Label>
+                      <Label className="text-xs text-muted-foreground">Nombre del campo</Label>
                       <Input
                         value={customFieldLabel}
                         onChange={(e) => setCustomFieldLabel(e.target.value)}
-                        placeholder="e.g. Project Name"
+                        placeholder="Ej.: Nombre del proyecto"
                         className="h-10"
                       />
                     </div>
                     <div className="space-y-1.5">
-                      <Label className="text-xs text-muted-foreground">Field Value</Label>
+                      <Label className="text-xs text-muted-foreground">Valor del campo</Label>
                       <Input
                         value={customFieldValue}
                         onChange={(e) => setCustomFieldValue(e.target.value)}
@@ -925,12 +925,12 @@ export function NewInvoiceForm({
                     {showDescription && (
                       <div className="space-y-2">
                         <div className="flex items-center justify-between">
-                          <Label className="text-xs text-muted-foreground">Description</Label>
+                          <Label className="text-xs text-muted-foreground">Descripción</Label>
                           <button
                             className="text-xs text-muted-foreground hover:text-destructive transition-colors"
                             onClick={() => { setShowDescription(false); setDescription(''); }}
                           >
-                            Remove
+                            Quitar
                           </button>
                         </div>
                         <Textarea
@@ -944,30 +944,30 @@ export function NewInvoiceForm({
                     {showAttachments && (
                       <div className="space-y-2">
                         <div className="flex items-center justify-between">
-                          <Label className="text-xs text-muted-foreground">Attachments</Label>
+                          <Label className="text-xs text-muted-foreground">Adjuntos</Label>
                           <button
                             className="text-xs text-muted-foreground hover:text-destructive transition-colors"
                             onClick={() => setShowAttachments(false)}
                           >
-                            Remove
+                            Quitar
                           </button>
                         </div>
                         <div className="border-2 border-dashed rounded-lg px-4 py-6 text-center text-muted-foreground text-sm hover:border-primary/30 transition-colors cursor-pointer bg-muted/10">
                           <Paperclip className="h-5 w-5 mx-auto mb-2 opacity-50" />
-                          <p>Click to upload or drag files here</p>
-                          <p className="text-xs mt-1">PDF, Images up to 10MB</p>
+                          <p>Haga clic o arrastre archivos aquí</p>
+                          <p className="text-xs mt-1">PDF e imágenes de hasta 10 MB</p>
                         </div>
                       </div>
                     )}
                     {showEvent && (
                       <div className="space-y-2">
                         <div className="flex items-center justify-between">
-                          <Label className="text-xs text-muted-foreground">Event Details</Label>
+                          <Label className="text-xs text-muted-foreground">Detalles del evento</Label>
                           <button
                             className="text-xs text-muted-foreground hover:text-destructive transition-colors"
                             onClick={() => { setShowEvent(false); setEventName(''); setEventDate(undefined); }}
                           >
-                            Remove
+                            Quitar
                           </button>
                         </div>
                         <div className="grid grid-cols-2 gap-3">
@@ -975,7 +975,7 @@ export function NewInvoiceForm({
                             value={eventName}
                             onChange={(e) => setEventName(e.target.value)}
                             className="h-10"
-                            placeholder="Event name"
+                            placeholder="Nombre del evento"
                           />
                           <Popover>
                             <PopoverTrigger asChild>
@@ -1016,20 +1016,20 @@ export function NewInvoiceForm({
                   <Popover>
                     <PopoverTrigger asChild>
                       <button className="text-sm text-muted-foreground hover:text-primary transition-colors flex items-center gap-1">
-                        Templates
+                        Plantillas
                         <ChevronDown className="h-3.5 w-3.5" />
                       </button>
                     </PopoverTrigger>
                     <PopoverContent align="end" className="w-64 p-1">
-                      <p className="text-xs font-medium text-muted-foreground px-2 py-1.5">Load a template</p>
+                      <p className="text-xs font-medium text-muted-foreground px-2 py-1.5">Cargar una plantilla</p>
                       {invoiceTemplates.length === 0 ? (
                         <div className="py-4 text-center">
-                          <p className="text-xs text-muted-foreground">No templates yet</p>
+                          <p className="text-xs text-muted-foreground">Aún no hay plantillas</p>
                           <button
                             onClick={() => router.push('/templates/invoices')}
                             className="text-xs text-primary hover:text-primary/80 mt-1"
                           >
-                            Create templates →
+                            Crear plantillas →
                           </button>
                         </div>
                       ) : (
@@ -1086,7 +1086,7 @@ export function NewInvoiceForm({
                     >
                       <div className="grid grid-cols-[1fr,80px,60px,32px] gap-3 items-center">
                         <Input
-                          placeholder="Item name"
+                          placeholder="Nombre del concepto"
                           value={item.name}
                           onChange={(e) =>
                             updateLineItem(item.id, 'name', e.target.value)
@@ -1133,7 +1133,7 @@ export function NewInvoiceForm({
                         </Button>
                       </div>
                       <Input
-                        placeholder="Add a description..."
+                        placeholder="Agregar una descripción..."
                         value={item.description}
                         onChange={(e) =>
                           updateLineItem(item.id, 'description', e.target.value)
@@ -1152,7 +1152,7 @@ export function NewInvoiceForm({
                       className="w-full h-11 border-dashed border-2 text-sm font-medium text-muted-foreground hover:text-primary hover:border-primary/40 hover:bg-primary-50/50 transition-all"
                     >
                       <Plus className="mr-2 h-4 w-4" />
-                      Add Items
+                      Agregar conceptos
                       <ChevronDown className="ml-2 h-3.5 w-3.5" />
                     </Button>
                   </PopoverTrigger>
@@ -1162,9 +1162,9 @@ export function NewInvoiceForm({
                     style={{ width: 'var(--radix-popover-trigger-width)' }}
                   >
                     <Command>
-                      <CommandInput placeholder="Search saved items..." />
+                      <CommandInput placeholder="Buscar conceptos guardados..." />
                       <CommandList className="max-h-[280px]">
-                        <CommandEmpty>No items found.</CommandEmpty>
+                        <CommandEmpty>No se encontraron conceptos.</CommandEmpty>
                         <CommandGroup>
                           <CommandItem
                             onSelect={() => {
@@ -1174,19 +1174,19 @@ export function NewInvoiceForm({
                             className="py-2.5"
                           >
                             <Plus className="mr-2 h-4 w-4 text-muted-foreground" />
-                            <span className="font-medium">Blank Item</span>
+                            <span className="font-medium">Concepto en blanco</span>
                           </CommandItem>
                         </CommandGroup>
                         <CommandSeparator />
                         <CommandGroup heading="Saved Items">
                           {savedItems.length === 0 ? (
                             <div className="py-4 text-center">
-                              <p className="text-xs text-muted-foreground">No saved items yet</p>
+                              <p className="text-xs text-muted-foreground">Aún no hay conceptos guardados</p>
                               <button
                                 onClick={() => { setAddItemOpen(false); router.push('/templates/invoice-items'); }}
                                 className="text-xs text-primary hover:text-primary/80 mt-1"
                               >
-                                Create saved items →
+                                Crear conceptos guardados →
                               </button>
                             </div>
                           ) : (
@@ -1232,10 +1232,10 @@ export function NewInvoiceForm({
                 <div className="flex items-center justify-between">
                   <div>
                     <h3 className="text-xl font-semibold tracking-tight font-display">
-                      Payment Settings
+                      Configuración de pagos
                     </h3>
                     <p className="text-[13px] text-muted-foreground mt-1">
-                      Payment methods are setup in your settings page.
+                      Los métodos de pago se configuran en la página de configuración.
                     </p>
                   </div>
                   <Popover>
@@ -1246,13 +1246,13 @@ export function NewInvoiceForm({
                       </button>
                     </PopoverTrigger>
                     <PopoverContent align="end" className="w-56 p-1">
-                      <p className="px-3 py-1.5 text-xs font-medium text-muted-foreground uppercase tracking-wider">Payment settings</p>
+                      <p className="px-3 py-1.5 text-xs font-medium text-muted-foreground uppercase tracking-wider">Configuración de pagos</p>
                       <button
                         className="w-full flex items-center gap-2.5 px-3 py-2.5 text-sm rounded-md hover:bg-muted transition-colors"
                         onClick={() => setShowDeposit(!showDeposit)}
                       >
                         <Banknote className="h-4 w-4 text-muted-foreground" />
-                        <span>Deposit/Payments</span>
+                        <span>Depósito y pagos</span>
                         {showDeposit && <Check className="h-3.5 w-3.5 ml-auto text-primary" />}
                       </button>
                       <button
@@ -1260,7 +1260,7 @@ export function NewInvoiceForm({
                         onClick={() => setShowDiscount(!showDiscount)}
                       >
                         <span className="h-4 w-4 text-muted-foreground flex items-center justify-center font-bold text-xs">%</span>
-                        <span>Discount</span>
+                        <span>Descuento</span>
                         {showDiscount && <Check className="h-3.5 w-3.5 ml-auto text-primary" />}
                       </button>
                       <div
@@ -1270,7 +1270,7 @@ export function NewInvoiceForm({
                       >
                         <div className="flex items-center gap-2.5">
                           <span className="h-4 w-4 text-muted-foreground flex items-center justify-center text-xs">&#128176;</span>
-                          <span>Tipping</span>
+                          <span>Propinas</span>
                         </div>
                         <Switch
                           checked={allowTipping}
@@ -1283,7 +1283,7 @@ export function NewInvoiceForm({
                         onClick={() => setShowRecurring(!showRecurring)}
                       >
                         <RotateCcw className="h-4 w-4 text-muted-foreground" />
-                        <span>Recurring Invoice</span>
+                        <span>Factura recurrente</span>
                         <HelpCircle className="h-3 w-3 text-muted-foreground/50" />
                         {showRecurring && <Check className="h-3.5 w-3.5 ml-auto text-primary" />}
                       </button>
@@ -1292,7 +1292,7 @@ export function NewInvoiceForm({
                         onClick={() => setShowCustomLinks(!showCustomLinks)}
                       >
                         <Link2 className="h-4 w-4 text-muted-foreground" />
-                        <span>Custom Links</span>
+                        <span>Enlaces personalizados</span>
                         <HelpCircle className="h-3 w-3 text-muted-foreground/50" />
                         {showCustomLinks && <Check className="h-3.5 w-3.5 ml-auto text-primary" />}
                       </button>
@@ -1302,16 +1302,16 @@ export function NewInvoiceForm({
                       >
                         <div className="flex items-center gap-2.5">
                           <FileText className="h-4 w-4 text-muted-foreground" />
-                          <span>PDF Payment Link</span>
+                          <span>Enlace de pago en PDF</span>
                           <HelpCircle className="h-3 w-3 text-muted-foreground/50" />
                         </div>
                         {pdfPaymentLink && <Check className="h-3.5 w-3.5 text-primary" />}
                       </button>
                       <Separator className="my-1" />
-                      <p className="px-3 py-1.5 text-xs font-medium text-muted-foreground uppercase tracking-wider">Payment methods</p>
+                      <p className="px-3 py-1.5 text-xs font-medium text-muted-foreground uppercase tracking-wider">Métodos de pago</p>
                       <button className="w-full flex items-center gap-2.5 px-3 py-2.5 text-sm rounded-md hover:bg-muted transition-colors">
                         <Plus className="h-4 w-4 text-muted-foreground" />
-                        <span>Add Payment Options</span>
+                        <span>Agregar opciones de pago</span>
                       </button>
                     </PopoverContent>
                   </Popover>
@@ -1323,12 +1323,12 @@ export function NewInvoiceForm({
                     {showDiscount && (
                       <div className="space-y-1.5">
                         <div className="flex items-center justify-between">
-                          <Label className="text-xs text-muted-foreground">Discount</Label>
+                          <Label className="text-xs text-muted-foreground">Descuento</Label>
                           <button
                             className="text-xs text-muted-foreground hover:text-destructive transition-colors"
                             onClick={() => { setShowDiscount(false); setDiscount(0); }}
                           >
-                            Remove
+                            Quitar
                           </button>
                         </div>
                         <div className="flex items-center gap-2">
@@ -1345,7 +1345,7 @@ export function NewInvoiceForm({
                               <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="flat">Flat</SelectItem>
+                              <SelectItem value="flat">Monto fijo</SelectItem>
                               <SelectItem value="percent">%</SelectItem>
                             </SelectContent>
                           </Select>
@@ -1355,12 +1355,12 @@ export function NewInvoiceForm({
                     {showDeposit && (
                       <div className="space-y-1.5">
                         <div className="flex items-center justify-between">
-                          <Label className="text-xs text-muted-foreground">Deposit Required</Label>
+                          <Label className="text-xs text-muted-foreground">Depósito requerido</Label>
                           <button
                             className="text-xs text-muted-foreground hover:text-destructive transition-colors"
                             onClick={() => { setShowDeposit(false); setDepositAmount(0); }}
                           >
-                            Remove
+                            Quitar
                           </button>
                         </div>
                         <Input
@@ -1376,12 +1376,12 @@ export function NewInvoiceForm({
                     {showRecurring && (
                       <div className="space-y-1.5">
                         <div className="flex items-center justify-between">
-                          <Label className="text-xs text-muted-foreground">Recurring Schedule</Label>
+                          <Label className="text-xs text-muted-foreground">Programación recurrente</Label>
                           <button
                             className="text-xs text-muted-foreground hover:text-destructive transition-colors"
                             onClick={() => setShowRecurring(false)}
                           >
-                            Remove
+                            Quitar
                           </button>
                         </div>
                         <Select value={recurringInterval} onValueChange={setRecurringInterval}>
@@ -1389,11 +1389,11 @@ export function NewInvoiceForm({
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="weekly">Weekly</SelectItem>
-                            <SelectItem value="biweekly">Bi-weekly</SelectItem>
-                            <SelectItem value="monthly">Monthly</SelectItem>
-                            <SelectItem value="quarterly">Quarterly</SelectItem>
-                            <SelectItem value="yearly">Yearly</SelectItem>
+                            <SelectItem value="weekly">Semanal</SelectItem>
+                            <SelectItem value="biweekly">Quincenal</SelectItem>
+                            <SelectItem value="monthly">Mensual</SelectItem>
+                            <SelectItem value="quarterly">Trimestral</SelectItem>
+                            <SelectItem value="yearly">Anual</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
@@ -1401,12 +1401,12 @@ export function NewInvoiceForm({
                     {showCustomLinks && (
                       <div className="space-y-1.5">
                         <div className="flex items-center justify-between">
-                          <Label className="text-xs text-muted-foreground">Custom Link</Label>
+                          <Label className="text-xs text-muted-foreground">Enlace personalizado</Label>
                           <button
                             className="text-xs text-muted-foreground hover:text-destructive transition-colors"
                             onClick={() => { setShowCustomLinks(false); setCustomLinkUrl(''); setCustomLinkLabel(''); }}
                           >
-                            Remove
+                            Quitar
                           </button>
                         </div>
                         <div className="grid grid-cols-2 gap-2">
@@ -1414,7 +1414,7 @@ export function NewInvoiceForm({
                             value={customLinkLabel}
                             onChange={(e) => setCustomLinkLabel(e.target.value)}
                             className="h-10"
-                            placeholder="Link label"
+                            placeholder="Texto del enlace"
                           />
                           <Input
                             value={customLinkUrl}
@@ -1434,15 +1434,15 @@ export function NewInvoiceForm({
               {/* ─── Memo Section ─────────────────────── */}
               <div className="py-8">
                 <h3 className="text-xl font-semibold tracking-tight font-display mb-5">
-                  Memo
+                  Nota
                 </h3>
                 <div className="space-y-2">
-                  <Label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest">Memo</Label>
+                  <Label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest">Nota</Label>
                   <Textarea
                     value={notes}
                     onChange={(e) => setNotes(e.target.value)}
                     className="resize-none min-h-[80px] text-sm"
-                    placeholder="Thank you for your business!"
+                    placeholder="¡Gracias por confiar en nosotros!"
                   />
                 </div>
               </div>
@@ -1458,7 +1458,7 @@ export function NewInvoiceForm({
                   {loading && (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   )}
-                  Create & Send
+                  Crear y enviar
                 </Button>
                 <Button
                   variant="outline"
@@ -1466,7 +1466,7 @@ export function NewInvoiceForm({
                   onClick={() => handleSubmit(true)}
                   disabled={loading}
                 >
-                  Save Draft
+                  Guardar borrador
                 </Button>
               </div>
             </div>
@@ -1487,19 +1487,19 @@ export function NewInvoiceForm({
                     value="payment"
                     className="text-xs data-[state=active]:text-foreground"
                   >
-                    Payment Page
+                    Página de pago
                   </TabsTrigger>
                   <TabsTrigger
                     value="email"
                     className="text-xs data-[state=active]:text-foreground"
                   >
-                    Email Preview
+                    Vista previa del correo
                   </TabsTrigger>
                   <TabsTrigger
                     value="pdf"
                     className="text-xs data-[state=active]:text-foreground"
                   >
-                    Invoice PDF
+                    PDF de la factura
                   </TabsTrigger>
                 </TabsList>
               </Tabs>
@@ -1532,7 +1532,7 @@ export function NewInvoiceForm({
                     </button>
                   </PopoverTrigger>
                   <PopoverContent className="w-[280px] p-3" align="end" side="bottom">
-                    <p className="text-xs font-medium text-muted-foreground mb-2.5">Invoice Style</p>
+                    <p className="text-xs font-medium text-muted-foreground mb-2.5">Estilo de factura</p>
                     <div className="grid grid-cols-3 gap-1.5">
                       {Object.entries(INVOICE_TEMPLATES).map(([key, t]) => (
                         <button
@@ -1572,7 +1572,7 @@ export function NewInvoiceForm({
                     {formatMoney(total, selectedCurrency)}
                   </p>
                   <p className="text-xs text-muted-foreground mt-1">
-                    Invoice #{invoiceNumber} &middot; Due {dueDate ? format(dueDate, 'MMM dd, yyyy') : '...'}
+                    Factura #{invoiceNumber} &middot; Vence {dueDate ? format(dueDate, 'dd MMM yyyy') : '...'}
                   </p>
                 </div>
 
@@ -1587,7 +1587,7 @@ export function NewInvoiceForm({
                     <div className="flex items-center justify-between mb-3">
                       <div>
                         <p className="font-semibold text-sm">
-                          {selectedClient?.name || 'Select a customer'}
+                          {selectedClient?.name || 'Seleccionar cliente'}
                         </p>
                         <p className="text-xs text-muted-foreground">
                           {selectedClient?.company || ''}
@@ -1617,7 +1617,7 @@ export function NewInvoiceForm({
                             >
                               <div className="flex-1 min-w-0">
                                 <p className="font-medium text-sm truncate">
-                                  {item.name || 'Untitled Item'}
+                                  {item.name || 'Concepto sin título'}
                                 </p>
                                 <p className="text-xs text-muted-foreground truncate mt-0.5">
                                   {item.quantity} &times; {formatMoney(item.rate, selectedCurrency)}
@@ -1645,7 +1645,7 @@ export function NewInvoiceForm({
                               <span className="tabular-nums">{formatMoney(subtotal, selectedCurrency)}</span>
                             </div>
                             <div className="flex justify-between text-sm">
-                              <span className="text-muted-foreground">Discount</span>
+                              <span className="text-muted-foreground">Descuento</span>
                               <span className="tabular-nums text-green-600">-{formatMoney(discountAmount, selectedCurrency)}</span>
                             </div>
                           </div>
@@ -1658,7 +1658,7 @@ export function NewInvoiceForm({
                         )}
                         <div className={cn('flex justify-between items-baseline rounded-lg px-3 py-3 -mx-3 border-l-2', tpl.accentBg)}
                           style={{ borderLeftColor: tpl.accent }}>
-                          <span className="font-semibold text-sm">Total Due</span>
+                          <span className="font-semibold text-sm">Saldo pendiente</span>
                           <span className="text-lg font-bold tabular-nums" style={{ color: tpl.accent }}>
                             {formatMoney(total, selectedCurrency)}
                           </span>
@@ -1697,7 +1697,7 @@ export function NewInvoiceForm({
                     ) : (
                       <>
                         <Download className="h-4 w-4" />
-                        Download Invoice
+                        Descargar factura
                       </>
                     )}
                   </button>
@@ -1722,7 +1722,7 @@ export function NewInvoiceForm({
             <div className="p-4 flex-1 flex flex-col items-center">
               {/* Info line */}
               <p className="text-xs text-muted-foreground mb-3 w-full">
-                A4 Preview &middot; {lineItems.length} item{lineItems.length !== 1 ? 's' : ''}
+                Vista previa A4 &middot; {lineItems.length} concepto{lineItems.length !== 1 ? 's' : ''}
               </p>
 
               {/* A4 Scaled Preview */}
@@ -1744,7 +1744,7 @@ export function NewInvoiceForm({
                       'absolute top-2.5 right-2.5 h-7 w-7 rounded-full bg-muted/80 hover:bg-muted transition-colors flex items-center justify-center z-20',
                       pdfGenerating && 'opacity-70 cursor-not-allowed'
                     )}
-                    title="Download PDF"
+                    title="Descargar PDF"
                   >
                     {pdfGenerating ? (
                       <Loader2 className="h-3.5 w-3.5 animate-spin text-muted-foreground" />
@@ -1767,7 +1767,7 @@ export function NewInvoiceForm({
                         <p className="text-xs mt-1" style={{ color: '#666' }}>hello@company.com</p>
                       </div>
                       <div className="text-right">
-                        <h1 className="text-2xl font-bold tracking-tight" style={{ color: tpl.accent }}>INVOICE</h1>
+                        <h1 className="text-2xl font-bold tracking-tight" style={{ color: tpl.accent }}>FACTURA</h1>
                         <p className="text-xs mt-1" style={{ color: '#666' }}>#{invoiceNumber}</p>
                         <p className="text-xs" style={{ color: '#666' }}>
                           Date: {dueDate ? format(dueDate, 'MMM dd, yyyy') : 'Not set'}
@@ -1777,9 +1777,9 @@ export function NewInvoiceForm({
 
                     {/* Bill To */}
                     <div className="px-10 pb-6">
-                      <p className="text-[10px] uppercase tracking-wider font-semibold mb-1" style={{ color: '#999' }}>Bill To</p>
+                      <p className="text-[10px] uppercase tracking-wider font-semibold mb-1" style={{ color: '#999' }}>Facturar a</p>
                       <p className="text-sm font-medium" style={{ color: '#111' }}>
-                        {selectedClient?.name || 'Customer Name'}
+                        {selectedClient?.name || 'Nombre del cliente'}
                       </p>
                       {selectedClient?.company && (
                         <p className="text-xs" style={{ color: '#666' }}>{selectedClient.company}</p>
@@ -1791,17 +1791,17 @@ export function NewInvoiceForm({
                       <table className="w-full text-xs">
                         <thead>
                           <tr style={{ borderBottom: '2px solid #e5e7eb' }}>
-                            <th className="text-left py-2 font-semibold" style={{ color: '#333', width: '50%' }}>Description</th>
-                            <th className="text-center py-2 font-semibold" style={{ color: '#333' }}>Qty</th>
-                            <th className="text-right py-2 font-semibold" style={{ color: '#333' }}>Rate</th>
-                            <th className="text-right py-2 font-semibold" style={{ color: '#333' }}>Amount</th>
+                            <th className="text-left py-2 font-semibold" style={{ color: '#333', width: '50%' }}>Descripción</th>
+                            <th className="text-center py-2 font-semibold" style={{ color: '#333' }}>Cant.</th>
+                            <th className="text-right py-2 font-semibold" style={{ color: '#333' }}>Precio</th>
+                            <th className="text-right py-2 font-semibold" style={{ color: '#333' }}>Importe</th>
                           </tr>
                         </thead>
                         <tbody>
                           {lineItems.length > 0 ? lineItems.map((item) => (
                             <tr key={item.id} style={{ borderBottom: '1px solid #f3f4f6' }}>
                               <td className="py-2">
-                                <p className="font-medium" style={{ color: '#111' }}>{item.name || 'Untitled'}</p>
+                                <p className="font-medium" style={{ color: '#111' }}>{item.name || 'Sin título'}</p>
                                 {item.description && <p style={{ color: '#888' }}>{item.description}</p>}
                               </td>
                               <td className="py-2 text-center" style={{ color: '#333' }}>{item.quantity}</td>
@@ -1828,7 +1828,7 @@ export function NewInvoiceForm({
                         </div>
                         {discountAmount > 0 && (
                           <div className="flex justify-between py-1 text-xs" style={{ color: '#22c55e' }}>
-                            <span>Discount</span>
+                            <span>Descuento</span>
                             <span className="tabular-nums">-{formatMoney(discountAmount, selectedCurrency)}</span>
                           </div>
                         )}
@@ -1845,7 +1845,7 @@ export function NewInvoiceForm({
                         <div className="flex justify-between py-2 mt-1 rounded px-2 -mx-2"
                           style={{ background: tpl.accentBg.replace('bg-', '').includes('50') ? `${tpl.accent}10` : '#f5f5f5' }}
                         >
-                          <span className="text-xs font-bold" style={{ color: '#111' }}>Balance Due</span>
+                          <span className="text-xs font-bold" style={{ color: '#111' }}>Saldo pendiente</span>
                           <span className="text-sm font-bold tabular-nums" style={{ color: tpl.accent }}>{formatMoney(total, selectedCurrency)}</span>
                         </div>
                       </div>
@@ -1881,7 +1881,7 @@ export function NewInvoiceForm({
                     </div>
                     <div className="text-right">
                       <p className="text-xs text-muted-foreground">{businessName}</p>
-                      <p className="font-bold text-lg mt-0.5" style={{ color: tpl.accent }}>Invoice</p>
+                      <p className="font-bold text-lg mt-0.5" style={{ color: tpl.accent }}>Factura</p>
                       <p className="text-xs text-muted-foreground mt-0.5">
                         Due {dueDate ? format(dueDate, 'MMM dd, yyyy') : '...'}
                       </p>
@@ -1894,12 +1894,12 @@ export function NewInvoiceForm({
                   <button
                     className={cn('flex-1 h-11 rounded-lg font-medium text-sm flex items-center justify-center gap-2 transition-colors', tpl.buttonColor)}
                   >
-                    Pay this Invoice
+                    Pagar esta factura
                   </button>
                   <button
                     className="flex-1 h-11 rounded-lg font-medium text-sm flex items-center justify-center gap-2 border border-border hover:bg-muted transition-colors"
                   >
-                    Download PDF
+                    Descargar PDF
                   </button>
                 </div>
 
@@ -1907,7 +1907,7 @@ export function NewInvoiceForm({
 
                 {/* ─── Invoice Summary ─── */}
                 <div className="px-6 py-4 space-y-3">
-                  <p className="text-sm font-medium">Invoice #{invoiceNumber}</p>
+                  <p className="text-sm font-medium">Factura #{invoiceNumber}</p>
 
                   {/* Line Items */}
                   {lineItems.length > 0 && (
@@ -1915,7 +1915,7 @@ export function NewInvoiceForm({
                       {lineItems.map((item) => (
                         <div key={item.id} className="flex items-center justify-between py-1.5 text-sm">
                           <div className="flex-1 min-w-0">
-                            <p className="font-medium text-sm truncate">{item.name || 'Untitled Item'}</p>
+                            <p className="font-medium text-sm truncate">{item.name || 'Concepto sin título'}</p>
                             <p className="text-xs text-muted-foreground truncate">
                               {item.quantity} &times; {formatMoney(item.rate, selectedCurrency)}
                               {item.description && <span className="ml-1.5 text-muted-foreground/70">&middot; {item.description}</span>}
@@ -1936,7 +1936,7 @@ export function NewInvoiceForm({
                           <span className="tabular-nums">{formatMoney(subtotal, selectedCurrency)}</span>
                         </div>
                         <div className="flex justify-between text-sm">
-                          <span className="text-muted-foreground">Discount</span>
+                          <span className="text-muted-foreground">Descuento</span>
                           <span className="tabular-nums text-green-600">-{formatMoney(discountAmount, selectedCurrency)}</span>
                         </div>
                         <Separator className={tpl.separatorClass} />
@@ -1949,7 +1949,7 @@ export function NewInvoiceForm({
                       </div>
                     )}
                     <div className="flex justify-between text-sm font-semibold">
-                      <span>Total Due</span>
+                      <span>Saldo pendiente</span>
                       <span className="tabular-nums" style={{ color: tpl.accent }}>{formatMoney(total, selectedCurrency)}</span>
                     </div>
                   </div>
@@ -1962,7 +1962,7 @@ export function NewInvoiceForm({
                     <div className="px-6 py-4">
                       <p className="text-sm italic text-muted-foreground">{notes}</p>
                       <p className="text-xs text-muted-foreground mt-1">
-                        Contact us at <span className="underline">hello@company.com</span>
+                        Contáctenos en <span className="underline">hello@company.com</span>
                       </p>
                     </div>
                   </>
@@ -2007,7 +2007,7 @@ export function NewInvoiceForm({
                   <p style={{ fontSize: '11px', color: '#666', marginTop: '4px' }}>hello@company.com</p>
                 </div>
                 <div style={{ textAlign: 'right' }}>
-                  <p style={{ fontSize: '22px', fontWeight: 700, color: tpl.accent, letterSpacing: '0.05em' }}>INVOICE</p>
+                  <p style={{ fontSize: '22px', fontWeight: 700, color: tpl.accent, letterSpacing: '0.05em' }}>FACTURA</p>
                   <p style={{ fontSize: '11px', color: '#666', marginTop: '4px' }}>#{invoiceNumber}</p>
                   <p style={{ fontSize: '11px', color: '#666' }}>
                     Date: {dueDate ? format(dueDate, 'MMM dd, yyyy') : 'Not set'}
@@ -2017,9 +2017,9 @@ export function NewInvoiceForm({
 
               {/* Bill To */}
               <div style={{ padding: '0 40px 24px' }}>
-                <p style={{ fontSize: '9px', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 600, color: '#999', marginBottom: '4px' }}>Bill To</p>
+                <p style={{ fontSize: '9px', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 600, color: '#999', marginBottom: '4px' }}>Facturar a</p>
                 <p style={{ fontSize: '13px', fontWeight: 500 }}>
-                  {selectedClient?.name || 'Customer Name'}
+                  {selectedClient?.name || 'Nombre del cliente'}
                 </p>
                 {selectedClient?.company && (
                   <p style={{ fontSize: '11px', color: '#666' }}>{selectedClient.company}</p>
@@ -2031,17 +2031,17 @@ export function NewInvoiceForm({
                 <table style={{ width: '100%', fontSize: '11px', borderCollapse: 'collapse' }}>
                   <thead>
                     <tr style={{ borderBottom: '2px solid #e5e7eb' }}>
-                      <th style={{ textAlign: 'left', padding: '8px 0', fontWeight: 600, color: '#333' }}>Description</th>
-                      <th style={{ textAlign: 'center', padding: '8px 0', fontWeight: 600, color: '#333' }}>Qty</th>
-                      <th style={{ textAlign: 'right', padding: '8px 0', fontWeight: 600, color: '#333' }}>Rate</th>
-                      <th style={{ textAlign: 'right', padding: '8px 0', fontWeight: 600, color: '#333' }}>Amount</th>
+                      <th style={{ textAlign: 'left', padding: '8px 0', fontWeight: 600, color: '#333' }}>Descripción</th>
+                      <th style={{ textAlign: 'center', padding: '8px 0', fontWeight: 600, color: '#333' }}>Cant.</th>
+                      <th style={{ textAlign: 'right', padding: '8px 0', fontWeight: 600, color: '#333' }}>Precio</th>
+                      <th style={{ textAlign: 'right', padding: '8px 0', fontWeight: 600, color: '#333' }}>Importe</th>
                     </tr>
                   </thead>
                   <tbody>
                     {lineItems.length > 0 ? lineItems.map((item) => (
                       <tr key={item.id} style={{ borderBottom: '1px solid #f3f4f6' }}>
                         <td style={{ padding: '8px 0' }}>
-                          <p style={{ fontWeight: 500 }}>{item.name || 'Untitled'}</p>
+                          <p style={{ fontWeight: 500 }}>{item.name || 'Sin título'}</p>
                           {item.description && <p style={{ color: '#888', marginTop: '2px' }}>{item.description}</p>}
                         </td>
                         <td style={{ textAlign: 'center', padding: '8px 0', color: '#333' }}>{item.quantity}</td>
@@ -2068,7 +2068,7 @@ export function NewInvoiceForm({
                   </div>
                   {discountAmount > 0 && (
                     <div style={{ display: 'flex', justifyContent: 'space-between', padding: '4px 0', fontSize: '11px', color: '#22c55e' }}>
-                      <span>Discount</span>
+                      <span>Descuento</span>
                       <span>-{formatMoney(discountAmount, selectedCurrency)}</span>
                     </div>
                   )}
@@ -2087,7 +2087,7 @@ export function NewInvoiceForm({
                     padding: '8px', marginTop: '4px', borderRadius: '4px',
                     background: `${tpl.accent}15`,
                   }}>
-                    <span style={{ fontSize: '11px', fontWeight: 700 }}>Balance Due</span>
+                    <span style={{ fontSize: '11px', fontWeight: 700 }}>Saldo pendiente</span>
                     <span style={{ fontSize: '14px', fontWeight: 700, color: tpl.accent }}>{formatMoney(total, selectedCurrency)}</span>
                   </div>
                 </div>

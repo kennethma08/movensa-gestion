@@ -41,7 +41,7 @@ export function ContractEditor({
   content,
   onChange,
   variables = [],
-  placeholder = 'Start writing your contract template...',
+  placeholder = 'Comience a escribir la plantilla del contrato...',
   editable = true,
 }: ContractEditorProps) {
   const editor = useEditor({

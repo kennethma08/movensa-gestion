@@ -49,12 +49,12 @@ export function LogoUpload({ value, onChange, className }: LogoUploadProps) {
   const handleFile = async (file: File) => {
     // Low #46: Show toast feedback on validation failure instead of silent return
     if (!file.type.startsWith('image/')) {
-      toast.error('Please upload an image file (PNG, JPG, or WebP)');
+      toast.error('Suba una imagen en formato PNG, JPG o WebP');
       return;
     }
 
     if (file.size > 2 * 1024 * 1024) {
-      toast.error('File size must be under 2MB');
+      toast.error('El archivo debe pesar menos de 2 MB');
       return;
     }
 
@@ -159,7 +159,7 @@ export function LogoUpload({ value, onChange, className }: LogoUploadProps) {
             )}
           </div>
           <div>
-            <p className="text-sm font-medium">Upload your logo</p>
+            <p className="text-sm font-medium">Cargue su logotipo</p>
             <p className="text-xs text-muted-foreground">
               PNG, JPG up to 2MB
             </p>

@@ -77,12 +77,12 @@ export function ConvertToInvoiceButton({
       if (result.success && result.invoice) {
         if (sendImmediately) {
           await sendInvoice(result.invoice.id).catch(() => {
-            toast.error('Invoice created but failed to send email. You can send it manually.');
+            toast.error('La factura se creó, pero el correo no pudo enviarse. Puede enviarlo manualmente.');
           });
         }
         router.push(`/invoices/${result.invoice.id}`);
       } else {
-        setError(result.error || 'Failed to create invoice');
+        setError(result.error || 'No se pudo crear la factura');
       }
     } catch (err) {
       setError('An unexpected error occurred');
@@ -96,12 +96,12 @@ export function ConvertToInvoiceButton({
       <DialogTrigger asChild>
         <Button size="sm" variant="default">
           <Receipt className="mr-2 h-4 w-4" />
-          Convert to Invoice
+          Convertir en factura
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Convert Quote to Invoice</DialogTitle>
+          <DialogTitle>Convertir cotización en factura</DialogTitle>
           <DialogDescription>
             This will create a new invoice from this quote. All line items, notes, and terms will
             be copied to the invoice.
@@ -111,11 +111,11 @@ export function ConvertToInvoiceButton({
         <div className="py-4">
           <div className="rounded-lg border p-4 space-y-2">
             <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Quote</span>
+              <span className="text-muted-foreground">Cotización</span>
               <span className="font-medium">{quoteTitle}</span>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Total Amount</span>
+              <span className="text-muted-foreground">Monto total</span>
               <span className="font-medium">
                 {formatMoney(total, currency)}
               </span>
@@ -124,7 +124,7 @@ export function ConvertToInvoiceButton({
 
           <div className="mt-4 space-y-3">
             <div>
-              <Label htmlFor="payment-terms" className="text-sm font-normal">Payment Terms</Label>
+              <Label htmlFor="payment-terms" className="text-sm font-normal">Condiciones de pago</Label>
               <Select value={paymentTermDays} onValueChange={setPaymentTermDays}>
                 <SelectTrigger id="payment-terms" className="mt-1">
                   <SelectValue />
@@ -148,7 +148,7 @@ export function ConvertToInvoiceButton({
                 onCheckedChange={(checked) => setSendImmediately(checked === true)}
               />
               <Label htmlFor="send-immediate" className="text-sm font-normal">
-                Send immediately after creation
+                Enviar inmediatamente después de crearla
               </Label>
             </div>
           </div>
@@ -164,11 +164,11 @@ export function ConvertToInvoiceButton({
             onClick={() => setOpen(false)}
             disabled={isConverting}
           >
-            Cancel
+            Cancelar
           </Button>
           <Button onClick={handleConvert} disabled={isConverting}>
             {isConverting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            Create Invoice
+            Crear factura
           </Button>
         </DialogFooter>
       </DialogContent>

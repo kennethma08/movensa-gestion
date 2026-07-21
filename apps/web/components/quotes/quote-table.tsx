@@ -15,13 +15,13 @@ interface QuoteTableProps {
 }
 
 const statusOptions = [
-  { value: 'draft', label: 'Draft' },
-  { value: 'sent', label: 'Sent' },
-  { value: 'viewed', label: 'Viewed' },
-  { value: 'accepted', label: 'Accepted' },
-  { value: 'declined', label: 'Declined' },
-  { value: 'expired', label: 'Expired' },
-  { value: 'converted', label: 'Converted' },
+  { value: 'draft', label: 'Borrador' },
+  { value: 'sent', label: 'Enviada' },
+  { value: 'viewed', label: 'Vista' },
+  { value: 'accepted', label: 'Aceptada' },
+  { value: 'declined', label: 'Rechazada' },
+  { value: 'expired', label: 'Vencida' },
+  { value: 'converted', label: 'Convertida' },
 ];
 
 export function QuoteTable({ quotes, isLoading = false }: QuoteTableProps) {
@@ -42,13 +42,13 @@ export function QuoteTable({ quotes, isLoading = false }: QuoteTableProps) {
     try {
       const result = await duplicateQuote(quote.id);
       if (result.success && result.quoteId) {
-        toast.success('Quote duplicated successfully');
+        toast.success('Cotización duplicada correctamente');
         router.push(`/quotes/${result.quoteId}`);
       } else {
-        toast.error('Failed to duplicate quote');
+        toast.error('No se pudo duplicar la cotización');
       }
     } catch (error) {
-      toast.error('Failed to duplicate quote');
+      toast.error('No se pudo duplicar la cotización');
     } finally {
       setIsProcessing(false);
     }
@@ -60,13 +60,13 @@ export function QuoteTable({ quotes, isLoading = false }: QuoteTableProps) {
     try {
       const result = await deleteQuote(quote.id);
       if (result.success) {
-        toast.success('Quote deleted successfully');
+        toast.success('Cotización eliminada correctamente');
         router.refresh();
       } else {
-        toast.error('Failed to delete quote');
+        toast.error('No se pudo eliminar la cotización');
       }
     } catch (error) {
-      toast.error('Failed to delete quote');
+      toast.error('No se pudo eliminar la cotización');
     } finally {
       setIsProcessing(false);
     }
@@ -90,14 +90,14 @@ export function QuoteTable({ quotes, isLoading = false }: QuoteTableProps) {
       columns={columns}
       data={quotes}
       filterKey="client"
-      filterPlaceholder="Search quotes..."
+      filterPlaceholder="Buscar cotizaciones..."
       statusOptions={statusOptions}
       statusFilterKey="status"
       isLoading={isLoading}
       emptyState={
         <div className="flex flex-col items-center gap-2">
           <FileText className="h-8 w-8 text-muted-foreground" />
-          <p className="text-muted-foreground">No quotes found</p>
+          <p className="text-muted-foreground">No se encontraron cotizaciones</p>
         </div>
       }
     />

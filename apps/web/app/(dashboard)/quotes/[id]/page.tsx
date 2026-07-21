@@ -19,13 +19,13 @@ const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12
 export async function generateMetadata({ params }: QuoteDetailPageProps) {
   const { id } = await params;
   if (!UUID_REGEX.test(id)) {
-    return { title: 'Quote Not Found' };
+    return { title: 'Cotización no encontrada' };
   }
   try {
     const quote = await getQuote(id);
-    return { title: quote ? `${quote.title} - ${quote.quoteNumber}` : 'Quote Details' };
+    return { title: quote ? `${quote.title} - ${quote.quoteNumber}` : 'Detalles de la cotización' };
   } catch {
-    return { title: 'Quote Not Found' };
+    return { title: 'Cotización no encontrada' };
   }
 }
 
@@ -76,14 +76,14 @@ export default async function QuoteDetailPage({ params }: QuoteDetailPageProps) 
           <Button variant="outline" size="sm" asChild>
             <a href={`/api/download/quote/${id}`} target="_blank" rel="noopener noreferrer">
               <Download className="mr-2 h-4 w-4" />
-              Download PDF
+              Descargar PDF
             </a>
           </Button>
           {quote.status === 'draft' && (
             <Button variant="outline" size="sm" asChild>
               <Link href={`/quotes/${id}/edit`}>
                 <Edit className="mr-2 h-4 w-4" />
-                Edit
+                Editar
               </Link>
             </Button>
           )}
@@ -106,7 +106,7 @@ export default async function QuoteDetailPage({ params }: QuoteDetailPageProps) 
         <div className="md:col-span-2">
           <Card>
             <CardHeader>
-              <CardTitle>Quote Preview</CardTitle>
+              <CardTitle>Vista previa de la cotización</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="rounded-lg border bg-card p-8">
@@ -115,17 +115,17 @@ export default async function QuoteDetailPage({ params }: QuoteDetailPageProps) 
                   <div>
                     <h2 className="text-2xl font-bold">{quote.title}</h2>
                     <p className="text-sm text-muted-foreground">
-                      Quote #{quote.quoteNumber}
+                      Cotización #{quote.quoteNumber}
                     </p>
                   </div>
                   <div className="text-right text-sm">
-                    <p className="font-medium">Issue Date</p>
+                    <p className="font-medium">Fecha de emisión</p>
                     <p className="text-muted-foreground">
                       {new Date(quote.issueDate).toLocaleDateString()}
                     </p>
                     {quote.expirationDate && (
                       <>
-                        <p className="mt-2 font-medium">Valid Until</p>
+                        <p className="mt-2 font-medium">Válida hasta</p>
                         <p className="text-muted-foreground">
                           {new Date(quote.expirationDate).toLocaleDateString()}
                         </p>
@@ -180,13 +180,13 @@ export default async function QuoteDetailPage({ params }: QuoteDetailPageProps) 
                     </div>
                     {quote.totals.discountAmount > 0 && (
                       <div className="flex justify-between text-sm text-green-600">
-                        <span>Discount</span>
+                        <span>Descuento</span>
                         <span>-{formatCurrency(quote.totals.discountAmount, quote.currency)}</span>
                       </div>
                     )}
                     {quote.totals.taxTotal > 0 && (
                       <div className="flex justify-between text-sm">
-                        <span>Tax</span>
+                        <span>Impuesto</span>
                         <span>{formatCurrency(quote.totals.taxTotal, quote.currency)}</span>
                       </div>
                     )}
@@ -200,7 +200,7 @@ export default async function QuoteDetailPage({ params }: QuoteDetailPageProps) 
                 {/* Notes */}
                 {quote.notes && (
                   <div className="mt-8 border-t pt-4">
-                    <h3 className="mb-2 font-semibold">Notes</h3>
+                    <h3 className="mb-2 font-semibold">Notas</h3>
                     <p className="text-sm text-muted-foreground">{quote.notes}</p>
                   </div>
                 )}
@@ -208,7 +208,7 @@ export default async function QuoteDetailPage({ params }: QuoteDetailPageProps) 
                 {/* Terms */}
                 {quote.terms && (
                   <div className="mt-4">
-                    <h3 className="mb-2 font-semibold">Terms & Conditions</h3>
+                    <h3 className="mb-2 font-semibold">Términos y condiciones</h3>
                     <p className="text-sm text-muted-foreground">{quote.terms}</p>
                   </div>
                 )}
@@ -222,17 +222,17 @@ export default async function QuoteDetailPage({ params }: QuoteDetailPageProps) 
           {/* Quick Stats */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-base">Quote Details</CardTitle>
+              <CardTitle className="text-base">Detalles de la cotización</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <p className="text-sm text-muted-foreground">Total Value</p>
+                <p className="text-sm text-muted-foreground">Valor total</p>
                 <p className="text-2xl font-bold">
                   {formatCurrency(quote.totals.total, quote.currency)}
                 </p>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Status</p>
+                <p className="text-sm text-muted-foreground">Estado</p>
                 <span
                   className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${statusStyle.bg} ${statusStyle.text}`}
                 >
@@ -240,7 +240,7 @@ export default async function QuoteDetailPage({ params }: QuoteDetailPageProps) 
                 </span>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Line Items</p>
+                <p className="text-sm text-muted-foreground">Conceptos</p>
                 <p className="font-medium">
                   {quote.blocks.filter((b) => b.type === 'service-item').length}
                 </p>
@@ -251,7 +251,7 @@ export default async function QuoteDetailPage({ params }: QuoteDetailPageProps) 
           {/* Client Card */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-base">Client</CardTitle>
+              <CardTitle className="text-base">Cliente</CardTitle>
             </CardHeader>
             <CardContent>
               {quote.client ? (
@@ -265,13 +265,13 @@ export default async function QuoteDetailPage({ params }: QuoteDetailPageProps) 
                   )}
                 </>
               ) : (
-                <p className="text-muted-foreground text-sm">No client assigned</p>
+                <p className="text-muted-foreground text-sm">No hay un cliente asignado</p>
               )}
               {quote.clientId && (
                 <Button variant="outline" size="sm" className="mt-4 w-full" asChild>
                   <Link href={`/clients/${quote.clientId}`}>
                     <ExternalLink className="mr-2 h-4 w-4" />
-                    View Client
+                    Ver cliente
                   </Link>
                 </Button>
               )}
@@ -284,7 +284,7 @@ export default async function QuoteDetailPage({ params }: QuoteDetailPageProps) 
               <CardHeader>
                 <CardTitle className="text-base flex items-center gap-2">
                   <Receipt className="h-4 w-4" />
-                  Linked Invoice
+                  Factura vinculada
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
@@ -302,7 +302,7 @@ export default async function QuoteDetailPage({ params }: QuoteDetailPageProps) 
                 <Button variant="outline" size="sm" className="w-full" asChild>
                   <Link href={`/invoices/${quote.linkedInvoice.id}`}>
                     <ExternalLink className="mr-2 h-4 w-4" />
-                    View Invoice
+                    Ver factura
                   </Link>
                 </Button>
               </CardContent>
@@ -324,7 +324,7 @@ export default async function QuoteDetailPage({ params }: QuoteDetailPageProps) 
                   {(quote.signatureData.data.startsWith('data:image/') || quote.signatureData.data.startsWith('https://')) ? (
                     <img
                       src={quote.signatureData.data}
-                      alt="Client signature"
+                      alt="Firma del cliente"
                       className="max-h-20 mx-auto"
                     />
                   ) : (
@@ -332,8 +332,8 @@ export default async function QuoteDetailPage({ params }: QuoteDetailPageProps) 
                   )}
                 </div>
                 <div className="space-y-1 text-sm">
-                  <p><span className="text-muted-foreground">Signed by:</span> {quote.signatureData.signerName}</p>
-                  <p><span className="text-muted-foreground">Date:</span> {new Date(quote.signatureData.signedAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
+                  <p><span className="text-muted-foreground">Firmado por:</span> {quote.signatureData.signerName}</p>
+                  <p><span className="text-muted-foreground">Fecha:</span> {new Date(quote.signatureData.signedAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
                   <p><span className="text-muted-foreground">IP:</span> {quote.signatureData.ipAddress}</p>
                 </div>
               </CardContent>
@@ -369,25 +369,25 @@ async function QuoteActivity({ quoteId }: { quoteId: string }) {
   };
 
   const getEventLabel = (eventType: string) => {
-    if (eventType.includes('sent') || eventType === 'quote_sent') return 'Quote sent';
-    if (eventType.includes('accepted')) return 'Quote accepted';
-    if (eventType.includes('declined')) return 'Quote declined';
-    if (eventType.includes('viewed')) return 'Quote viewed';
-    if (eventType.includes('created')) return 'Quote created';
-    if (eventType.includes('expired')) return 'Quote expired';
-    if (eventType.includes('converted')) return 'Quote converted to invoice';
-    return eventType.replace(/_/g, ' ').replace(/status changed to /i, 'Status changed to ');
+    if (eventType.includes('sent') || eventType === 'quote_sent') return 'Cotización enviada';
+    if (eventType.includes('accepted')) return 'Cotización aceptada';
+    if (eventType.includes('declined')) return 'Cotización rechazada';
+    if (eventType.includes('viewed')) return 'Cotización vista';
+    if (eventType.includes('created')) return 'Cotización creada';
+    if (eventType.includes('expired')) return 'Cotización vencida';
+    if (eventType.includes('converted')) return 'Cotización convertida en factura';
+    return eventType.replace(/_/g, ' ').replace(/status changed to /i, 'Estado cambiado a ');
   };
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-base">Activity</CardTitle>
+        <CardTitle className="text-base">Actividad</CardTitle>
       </CardHeader>
       <CardContent>
         {events.length === 0 ? (
           <p className="text-sm text-muted-foreground">
-            No activity yet.
+            Aún no hay actividad.
           </p>
         ) : (
           <div className="space-y-3">

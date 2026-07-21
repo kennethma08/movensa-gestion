@@ -29,7 +29,7 @@ import type {
 } from '@/lib/contracts/types';
 
 const contractTemplateSchema = z.object({
-  name: z.string().min(1, 'Name is required').max(255),
+  name: z.string().min(1, 'El nombre es obligatorio').max(255),
   content: z.string().min(1, 'Content is required'),
 });
 
@@ -75,7 +75,7 @@ export function ContractTemplateForm({ template }: ContractTemplateFormProps) {
             content,
             variables,
           });
-          toast.success('Template updated successfully');
+          toast.success('Plantilla actualizada correctamente');
         } else {
           await createContractTemplate({
             name: data.name,
@@ -83,12 +83,12 @@ export function ContractTemplateForm({ template }: ContractTemplateFormProps) {
             isTemplate: true,
             variables,
           });
-          toast.success('Template created successfully');
+          toast.success('Plantilla creada correctamente');
         }
         router.push('/templates');
         router.refresh();
       } catch (error) {
-        toast.error(template ? 'Failed to update template' : 'Failed to create template');
+        toast.error(template ? 'No se pudo actualizar la plantilla' : 'No se pudo crear la plantilla');
       }
     });
   };
@@ -97,20 +97,20 @@ export function ContractTemplateForm({ template }: ContractTemplateFormProps) {
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle>{template ? 'Edit Template' : 'Create Template'}</CardTitle>
+          <CardTitle>{template ? 'Editar plantilla' : 'Crear plantilla'}</CardTitle>
           <CardDescription>
             {template
-              ? 'Update your contract template details and content.'
-              : 'Create a new contract template that can be used for multiple clients.'}
+              ? 'Actualice los detalles y el contenido de la plantilla de contrato.'
+              : 'Cree una plantilla de contrato reutilizable para diferentes clientes.'}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="name">Template Name</Label>
+            <Label htmlFor="name">Nombre de la plantilla</Label>
             <Input
               id="name"
               {...register('name')}
-              placeholder="e.g., Standard Service Agreement"
+              placeholder="Ej.: Contrato estándar de servicios"
             />
             {errors.name && (
               <p className="text-sm text-destructive">{errors.name.message}</p>
@@ -123,10 +123,10 @@ export function ContractTemplateForm({ template }: ContractTemplateFormProps) {
 
       <Card>
         <CardHeader>
-          <CardTitle>Contract Content</CardTitle>
+          <CardTitle>Contenido del contrato</CardTitle>
           <CardDescription>
-            Write your contract content. Use {'{{variableKey}}'} syntax to insert
-            variables that will be replaced when creating contracts.
+            Escriba el contenido del contrato. Use la sintaxis {'{{variableKey}}'} para insertar
+            variables que se reemplazarán al crear cada contrato.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -148,11 +148,11 @@ export function ContractTemplateForm({ template }: ContractTemplateFormProps) {
           onClick={() => router.push('/templates')}
           disabled={isPending}
         >
-          Cancel
+          Cancelar
         </Button>
         <Button type="submit" disabled={isPending}>
           {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          {template ? 'Update Template' : 'Create Template'}
+          {template ? 'Actualizar plantilla' : 'Crear plantilla'}
         </Button>
       </div>
     </form>

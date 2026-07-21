@@ -19,13 +19,13 @@ const statusColors: Record<string, string> = {
 };
 
 const statusLabels: Record<string, string> = {
-  draft: 'Draft',
-  sent: 'Sent',
-  viewed: 'Viewed',
-  partial: 'Partially Paid',
-  paid: 'Paid',
-  overdue: 'Overdue',
-  voided: 'Voided',
+  draft: 'Borrador',
+  sent: 'Enviada',
+  viewed: 'Vista',
+  partial: 'Pagada parcialmente',
+  paid: 'Pagada',
+  overdue: 'Vencida',
+  voided: 'Anulada',
 };
 
 function formatCurrency(amount: number, currency: string = 'USD'): string {
@@ -40,7 +40,7 @@ function formatCurrency(amount: number, currency: string = 'USD'): string {
 }
 
 function formatDate(dateString: string): string {
-  return new Date(dateString).toLocaleDateString('en-US', {
+  return new Date(dateString).toLocaleDateString('es-CR', {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
@@ -77,7 +77,7 @@ export function getInvoiceColumns(options: InvoiceColumnsOptions = {}): ColumnDe
             (table.getIsSomePageRowsSelected() && 'indeterminate')
           }
           onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label="Select all"
+          aria-label="Seleccionar todo"
           className="translate-y-[2px]"
         />
       ),
@@ -85,7 +85,7 @@ export function getInvoiceColumns(options: InvoiceColumnsOptions = {}): ColumnDe
         <Checkbox
           checked={row.getIsSelected()}
           onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label="Select row"
+          aria-label="Seleccionar fila"
           className="translate-y-[2px]"
         />
       ),
@@ -96,7 +96,7 @@ export function getInvoiceColumns(options: InvoiceColumnsOptions = {}): ColumnDe
       id: 'Invoice ID',
       accessorKey: 'invoiceNumber',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Invoice ID" />
+        <DataTableColumnHeader column={column} title="Factura" />
       ),
       cell: ({ row }) => {
         const isRecurring = recurringInvoiceIds?.has(row.original.id);
@@ -113,7 +113,7 @@ export function getInvoiceColumns(options: InvoiceColumnsOptions = {}): ColumnDe
               #{row.original.invoiceNumber}
             </button>
             {isRecurring && (
-              <span title="Recurring invoice">
+              <span title="Factura recurrente">
                 <RefreshCw className="h-3.5 w-3.5 text-muted-foreground" />
               </span>
             )}
@@ -124,7 +124,7 @@ export function getInvoiceColumns(options: InvoiceColumnsOptions = {}): ColumnDe
     {
       accessorKey: 'status',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Status" />
+        <DataTableColumnHeader column={column} title="Estado" />
       ),
       cell: ({ row }) => {
         const status = row.getValue('status') as string;
@@ -153,7 +153,7 @@ export function getInvoiceColumns(options: InvoiceColumnsOptions = {}): ColumnDe
     {
       accessorKey: 'client',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Client" />
+        <DataTableColumnHeader column={column} title="Cliente" />
       ),
       cell: ({ row }) => {
         const client = row.original.client;
@@ -190,7 +190,7 @@ export function getInvoiceColumns(options: InvoiceColumnsOptions = {}): ColumnDe
     {
       accessorKey: 'total',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Amount" />
+        <DataTableColumnHeader column={column} title="Monto" />
       ),
       cell: ({ row }) => {
         const total = row.getValue('total') as number;
@@ -203,12 +203,12 @@ export function getInvoiceColumns(options: InvoiceColumnsOptions = {}): ColumnDe
             <div className="font-medium">{formatCurrency(total, curr)}</div>
             {status === 'partial' && amountDue > 0 && (
               <div className="text-sm text-amber-600">
-                {formatCurrency(amountDue, curr)} remaining
+                {formatCurrency(amountDue, curr)} pendiente
               </div>
             )}
             {status !== 'partial' && amountDue > 0 && amountDue !== total && (
               <div className="text-sm text-orange-600">
-                Due: {formatCurrency(amountDue, curr)}
+                Pendiente: {formatCurrency(amountDue, curr)}
               </div>
             )}
           </div>
@@ -219,7 +219,7 @@ export function getInvoiceColumns(options: InvoiceColumnsOptions = {}): ColumnDe
       id: 'Issued Date',
       accessorKey: 'issueDate',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Issued Date" />
+        <DataTableColumnHeader column={column} title="Fecha de emisión" />
       ),
       cell: ({ row }) => {
         return (
@@ -233,7 +233,7 @@ export function getInvoiceColumns(options: InvoiceColumnsOptions = {}): ColumnDe
       id: 'Due Date',
       accessorKey: 'dueDate',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Due Date" />
+        <DataTableColumnHeader column={column} title="Fecha de vencimiento" />
       ),
       cell: ({ row }) => {
         return (
@@ -251,7 +251,7 @@ export function getInvoiceColumns(options: InvoiceColumnsOptions = {}): ColumnDe
 
         if (onEdit && invoice.status === 'draft') {
           actions.push({
-            label: 'Edit',
+            label: 'Editar',
             icon: <Pencil className="mr-2 h-4 w-4" />,
             onClick: onEdit,
           });
@@ -259,7 +259,7 @@ export function getInvoiceColumns(options: InvoiceColumnsOptions = {}): ColumnDe
         if (onSend) {
           const isSent = invoice.status !== 'draft';
           actions.push({
-            label: isSent ? 'Resend Invoice' : 'Send Invoice',
+            label: isSent ? 'Reenviar factura' : 'Enviar factura',
             icon: <Send className="mr-2 h-4 w-4" />,
             onClick: onSend,
             separator: true,
@@ -267,7 +267,7 @@ export function getInvoiceColumns(options: InvoiceColumnsOptions = {}): ColumnDe
         }
         if (onCopyLink) {
           actions.push({
-            label: 'Copy Link',
+            label: 'Copiar enlace',
             icon: <Link2 className="mr-2 h-4 w-4" />,
             onClick: onCopyLink,
           });
@@ -282,14 +282,14 @@ export function getInvoiceColumns(options: InvoiceColumnsOptions = {}): ColumnDe
         }
         if (onDownload) {
           actions.push({
-            label: 'Download PDF',
+            label: 'Descargar PDF',
             icon: <Download className="mr-2 h-4 w-4" />,
             onClick: onDownload,
           });
         }
         if (onRecordPayment && invoice.status !== 'paid' && invoice.status !== 'voided') {
           actions.push({
-            label: 'Record Payment',
+            label: 'Registrar pago',
             icon: <Banknote className="mr-2 h-4 w-4" />,
             onClick: onRecordPayment,
             separator: true,
@@ -297,14 +297,14 @@ export function getInvoiceColumns(options: InvoiceColumnsOptions = {}): ColumnDe
         }
         if (onRecurringSettings) {
           actions.push({
-            label: 'Recurring Settings',
+            label: 'Configuración recurrente',
             icon: <RefreshCw className="mr-2 h-4 w-4" />,
             onClick: onRecurringSettings,
           });
         }
         if (onDelete) {
           actions.push({
-            label: 'Delete',
+            label: 'Eliminar',
             icon: <Trash2 className="mr-2 h-4 w-4" />,
             onClick: onDelete,
             variant: 'destructive',
@@ -324,11 +324,11 @@ export function getInvoiceColumns(options: InvoiceColumnsOptions = {}): ColumnDe
 }
 
 export const invoiceStatusOptions = [
-  { value: 'draft', label: 'Draft' },
-  { value: 'sent', label: 'Sent' },
-  { value: 'viewed', label: 'Viewed' },
-  { value: 'partial', label: 'Partially Paid' },
-  { value: 'paid', label: 'Paid' },
-  { value: 'overdue', label: 'Overdue' },
+  { value: 'draft', label: 'Borrador' },
+  { value: 'sent', label: 'Enviada' },
+  { value: 'viewed', label: 'Vista' },
+  { value: 'partial', label: 'Pagada parcialmente' },
+  { value: 'paid', label: 'Pagada' },
+  { value: 'overdue', label: 'Vencida' },
   { value: 'voided', label: 'Voided' },
 ];

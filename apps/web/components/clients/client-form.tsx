@@ -31,7 +31,7 @@ export function ClientForm({
   defaultValues,
   onSubmit,
   isLoading = false,
-  submitLabel = 'Save Client',
+  submitLabel = 'Guardar cliente',
 }: ClientFormProps) {
   const form = useForm<CreateClientInput>({
     resolver: zodResolver(createClientSchema),
@@ -69,7 +69,7 @@ export function ClientForm({
     try {
       await onSubmit(data);
     } catch {
-      form.setError('root', { message: 'Failed to save client. Please try again.' });
+      form.setError('root', { message: 'No se pudo guardar el cliente. Inténtelo nuevamente.' });
     }
   });
 
@@ -78,22 +78,22 @@ export function ClientForm({
       {/* Basic Information */}
       <Card>
         <CardHeader>
-          <CardTitle>Basic Information</CardTitle>
+          <CardTitle>Información básica</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="type">Client Type</Label>
+              <Label htmlFor="type">Tipo de cliente</Label>
               <Select
                 value={clientType}
                 onValueChange={(value) => form.setValue('type', value as 'individual' | 'company')}
               >
                 <SelectTrigger id="type">
-                  <SelectValue placeholder="Select type" />
+                  <SelectValue placeholder="Seleccione un tipo" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="individual">Individual</SelectItem>
-                  <SelectItem value="company">Company</SelectItem>
+                  <SelectItem value="individual">Persona</SelectItem>
+                  <SelectItem value="company">Empresa</SelectItem>
                 </SelectContent>
               </Select>
               {form.formState.errors.type && (
@@ -102,11 +102,11 @@ export function ClientForm({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="name">{clientType === 'company' ? 'Contact Name' : 'Full Name'} *</Label>
+              <Label htmlFor="name">{clientType === 'company' ? 'Nombre del contacto' : 'Nombre completo'} *</Label>
               <Input
                 id="name"
                 {...form.register('name')}
-                placeholder={clientType === 'company' ? 'Primary contact name' : 'John Doe'}
+                placeholder={clientType === 'company' ? 'Nombre del contacto principal' : 'Nombre y apellidos'}
               />
               {form.formState.errors.name && (
                 <p className="text-sm text-destructive">{form.formState.errors.name.message}</p>
@@ -117,15 +117,15 @@ export function ClientForm({
           {clientType === 'company' && (
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="company">Company Name</Label>
+                <Label htmlFor="company">Nombre de la empresa</Label>
                 <Input
                   id="company"
                   {...form.register('company')}
-                  placeholder="Acme Inc."
+                  placeholder="Nombre de la empresa"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="taxId">Tax ID / VAT</Label>
+                <Label htmlFor="taxId">Identificación tributaria</Label>
                 <Input
                   id="taxId"
                   {...form.register('taxId')}
@@ -137,35 +137,35 @@ export function ClientForm({
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="email">Email *</Label>
+              <Label htmlFor="email">Correo electrónico *</Label>
               <Input
                 id="email"
                 type="email"
                 {...form.register('email')}
-                placeholder="client@example.com"
+                placeholder="cliente@ejemplo.com"
               />
               {form.formState.errors.email && (
                 <p className="text-sm text-destructive">{form.formState.errors.email.message}</p>
               )}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="phone">Phone</Label>
+              <Label htmlFor="phone">Teléfono</Label>
               <Input
                 id="phone"
                 type="tel"
                 {...form.register('phone')}
-                placeholder="+1 (555) 000-0000"
+                placeholder="+506 0000-0000"
               />
             </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="website">Website</Label>
+            <Label htmlFor="website">Sitio web</Label>
             <Input
               id="website"
               type="text"
               {...form.register('website')}
-              placeholder="example.com"
+              placeholder="ejemplo.com"
             />
           </div>
         </CardContent>
@@ -174,18 +174,18 @@ export function ClientForm({
       {/* Address */}
       <Card>
         <CardHeader>
-          <CardTitle>Address</CardTitle>
+          <CardTitle>Dirección</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           {form.formState.errors.address && typeof form.formState.errors.address.message === 'string' && (
             <p className="text-sm text-destructive">{form.formState.errors.address.message}</p>
           )}
           <div className="space-y-2">
-            <Label htmlFor="address.street">Street Address</Label>
+            <Label htmlFor="address.street">Dirección exacta</Label>
             <Input
               id="address.street"
               {...form.register('address.street')}
-              placeholder="123 Main St"
+              placeholder="Señas de la dirección"
             />
             {form.formState.errors.address?.street && (
               <p className="text-sm text-destructive">{form.formState.errors.address.street.message}</p>
@@ -194,22 +194,22 @@ export function ClientForm({
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="address.city">City</Label>
+              <Label htmlFor="address.city">Ciudad</Label>
               <Input
                 id="address.city"
                 {...form.register('address.city')}
-                placeholder="New York"
+                placeholder="Ciudad"
               />
               {form.formState.errors.address?.city && (
                 <p className="text-sm text-destructive">{form.formState.errors.address.city.message}</p>
               )}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="address.state">State / Province</Label>
+              <Label htmlFor="address.state">Provincia o región</Label>
               <Input
                 id="address.state"
                 {...form.register('address.state')}
-                placeholder="NY"
+                placeholder="Provincia"
               />
               {form.formState.errors.address?.state && (
                 <p className="text-sm text-destructive">{form.formState.errors.address.state.message}</p>
@@ -219,7 +219,7 @@ export function ClientForm({
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="address.postalCode">Postal Code</Label>
+              <Label htmlFor="address.postalCode">Código postal</Label>
               <Input
                 id="address.postalCode"
                 {...form.register('address.postalCode')}
@@ -230,11 +230,11 @@ export function ClientForm({
               )}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="address.country">Country</Label>
+              <Label htmlFor="address.country">País</Label>
               <Input
                 id="address.country"
                 {...form.register('address.country')}
-                placeholder="United States"
+                placeholder="Costa Rica"
               />
               {form.formState.errors.address?.country && (
                 <p className="text-sm text-destructive">{form.formState.errors.address.country.message}</p>
@@ -247,7 +247,7 @@ export function ClientForm({
       {/* Additional Contacts */}
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle>Additional Contacts</CardTitle>
+          <CardTitle>Contactos adicionales</CardTitle>
           <Button
             type="button"
             variant="outline"
@@ -255,12 +255,12 @@ export function ClientForm({
             onClick={() => append({ name: '', email: '', phone: '', role: '', isPrimary: false })}
           >
             <Plus className="mr-2 h-4 w-4" />
-            Add Contact
+            Agregar contacto
           </Button>
         </CardHeader>
         <CardContent>
           {fields.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No additional contacts added.</p>
+            <p className="text-sm text-muted-foreground">No se han agregado contactos adicionales.</p>
           ) : (
             <div className="space-y-4">
               {fields.map((field, index) => (
@@ -280,33 +280,33 @@ export function ClientForm({
 
                   <div className="grid gap-4 pr-8 sm:grid-cols-2">
                     <div className="space-y-2">
-                      <Label>Name</Label>
+                      <Label>Nombre</Label>
                       <Input
                         {...form.register(`contacts.${index}.name`)}
-                        placeholder="Contact name"
+                        placeholder="Nombre del contacto"
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label>Email</Label>
+                      <Label>Correo electrónico</Label>
                       <Input
                         type="email"
                         {...form.register(`contacts.${index}.email`)}
-                        placeholder="contact@example.com"
+                        placeholder="contacto@ejemplo.com"
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label>Phone</Label>
+                      <Label>Teléfono</Label>
                       <Input
                         type="tel"
                         {...form.register(`contacts.${index}.phone`)}
-                        placeholder="+1 (555) 000-0000"
+                        placeholder="+506 0000-0000"
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label>Role</Label>
+                      <Label>Cargo</Label>
                       <Input
                         {...form.register(`contacts.${index}.role`)}
-                        placeholder="e.g., Project Manager"
+                        placeholder="Ej.: Gerente de proyecto"
                       />
                     </div>
                   </div>
@@ -327,7 +327,7 @@ export function ClientForm({
                       }}
                     />
                     <Label htmlFor={`contacts.${index}.isPrimary`} className="text-sm font-normal">
-                      Primary contact
+                      Contacto principal
                     </Label>
                   </div>
                 </div>
@@ -340,12 +340,12 @@ export function ClientForm({
       {/* Notes */}
       <Card>
         <CardHeader>
-          <CardTitle>Notes</CardTitle>
+          <CardTitle>Notas</CardTitle>
         </CardHeader>
         <CardContent>
           <Textarea
             {...form.register('notes')}
-            placeholder="Internal notes about this client..."
+            placeholder="Notas internas sobre este cliente..."
             rows={4}
           />
         </CardContent>

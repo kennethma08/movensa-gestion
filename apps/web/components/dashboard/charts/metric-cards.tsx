@@ -100,7 +100,7 @@ export function WinRateCard({ data, className }: WinRateCardProps) {
           label={`${winRate.toFixed(0)}%`}
         />
         <div className="min-w-0">
-          <p className="text-sm font-medium">Win Rate</p>
+          <p className="text-sm font-medium">Tasa de éxito</p>
           <p className="text-xs text-muted-foreground mt-0.5">
             {total > 0
               ? `${accepted} of ${total} decided`
@@ -137,7 +137,7 @@ export function CollectionRateCard({ data, className }: CollectionRateCardProps)
           label={`${collectionRate.toFixed(0)}%`}
         />
         <div className="min-w-0">
-          <p className="text-sm font-medium">Collection Rate</p>
+          <p className="text-sm font-medium">Tasa de cobro</p>
           <p className="text-xs text-muted-foreground mt-0.5">
             {billable > 0
               ? `${paid} of ${billable} collected`
@@ -160,11 +160,11 @@ interface PipelineCardProps {
 
 const PIPELINE_STAGES = [
   { key: 'quotesCreated', label: 'Created' },
-  { key: 'quotesSent', label: 'Sent' },
-  { key: 'quotesViewed', label: 'Viewed' },
+  { key: 'quotesSent', label: 'Enviadas' },
+  { key: 'quotesViewed', label: 'Vistas' },
   { key: 'quotesAccepted', label: 'Won' },
-  { key: 'invoicesCreated', label: 'Invoiced' },
-  { key: 'invoicesPaid', label: 'Paid' },
+  { key: 'invoicesCreated', label: 'Facturadas' },
+  { key: 'invoicesPaid', label: 'Pagadas' },
 ] as const;
 
 const PIPELINE_OPACITIES = [1, 0.85, 0.7, 0.55, 0.42, 0.3];
@@ -191,7 +191,7 @@ export function PipelineCard({ data, className }: PipelineCardProps) {
     <Card className={className}>
       <CardHeader className="pb-2 p-5">
         <div className="flex items-baseline justify-between">
-          <CardTitle className="text-sm font-medium">Pipeline</CardTitle>
+          <CardTitle className="text-sm font-medium">Embudo</CardTitle>
           {!isEmpty && (
             <span className="text-xs text-muted-foreground">
               {overallConversion.toFixed(0)}% end-to-end
@@ -202,7 +202,7 @@ export function PipelineCard({ data, className }: PipelineCardProps) {
       <CardContent className="pt-0 px-5 pb-5">
         {isEmpty ? (
           <div className="flex h-[100px] items-center justify-center">
-            <p className="text-sm text-muted-foreground">No pipeline data</p>
+            <p className="text-sm text-muted-foreground">No hay datos del embudo</p>
           </div>
         ) : (
           <div className="space-y-2">

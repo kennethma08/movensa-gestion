@@ -24,7 +24,6 @@ import { markAllNotificationsRead, markNotificationRead, type NotificationData }
 import { ThemeToggle } from '@/components/shared/theme-toggle';
 import { SearchCommand } from '@/components/shared/search-command';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import {
@@ -155,7 +154,6 @@ function generateBreadcrumbs(pathname: string) {
 
 export function AppHeader({ user, unreadCount = 0, notifications = [] }: AppHeaderProps) {
   const pathname = usePathname();
-  const [searchOpen, setSearchOpen] = useState(false);
   const [commandOpen, setCommandOpen] = useState(false);
   const breadcrumbs = generateBreadcrumbs(pathname);
 
@@ -210,33 +208,20 @@ export function AppHeader({ user, unreadCount = 0, notifications = [] }: AppHead
             </BreadcrumbList>
           </Breadcrumb>
 
-          {/* Search - visible on mobile when expanded */}
-          {searchOpen && (
-            <div className="relative md:hidden">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                placeholder="Buscar..."
-                className="w-40 pl-9"
-                autoFocus
-                onBlur={() => setSearchOpen(false)}
-              />
-            </div>
-          )}
         </div>
 
         {/* Right: Actions */}
         <div className="flex items-center gap-1.5">
           {/* Search button */}
-          {!searchOpen && (
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setSearchOpen(true)}
-              className="md:hidden"
-            >
-              <Search className="h-4 w-4" />
-            </Button>
-          )}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setCommandOpen(true)}
+            className="md:hidden"
+            aria-label="Buscar"
+          >
+            <Search className="h-4 w-4" />
+          </Button>
 
           {/* Desktop Search */}
           <Button
@@ -346,7 +331,7 @@ export function AppHeader({ user, unreadCount = 0, notifications = [] }: AppHead
                 aria-label="Menú de usuario"
               >
                 <Avatar className="size-9 rounded-md">
-                  <AvatarImage src={user.avatarUrl || undefined} alt={user.name || 'User'} />
+                  <AvatarImage src={user.avatarUrl || undefined} alt={user.name || 'Usuario'} />
                   <AvatarFallback className="rounded-md">{initials}</AvatarFallback>
                 </Avatar>
               </Button>
@@ -354,11 +339,11 @@ export function AppHeader({ user, unreadCount = 0, notifications = [] }: AppHead
             <DropdownMenuContent className="w-64" align="end" forceMount>
               <DropdownMenuLabel className="flex items-center gap-3 px-2 py-2 font-normal">
                 <Avatar className="size-10">
-                  <AvatarImage src={user.avatarUrl || undefined} alt={user.name || 'User'} />
+                  <AvatarImage src={user.avatarUrl || undefined} alt={user.name || 'Usuario'} />
                   <AvatarFallback>{initials}</AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col">
-                  <span className="text-sm font-medium">{user.name || 'User'}</span>
+                  <span className="text-sm font-medium">{user.name || 'Usuario'}</span>
                   <span className="text-xs text-muted-foreground">{user.email}</span>
                 </div>
               </DropdownMenuLabel>

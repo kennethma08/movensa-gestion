@@ -1,5 +1,5 @@
 export const metadata = {
-  title: 'New Quote',
+  title: 'Nueva cotización',
 };
 
 export default function NewQuoteLayout({ children }: { children: React.ReactNode }) {

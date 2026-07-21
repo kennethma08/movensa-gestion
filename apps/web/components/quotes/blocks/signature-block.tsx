@@ -19,7 +19,7 @@ export function SignatureBlockContent({ block }: SignatureBlockContentProps) {
       <div className="rounded-lg border bg-green-50 p-6">
         <div className="flex items-center gap-2 text-green-700 mb-4">
           <Check className="h-5 w-5" />
-          <span className="font-medium">Signed</span>
+          <span className="font-medium">Firmado</span>
         </div>
         <div className="space-y-2">
           {block.content.signatureData && (
@@ -58,7 +58,7 @@ export function SignatureBlockContent({ block }: SignatureBlockContentProps) {
         <PenTool className="h-8 w-8 text-muted-foreground mb-3" />
         <p className="font-medium">{block.content.label}</p>
         {block.content.required && (
-          <p className="text-xs text-muted-foreground mt-1">Required</p>
+          <p className="text-xs text-muted-foreground mt-1">Obligatorio</p>
         )}
         {previewMode && (
           <p className="text-sm text-muted-foreground mt-3 italic">

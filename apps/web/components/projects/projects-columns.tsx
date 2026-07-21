@@ -57,7 +57,7 @@ export function getProjectColumns(options: ProjectColumnsOptions = {}): ColumnDe
             (table.getIsSomePageRowsSelected() && 'indeterminate')
           }
           onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label="Select all"
+          aria-label="Seleccionar todo"
           className="translate-y-[2px]"
         />
       ),
@@ -65,7 +65,7 @@ export function getProjectColumns(options: ProjectColumnsOptions = {}): ColumnDe
         <Checkbox
           checked={row.getIsSelected()}
           onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label="Select row"
+          aria-label="Seleccionar fila"
           className="translate-y-[2px]"
         />
       ),
@@ -75,7 +75,7 @@ export function getProjectColumns(options: ProjectColumnsOptions = {}): ColumnDe
     {
       accessorKey: 'name',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Project" />
+        <DataTableColumnHeader column={column} title="Proyecto" />
       ),
       cell: ({ row }) => {
         return (
@@ -98,7 +98,7 @@ export function getProjectColumns(options: ProjectColumnsOptions = {}): ColumnDe
       id: 'status',
       accessorKey: 'isActive',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Status" />
+        <DataTableColumnHeader column={column} title="Estado" />
       ),
       cell: ({ row }) => {
         const isActive = row.original.isActive;
@@ -125,7 +125,7 @@ export function getProjectColumns(options: ProjectColumnsOptions = {}): ColumnDe
     {
       accessorKey: 'client',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Client" />
+        <DataTableColumnHeader column={column} title="Cliente" />
       ),
       cell: ({ row }) => {
         const client = row.original.client;
@@ -177,10 +177,10 @@ export function getProjectColumns(options: ProjectColumnsOptions = {}): ColumnDe
             onEdit={onEdit}
             onDelete={onDelete}
             actions={[
-              ...(onView ? [{ label: 'View Details', icon: <FolderKanban className="mr-2 h-4 w-4" />, onClick: onView }] : []),
-              ...(onEdit ? [{ label: 'Edit', icon: <Pencil className="mr-2 h-4 w-4" />, onClick: onEdit }] : []),
-              ...(onCreateQuote ? [{ label: 'Create Quote', icon: <FileText className="mr-2 h-4 w-4" />, onClick: onCreateQuote, separator: true }] : []),
-              ...(onCreateInvoice ? [{ label: 'Create Invoice', icon: <Receipt className="mr-2 h-4 w-4" />, onClick: onCreateInvoice }] : []),
+              ...(onView ? [{ label: 'Ver detalles', icon: <FolderKanban className="mr-2 h-4 w-4" />, onClick: onView }] : []),
+              ...(onEdit ? [{ label: 'Editar', icon: <Pencil className="mr-2 h-4 w-4" />, onClick: onEdit }] : []),
+              ...(onCreateQuote ? [{ label: 'Crear cotización', icon: <FileText className="mr-2 h-4 w-4" />, onClick: onCreateQuote, separator: true }] : []),
+              ...(onCreateInvoice ? [{ label: 'Crear factura', icon: <Receipt className="mr-2 h-4 w-4" />, onClick: onCreateInvoice }] : []),
               ...(onToggleActive ? [{
                 label: project.isActive ? 'Deactivate' : 'Reactivate',
                 icon: project.isActive
@@ -189,7 +189,7 @@ export function getProjectColumns(options: ProjectColumnsOptions = {}): ColumnDe
                 onClick: onToggleActive,
                 separator: true,
               }] : []),
-              ...(onDelete ? [{ label: 'Delete', icon: <Trash2 className="mr-2 h-4 w-4" />, onClick: onDelete, variant: 'destructive' as const, separator: !onToggleActive }] : []),
+              ...(onDelete ? [{ label: 'Eliminar', icon: <Trash2 className="mr-2 h-4 w-4" />, onClick: onDelete, variant: 'destructive' as const, separator: !onToggleActive }] : []),
             ]}
           />
         );

@@ -20,14 +20,14 @@ export default function NewClientPage() {
     setServerError(null);
     try {
       const result = await createClient(data);
-      toast.success('Client created successfully');
+      toast.success('Cliente creado correctamente');
       router.push(`/clients/${result.id}`);
     } catch (error) {
-      let errorMessage = 'Failed to create client';
+      let errorMessage = 'No se pudo crear el cliente';
       if (error instanceof Error) {
         // Server action errors may be sanitized; check for demo mode keywords
         if (error.message.includes('demo') || error.message.includes('Demo')) {
-          errorMessage = 'This action is not available in demo mode. Create an account to save your changes.';
+          errorMessage = 'Esta acción no está disponible en el modo de demostración. Cree una cuenta para guardar sus cambios.';
         } else {
           errorMessage = error.message;
         }
@@ -48,8 +48,8 @@ export default function NewClientPage() {
           </Link>
         </Button>
         <div>
-          <h1 className="text-2xl font-bold">Add New Client</h1>
-          <p className="text-muted-foreground">Create a new client profile</p>
+          <h1 className="text-2xl font-bold">Agregar cliente</h1>
+          <p className="text-muted-foreground">Cree un nuevo perfil de cliente</p>
         </div>
       </div>
 
@@ -59,7 +59,7 @@ export default function NewClientPage() {
         </div>
       )}
 
-      <ClientForm onSubmit={handleSubmit} isLoading={isLoading} submitLabel="Create Client" />
+      <ClientForm onSubmit={handleSubmit} isLoading={isLoading} submitLabel="Crear cliente" />
     </div>
   );
 }

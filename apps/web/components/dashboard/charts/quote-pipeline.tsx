@@ -11,11 +11,11 @@ interface QuotePipelineProps {
 
 const STAGES = [
   { key: 'quotesCreated', label: 'Created', color: 'bg-blue-500' },
-  { key: 'quotesSent', label: 'Sent', color: 'bg-blue-400' },
-  { key: 'quotesViewed', label: 'Viewed', color: 'bg-blue-300' },
-  { key: 'quotesAccepted', label: 'Accepted', color: 'bg-green-500' },
-  { key: 'invoicesCreated', label: 'Invoiced', color: 'bg-green-400' },
-  { key: 'invoicesPaid', label: 'Paid', color: 'bg-emerald-500' },
+  { key: 'quotesSent', label: 'Enviadas', color: 'bg-blue-400' },
+  { key: 'quotesViewed', label: 'Vistas', color: 'bg-blue-300' },
+  { key: 'quotesAccepted', label: 'Aceptadas', color: 'bg-green-500' },
+  { key: 'invoicesCreated', label: 'Facturadas', color: 'bg-green-400' },
+  { key: 'invoicesPaid', label: 'Pagadas', color: 'bg-emerald-500' },
 ] as const;
 
 export function QuotePipeline({ data, className }: QuotePipelineProps) {
@@ -33,11 +33,11 @@ export function QuotePipeline({ data, className }: QuotePipelineProps) {
   return (
     <Card className={className}>
       <CardHeader className="pb-3">
-        <CardTitle className="text-sm font-medium">Quote-to-Cash Pipeline</CardTitle>
+        <CardTitle className="text-sm font-medium">Flujo de cotización a cobro</CardTitle>
       </CardHeader>
       <CardContent>
         {isEmpty ? (
-          <p className="text-sm text-muted-foreground text-center py-4">No pipeline data</p>
+          <p className="text-sm text-muted-foreground text-center py-4">No hay datos del embudo</p>
         ) : (
           <div className="space-y-3">
             {stages.map((stage) => (

@@ -35,11 +35,11 @@ export function ProjectsDataTable({ data }: ProjectsDataTableProps) {
     setIsDeleting(true);
     try {
       await deleteProject(deleteId);
-      toast.success('Project deleted successfully');
+      toast.success('Proyecto eliminado correctamente');
       setDeleteId(null);
       router.refresh();
     } catch {
-      toast.error('Failed to delete project');
+      toast.error('No se pudo eliminar el proyecto');
     } finally {
       setIsDeleting(false);
     }
@@ -52,11 +52,11 @@ export function ProjectsDataTable({ data }: ProjectsDataTableProps) {
       for (const row of selectedRows) {
         await deleteProject(row.id);
       }
-      toast.success(`${selectedRows.length} projects deleted successfully`);
+      toast.success(`${selectedRows.length} proyecto(s) eliminado(s) correctamente`);
       setSelectedRows([]);
       router.refresh();
     } catch {
-      toast.error('Failed to delete projects');
+      toast.error('No se pudieron eliminar los proyectos');
     } finally {
       setIsDeleting(false);
     }
@@ -66,14 +66,14 @@ export function ProjectsDataTable({ data }: ProjectsDataTableProps) {
     try {
       if (project.isActive) {
         await deactivateProject(project.id);
-        toast.success('Project deactivated');
+        toast.success('Proyecto desactivado');
       } else {
         await reactivateProject(project.id);
-        toast.success('Project reactivated');
+        toast.success('Proyecto reactivado');
       }
       router.refresh();
     } catch {
-      toast.error('Failed to update project status');
+      toast.error('No se pudo actualizar el estado del proyecto');
     }
   };
 
@@ -99,14 +99,14 @@ export function ProjectsDataTable({ data }: ProjectsDataTableProps) {
   const emptyState = (
     <div className="flex flex-col items-center justify-center py-16">
       <FolderKanban className="h-12 w-12 text-muted-foreground mb-4" />
-      <h3 className="text-lg font-medium">No projects found</h3>
+      <h3 className="text-lg font-medium">No se encontraron proyectos</h3>
       <p className="text-muted-foreground mb-4">
-        Create your first project to organize your work
+        Cree su primer proyecto para organizar el trabajo
       </p>
       <Button asChild>
         <Link href="/projects/new">
           <Plus className="mr-2 h-4 w-4" />
-          New Project
+          Nuevo proyecto
         </Link>
       </Button>
     </div>
@@ -126,7 +126,7 @@ export function ProjectsDataTable({ data }: ProjectsDataTableProps) {
             disabled={isDeleting}
           >
             <Trash2 className="mr-2 h-4 w-4" />
-            Delete Selected
+            Eliminar seleccionados
           </Button>
         </div>
       )}
@@ -135,7 +135,7 @@ export function ProjectsDataTable({ data }: ProjectsDataTableProps) {
         columns={columns}
         data={data}
         filterKey="name"
-        filterPlaceholder="Search projects..."
+        filterPlaceholder="Buscar proyectos..."
         statusOptions={projectStatusOptions}
         statusFilterKey="status"
         pageSizes={[10, 25, 50, 100]}
@@ -147,7 +147,7 @@ export function ProjectsDataTable({ data }: ProjectsDataTableProps) {
       <AlertDialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Project</AlertDialogTitle>
+            <AlertDialogTitle>Eliminar proyecto</AlertDialogTitle>
             <AlertDialogDescription>
               Are you sure you want to delete this project? This action cannot be
               undone. Associated quotes and invoices will remain but will no
@@ -155,13 +155,13 @@ export function ProjectsDataTable({ data }: ProjectsDataTableProps) {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDelete}
               disabled={isDeleting}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              Delete
+              Eliminar
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

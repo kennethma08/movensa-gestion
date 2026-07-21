@@ -62,11 +62,11 @@ export function ImageBlockContent({ block }: ImageBlockContentProps) {
               <Input
                 value={urlInput}
                 onChange={(e) => setUrlInput(e.target.value)}
-                placeholder="Enter image URL..."
+                placeholder="Ingrese la URL de la imagen..."
                 className="flex-1"
               />
               <Button onClick={handleUrlSubmit} size="sm">
-                Add
+                Agregar
               </Button>
             </div>
             <p className="text-center text-xs text-muted-foreground">
@@ -74,7 +74,7 @@ export function ImageBlockContent({ block }: ImageBlockContentProps) {
             </p>
           </div>
         ) : (
-          <p className="text-sm text-muted-foreground">Click to add an image</p>
+          <p className="text-sm text-muted-foreground">Haga clic para agregar una imagen</p>
         )}
       </div>
     );
@@ -99,7 +99,7 @@ export function ImageBlockContent({ block }: ImageBlockContentProps) {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={block.content.src}
-            alt={block.content.alt || 'Quote image'}
+            alt={block.content.alt || 'Imagen de la cotización'}
             className="w-full h-auto object-cover"
           />
         </div>

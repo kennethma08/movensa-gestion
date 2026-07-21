@@ -22,16 +22,16 @@ export function SendQuoteButton({ quoteId }: { quoteId: string }) {
       const result = await sendQuote(quoteId);
       if (result.success) {
         if (result.emailSent) {
-          toast.success('Quote sent and email delivered');
+          toast.success('Cotización enviada y correo entregado');
         } else {
-          toast.warning('Quote marked as sent, but email delivery failed. Please check your email configuration.');
+          toast.warning('La cotización se marcó como enviada, pero el correo no pudo entregarse. Revise la configuración del correo.');
         }
         router.refresh();
       } else {
-        toast.error(result.error || 'Failed to send quote');
+        toast.error(result.error || 'No se pudo enviar la cotización');
       }
     } catch {
-      toast.error('Failed to send quote');
+      toast.error('No se pudo enviar la cotización');
     } finally {
       setIsSending(false);
     }
@@ -44,7 +44,7 @@ export function SendQuoteButton({ quoteId }: { quoteId: string }) {
       ) : (
         <Send className="mr-2 h-4 w-4" />
       )}
-      Send to Client
+      Enviar al cliente
     </Button>
   );
 }
@@ -58,11 +58,11 @@ export function DuplicateQuoteButton({ quoteId }: { quoteId: string }) {
     try {
       const result = await duplicateQuote(quoteId);
       if (result.success && result.quoteId) {
-        toast.success('Quote duplicated');
+        toast.success('Cotización duplicada');
         router.push(`/quotes/${result.quoteId}`);
       }
     } catch {
-      toast.error('Failed to duplicate quote');
+      toast.error('No se pudo duplicar la cotización');
     } finally {
       setIsDuplicating(false);
     }

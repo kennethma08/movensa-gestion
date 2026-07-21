@@ -44,7 +44,7 @@ export default function EditProjectPage({ params }: EditProjectPageProps) {
           clientId: projectData.client.id,
         });
       } catch (error) {
-        toast.error('Failed to load project');
+        toast.error('No se pudo cargar el proyecto');
       } finally {
         setIsLoadingData(false);
       }
@@ -62,10 +62,10 @@ export default function EditProjectPage({ params }: EditProjectPageProps) {
         name: data.name,
         description: data.description || null,
       });
-      toast.success('Project updated successfully');
+      toast.success('Proyecto actualizado correctamente');
       router.push(`/projects/${resolvedParams.id}`);
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to update project';
+      const errorMessage = error instanceof Error ? error.message : 'No se pudo actualizar el proyecto';
       setServerError(errorMessage);
       toast.error(errorMessage);
       setIsLoading(false);
@@ -106,8 +106,8 @@ export default function EditProjectPage({ params }: EditProjectPageProps) {
           <ArrowLeft className="h-4 w-4" />
         </Button>
         <div>
-          <h1 className="text-2xl font-bold">Edit Project</h1>
-          <p className="text-muted-foreground">Update project details</p>
+          <h1 className="text-2xl font-bold">Editar proyecto</h1>
+          <p className="text-muted-foreground">Actualice los datos del proyecto</p>
         </div>
       </div>
 
@@ -126,7 +126,7 @@ export default function EditProjectPage({ params }: EditProjectPageProps) {
         }}
         onSubmit={handleSubmit}
         isLoading={isLoading}
-        submitLabel="Save Changes"
+        submitLabel="Guardar cambios"
       />
     </div>
   );

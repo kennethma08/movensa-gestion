@@ -39,7 +39,7 @@ export function useLogoUpload() {
       setLogoUrl(url);
       toast.success('Logo uploaded successfully');
     } catch {
-      toast.error('Failed to upload logo');
+      toast.error('No se pudo subir el logo');
     } finally {
       setIsUploadingLogo(false);
     }

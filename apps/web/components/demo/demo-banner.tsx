@@ -30,9 +30,9 @@ export function DemoBanner({ className }: DemoBannerProps) {
             <AlertTriangle className="h-4 w-4 flex-shrink-0" />
             <span className="font-medium">Demo Mode</span>
             <span className="hidden sm:inline">
-              &mdash; Data resets daily. Create an account to keep your work.
+              &mdash; Los datos se restablecen diariamente. Cree una cuenta para conservar su trabajo.
             </span>
-            <span className="sm:hidden">&mdash; Data resets daily</span>
+            <span className="sm:hidden">&mdash; Los datos se restablecen diariamente</span>
           </div>
 
           <div className="flex items-center gap-2">
@@ -44,7 +44,7 @@ export function DemoBanner({ className }: DemoBannerProps) {
             >
               <Link href="/register">
                 <Rocket className="mr-1.5 h-3.5 w-3.5" />
-                Create Account
+                Crear cuenta
               </Link>
             </Button>
 

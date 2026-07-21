@@ -36,14 +36,14 @@ export function PortalLineItemsTable({
       <table className="w-full">
         <thead className="bg-muted text-sm">
           <tr>
-            <th className="px-4 py-3 text-left font-medium">Description</th>
+            <th className="px-4 py-3 text-left font-medium">Descripción</th>
             {showPrices && (
               <>
-                <th className="px-4 py-3 text-right font-medium">Qty</th>
-                <th className="px-4 py-3 text-right font-medium">Rate</th>
+                <th className="px-4 py-3 text-right font-medium">Cant.</th>
+                <th className="px-4 py-3 text-right font-medium">Precio</th>
               </>
             )}
-            <th className="px-4 py-3 text-right font-medium">Amount</th>
+            <th className="px-4 py-3 text-right font-medium">Importe</th>
           </tr>
         </thead>
         <tbody className="divide-y">

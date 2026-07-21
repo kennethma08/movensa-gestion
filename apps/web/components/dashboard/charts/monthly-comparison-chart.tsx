@@ -31,8 +31,8 @@ type MetricType = 'revenue' | 'quotes' | 'invoices';
 
 const METRICS: { key: MetricType; label: string; color: string }[] = [
   { key: 'revenue', label: 'Revenue', color: CHART_COLORS.primary },
-  { key: 'quotes', label: 'Quotes', color: CHART_COLORS.secondary },
-  { key: 'invoices', label: 'Invoices', color: CHART_COLORS.success },
+  { key: 'quotes', label: 'Cotizaciones', color: CHART_COLORS.secondary },
+  { key: 'invoices', label: 'Facturas', color: CHART_COLORS.success },
 ];
 
 export function MonthlyComparisonChart({

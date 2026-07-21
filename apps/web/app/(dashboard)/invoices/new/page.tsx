@@ -4,7 +4,7 @@ import { getTaxRates, getNumberSequences, getBusinessProfile, getWorkspaceCurren
 import { NewInvoiceForm } from './new-invoice-form';
 
 export const metadata = {
-  title: 'New Invoice',
+  title: 'Nueva factura',
 };
 
 export default async function NewInvoicePage() {

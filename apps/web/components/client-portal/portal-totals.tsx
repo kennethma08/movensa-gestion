@@ -44,14 +44,14 @@ export function PortalTotals({
 
       {discountAmount > 0 && (
         <div className="flex justify-between text-sm text-green-600">
-          <span>Discount</span>
+          <span>Descuento</span>
           <span>-{formatCurrency(discountAmount, currency)}</span>
         </div>
       )}
 
       {taxTotal > 0 && (
         <div className="flex justify-between text-sm">
-          <span className="text-muted-foreground">Tax</span>
+          <span className="text-muted-foreground">Impuesto</span>
           <span>{formatCurrency(taxTotal, currency)}</span>
         </div>
       )}
@@ -64,7 +64,7 @@ export function PortalTotals({
       {amountPaid !== undefined && amountPaid > 0 && (
         <>
           <div className="flex justify-between text-sm text-green-600">
-            <span>Paid</span>
+            <span>Pagado</span>
             <span>-{formatCurrency(amountPaid, currency)}</span>
           </div>
           {amountDue !== undefined && (
@@ -73,7 +73,7 @@ export function PortalTotals({
                 amountDue > 0 ? 'text-orange-600' : 'text-green-600'
               }`}
             >
-              <span>Amount Due</span>
+              <span>Saldo pendiente</span>
               <span>{formatCurrency(amountDue, currency)}</span>
             </div>
           )}
@@ -82,7 +82,7 @@ export function PortalTotals({
 
       {deposit?.required && deposit.amount > 0 && (
         <div className="mt-3 rounded-lg border border-dashed p-3">
-          <p className="text-sm font-medium">Deposit Required</p>
+          <p className="text-sm font-medium">Depósito requerido</p>
           <p className="text-xs text-muted-foreground">
             {deposit.type === 'percentage' ? `${deposit.value}%` : formatCurrency(deposit.value, currency)}{' '}
             ({formatCurrency(deposit.amount, currency)}) due upon acceptance

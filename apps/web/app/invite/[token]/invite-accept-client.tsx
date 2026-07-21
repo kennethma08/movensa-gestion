@@ -35,7 +35,7 @@ export function InviteAcceptClient({ tokenHash, workspaceName }: InviteAcceptCli
       <div className="text-center space-y-4">
         <CheckCircle className="mx-auto h-12 w-12 text-green-600" />
         <p className="text-lg font-medium">Welcome to {workspaceName}!</p>
-        <p className="text-sm text-muted-foreground">Redirecting to dashboard...</p>
+        <p className="text-sm text-muted-foreground">Redirigiendo al panel...</p>
       </div>
     );
   }

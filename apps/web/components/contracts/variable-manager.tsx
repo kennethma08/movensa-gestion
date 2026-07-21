@@ -28,10 +28,10 @@ interface VariableManagerProps {
 }
 
 const variableTypes = [
-  { value: 'text', label: 'Text' },
-  { value: 'date', label: 'Date' },
-  { value: 'number', label: 'Number' },
-  { value: 'boolean', label: 'Yes/No' },
+  { value: 'text', label: 'Texto' },
+  { value: 'date', label: 'Fecha' },
+  { value: 'number', label: 'Número' },
+  { value: 'boolean', label: 'Sí/No' },
 ] as const;
 
 export function VariableManager({ variables, onChange }: VariableManagerProps) {
@@ -51,7 +51,7 @@ export function VariableManager({ variables, onChange }: VariableManagerProps) {
   const addVariable = () => {
     const newVariable: ContractVariable = {
       key: `variable_${variables.length + 1}`,
-      label: 'New Variable',
+      label: 'Nueva variable',
       type: 'text',
       required: false,
     };
@@ -89,14 +89,14 @@ export function VariableManager({ variables, onChange }: VariableManagerProps) {
       <CardHeader>
         <CardTitle>Variables</CardTitle>
         <CardDescription>
-          Define variables that can be customized when creating contracts from this
-          template. Use {'{{variableKey}}'} syntax in your content.
+          Defina variables que puedan personalizarse al crear contratos desde esta
+          plantilla. Use la sintaxis {'{{claveVariable}}'} en el contenido.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         {variables.length === 0 ? (
           <p className="text-sm text-muted-foreground text-center py-4">
-            No variables defined yet. Add a variable to make your template dynamic.
+            Aún no hay variables. Agregue una para convertir la plantilla en dinámica.
           </p>
         ) : (
           <div className="space-y-3">
@@ -111,7 +111,7 @@ export function VariableManager({ variables, onChange }: VariableManagerProps) {
                 </div>
                 <div className="flex-1 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                   <div className="space-y-1">
-                    <Label className="text-xs">Label</Label>
+                    <Label className="text-xs">Nombre</Label>
                     <Input
                       value={variable.label}
                       onChange={(e) => {
@@ -121,11 +121,11 @@ export function VariableManager({ variables, onChange }: VariableManagerProps) {
                           key: generateKey(label) || variable.key,
                         });
                       }}
-                      placeholder="Variable label"
+                      placeholder="Nombre de la variable"
                     />
                   </div>
                   <div className="space-y-1">
-                    <Label className="text-xs">Key</Label>
+                    <Label className="text-xs">Clave</Label>
                     <Input
                       value={variable.key}
                       onChange={(e) =>
@@ -136,7 +136,7 @@ export function VariableManager({ variables, onChange }: VariableManagerProps) {
                     />
                   </div>
                   <div className="space-y-1">
-                    <Label className="text-xs">Type</Label>
+                    <Label className="text-xs">Tipo</Label>
                     <Select
                       value={variable.type}
                       onValueChange={(value: ContractVariable['type']) =>
@@ -156,13 +156,13 @@ export function VariableManager({ variables, onChange }: VariableManagerProps) {
                     </Select>
                   </div>
                   <div className="space-y-1">
-                    <Label className="text-xs">Default Value</Label>
+                    <Label className="text-xs">Valor predeterminado</Label>
                     <Input
                       value={variable.defaultValue || ''}
                       onChange={(e) =>
                         updateVariable(index, { defaultValue: e.target.value })
                       }
-                      placeholder="Default value"
+                      placeholder="Valor predeterminado"
                     />
                   </div>
                 </div>
@@ -174,7 +174,7 @@ export function VariableManager({ variables, onChange }: VariableManagerProps) {
                         updateVariable(index, { required: checked })
                       }
                     />
-                    <Label className="text-xs">Required</Label>
+                    <Label className="text-xs">Obligatorio</Label>
                   </div>
                   <Button
                     type="button"
@@ -192,7 +192,7 @@ export function VariableManager({ variables, onChange }: VariableManagerProps) {
         )}
         <Button type="button" variant="outline" onClick={addVariable}>
           <Plus className="mr-2 h-4 w-4" />
-          Add Variable
+          Agregar variable
         </Button>
       </CardContent>
     </Card>

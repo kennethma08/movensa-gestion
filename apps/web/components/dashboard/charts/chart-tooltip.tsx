@@ -78,12 +78,12 @@ export function RevenueTooltip({ active, payload, label }: ChartTooltipProps) {
       <p className="mb-1 text-sm font-medium">{label}</p>
       <div className="space-y-1 text-sm">
         <div className="flex items-center justify-between gap-4">
-          <span className="text-muted-foreground">Revenue:</span>
+          <span className="text-muted-foreground">Ingresos:</span>
           <span className="font-medium">{formatFullCurrency(data?.revenue || 0)}</span>
         </div>
         {data?.invoiceCount !== undefined && (
           <div className="flex items-center justify-between gap-4">
-            <span className="text-muted-foreground">Invoices:</span>
+            <span className="text-muted-foreground">Facturas:</span>
             <span className="font-medium">{data.invoiceCount}</span>
           </div>
         )}

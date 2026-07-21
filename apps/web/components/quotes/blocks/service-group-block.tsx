@@ -52,7 +52,7 @@ export function ServiceGroupBlockContent({ block }: ServiceGroupBlockContentProp
 
   const handleAddItem = () => {
     const newItem = createBlock<ServiceItemBlock>('service-item', {
-      name: 'New Service',
+      name: 'Nuevo servicio',
       description: '',
       quantity: 1,
       rate: 0,
@@ -92,7 +92,7 @@ export function ServiceGroupBlockContent({ block }: ServiceGroupBlockContentProp
             <Input
               value={block.content.title}
               onChange={(e) => handleChange('title', e.target.value)}
-              placeholder="Group title"
+              placeholder="Título del grupo"
               className="font-medium text-foreground"
             />
           </div>
@@ -106,7 +106,7 @@ export function ServiceGroupBlockContent({ block }: ServiceGroupBlockContentProp
             <Input
               value={block.content.description}
               onChange={(e) => handleChange('description', e.target.value)}
-              placeholder="Group description (optional)"
+              placeholder="Descripción del grupo (opcional)"
               className="text-sm text-foreground"
             />
 
@@ -128,7 +128,7 @@ export function ServiceGroupBlockContent({ block }: ServiceGroupBlockContentProp
 
             <Button variant="outline" size="sm" onClick={handleAddItem} className="w-full">
               <Plus className="mr-2 h-4 w-4" />
-              Add Item to Group
+              Agregar concepto al grupo
             </Button>
           </div>
         )}
@@ -148,7 +148,7 @@ export function ServiceGroupBlockContent({ block }: ServiceGroupBlockContentProp
           <ChevronDown className="h-4 w-4 text-muted-foreground" />
         )}
         <div className="flex-1">
-          <h4 className="font-medium">{block.content.title || 'Untitled Group'}</h4>
+          <h4 className="font-medium">{block.content.title || 'Grupo sin título'}</h4>
           {block.content.description && (
             <p className="mt-1 text-sm text-muted-foreground">{block.content.description}</p>
           )}

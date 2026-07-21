@@ -52,12 +52,12 @@ interface RecordPaymentDialogProps {
 }
 
 const paymentMethods = [
-  { value: 'bank_transfer', label: 'Bank Transfer', icon: Building2 },
-  { value: 'card', label: 'Credit Card', icon: CreditCard },
-  { value: 'cash', label: 'Cash', icon: Banknote },
-  { value: 'check', label: 'Check', icon: Wallet },
+  { value: 'bank_transfer', label: 'Transferencia bancaria', icon: Building2 },
+  { value: 'card', label: 'Tarjeta', icon: CreditCard },
+  { value: 'cash', label: 'Efectivo', icon: Banknote },
+  { value: 'check', label: 'Cheque', icon: Wallet },
   { value: 'paypal', label: 'PayPal', icon: Wallet },
-  { value: 'other', label: 'Other', icon: Wallet },
+  { value: 'other', label: 'Otro', icon: Wallet },
 ];
 
 function formatCurrency(amount: number, currency: string = 'USD'): string {
@@ -105,12 +105,12 @@ export function RecordPaymentDialog({
 
     const numAmount = parseFloat(amount);
     if (isNaN(numAmount) || numAmount <= 0) {
-      setError('Please enter a valid amount');
+      setError('Ingrese un monto válido');
       return;
     }
 
     if (numAmount > amountDue) {
-      setError(`Amount cannot exceed the amount due (${formatCurrency(amountDue, currency)})`);
+      setError(`El monto no puede superar el saldo pendiente (${formatCurrency(amountDue, currency)})`);
       return;
     }
 
@@ -125,11 +125,11 @@ export function RecordPaymentDialog({
 
       if (result.success) {
         // CR #23: Use callback instead of full reload to preserve state
-        toast.success('Payment recorded successfully');
+        toast.success('Pago registrado correctamente');
         onOpenChange(false);
         onPaymentRecorded?.();
       } else {
-        setError(result.error || 'Failed to record payment');
+        setError(result.error || 'No se pudo registrar el pago');
       }
     } finally {
       setIsSubmitting(false);
@@ -141,17 +141,17 @@ export function RecordPaymentDialog({
       <DialogContent>
         <form onSubmit={handleSubmit}>
           <DialogHeader>
-            <DialogTitle>Record Payment</DialogTitle>
+            <DialogTitle>Registrar pago</DialogTitle>
             <DialogDescription>
-              Record a payment received for this invoice.
-              Amount due: {formatCurrency(amountDue, currency)}
+              Registre un pago recibido para esta factura. Saldo pendiente:{' '}
+              {formatCurrency(amountDue, currency)}
             </DialogDescription>
           </DialogHeader>
 
           <div className="grid gap-4 py-4">
             {/* Amount */}
             <div className="grid gap-2">
-              <Label htmlFor="payment-amount">Amount</Label>
+              <Label htmlFor="payment-amount">Monto</Label>
               <div className="relative">
                 <Banknote className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
@@ -174,7 +174,7 @@ export function RecordPaymentDialog({
                   size="sm"
                   onClick={() => setAmount(amountDue.toString())}
                 >
-                  Full Amount
+                  Monto total
                 </Button>
                 <Button
                   type="button"
@@ -189,7 +189,7 @@ export function RecordPaymentDialog({
 
             {/* Payment Date */}
             <div className="grid gap-2">
-              <Label>Payment Date</Label>
+              <Label>Fecha del pago</Label>
               <Popover>
                 <PopoverTrigger asChild>
                   <Button
@@ -200,7 +200,7 @@ export function RecordPaymentDialog({
                     )}
                   >
                     <CalendarIcon className="mr-2 h-4 w-4" />
-                    {paymentDate ? format(paymentDate, 'PPP') : 'Pick a date'}
+                    {paymentDate ? format(paymentDate, 'dd/MM/yyyy') : 'Seleccione una fecha'}
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0" align="start">
@@ -216,10 +216,10 @@ export function RecordPaymentDialog({
 
             {/* Payment Method */}
             <div className="grid gap-2">
-              <Label htmlFor="payment-method">Payment Method</Label>
+              <Label htmlFor="payment-method">Método de pago</Label>
               <Select value={paymentMethod} onValueChange={setPaymentMethod}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Select payment method" />
+                  <SelectValue placeholder="Seleccione un método" />
                 </SelectTrigger>
                 <SelectContent>
                   {paymentMethods.map((method) => (
@@ -236,23 +236,23 @@ export function RecordPaymentDialog({
 
             {/* Reference Number */}
             <div className="grid gap-2">
-              <Label htmlFor="payment-reference">Reference Number (Optional)</Label>
+              <Label htmlFor="payment-reference">Número de referencia (opcional)</Label>
               <Input
                 id="payment-reference"
                 value={referenceNumber}
                 onChange={(e) => setReferenceNumber(e.target.value)}
-                placeholder="Transaction ID, check number, etc."
+                placeholder="Identificador de transacción, número de cheque, etc."
               />
             </div>
 
             {/* Notes */}
             <div className="grid gap-2">
-              <Label htmlFor="payment-notes">Notes (Optional)</Label>
+              <Label htmlFor="payment-notes">Notas (opcional)</Label>
               <Textarea
                 id="payment-notes"
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-                placeholder="Add any payment notes..."
+                placeholder="Agregue notas sobre el pago..."
                 rows={2}
               />
             </div>
@@ -269,11 +269,11 @@ export function RecordPaymentDialog({
               onClick={() => onOpenChange(false)}
               disabled={isSubmitting}
             >
-              Cancel
+              Cancelar
             </Button>
             <Button type="submit" disabled={isSubmitting}>
               {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Record Payment
+              Registrar pago
             </Button>
           </DialogFooter>
         </form>

@@ -66,10 +66,10 @@ export function ProjectDetail({ project, stats, activity, notes, contracts, curr
     setIsDeleting(true);
     try {
       await deleteProject(project.id);
-      toast.success('Project deleted successfully');
+      toast.success('Proyecto eliminado correctamente');
       router.push('/projects');
     } catch {
-      toast.error('Failed to delete project');
+      toast.error('No se pudo eliminar el proyecto');
     } finally {
       setIsDeleting(false);
     }
@@ -89,7 +89,7 @@ export function ProjectDetail({ project, stats, activity, notes, contracts, curr
           className="flex items-center gap-1.5 hover:text-foreground transition-colors"
         >
           <ArrowLeft className="h-4 w-4" />
-          Projects
+          Proyectos
         </Link>
         <span>/</span>
         <span className="text-foreground">{project.name}</span>
@@ -120,7 +120,7 @@ export function ProjectDetail({ project, stats, activity, notes, contracts, curr
           <Button variant="outline" size="sm" asChild>
             <Link href={`/projects/${project.id}/edit`}>
               <Pencil className="mr-2 h-3.5 w-3.5" />
-              Edit
+              Editar
             </Link>
           </Button>
           <DropdownMenu>
@@ -135,14 +135,14 @@ export function ProjectDetail({ project, stats, activity, notes, contracts, curr
                   try {
                     if (project.isActive) {
                       await deactivateProject(project.id);
-                      toast.success('Project deactivated');
+                      toast.success('Proyecto desactivado');
                     } else {
                       await reactivateProject(project.id);
-                      toast.success('Project reactivated');
+                      toast.success('Proyecto reactivado');
                     }
                     router.refresh();
                   } catch {
-                    toast.error('Failed to update status');
+                    toast.error('No se pudo actualizar el estado');
                   }
                 }}
               >
@@ -153,7 +153,7 @@ export function ProjectDetail({ project, stats, activity, notes, contracts, curr
                 onClick={() => setShowDeleteDialog(true)}
               >
                 <Trash2 className="mr-2 h-4 w-4" />
-                Delete
+                Eliminar
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -164,13 +164,13 @@ export function ProjectDetail({ project, stats, activity, notes, contracts, curr
       <div className="rounded-lg border bg-card p-6">
         <div className="grid grid-cols-3 gap-6">
           <div>
-            <p className="text-sm text-muted-foreground">Project Value</p>
+            <p className="text-sm text-muted-foreground">Valor del proyecto</p>
             <p className="text-2xl font-semibold tracking-tight mt-1">
               {formatCurrency(projectValue, currency)}
             </p>
           </div>
           <div>
-            <p className="text-sm text-muted-foreground">Outstanding</p>
+            <p className="text-sm text-muted-foreground">Saldo pendiente</p>
             <p className="text-2xl font-semibold tracking-tight mt-1 text-amber-600">
               {formatCurrency(totalDue, currency)}
             </p>
@@ -184,7 +184,7 @@ export function ProjectDetail({ project, stats, activity, notes, contracts, curr
         </div>
         <div className="mt-5">
           <div className="flex items-center justify-between text-xs text-muted-foreground mb-1.5">
-            <span>Payment progress</span>
+            <span>Progreso de pagos</span>
             <span>{Math.round(paymentProgress)}%</span>
           </div>
           <div className="h-1.5 rounded-full bg-muted overflow-hidden">
@@ -203,7 +203,7 @@ export function ProjectDetail({ project, stats, activity, notes, contracts, curr
           {/* Invoices */}
           <section>
             <SectionHeader
-              title="Invoices"
+              title="Facturas"
               count={project.invoices.length}
               addHref={`/invoices/new?projectId=${project.id}&clientId=${project.client.id}`}
             />
@@ -239,7 +239,7 @@ export function ProjectDetail({ project, stats, activity, notes, contracts, curr
           {/* Quotes */}
           <section>
             <SectionHeader
-              title="Quotes"
+              title="Cotizaciones"
               count={project.quotes.length}
               addHref={`/quotes/new?projectId=${project.id}&clientId=${project.client.id}`}
             />
@@ -276,7 +276,7 @@ export function ProjectDetail({ project, stats, activity, notes, contracts, curr
           {/* Contracts */}
           <section>
             <SectionHeader
-              title="Contracts"
+              title="Contratos"
               count={contracts.length}
               addHref={`/contracts/new?projectId=${project.id}&clientId=${project.client.id}`}
             />
@@ -299,7 +299,7 @@ export function ProjectDetail({ project, stats, activity, notes, contracts, curr
                         className="text-xs border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-400"
                       >
                         <CheckCircle2 className="mr-1 h-3 w-3" />
-                        Signed
+                        Firmado
                       </Badge>
                     ) : (
                       <Badge variant="outline" className="text-xs">
@@ -316,7 +316,7 @@ export function ProjectDetail({ project, stats, activity, notes, contracts, curr
 
           {/* Notes */}
           <section>
-            <SectionHeader title="Notes" count={notes.length} />
+            <SectionHeader title="Notas" count={notes.length} />
             {notes.length > 0 ? (
               <div className="space-y-3">
                 {notes.map((note) => (
@@ -394,24 +394,24 @@ export function ProjectDetail({ project, stats, activity, notes, contracts, curr
               <div className="mt-4 pt-4 border-t space-y-1">
                 <button
                   className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors w-full"
-                  onClick={() => toast.info('Client portal is not yet available')}
+                  onClick={() => toast.info('El portal del cliente estará disponible próximamente')}
                 >
                   <ExternalLink className="h-3.5 w-3.5" />
-                  View client portal
+                  Ver portal del cliente
                 </button>
                 <button
                   className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors w-full"
-                  onClick={() => toast.info('Invite links are not yet available')}
+                  onClick={() => toast.info('Los enlaces de invitación estarán disponibles próximamente')}
                 >
                   <Link2 className="h-3.5 w-3.5" />
-                  Copy invite link
+                  Copiar enlace de invitación
                 </button>
                 <button
                   className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors w-full"
-                  onClick={() => toast.info('Invitations are not yet available')}
+                  onClick={() => toast.info('Las invitaciones estarán disponibles próximamente')}
                 >
                   <Send className="h-3.5 w-3.5" />
-                  Send invitation
+                  Enviar invitación
                 </button>
               </div>
             </div>
@@ -419,7 +419,7 @@ export function ProjectDetail({ project, stats, activity, notes, contracts, curr
 
           {/* Activity */}
           <section>
-            <h2 className="text-sm font-medium text-muted-foreground mb-4">Activity</h2>
+            <h2 className="text-sm font-medium text-muted-foreground mb-4">Actividad</h2>
             <div className="space-y-0">
               {activity.map((item, i) => (
                 <div key={item.id} className="flex gap-3">
@@ -449,7 +449,7 @@ export function ProjectDetail({ project, stats, activity, notes, contracts, curr
                 </div>
               ))}
               {activity.length === 0 && (
-                <p className="text-sm text-muted-foreground py-2">No activity yet</p>
+                <p className="text-sm text-muted-foreground py-2">Aún no hay actividad</p>
               )}
             </div>
           </section>
@@ -461,7 +461,7 @@ export function ProjectDetail({ project, stats, activity, notes, contracts, curr
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete project</AlertDialogTitle>
+            <AlertDialogTitle>Eliminar proyecto</AlertDialogTitle>
             <AlertDialogDescription>
               Are you sure you want to delete &quot;{project.name}&quot;? This action cannot be
               undone. Associated quotes, invoices, and contracts will remain but will no longer
@@ -469,13 +469,13 @@ export function ProjectDetail({ project, stats, activity, notes, contracts, curr
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDelete}
               disabled={isDeleting}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              Delete
+              Eliminar
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -509,7 +509,7 @@ function SectionHeader({
         <Button variant="ghost" size="sm" className="h-7 text-xs" asChild>
           <Link href={addHref}>
             <Plus className="mr-1 h-3 w-3" />
-            Add
+            Agregar
           </Link>
         </Button>
       )}

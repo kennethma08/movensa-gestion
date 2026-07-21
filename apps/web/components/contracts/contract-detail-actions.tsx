@@ -31,13 +31,13 @@ export function ContractDetailActions({
     try {
       const result = await sendContractInstance(contractId);
       if (result.emailSent) {
-        toast.success('Contract sent successfully!');
+        toast.success('Contrato enviado correctamente');
       } else {
-        toast.warning('Contract marked as sent, but email delivery failed. Check email settings.');
+        toast.warning('El contrato se marcó como enviado, pero el correo no pudo entregarse. Revise la configuración del correo.');
       }
       router.refresh();
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Failed to send contract');
+      toast.error(err instanceof Error ? err.message : 'No se pudo enviar el contrato');
     } finally {
       setIsSending(false);
     }
@@ -49,7 +49,7 @@ export function ContractDetailActions({
         {status === 'draft' && (
           <Button onClick={handleSend} disabled={isSending}>
             <Send className="mr-2 h-4 w-4" />
-            {isSending ? 'Sending...' : 'Send to Client'}
+            {isSending ? 'Enviando...' : 'Enviar al cliente'}
           </Button>
         )}
         {status === 'pending' && (

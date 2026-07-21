@@ -50,7 +50,7 @@ export function DetailsSection({
       {/* Client Selection with Typeahead */}
       <Card>
         <CardHeader className="pb-4">
-          <CardTitle className="text-base">Client</CardTitle>
+          <CardTitle className="text-base">Cliente</CardTitle>
           <CardDescription>
             Search and select a client for this quote
           </CardDescription>
@@ -63,7 +63,7 @@ export function DetailsSection({
                 onClientChange(newClient);
               }
             }}
-            placeholder="Search clients by name, email, or company..."
+            placeholder="Buscar clientes por nombre, correo o empresa..."
           />
         </CardContent>
       </Card>
@@ -71,7 +71,7 @@ export function DetailsSection({
       {/* Project Selection */}
       <Card>
         <CardHeader className="pb-4">
-          <CardTitle className="text-base">Project</CardTitle>
+          <CardTitle className="text-base">Proyecto</CardTitle>
           <CardDescription>
             Optionally associate this quote with a project
           </CardDescription>
@@ -88,11 +88,11 @@ export function DetailsSection({
       {/* Quote Details */}
       <Card>
         <CardHeader className="pb-4">
-          <CardTitle className="text-base">Quote Details</CardTitle>
+          <CardTitle className="text-base">Detalles de la cotización</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
-            <Label htmlFor="title">Quote Title</Label>
+            <Label htmlFor="title">Título de la cotización</Label>
             <Input
               id="title"
               placeholder="e.g., Website Redesign Proposal"
@@ -103,24 +103,24 @@ export function DetailsSection({
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <Label htmlFor="expiration">Valid For</Label>
+              <Label htmlFor="expiration">Válida por</Label>
               <Select value={expirationDays} onValueChange={onExpirationChange}>
                 <SelectTrigger id="expiration">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="7">7 days</SelectItem>
-                  <SelectItem value="14">14 days</SelectItem>
-                  <SelectItem value="30">30 days</SelectItem>
-                  <SelectItem value="45">45 days</SelectItem>
-                  <SelectItem value="60">60 days</SelectItem>
-                  <SelectItem value="90">90 days</SelectItem>
+                  <SelectItem value="7">7 días</SelectItem>
+                  <SelectItem value="14">14 días</SelectItem>
+                  <SelectItem value="30">30 días</SelectItem>
+                  <SelectItem value="45">45 días</SelectItem>
+                  <SelectItem value="60">60 días</SelectItem>
+                  <SelectItem value="90">90 días</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
             <div>
-              <Label htmlFor="taxRate">Tax Rate (%)</Label>
+              <Label htmlFor="taxRate">Tasa de impuesto (%)</Label>
               <Input
                 id="taxRate"
                 type="number"

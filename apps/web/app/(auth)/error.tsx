@@ -21,17 +21,17 @@ export default function AuthError({
         <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-destructive/10">
           <AlertTriangle className="h-6 w-6 text-destructive" />
         </div>
-        <h2 className="text-lg font-semibold">Authentication Error</h2>
+        <h2 className="text-lg font-semibold">Error de autenticación</h2>
         <p className="text-sm text-muted-foreground">
-          Something went wrong. Please try again.
+          Ocurrió un error. Inténtelo nuevamente.
         </p>
         <div className="flex justify-center gap-2 pt-2">
           <Button variant="outline" asChild>
-            <a href="/login">Back to Login</a>
+            <a href="/login">Volver al inicio de sesión</a>
           </Button>
           <Button onClick={reset}>
             <RefreshCw className="mr-2 h-4 w-4" />
-            Try again
+            Intentar de nuevo
           </Button>
         </div>
       </div>

@@ -28,13 +28,13 @@ const ACCENT_PRESETS = [
 ];
 
 const COUNTRY_OPTIONS = [
-  'United States', 'Canada', 'United Kingdom', 'Australia',
-  'Germany', 'France', 'Netherlands', 'India',
-  'Singapore', 'New Zealand', 'Japan', 'Brazil',
+  'Costa Rica', 'Estados Unidos', 'Canadá', 'Reino Unido', 'Australia',
+  'Alemania', 'Francia', 'Países Bajos', 'India',
+  'Singapur', 'Nueva Zelanda', 'Japón', 'Brasil',
 ];
 
 const SOCIAL_PLATFORMS = [
-  { id: 'website', label: 'Website', icon: Globe, placeholder: 'https://yourwebsite.com' },
+  { id: 'website', label: 'Sitio web', icon: Globe, placeholder: 'https://susitio.com' },
   { id: 'twitter', label: 'Twitter / X', icon: Twitter, placeholder: 'https://twitter.com/username' },
   { id: 'linkedin', label: 'LinkedIn', icon: Linkedin, placeholder: 'https://linkedin.com/company/name' },
   { id: 'instagram', label: 'Instagram', icon: Instagram, placeholder: 'https://instagram.com/username' },
@@ -44,7 +44,7 @@ const SOCIAL_PLATFORMS = [
 
 const brandingSchema = z.object({
   accentColor: z.string().regex(/^#[0-9A-Fa-f]{6}$/).optional(),
-  businessName: z.string().min(1, 'Business name is required').max(200),
+  businessName: z.string().min(1, 'El nombre del negocio es obligatorio').max(200),
   email: z.string().email().optional().or(z.literal('')),
   phone: z.string().max(50).optional(),
   website: z.string().url().optional().or(z.literal('')),
@@ -159,9 +159,9 @@ export function BrandingSettingsForm({ initialData, businessData }: BrandingSett
           socialLinks,
         }),
       ]);
-      toast.success('Branding settings updated');
+      toast.success('Configuración de marca actualizada');
     } catch {
-      toast.error('Failed to update branding settings');
+      toast.error('No se pudo actualizar la configuración de marca');
     } finally {
       setIsSaving(false);
     }
@@ -174,21 +174,21 @@ export function BrandingSettingsForm({ initialData, businessData }: BrandingSett
         <CardHeader>
           <CardTitle>Logo</CardTitle>
           <CardDescription>
-            Your branding will appear across your website, invoices, and client portal.
-            Upload a transparent PNG up to 200 x 50 pixels. For best results, first crop any empty space.
+            Su identidad visual aparecerá en facturas, cotizaciones y el portal del cliente.
+            Suba un PNG transparente de hasta 200 × 50 píxeles y recorte el espacio vacío.
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid gap-6 sm:grid-cols-2">
             <div className="space-y-2">
-              <Label className="text-sm text-muted-foreground">Light Background Logo</Label>
+              <Label className="text-sm text-muted-foreground">Logo para fondo claro</Label>
               <div
                 className="group relative flex h-32 cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-border bg-background transition-colors hover:border-primary/50 hover:bg-muted/50"
                 onClick={() => handleLogoUpload('light')}
               >
                 {lightLogo ? (
                   <>
-                    <img src={lightLogo} alt="Light logo" className="max-h-20 max-w-[180px] object-contain" />
+                    <img src={lightLogo} alt="Logo para fondo claro" className="max-h-20 max-w-[180px] object-contain" />
                     <button
                       type="button"
                       className="absolute right-2 top-2 rounded-full bg-destructive p-1 text-destructive-foreground opacity-0 transition-opacity group-hover:opacity-100"
@@ -200,21 +200,21 @@ export function BrandingSettingsForm({ initialData, businessData }: BrandingSett
                 ) : (
                   <div className="flex flex-col items-center gap-2 text-muted-foreground">
                     <Upload className="h-6 w-6" />
-                    <span className="text-sm">Upload Logo</span>
+                    <span className="text-sm">Subir logo</span>
                   </div>
                 )}
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label className="text-sm text-muted-foreground">Dark Background Logo</Label>
+              <Label className="text-sm text-muted-foreground">Logo para fondo oscuro</Label>
               <div
                 className="group relative flex h-32 cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-border bg-zinc-900 transition-colors hover:border-primary/50"
                 onClick={() => handleLogoUpload('dark')}
               >
                 {darkLogo ? (
                   <>
-                    <img src={darkLogo} alt="Dark logo" className="max-h-20 max-w-[180px] object-contain" />
+                    <img src={darkLogo} alt="Logo para fondo oscuro" className="max-h-20 max-w-[180px] object-contain" />
                     <button
                       type="button"
                       className="absolute right-2 top-2 rounded-full bg-destructive p-1 text-destructive-foreground opacity-0 transition-opacity group-hover:opacity-100"
@@ -226,7 +226,7 @@ export function BrandingSettingsForm({ initialData, businessData }: BrandingSett
                 ) : (
                   <div className="flex flex-col items-center gap-2 text-zinc-400">
                     <Upload className="h-6 w-6" />
-                    <span className="text-sm">Upload Logo</span>
+                    <span className="text-sm">Subir logo</span>
                   </div>
                 )}
               </div>
@@ -238,15 +238,15 @@ export function BrandingSettingsForm({ initialData, businessData }: BrandingSett
       {/* Accent Color */}
       <Card>
         <CardHeader>
-          <CardTitle>Accent Color</CardTitle>
+          <CardTitle>Color de acento</CardTitle>
           <CardDescription>
-            Choose a predefined color or set your own by entering a custom HEX color code.
+            Elija un color predefinido o ingrese un código HEX personalizado.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
             <Label className="mb-3 block text-sm text-muted-foreground">
-              Choose from the options or pick your own.
+              Seleccione una opción o indique su propio color.
             </Label>
             <div className="flex flex-wrap gap-2">
               {ACCENT_PRESETS.map((color) => (
@@ -296,19 +296,19 @@ export function BrandingSettingsForm({ initialData, businessData }: BrandingSett
       {/* Business Info */}
       <Card>
         <CardHeader>
-          <CardTitle>Your Business Info</CardTitle>
+          <CardTitle>Información de su negocio</CardTitle>
           <CardDescription>
-            This information will appear on your quotes, invoices, and client portal.
+            Esta información aparecerá en cotizaciones, facturas y el portal del cliente.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <div className="space-y-2">
-              <Label htmlFor="businessName">Business Name</Label>
+              <Label htmlFor="businessName">Nombre del negocio</Label>
               <Input
                 id="businessName"
                 {...form.register('businessName')}
-                placeholder="Your Business Name"
+                placeholder="Nombre de su negocio"
               />
               {form.formState.errors.businessName && (
                 <p className="text-sm text-destructive">
@@ -318,26 +318,26 @@ export function BrandingSettingsForm({ initialData, businessData }: BrandingSett
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="email">Business Email</Label>
+              <Label htmlFor="email">Correo electrónico</Label>
               <Input
                 id="email"
                 type="email"
                 {...form.register('email')}
-                placeholder="business@example.com"
+                placeholder="negocio@ejemplo.com"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="phone">Phone Number</Label>
+              <Label htmlFor="phone">Teléfono</Label>
               <Input
                 id="phone"
                 {...form.register('phone')}
-                placeholder="+1 (555) 000-0000"
+                placeholder="+506 0000-0000"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="businessWebsite">Business Website</Label>
+              <Label htmlFor="businessWebsite">Sitio web</Label>
               <Input
                 id="businessWebsite"
                 {...form.register('website')}
@@ -348,22 +348,22 @@ export function BrandingSettingsForm({ initialData, businessData }: BrandingSett
 
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <div className="space-y-2">
-              <Label htmlFor="street">Business Address</Label>
+              <Label htmlFor="street">Dirección del negocio</Label>
               <Input
                 id="street"
                 {...form.register('street')}
-                placeholder="123 Business Street"
+                placeholder="Dirección exacta"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="country">Country</Label>
+              <Label htmlFor="country">País</Label>
               <Select
                 value={form.watch('country') || ''}
                 onValueChange={(value) => form.setValue('country', value)}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Select country" />
+                  <SelectValue placeholder="Seleccione el país" />
                 </SelectTrigger>
                 <SelectContent>
                   {COUNTRY_OPTIONS.map((c) => (
@@ -376,25 +376,25 @@ export function BrandingSettingsForm({ initialData, businessData }: BrandingSett
 
           <div className="grid gap-4 sm:grid-cols-3">
             <div className="space-y-2">
-              <Label htmlFor="city">City</Label>
+              <Label htmlFor="city">Ciudad</Label>
               <Input
                 id="city"
                 {...form.register('city')}
-                placeholder="City"
+                placeholder="Ciudad"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="state">Province/Region</Label>
+              <Label htmlFor="state">Provincia o región</Label>
               <Input
                 id="state"
                 {...form.register('state')}
-                placeholder="State / Province"
+                placeholder="Provincia o región"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="postalCode">Postal Code</Label>
+              <Label htmlFor="postalCode">Código postal</Label>
               <Input
                 id="postalCode"
                 {...form.register('postalCode')}
@@ -409,10 +409,10 @@ export function BrandingSettingsForm({ initialData, businessData }: BrandingSett
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
-            <CardTitle>Social Media</CardTitle>
+            <CardTitle>Redes sociales</CardTitle>
             <CardDescription>
-              Add social media links to your brand. If no link is provided, the social media icon
-              will not be visible on your client portal.
+              Agregue los enlaces de sus redes sociales. Los iconos sin enlace no se mostrarán
+              en el portal del cliente.
             </CardDescription>
           </div>
           <Button
@@ -423,13 +423,13 @@ export function BrandingSettingsForm({ initialData, businessData }: BrandingSett
             disabled={socialLinks.length >= SOCIAL_PLATFORMS.length}
           >
             <Plus className="mr-1 h-4 w-4" />
-            Add Social Media
+            Agregar red social
           </Button>
         </CardHeader>
         <CardContent>
           {socialLinks.length === 0 ? (
             <p className="text-sm text-muted-foreground py-4 text-center">
-              No social media links added yet. Click &quot;Add Social Media&quot; to get started.
+              Aún no hay redes sociales. Use &quot;Agregar red social&quot; para comenzar.
             </p>
           ) : (
             <div className="space-y-3">
@@ -481,7 +481,7 @@ export function BrandingSettingsForm({ initialData, businessData }: BrandingSett
 
       <div className="flex justify-end">
         <Button type="submit" disabled={isSaving}>
-          {isSaving ? 'Saving...' : 'Save Changes'}
+          {isSaving ? 'Guardando...' : 'Guardar cambios'}
         </Button>
       </div>
     </form>

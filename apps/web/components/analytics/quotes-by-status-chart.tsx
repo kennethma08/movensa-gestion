@@ -6,12 +6,12 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import type { QuoteStatusCounts } from '@/lib/dashboard/types';
 
 const STATUS_CONFIG: { key: keyof QuoteStatusCounts; label: string; color: string; bg: string }[] = [
-  { key: 'accepted', label: 'Accepted', color: 'bg-emerald-500', bg: 'bg-emerald-500/15' },
-  { key: 'sent', label: 'Sent', color: 'bg-blue-500', bg: 'bg-blue-500/15' },
-  { key: 'viewed', label: 'Viewed', color: 'bg-amber-500', bg: 'bg-amber-500/15' },
-  { key: 'draft', label: 'Draft', color: 'bg-muted-foreground/40', bg: 'bg-muted-foreground/10' },
-  { key: 'declined', label: 'Declined', color: 'bg-red-500', bg: 'bg-red-500/15' },
-  { key: 'expired', label: 'Expired', color: 'bg-orange-500', bg: 'bg-orange-500/15' },
+  { key: 'accepted', label: 'Aceptadas', color: 'bg-emerald-500', bg: 'bg-emerald-500/15' },
+  { key: 'sent', label: 'Enviadas', color: 'bg-blue-500', bg: 'bg-blue-500/15' },
+  { key: 'viewed', label: 'Vistas', color: 'bg-amber-500', bg: 'bg-amber-500/15' },
+  { key: 'draft', label: 'Borradores', color: 'bg-muted-foreground/40', bg: 'bg-muted-foreground/10' },
+  { key: 'declined', label: 'Rechazadas', color: 'bg-red-500', bg: 'bg-red-500/15' },
+  { key: 'expired', label: 'Vencidas', color: 'bg-orange-500', bg: 'bg-orange-500/15' },
 ];
 
 interface QuotesByStatusChartProps {
@@ -33,7 +33,7 @@ export function QuotesByStatusChart({ data }: QuotesByStatusChartProps) {
     return (
       <Card>
         <CardHeader className="pb-4">
-          <CardTitle className="text-sm font-medium">Quotes by Status</CardTitle>
+          <CardTitle className="text-sm font-medium">Cotizaciones por estado</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="h-[200px] flex items-center justify-center text-sm text-muted-foreground">
@@ -48,7 +48,7 @@ export function QuotesByStatusChart({ data }: QuotesByStatusChartProps) {
     <Card>
       <CardHeader className="pb-4">
         <div className="flex items-baseline justify-between">
-          <CardTitle className="text-sm font-medium">Quotes by Status</CardTitle>
+          <CardTitle className="text-sm font-medium">Cotizaciones por estado</CardTitle>
           <span className="text-xs text-muted-foreground/60">
             {total} total
           </span>

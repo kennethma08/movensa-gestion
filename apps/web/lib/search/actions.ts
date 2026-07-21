@@ -102,15 +102,15 @@ export async function globalSearch(query: string): Promise<SearchResult[]> {
     ...quotes.map((q) => ({
       id: q.id,
       type: 'quote' as const,
-      title: `${q.quoteNumber} - ${q.title || 'Untitled Quote'}`,
-      subtitle: q.client?.name || 'No client',
+      title: `${q.quoteNumber} - ${q.title || 'Cotización sin título'}`,
+      subtitle: q.client?.name || 'Sin cliente',
       href: `/quotes/${q.id}`,
     })),
     ...invoices.map((i) => ({
       id: i.id,
       type: 'invoice' as const,
       title: i.invoiceNumber,
-      subtitle: i.client?.name || 'No client',
+      subtitle: i.client?.name || 'Sin cliente',
       href: `/invoices/${i.id}`,
     })),
     ...clients.map((c) => ({
@@ -124,14 +124,14 @@ export async function globalSearch(query: string): Promise<SearchResult[]> {
       id: ct.id,
       type: 'contract' as const,
       title: ct.name,
-      subtitle: ct.isTemplate ? 'Template' : 'Contract',
+      subtitle: ct.isTemplate ? 'Plantilla' : 'Contrato',
       href: ct.isTemplate ? `/templates/${ct.id}` : `/contracts/${ct.id}`,
     })),
     ...projects.map((p) => ({
       id: p.id,
       type: 'project' as const,
       title: p.name,
-      subtitle: p.client?.name || 'No client',
+      subtitle: p.client?.name || 'Sin cliente',
       href: `/projects/${p.id}`,
     })),
     ...emailTemplates.map((et) => ({

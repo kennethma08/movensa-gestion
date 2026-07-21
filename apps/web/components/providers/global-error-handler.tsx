@@ -22,13 +22,13 @@ export function GlobalErrorHandler() {
       if (reason?.name === 'AbortError') return;
 
       const message =
-        reason instanceof Error ? reason.message : String(reason || 'Unknown error');
+        reason instanceof Error ? reason.message : String(reason || 'Error desconocido');
 
       // Don't show duplicate toasts for common non-actionable errors
       if (message.includes('NEXT_NOT_FOUND') || message.includes('NEXT_REDIRECT')) return;
 
       console.error('[GlobalErrorHandler] Unhandled promise rejection:', reason);
-      toast.error('Something went wrong. Please try again.', {
+      toast.error('Algo salió mal. Inténtelo nuevamente.', {
         description: process.env.NODE_ENV === 'development' ? message : undefined,
       });
 
@@ -41,7 +41,7 @@ export function GlobalErrorHandler() {
       if (event.message?.includes('ResizeObserver')) return;
 
       console.error('[GlobalErrorHandler] Uncaught error:', event.error || event.message);
-      toast.error('An unexpected error occurred.', {
+      toast.error('Ocurrió un error inesperado.', {
         description:
           process.env.NODE_ENV === 'development'
             ? event.message

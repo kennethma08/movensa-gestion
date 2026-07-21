@@ -48,20 +48,20 @@ export function SigningOtpGate({
       try {
         const result = await sendSigningOtp({ type, accessToken });
         if (result.success) {
-          toast.success('Verification code sent to your email');
+          toast.success('Código de verificación enviado a su correo');
           setStep('verify');
         } else {
           toast.error(result.error);
         }
       } catch {
-        toast.error('Network error. Please check your connection and try again.');
+        toast.error('Error de red. Revise su conexión e inténtelo nuevamente.');
       }
     });
   };
 
   const handleVerifyOtp = () => {
     if (code.length !== 6) {
-      toast.error('Please enter the 6-digit code');
+      toast.error('Ingrese el código de 6 dígitos');
       return;
     }
 
@@ -74,13 +74,13 @@ export function SigningOtpGate({
           email: clientEmail,
         });
         if (result.success) {
-          toast.success('Identity verified');
+          toast.success('Identidad verificada');
           onVerified();
         } else {
           toast.error(result.error);
         }
       } catch {
-        toast.error('Network error. Please check your connection and try again.');
+        toast.error('Error de red. Revise su conexión e inténtelo nuevamente.');
       }
     });
   };
@@ -97,10 +97,10 @@ export function SigningOtpGate({
           <div className="mx-auto w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-2">
             <ShieldCheck className="h-6 w-6 text-primary" />
           </div>
-          <CardTitle>Verify Your Identity</CardTitle>
+          <CardTitle>Verifique su identidad</CardTitle>
           <CardDescription>
-            Before signing, we need to verify your identity. We&apos;ll send a
-            verification code to <strong>{maskedEmail}</strong>.
+            Antes de firmar, necesitamos verificar su identidad. Enviaremos un
+            código de verificación a <strong>{maskedEmail}</strong>.
           </CardDescription>
         </CardHeader>
         <CardContent className="flex justify-center">
@@ -108,12 +108,12 @@ export function SigningOtpGate({
             {isPending ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Sending...
+                Enviando...
               </>
             ) : (
               <>
                 <Mail className="mr-2 h-4 w-4" />
-                Send Verification Code
+                Enviar código de verificación
               </>
             )}
           </Button>
@@ -128,15 +128,15 @@ export function SigningOtpGate({
         <div className="mx-auto w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-2">
           <Mail className="h-6 w-6 text-primary" />
         </div>
-        <CardTitle>Enter Verification Code</CardTitle>
+        <CardTitle>Ingrese el código de verificación</CardTitle>
         <CardDescription>
-          We sent a 6-digit code to <strong>{maskedEmail}</strong>.
-          Check your inbox and enter it below.
+          Enviamos un código de 6 dígitos a <strong>{maskedEmail}</strong>.
+          Revise su bandeja de entrada e ingréselo a continuación.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="max-w-xs mx-auto space-y-2">
-          <Label htmlFor="otp-code">Verification Code</Label>
+          <Label htmlFor="otp-code">Código de verificación</Label>
           <Input
             id="otp-code"
             value={code}
@@ -159,12 +159,12 @@ export function SigningOtpGate({
             {isPending ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Verifying...
+                Verificando...
               </>
             ) : (
               <>
                 <ShieldCheck className="mr-2 h-4 w-4" />
-                Verify
+                Verificar
               </>
             )}
           </Button>
@@ -175,7 +175,7 @@ export function SigningOtpGate({
             disabled={isPending}
             className="text-sm text-muted-foreground hover:text-foreground transition-colors"
           >
-            Didn&apos;t receive the code? Resend
+            ¿No recibió el código? Reenviar
           </button>
         </div>
       </CardContent>

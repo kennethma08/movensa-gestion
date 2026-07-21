@@ -5,7 +5,7 @@ import { InvoiceItemsClient } from './invoice-items-client';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export const metadata = {
-  title: 'Invoice Items',
+  title: 'Conceptos de factura',
   description: 'Manage reusable line items for quotes and invoices.',
 };
 

@@ -11,7 +11,7 @@ import {
 import { getWorkspaceCurrency } from '@/lib/settings/actions';
 
 export const metadata = {
-  title: 'Analytics',
+  title: 'Analíticas',
   description: 'Business analytics and insights',
 };
 

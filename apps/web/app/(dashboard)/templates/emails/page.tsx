@@ -4,7 +4,7 @@ import { getEmailTemplates } from '@/lib/email/actions';
 import { EmailTemplatesDataTable } from '@/components/email/email-templates-data-table';
 
 export const metadata = {
-  title: 'Email Templates',
+  title: 'Plantillas de correo',
 };
 
 async function EmailTemplateContent() {

@@ -29,12 +29,12 @@ function formatCurrency(amount: number, currency: string = 'USD'): string {
 }
 
 const STATUS_ITEMS = [
-  { key: 'accepted', label: 'Accepted', color: 'bg-emerald-500' },
-  { key: 'sent', label: 'Sent', color: 'bg-blue-500' },
-  { key: 'viewed', label: 'Viewed', color: 'bg-amber-400' },
-  { key: 'draft', label: 'Draft', color: 'bg-slate-400' },
-  { key: 'declined', label: 'Declined', color: 'bg-red-400' },
-  { key: 'expired', label: 'Expired', color: 'bg-orange-400' },
+  { key: 'accepted', label: 'Aceptadas', color: 'bg-emerald-500' },
+  { key: 'sent', label: 'Enviadas', color: 'bg-blue-500' },
+  { key: 'viewed', label: 'Vistas', color: 'bg-amber-400' },
+  { key: 'draft', label: 'Borradores', color: 'bg-slate-400' },
+  { key: 'declined', label: 'Rechazadas', color: 'bg-red-400' },
+  { key: 'expired', label: 'Vencidas', color: 'bg-orange-400' },
 ] as const;
 
 export function SalesPipelineSection({
@@ -61,10 +61,10 @@ export function SalesPipelineSection({
     <Card>
       <CardHeader className="pb-2">
         <div className="flex items-baseline justify-between">
-          <CardTitle className="text-sm font-medium">Sales Pipeline</CardTitle>
+          <CardTitle className="text-sm font-medium">Embudo de ventas</CardTitle>
           <div className="flex items-center gap-1 text-xs text-emerald-600 dark:text-emerald-400">
             <ArrowUpRight className="h-3 w-3" />
-            <span className="font-medium">{conversionRate.toFixed(0)}% win rate</span>
+            <span className="font-medium">{conversionRate.toFixed(0)}% de éxito</span>
           </div>
         </div>
       </CardHeader>
@@ -73,7 +73,7 @@ export function SalesPipelineSection({
         <div className="flex items-center gap-6 mb-5">
           <div>
             <p className="text-2xl font-semibold tracking-tight">{totalQuotes}</p>
-            <p className="text-xs text-muted-foreground">Total quotes</p>
+            <p className="text-xs text-muted-foreground">Cotizaciones totales</p>
           </div>
           <div className="h-8 w-px bg-border" />
           <div>

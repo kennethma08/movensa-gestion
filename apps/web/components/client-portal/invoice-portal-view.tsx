@@ -48,7 +48,7 @@ export function InvoicePortalView({ invoice, accessToken }: InvoicePortalViewPro
     : ACCENT_LIGHT;
 
   const handlePayment = () => {
-    alert('Online payment is not yet available for this invoice. Please contact the business directly for payment options.');
+    alert('El pago en línea aún no está disponible para esta factura. Comuníquese directamente con la empresa para conocer las opciones de pago.');
   };
 
   return (
@@ -84,7 +84,7 @@ export function InvoicePortalView({ invoice, accessToken }: InvoicePortalViewPro
       {invoice.payments.length > 0 && (
         <>
           <div className="px-6 py-4">
-            <p className="mb-3 text-xs font-medium text-muted-foreground">Payment History</p>
+            <p className="mb-3 text-xs font-medium text-muted-foreground">Historial de pagos</p>
             <div className="space-y-2">
               {invoice.payments.map((payment) => (
                 <div
@@ -143,7 +143,7 @@ export function InvoicePortalView({ invoice, accessToken }: InvoicePortalViewPro
                 >
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-sm font-medium">
-                      {item.name || 'Untitled Item'}
+                      {item.name || 'Concepto sin título'}
                     </p>
                     <p className="mt-0.5 truncate text-xs text-muted-foreground">
                       {item.quantity} &times; {formatCurrency(item.rate, currency)}
@@ -170,7 +170,7 @@ export function InvoicePortalView({ invoice, accessToken }: InvoicePortalViewPro
                     <span className="tabular-nums">{formatCurrency(invoice.totals.subtotal, currency)}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Discount</span>
+                    <span className="text-muted-foreground">Descuento</span>
                     <span className="tabular-nums text-green-600">-{formatCurrency(invoice.totals.discountAmount, currency)}</span>
                   </div>
                 </div>
@@ -186,7 +186,7 @@ export function InvoicePortalView({ invoice, accessToken }: InvoicePortalViewPro
                     </div>
                   )}
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Tax</span>
+                    <span className="text-muted-foreground">Impuesto</span>
                     <span className="tabular-nums">{formatCurrency(invoice.totals.taxTotal, currency)}</span>
                   </div>
                 </div>
@@ -202,7 +202,7 @@ export function InvoicePortalView({ invoice, accessToken }: InvoicePortalViewPro
                     </div>
                   )}
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Paid</span>
+                    <span className="text-muted-foreground">Pagado</span>
                     <span className="tabular-nums text-green-600">-{formatCurrency(invoice.totals.amountPaid, currency)}</span>
                   </div>
                 </div>
@@ -216,7 +216,7 @@ export function InvoicePortalView({ invoice, accessToken }: InvoicePortalViewPro
                 )}
                 style={{ borderLeftColor: accentColor }}
               >
-                <span className="text-sm font-semibold">Total Due</span>
+                <span className="text-sm font-semibold">Saldo pendiente</span>
                 <span className="text-lg font-bold tabular-nums" style={{ color: accentColor }}>
                   {formatCurrency(invoice.totals.amountDue ?? invoice.totals.total, currency)}
                 </span>
@@ -241,7 +241,7 @@ export function InvoicePortalView({ invoice, accessToken }: InvoicePortalViewPro
         <>
           <Separator className="border-gray-100" />
           <div className="px-6 py-5">
-            <p className="mb-1 text-xs font-medium text-muted-foreground">Terms & Conditions</p>
+            <p className="mb-1 text-xs font-medium text-muted-foreground">Términos y condiciones</p>
             <p className="text-sm text-muted-foreground">{invoice.terms}</p>
           </div>
         </>

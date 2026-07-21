@@ -17,17 +17,17 @@ export function NotesSection({ notes, onNotesChange, internalNotes, onInternalNo
       {/* Client-facing Notes */}
       <Card>
         <CardHeader className="pb-4">
-          <CardTitle className="text-base">Notes for Client</CardTitle>
+          <CardTitle className="text-base">Notas para el cliente</CardTitle>
           <CardDescription>
             These notes will be visible to the client on the quote
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div>
-            <Label htmlFor="notes" className="sr-only">Notes for Client</Label>
+            <Label htmlFor="notes" className="sr-only">Notas para el cliente</Label>
             <Textarea
               id="notes"
-              placeholder="Thank you for considering us for your project. We look forward to working with you!"
+              placeholder="Gracias por considerarnos para su proyecto. Esperamos trabajar con usted."
               value={notes}
               onChange={(e) => onNotesChange(e.target.value)}
               rows={4}
@@ -40,17 +40,17 @@ export function NotesSection({ notes, onNotesChange, internalNotes, onInternalNo
       {/* Internal Notes */}
       <Card>
         <CardHeader className="pb-4">
-          <CardTitle className="text-base">Internal Notes</CardTitle>
+          <CardTitle className="text-base">Notas internas</CardTitle>
           <CardDescription>
             Private notes for your team only - not visible to client
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div>
-            <Label htmlFor="internalNotes" className="sr-only">Internal Notes</Label>
+            <Label htmlFor="internalNotes" className="sr-only">Notas internas</Label>
             <Textarea
               id="internalNotes"
-              placeholder="Add any internal notes about this quote..."
+              placeholder="Agregue notas internas sobre esta cotización..."
               value={internalNotes}
               onChange={(e) => onInternalNotesChange?.(e.target.value)}
               rows={4}

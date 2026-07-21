@@ -6,7 +6,7 @@ import { getWorkspaceMembers, getCurrentUserRole, getPendingInvitations } from '
 import { PendingInvitations } from '@/components/settings/pending-invitations';
 
 export const metadata = {
-  title: 'Team - Settings',
+  title: 'Equipo - Configuración',
 };
 
 export default async function TeamSettingsPage() {

@@ -76,18 +76,18 @@ export function CreditNoteDialog(props: CreditNoteDialogProps) {
 
   const handleSubmit = async () => {
     if (!reason.trim()) {
-      toast.error('Please provide a reason for the credit note');
+      toast.error('Indique el motivo de la nota de crédito');
       return;
     }
 
     if (lineItems.length === 0) {
-      toast.error('At least one line item is required');
+      toast.error('Se requiere al menos una línea de detalle');
       return;
     }
 
     for (const item of lineItems) {
       if (!item.name.trim()) {
-        toast.error('All line items must have a name');
+        toast.error('Todas las líneas deben tener un nombre');
         return;
       }
     }
@@ -106,13 +106,13 @@ export function CreditNoteDialog(props: CreditNoteDialogProps) {
       });
 
       if (result.success) {
-        toast.success('Credit note created successfully');
+        toast.success('Nota de crédito creada correctamente');
         setOpen(false);
         setReason('');
         setNotes('');
         router.refresh();
       } else {
-        toast.error(result.error || 'Failed to create credit note');
+        toast.error(result.error || 'No se pudo crear la nota de crédito');
       }
     } finally {
       setIsSubmitting(false);
@@ -134,23 +134,23 @@ export function CreditNoteDialog(props: CreditNoteDialogProps) {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="outline" size="sm">
-          Issue Credit Note
+          Emitir nota de crédito
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Create Credit Note</DialogTitle>
+          <DialogTitle>Crear nota de crédito</DialogTitle>
           <DialogDescription>
-            Issue a credit note against this invoice. This creates a formal record of the credit.
+            Emita una nota de crédito asociada a esta factura y conserve el registro formal del ajuste.
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4">
           <div>
-            <Label htmlFor="reason">Reason *</Label>
+            <Label htmlFor="reason">Motivo *</Label>
             <Textarea
               id="reason"
-              placeholder="Reason for the credit note..."
+              placeholder="Motivo de la nota de crédito..."
               value={reason}
               onChange={(e) => setReason(e.target.value)}
               className="mt-1"
@@ -159,10 +159,10 @@ export function CreditNoteDialog(props: CreditNoteDialogProps) {
 
           <div>
             <div className="flex items-center justify-between mb-2">
-              <Label>Line Items</Label>
+              <Label>Líneas de detalle</Label>
               <Button type="button" variant="outline" size="sm" onClick={handleAddLineItem}>
                 <Plus className="mr-1 h-3 w-3" />
-                Add Item
+                Agregar línea
               </Button>
             </div>
             <div className="space-y-3">
@@ -170,18 +170,18 @@ export function CreditNoteDialog(props: CreditNoteDialogProps) {
                 <div key={index} className="flex items-start gap-2 rounded-lg border p-3">
                   <div className="flex-1 space-y-2">
                     <Input
-                      placeholder="Item name"
+                      placeholder="Nombre del concepto"
                       value={item.name}
                       onChange={(e) => handleLineItemChange(index, 'name', e.target.value)}
                     />
                     <Input
-                      placeholder="Description (optional)"
+                      placeholder="Descripción (opcional)"
                       value={item.description}
                       onChange={(e) => handleLineItemChange(index, 'description', e.target.value)}
                     />
                     <div className="flex gap-2">
                       <div className="w-24">
-                        <Label className="text-xs">Qty</Label>
+                        <Label className="text-xs">Cantidad</Label>
                         <Input
                           type="number"
                           min="0"
@@ -191,7 +191,7 @@ export function CreditNoteDialog(props: CreditNoteDialogProps) {
                         />
                       </div>
                       <div className="w-32">
-                        <Label className="text-xs">Rate</Label>
+                        <Label className="text-xs">Precio</Label>
                         <Input
                           type="number"
                           min="0"
@@ -201,7 +201,7 @@ export function CreditNoteDialog(props: CreditNoteDialogProps) {
                         />
                       </div>
                       <div className="w-32">
-                        <Label className="text-xs">Amount</Label>
+                        <Label className="text-xs">Importe</Label>
                         <div className="flex items-center h-10 px-3 text-sm font-medium text-muted-foreground">
                           {formatCurrency(Math.round(item.quantity * item.rate * 100) / 100)}
                         </div>
@@ -229,10 +229,10 @@ export function CreditNoteDialog(props: CreditNoteDialogProps) {
           </div>
 
           <div>
-            <Label htmlFor="notes">Notes (optional)</Label>
+            <Label htmlFor="notes">Notas (opcional)</Label>
             <Textarea
               id="notes"
-              placeholder="Additional notes..."
+              placeholder="Notas adicionales..."
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               className="mt-1"
@@ -242,11 +242,11 @@ export function CreditNoteDialog(props: CreditNoteDialogProps) {
 
         <DialogFooter>
           <Button variant="outline" onClick={() => setOpen(false)} disabled={isSubmitting}>
-            Cancel
+            Cancelar
           </Button>
           <Button onClick={handleSubmit} disabled={isSubmitting}>
             {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            Create Credit Note
+            Crear nota de crédito
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -245,7 +245,7 @@ export function QuoteBlockRenderer({ block: rawBlock, quote }: QuoteBlockRendere
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={block.content.src}
-            alt={block.content.alt || 'Quote image'}
+            alt={block.content.alt || 'Imagen de la cotización'}
             className="max-w-full rounded-lg"
             style={{
               width: block.content.width === 'full' ? '100%' : block.content.width,
@@ -259,7 +259,7 @@ export function QuoteBlockRenderer({ block: rawBlock, quote }: QuoteBlockRendere
       if (block.content.signatureData) {
         return (
           <div className="rounded-lg border border-green-200 bg-green-50 p-4 dark:border-green-800 dark:bg-green-950/50">
-            <p className="mb-2 text-sm font-medium text-green-800 dark:text-green-200">Signed</p>
+            <p className="mb-2 text-sm font-medium text-green-800 dark:text-green-200">Firmado</p>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={block.content.signatureData}

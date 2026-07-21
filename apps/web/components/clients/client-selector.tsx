@@ -31,7 +31,7 @@ interface ClientSelectorProps {
 export function ClientSelector({
   value,
   onChange,
-  placeholder = 'Search clients...',
+  placeholder = 'Buscar clientes...',
   disabled = false,
 }: ClientSelectorProps) {
   const [open, setOpen] = useState(false);
@@ -53,7 +53,7 @@ export function ClientSelector({
       const results = await searchClients(query, 10);
       setClients(results);
     } catch {
-      toast.error('Failed to search clients');
+      toast.error('No se pudo buscar clientes');
       setClients([]);
     } finally {
       setIsLoading(false);
@@ -125,7 +125,7 @@ export function ClientSelector({
           <div className="flex items-center border-b px-3 py-2">
             <Input
               ref={inputRef}
-              placeholder="Type to search..."
+              placeholder="Escriba para buscar..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="border-0 focus-visible:ring-0 focus-visible:ring-offset-0 h-8 px-0"
@@ -139,7 +139,7 @@ export function ClientSelector({
           <div className="max-h-[200px] overflow-y-auto">
             {clients.length === 0 && !isLoading && search.length > 0 && (
               <div className="py-6 text-center text-sm text-muted-foreground">
-                No clients found
+                No se encontraron clientes
               </div>
             )}
 

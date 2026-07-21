@@ -28,7 +28,7 @@ interface OnboardingWizardProps {
 const steps = [
   { id: 'business' as OnboardingStep, title: 'Business', icon: Building2 },
   { id: 'branding' as OnboardingStep, title: 'Branding', icon: Palette },
-  { id: 'payment' as OnboardingStep, title: 'Payments', icon: CreditCard },
+  { id: 'payment' as OnboardingStep, title: 'Pagos', icon: CreditCard },
   { id: 'complete' as OnboardingStep, title: 'Complete', icon: PartyPopper },
 ];
 
@@ -65,7 +65,7 @@ export function OnboardingWizard({ initialProgress, stripeEnabled }: OnboardingW
       router.push('/dashboard');
       router.refresh();
     } catch {
-      toast.error('Failed to complete setup. Please try again.');
+      toast.error('No se pudo completar la configuración. Inténtelo nuevamente.');
     } finally {
       setIsLoading(false);
     }
@@ -75,7 +75,7 @@ export function OnboardingWizard({ initialProgress, stripeEnabled }: OnboardingW
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/50 flex items-center justify-center p-4">
       <Card className="w-full max-w-2xl">
         <CardHeader className="text-center pb-2">
-          <CardTitle className="text-2xl">Welcome to Oreko</CardTitle>
+          <CardTitle className="text-2xl">Bienvenido a Oreko</CardTitle>
           <CardDescription>
             Let&apos;s set up your account in just a few steps
           </CardDescription>

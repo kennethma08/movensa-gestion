@@ -30,10 +30,10 @@ function formatCurrency(amount: number, currency: string = 'USD'): string {
 }
 
 const AGING_BUCKETS_CONFIG = [
-  { label: 'Current', color: 'bg-emerald-500', dot: 'bg-emerald-500' },
-  { label: '1-30 Days', color: 'bg-amber-400', dot: 'bg-amber-400' },
-  { label: '31-60 Days', color: 'bg-orange-500', dot: 'bg-orange-500' },
-  { label: '60+ Days', color: 'bg-red-500', dot: 'bg-red-500' },
+  { label: 'Al día', color: 'bg-emerald-500', dot: 'bg-emerald-500' },
+  { label: '1-30 días', color: 'bg-amber-400', dot: 'bg-amber-400' },
+  { label: '31-60 días', color: 'bg-orange-500', dot: 'bg-orange-500' },
+  { label: 'Más de 60 días', color: 'bg-red-500', dot: 'bg-red-500' },
 ] as const;
 
 export function FinancialHealthSection({
@@ -60,18 +60,18 @@ export function FinancialHealthSection({
   }, [paymentAging]);
 
   const healthStatus = useMemo(() => {
-    if (outstandingAmount === 0) return { label: 'Healthy', color: 'text-emerald-600 dark:text-emerald-400', icon: CheckCircle2 };
+    if (outstandingAmount === 0) return { label: 'Saludable', color: 'text-emerald-600 dark:text-emerald-400', icon: CheckCircle2 };
     const overdueRatio = (overdueAmount / outstandingAmount) * 100;
-    if (overdueRatio < 10) return { label: 'Healthy', color: 'text-emerald-600 dark:text-emerald-400', icon: CheckCircle2 };
-    if (overdueRatio < 25) return { label: 'Fair', color: 'text-amber-500', icon: Clock };
-    return { label: 'Needs Attention', color: 'text-red-500 dark:text-red-400', icon: AlertTriangle };
+    if (overdueRatio < 10) return { label: 'Saludable', color: 'text-emerald-600 dark:text-emerald-400', icon: CheckCircle2 };
+    if (overdueRatio < 25) return { label: 'Aceptable', color: 'text-amber-500', icon: Clock };
+    return { label: 'Requiere atención', color: 'text-red-500 dark:text-red-400', icon: AlertTriangle };
   }, [outstandingAmount, overdueAmount]);
 
   return (
     <Card>
       <CardHeader className="pb-2">
         <div className="flex items-baseline justify-between">
-          <CardTitle className="text-sm font-medium">Financial Health</CardTitle>
+          <CardTitle className="text-sm font-medium">Salud financiera</CardTitle>
           <div className={cn('flex items-center gap-1.5 text-xs font-medium', healthStatus.color)}>
             <healthStatus.icon className="h-3 w-3" />
             <span>{healthStatus.label}</span>
@@ -83,17 +83,17 @@ export function FinancialHealthSection({
         <div className="flex items-center gap-6 mb-5">
           <div>
             <p className="text-2xl font-semibold tracking-tight">{formatCurrency(outstandingAmount)}</p>
-            <p className="text-xs text-muted-foreground">Outstanding</p>
+            <p className="text-xs text-muted-foreground">Pendiente</p>
           </div>
           <div className="h-8 w-px bg-border" />
           <div>
             <p className="text-2xl font-semibold tracking-tight text-red-500 dark:text-red-400">{formatCurrency(overdueAmount)}</p>
-            <p className="text-xs text-muted-foreground">Overdue</p>
+            <p className="text-xs text-muted-foreground">Vencido</p>
           </div>
           <div className="h-8 w-px bg-border" />
           <div>
             <p className="text-2xl font-semibold tracking-tight">{collectionRate.toFixed(0)}%</p>
-            <p className="text-xs text-muted-foreground">Collection rate</p>
+            <p className="text-xs text-muted-foreground">Tasa de cobro</p>
           </div>
         </div>
 

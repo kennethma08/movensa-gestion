@@ -60,7 +60,7 @@ export function useQuoteForm() {
           projectId: null,
           quoteNumber: 'DRAFT',
           status: 'draft',
-          title: 'New Quote',
+          title: 'Nueva cotización',
           currency: workspaceCurrency,
           issueDate: now,
           expirationDate: expDate.toISOString(),
@@ -102,7 +102,7 @@ export function useQuoteForm() {
           projectId: null,
           quoteNumber: 'DRAFT',
           status: 'draft',
-          title: 'New Quote',
+          title: 'Nueva cotización',
           currency: 'USD',
           issueDate: now,
           expirationDate: expDate.toISOString(),
@@ -149,7 +149,7 @@ export function useQuoteForm() {
             });
           }
         })
-        .catch(() => toast.error('Failed to load client details'));
+        .catch(() => toast.error('No se pudieron cargar los datos del cliente'));
     }
   }, [clientId]);
 

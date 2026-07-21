@@ -32,12 +32,12 @@ const FUNNEL_COLORS = [
 ];
 
 const STAGES = [
-  { key: 'quotesCreated', label: 'Quotes Created' },
-  { key: 'quotesSent', label: 'Sent' },
-  { key: 'quotesViewed', label: 'Viewed' },
-  { key: 'quotesAccepted', label: 'Accepted' },
-  { key: 'invoicesCreated', label: 'Invoiced' },
-  { key: 'invoicesPaid', label: 'Paid' },
+  { key: 'quotesCreated', label: 'Cotizaciones creadas' },
+  { key: 'quotesSent', label: 'Enviadas' },
+  { key: 'quotesViewed', label: 'Vistas' },
+  { key: 'quotesAccepted', label: 'Aceptadas' },
+  { key: 'invoicesCreated', label: 'Facturadas' },
+  { key: 'invoicesPaid', label: 'Pagadas' },
 ];
 
 export function ConversionFunnel({
@@ -79,7 +79,7 @@ export function ConversionFunnel({
   return (
     <ChartCard
       title="Conversion Funnel"
-      description={isEmpty ? undefined : `Quote-to-payment pipeline \u2022 ${formatPercentage(overallConversion)} end-to-end`}
+      description={isEmpty ? undefined : `Proceso de cotización a pago \u2022 ${formatPercentage(overallConversion)} de conversión total`}
       className={className}
       isLoading={isLoading}
       isEmpty={isEmpty}
@@ -112,10 +112,10 @@ export function ConversionFunnel({
                       Count: <span className="font-medium">{item.value}</span>
                     </p>
                     <p className="text-sm text-muted-foreground">
-                      Step Rate: <span className="font-medium">{formatPercentage(item.conversionRate)}</span>
+                      Conversión del paso: <span className="font-medium">{formatPercentage(item.conversionRate)}</span>
                     </p>
                     <p className="text-sm text-muted-foreground">
-                      Total Rate: <span className="font-medium">{formatPercentage(item.totalRate)}</span>
+                      Conversión total: <span className="font-medium">{formatPercentage(item.totalRate)}</span>
                     </p>
                   </div>
                 );

@@ -21,7 +21,7 @@ export default function GlobalError({
         <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-destructive/10">
           <AlertTriangle className="h-6 w-6 text-destructive" />
         </div>
-        <h1 className="text-xl font-semibold">Something went wrong</h1>
+        <h1 className="text-xl font-semibold">Algo salió mal</h1>
         <p className="text-sm text-muted-foreground">
           An unexpected error occurred. Please try again.
         </p>
@@ -30,7 +30,7 @@ export default function GlobalError({
         )}
         <div className="flex justify-center gap-2 pt-2">
           <Button variant="outline" asChild>
-            <a href="/">Go Home</a>
+            <a href="/">Ir al inicio</a>
           </Button>
           <Button onClick={reset}>
             <RefreshCw className="mr-2 h-4 w-4" />

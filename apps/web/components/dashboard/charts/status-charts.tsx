@@ -140,7 +140,7 @@ export function QuoteStatusChart({
     <StatusChart
       data={data as unknown as Record<string, number>}
       colors={QUOTE_STATUS_COLORS}
-      title="Quote Status"
+      title="Estado de cotizaciones"
       isLoading={isLoading}
       className={className}
       onSegmentClick={onSegmentClick}
@@ -166,7 +166,7 @@ export function InvoiceStatusChart({
     <StatusChart
       data={data as unknown as Record<string, number>}
       colors={INVOICE_STATUS_COLORS}
-      title="Invoice Status"
+      title="Estado de facturas"
       isLoading={isLoading}
       className={className}
       onSegmentClick={onSegmentClick}

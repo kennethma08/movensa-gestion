@@ -137,7 +137,7 @@ export function SignaturePad({ onChange, className }: SignaturePadProps) {
 
         <TabsContent value="typed" className="space-y-3 mt-3">
           <div className="space-y-2">
-            <Label htmlFor="typed-sig">Type Your Signature</Label>
+            <Label htmlFor="typed-sig">Escriba su firma</Label>
             <Input
               id="typed-sig"
               value={typedSignature}
@@ -149,7 +149,7 @@ export function SignaturePad({ onChange, className }: SignaturePadProps) {
           </div>
           {typedSignature && (
             <div className="border rounded-lg p-4 bg-muted/30">
-              <p className="text-xs text-muted-foreground mb-1">Preview:</p>
+              <p className="text-xs text-muted-foreground mb-1">Vista previa:</p>
               <p
                 className="text-3xl"
                 style={{ fontFamily: "'Brush Script MT', cursive" }}
@@ -163,7 +163,7 @@ export function SignaturePad({ onChange, className }: SignaturePadProps) {
         <TabsContent value="drawn" className="space-y-3 mt-3">
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <Label>Draw Your Signature</Label>
+              <Label>Dibuje su firma</Label>
               <Button
                 type="button"
                 variant="ghost"
@@ -172,7 +172,7 @@ export function SignaturePad({ onChange, className }: SignaturePadProps) {
                 disabled={!hasDrawn}
               >
                 <Eraser className="mr-2 h-4 w-4" />
-                Clear
+                Limpiar
               </Button>
             </div>
             <div className="relative overflow-hidden rounded-lg border-2 border-dashed border-primary/30 bg-white">

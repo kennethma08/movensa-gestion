@@ -13,7 +13,7 @@ export async function generateMetadata({ params }: ClientDetailPageProps) {
   const { id } = await params;
 
   if (!UUID_REGEX.test(id)) {
-    return { title: 'Client Not Found' };
+    return { title: 'Cliente no encontrado' };
   }
 
   try {
@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: ClientDetailPageProps) {
     };
   } catch {
     return {
-      title: 'Client Not Found',
+      title: 'Cliente no encontrado',
     };
   }
 }

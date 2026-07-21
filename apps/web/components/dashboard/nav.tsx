@@ -37,27 +37,27 @@ export const navItems: NavItem[] = [
     icon: LayoutDashboard,
   },
   {
-    title: 'Quotes',
+    title: 'Cotizaciones',
     href: '/quotes',
     icon: FileText,
   },
   {
-    title: 'Invoices',
+    title: 'Facturas',
     href: '/invoices',
     icon: Receipt,
   },
   {
-    title: 'Clients',
+    title: 'Clientes',
     href: '/clients',
     icon: Users,
   },
   {
-    title: 'Templates',
+    title: 'Plantillas',
     href: '/templates',
     icon: FileStack,
   },
   {
-    title: 'Settings',
+    title: 'Configuración',
     href: '/settings',
     icon: Settings,
   },

@@ -35,13 +35,13 @@ const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12
 export async function generateMetadata({ params }: InvoiceDetailPageProps) {
   const { id } = await params;
   if (!UUID_REGEX.test(id)) {
-    return { title: 'Invoice Not Found' };
+    return { title: 'Factura no encontrada' };
   }
   try {
     const invoice = await getInvoice(id);
-    return { title: invoice ? `${invoice.title} - ${invoice.invoiceNumber}` : 'Invoice Details' };
+    return { title: invoice ? `${invoice.title} - ${invoice.invoiceNumber}` : 'Detalles de la factura' };
   } catch {
-    return { title: 'Invoice Not Found' };
+    return { title: 'Factura no encontrada' };
   }
 }
 
@@ -81,12 +81,12 @@ export default async function InvoiceDetailPage({ params }: InvoiceDetailPagePro
     return (
       <div className="flex flex-col items-center justify-center py-16">
         <AlertCircle className="h-12 w-12 text-destructive mb-4" />
-        <h2 className="text-xl font-semibold mb-2">Failed to load invoice</h2>
+        <h2 className="text-xl font-semibold mb-2">No se pudo cargar la factura</h2>
         <p className="text-muted-foreground mb-4">
-          There was an error loading this invoice. Please try again.
+          Ocurrió un error al cargar esta factura. Inténtelo nuevamente.
         </p>
         <Button asChild>
-          <Link href="/invoices">Back to Invoices</Link>
+          <Link href="/invoices">Volver a facturas</Link>
         </Button>
       </div>
     );
@@ -125,7 +125,7 @@ export default async function InvoiceDetailPage({ params }: InvoiceDetailPagePro
             {recurringSettings?.enabled && (
               <Badge variant="outline" className="gap-1 border-violet-300 text-violet-600 bg-violet-50 dark:border-violet-600 dark:text-violet-400 dark:bg-violet-950">
                 <RefreshCw className="h-3 w-3" />
-                Recurring
+                Recurrencia
               </Badge>
             )}
           </div>
@@ -140,7 +140,7 @@ export default async function InvoiceDetailPage({ params }: InvoiceDetailPagePro
             <Button asChild>
               <Link href={`/invoices/${invoice.id}/edit`}>
                 <Edit className="mr-2 h-4 w-4" />
-                Edit Invoice
+                Editar factura
               </Link>
             </Button>
           )}
@@ -153,7 +153,7 @@ export default async function InvoiceDetailPage({ params }: InvoiceDetailPagePro
         <div className="md:col-span-2">
           <Card>
             <CardHeader>
-              <CardTitle>Invoice Preview</CardTitle>
+              <CardTitle>Vista previa de la factura</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="rounded-lg border bg-card p-8">
@@ -166,11 +166,11 @@ export default async function InvoiceDetailPage({ params }: InvoiceDetailPagePro
                     </p>
                   </div>
                   <div className="text-right text-sm">
-                    <p className="font-medium">Issue Date</p>
+                    <p className="font-medium">Fecha de emisión</p>
                     <p className="text-muted-foreground">
                       {new Date(invoice.issueDate).toLocaleDateString()}
                     </p>
-                    <p className="mt-2 font-medium">Due Date</p>
+                    <p className="mt-2 font-medium">Fecha de vencimiento</p>
                     <p className={`${isOverdue ? 'text-red-600 font-semibold' : 'text-muted-foreground'}`}>
                       {new Date(invoice.dueDate).toLocaleDateString()}
                       {isOverdue && ` (${Math.abs(daysUntilDue)} days overdue)`}
@@ -180,15 +180,15 @@ export default async function InvoiceDetailPage({ params }: InvoiceDetailPagePro
 
                 {/* Line Items */}
                 <div className="mb-8">
-                  <h3 className="mb-4 font-semibold">Line Items</h3>
+                  <h3 className="mb-4 font-semibold">Conceptos</h3>
                   <div className="overflow-hidden rounded-lg border">
                     <table className="w-full">
                       <thead className="bg-muted text-sm">
                         <tr>
-                          <th className="px-4 py-3 text-left font-medium">Description</th>
-                          <th className="px-4 py-3 text-right font-medium">Qty</th>
-                          <th className="px-4 py-3 text-right font-medium">Rate</th>
-                          <th className="px-4 py-3 text-right font-medium">Amount</th>
+                          <th className="px-4 py-3 text-left font-medium">Descripción</th>
+                          <th className="px-4 py-3 text-right font-medium">Cant.</th>
+                          <th className="px-4 py-3 text-right font-medium">Precio</th>
+                          <th className="px-4 py-3 text-right font-medium">Importe</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y">
@@ -225,13 +225,13 @@ export default async function InvoiceDetailPage({ params }: InvoiceDetailPagePro
                     </div>
                     {invoice.totals.discountAmount > 0 && (
                       <div className="flex justify-between text-sm text-green-600">
-                        <span>Discount</span>
+                        <span>Descuento</span>
                         <span>-{formatCurrency(invoice.totals.discountAmount, invoice.currency)}</span>
                       </div>
                     )}
                     {invoice.totals.taxTotal > 0 && (
                       <div className="flex justify-between text-sm">
-                        <span>Tax</span>
+                        <span>Impuesto</span>
                         <span>{formatCurrency(invoice.totals.taxTotal, invoice.currency)}</span>
                       </div>
                     )}
@@ -242,11 +242,11 @@ export default async function InvoiceDetailPage({ params }: InvoiceDetailPagePro
                     {invoice.totals.amountPaid > 0 && (
                       <>
                         <div className="flex justify-between text-sm text-green-600">
-                          <span>Amount Paid</span>
+                          <span>Monto pagado</span>
                           <span>-{formatCurrency(invoice.totals.amountPaid, invoice.currency)}</span>
                         </div>
                         <div className={`flex justify-between border-t pt-2 font-bold ${invoice.totals.amountDue > 0 ? 'text-orange-600' : 'text-green-600'}`}>
-                          <span>Amount Due</span>
+                          <span>Saldo pendiente</span>
                           <span>{formatCurrency(invoice.totals.amountDue, invoice.currency)}</span>
                         </div>
                       </>
@@ -257,7 +257,7 @@ export default async function InvoiceDetailPage({ params }: InvoiceDetailPagePro
                 {/* Notes */}
                 {invoice.notes && (
                   <div className="mt-8 border-t pt-4">
-                    <h3 className="mb-2 font-semibold">Notes</h3>
+                    <h3 className="mb-2 font-semibold">Notas</h3>
                     <p className="text-sm text-muted-foreground">{invoice.notes}</p>
                   </div>
                 )}
@@ -265,7 +265,7 @@ export default async function InvoiceDetailPage({ params }: InvoiceDetailPagePro
                 {/* Terms */}
                 {invoice.terms && (
                   <div className="mt-4">
-                    <h3 className="mb-2 font-semibold">Terms & Conditions</h3>
+                    <h3 className="mb-2 font-semibold">Términos y condiciones</h3>
                     <p className="text-sm text-muted-foreground">{invoice.terms}</p>
                   </div>
                 )}
@@ -279,17 +279,17 @@ export default async function InvoiceDetailPage({ params }: InvoiceDetailPagePro
           {/* Quick Stats */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-base">Invoice Details</CardTitle>
+              <CardTitle className="text-base">Detalles de la factura</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <p className="text-sm text-muted-foreground">Total Value</p>
+                <p className="text-sm text-muted-foreground">Valor total</p>
                 <p data-testid="invoice-total" className="text-2xl font-bold">
                   {formatCurrency(invoice.totals.total, invoice.currency)}
                 </p>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Status</p>
+                <p className="text-sm text-muted-foreground">Estado</p>
                 <span
                   className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium ${statusStyle.bg} ${statusStyle.text}`}
                 >
@@ -298,13 +298,13 @@ export default async function InvoiceDetailPage({ params }: InvoiceDetailPagePro
                 </span>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Amount Due</p>
+                <p className="text-sm text-muted-foreground">Saldo pendiente</p>
                 <p data-testid="amount-due" className={`text-xl font-bold ${displayAmountDue > 0 ? 'text-orange-600' : 'text-green-600'}`}>
                   {formatCurrency(displayAmountDue, invoice.currency)}
                 </p>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Due Date</p>
+                <p className="text-sm text-muted-foreground">Fecha de vencimiento</p>
                 <p className={`font-medium ${isOverdue ? 'text-red-600' : ''}`}>
                   {new Date(invoice.dueDate).toLocaleDateString()}
                   {!isOverdue && daysUntilDue >= 0 && (
@@ -315,7 +315,7 @@ export default async function InvoiceDetailPage({ params }: InvoiceDetailPagePro
                 </p>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Line Items</p>
+                <p className="text-sm text-muted-foreground">Conceptos</p>
                 <p className="font-medium">{invoice.lineItems.length}</p>
               </div>
             </CardContent>
@@ -324,7 +324,7 @@ export default async function InvoiceDetailPage({ params }: InvoiceDetailPagePro
           {/* Client Card */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-base">Client</CardTitle>
+              <CardTitle className="text-base">Cliente</CardTitle>
             </CardHeader>
             <CardContent>
               {invoice.client ? (
@@ -338,7 +338,7 @@ export default async function InvoiceDetailPage({ params }: InvoiceDetailPagePro
                   )}
                 </>
               ) : (
-                <p className="text-muted-foreground text-sm">No client assigned</p>
+                <p className="text-muted-foreground text-sm">No hay un cliente asignado</p>
               )}
               <Button variant="outline" size="sm" className="mt-4 w-full" asChild>
                 <Link href={`/clients/${invoice.clientId}`}>
@@ -353,7 +353,7 @@ export default async function InvoiceDetailPage({ params }: InvoiceDetailPagePro
           <Card>
             <CardHeader>
               <div className="flex items-center justify-between">
-                <CardTitle className="text-base">Recurring</CardTitle>
+                <CardTitle className="text-base">Recurrencia</CardTitle>
                 <RecurringSettingsButton
                   invoiceId={invoice.id}
                   initialSettings={recurringSettings}
@@ -364,12 +364,12 @@ export default async function InvoiceDetailPage({ params }: InvoiceDetailPagePro
               {recurringSettings?.enabled ? (
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">Frequency</span>
+                    <span className="text-muted-foreground">Frecuencia</span>
                     <span className="font-medium capitalize">{recurringSettings.frequency}</span>
                   </div>
                   {recurringSettings.nextRecurringDate && (
                     <div className="flex justify-between">
-                      <span className="text-muted-foreground">Next Invoice</span>
+                      <span className="text-muted-foreground">Próxima factura</span>
                       <span className="font-medium">
                         {new Date(recurringSettings.nextRecurringDate).toLocaleDateString()}
                       </span>
@@ -377,15 +377,15 @@ export default async function InvoiceDetailPage({ params }: InvoiceDetailPagePro
                   )}
                   {recurringSettings.endDate && (
                     <div className="flex justify-between">
-                      <span className="text-muted-foreground">Ends</span>
+                      <span className="text-muted-foreground">Finaliza</span>
                       <span className="font-medium">
                         {new Date(recurringSettings.endDate).toLocaleDateString()}
                       </span>
                     </div>
                   )}
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">Auto-send</span>
-                    <span className="font-medium">{recurringSettings.autoSend ? 'Yes' : 'No'}</span>
+                    <span className="text-muted-foreground">Envío automático</span>
+                    <span className="font-medium">{recurringSettings.autoSend ? 'Sí' : 'No'}</span>
                   </div>
                 </div>
               ) : (
@@ -400,7 +400,7 @@ export default async function InvoiceDetailPage({ params }: InvoiceDetailPagePro
           {invoice.status !== 'draft' && invoice.status !== 'voided' && invoice.totals.amountDue > 0 && (
             <Card>
               <CardHeader>
-                <CardTitle className="text-base">Record Payment</CardTitle>
+                <CardTitle className="text-base">Registrar pago</CardTitle>
               </CardHeader>
               <CardContent>
                 <RecordPaymentButton
@@ -417,7 +417,7 @@ export default async function InvoiceDetailPage({ params }: InvoiceDetailPagePro
             <Card>
               <CardHeader>
                 <div className="flex items-center justify-between">
-                  <CardTitle className="text-base">Credit Notes</CardTitle>
+                  <CardTitle className="text-base">Notas de crédito</CardTitle>
                   <CreditNoteDialog
                     invoiceId={invoice.id}
                     invoiceLineItems={invoice.lineItems}
@@ -444,7 +444,7 @@ export default async function InvoiceDetailPage({ params }: InvoiceDetailPagePro
           {invoice.internalNotes && (
             <Card>
               <CardHeader>
-                <CardTitle className="text-base">Internal Notes</CardTitle>
+                <CardTitle className="text-base">Notas internas</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-muted-foreground">
@@ -481,21 +481,21 @@ async function InvoiceActivity({ invoiceId }: { invoiceId: string }) {
   };
 
   const getEventLabel = (eventType: string) => {
-    if (eventType === 'sent' || eventType === 'status_changed_to_sent') return 'Invoice sent';
-    if (eventType === 'viewed' || eventType === 'status_changed_to_viewed') return 'Invoice viewed';
-    if (eventType === 'paid' || eventType === 'status_changed_to_paid') return 'Invoice paid';
-    if (eventType === 'partial' || eventType === 'status_changed_to_partial') return 'Partial payment recorded';
-    if (eventType === 'voided' || eventType === 'status_changed_to_voided') return 'Invoice voided';
-    if (eventType === 'overdue' || eventType === 'status_changed_to_overdue') return 'Invoice overdue';
-    if (eventType.includes('payment')) return 'Payment recorded';
-    if (eventType.includes('created')) return 'Invoice created';
-    return eventType.replace(/_/g, ' ').replace(/status changed to /i, 'Status changed to ');
+    if (eventType === 'sent' || eventType === 'status_changed_to_sent') return 'Factura enviada';
+    if (eventType === 'viewed' || eventType === 'status_changed_to_viewed') return 'Factura vista';
+    if (eventType === 'paid' || eventType === 'status_changed_to_paid') return 'Factura pagada';
+    if (eventType === 'partial' || eventType === 'status_changed_to_partial') return 'Pago parcial registrado';
+    if (eventType === 'voided' || eventType === 'status_changed_to_voided') return 'Factura anulada';
+    if (eventType === 'overdue' || eventType === 'status_changed_to_overdue') return 'Factura vencida';
+    if (eventType.includes('payment')) return 'Pago registrado';
+    if (eventType.includes('created')) return 'Factura creada';
+    return eventType.replace(/_/g, ' ').replace(/status changed to /i, 'Estado cambiado a ');
   };
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-base">Activity</CardTitle>
+        <CardTitle className="text-base">Actividad</CardTitle>
       </CardHeader>
       <CardContent>
         {events.length === 0 ? (

@@ -59,8 +59,8 @@ export function BlocksPanel() {
     <div className="absolute md:relative left-0 top-0 z-20 flex h-full w-64 flex-col border-r bg-card shadow-lg md:shadow-none">
       <div className="flex items-center justify-between border-b px-4 py-3">
         <div>
-          <h2 className="font-semibold">Blocks</h2>
-          <p className="text-xs text-muted-foreground">Drag blocks to the canvas</p>
+          <h2 className="font-semibold">Bloques</h2>
+          <p className="text-xs text-muted-foreground">Arrastre bloques al lienzo</p>
         </div>
         <Button
           variant="ghost"

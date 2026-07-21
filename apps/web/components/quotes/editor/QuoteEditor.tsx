@@ -45,10 +45,10 @@ type PreviewMode = 'payment' | 'email' | 'pdf';
 type EditorSection = 'details' | 'items' | 'terms' | 'notes';
 
 const sectionNav = [
-  { id: 'details' as const, label: 'Details' },
-  { id: 'items' as const, label: 'Items' },
-  { id: 'terms' as const, label: 'Terms' },
-  { id: 'notes' as const, label: 'Notes' },
+  { id: 'details' as const, label: 'Detalles' },
+  { id: 'items' as const, label: 'Conceptos' },
+  { id: 'terms' as const, label: 'Términos' },
+  { id: 'notes' as const, label: 'Notas' },
 ];
 
 export function QuoteEditor() {
@@ -111,14 +111,14 @@ export function QuoteEditor() {
           </Button>
           <div>
             <h1 className="text-2xl font-bold tracking-tight">
-              {title || 'New Quote'}
+              {title || 'Nueva cotización'}
               {isDirty && (
-                <span className="text-muted-foreground ml-2">(unsaved)</span>
+                <span className="text-muted-foreground ml-2">(sin guardar)</span>
               )}
             </h1>
             {client && (
               <p className="text-muted-foreground text-sm">
-                For {client.company || client.name}
+                Para {client.company || client.name}
               </p>
             )}
           </div>
@@ -126,7 +126,7 @@ export function QuoteEditor() {
         <div className="flex items-center gap-2">
           <Button variant="outline" onClick={handleSwitchToBuilder} size="sm">
             <Blocks className="mr-2 h-4 w-4" />
-            Visual Builder
+            Editor visual
           </Button>
           <Button
             variant="outline"
@@ -134,14 +134,14 @@ export function QuoteEditor() {
             disabled={isLoading || isSaving}
           >
             <Save className="mr-2 h-4 w-4" />
-            {isLoading ? 'Saving...' : 'Save Draft'}
+            {isLoading ? 'Guardando...' : 'Guardar borrador'}
           </Button>
           <Button
             onClick={() => setShowSendConfirm(true)}
             disabled={isLoading || !client}
           >
             <Send className="mr-2 h-4 w-4" />
-            Send Quote
+            Enviar cotización
           </Button>
         </div>
       </div>
@@ -217,11 +217,11 @@ export function QuoteEditor() {
             <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="payment" className="flex items-center gap-2">
                 <CreditCard className="h-4 w-4" />
-                <span className="hidden sm:inline">Payment</span>
+                <span className="hidden sm:inline">Pago</span>
               </TabsTrigger>
               <TabsTrigger value="email" className="flex items-center gap-2">
                 <Mail className="h-4 w-4" />
-                <span className="hidden sm:inline">Email</span>
+                <span className="hidden sm:inline">Correo</span>
               </TabsTrigger>
               <TabsTrigger value="pdf" className="flex items-center gap-2">
                 <FileText className="h-4 w-4" />
@@ -246,14 +246,14 @@ export function QuoteEditor() {
                     )}
                   >
                     {isUploadingLogo ? (
-                      <div role="status" aria-label="Uploading logo">
+                      <div role="status" aria-label="Subiendo logo">
                         <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
                       </div>
                     ) : logoUrl ? (
                       <div className="relative h-12 w-32">
                         <Image
                           src={logoUrl}
-                          alt="Business logo"
+                          alt="Logo del negocio"
                           fill
                           className="object-contain"
                         />
@@ -261,7 +261,7 @@ export function QuoteEditor() {
                     ) : (
                       <div className="flex items-center gap-2 text-sm text-muted-foreground">
                         <Upload className="h-4 w-4" />
-                        <span>Upload logo (PNG/JPG, max 2MB)</span>
+                        <span>Subir logo (PNG/JPG, máx. 2 MB)</span>
                       </div>
                     )}
                     <input
@@ -270,22 +270,22 @@ export function QuoteEditor() {
                       accept="image/png,image/jpeg,image/jpg"
                       onChange={handleLogoUpload}
                       className="hidden"
-                      aria-label="Upload business logo"
+                      aria-label="Subir logo del negocio"
                     />
                   </label>
                 </div>
 
                 {/* Quote Header */}
                 <div className="text-center mb-6">
-                  <h2 className="text-xl font-bold">{title || 'Quote'}</h2>
+                  <h2 className="text-xl font-bold">{title || 'Cotización'}</h2>
                   <p className="text-sm text-muted-foreground">
-                    {document?.quoteNumber || 'DRAFT'}
+                    {document?.quoteNumber || 'BORRADOR'}
                   </p>
                   <p className="text-2xl font-bold mt-2">
                     {formatCurrency(total, editorCurrency)}
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    Valid for {expirationDays} days
+                    Válida por {expirationDays} días
                   </p>
                 </div>
 
@@ -308,7 +308,7 @@ export function QuoteEditor() {
                   {serviceItems.map((item) => (
                     <div key={item.id} className="flex justify-between text-sm">
                       <span>
-                        {item.content.name || 'Untitled'} ×{' '}
+                        {item.content.name || 'Sin título'} ×{' '}
                         {item.content.quantity}
                       </span>
                       <span>
@@ -321,7 +321,7 @@ export function QuoteEditor() {
 
                   {serviceItems.length === 0 && (
                     <p className="text-sm text-muted-foreground text-center py-4">
-                      No items added yet
+                      Aún no hay conceptos
                     </p>
                   )}
                 </div>
@@ -336,7 +336,7 @@ export function QuoteEditor() {
                   </div>
                   {taxAmount > 0 && (
                     <div className="flex justify-between text-sm">
-                      <span>Tax ({taxRate}%)</span>
+                      <span>Impuesto ({taxRate}%)</span>
                       <span>{formatCurrency(taxAmount, editorCurrency)}</span>
                     </div>
                   )}
@@ -349,26 +349,26 @@ export function QuoteEditor() {
                 {previewMode === 'payment' && (
                   <div className="mt-6 space-y-2">
                     <Button className="w-full" disabled>
-                      Accept & Pay Deposit
+                      Aceptar y pagar depósito
                     </Button>
                     <p className="text-xs text-center text-muted-foreground">
-                      Preview only — clients will see this button in the portal
+                      Solo vista previa: el cliente verá este botón en el portal
                     </p>
                   </div>
                 )}
 
                 {previewMode === 'email' && (
                   <div className="mt-6 p-4 bg-muted/50 rounded-lg text-sm">
-                    <p className="font-medium mb-2">Email Preview</p>
+                    <p className="font-medium mb-2">Vista previa del correo</p>
                     <p className="text-muted-foreground">
-                      Hi {client?.name || 'Client'},
+                      Hola {client?.name || 'cliente'},
                     </p>
                     <p className="text-muted-foreground mt-2">
-                      Please find attached your quote for &quot;{title || 'New Quote'}&quot;
-                      totaling {formatCurrency(total, editorCurrency)}.
+                      Adjuntamos su cotización de &quot;{title || 'Nueva cotización'}&quot;
+                      por un total de {formatCurrency(total, editorCurrency)}.
                     </p>
                     <p className="text-muted-foreground mt-2">
-                      This quote is valid for {expirationDays} days.
+                      Esta cotización es válida por {expirationDays} días.
                     </p>
                   </div>
                 )}
@@ -377,10 +377,10 @@ export function QuoteEditor() {
                   <div className="mt-6 text-center space-y-2">
                     <Button variant="outline" disabled>
                       <FileText className="mr-2 h-4 w-4" />
-                      Download PDF Preview
+                      Descargar vista previa en PDF
                     </Button>
                     <p className="text-xs text-muted-foreground">
-                      PDF generation available after saving the quote
+                      El PDF estará disponible después de guardar la cotización
                     </p>
                   </div>
                 )}
@@ -394,25 +394,25 @@ export function QuoteEditor() {
       <AlertDialog open={showSendConfirm} onOpenChange={setShowSendConfirm}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Send Quote?</AlertDialogTitle>
+            <AlertDialogTitle>¿Enviar cotización?</AlertDialogTitle>
             <AlertDialogDescription>
-              This will send the quote to {client?.email || 'the client'}. The
-              quote status will be updated to &quot;Sent&quot; and the client will receive
-              an email with a link to view and accept the quote.
+              La cotización se enviará a {client?.email || 'la persona cliente'}.
+              Su estado cambiará a &quot;Enviada&quot; y recibirá un correo con el enlace
+              para verla y aceptarla.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={isSending}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel disabled={isSending}>Cancelar</AlertDialogCancel>
             <AlertDialogAction onClick={handleSendQuote} disabled={isSending}>
               {isSending ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Sending...
+                  Enviando...
                 </>
               ) : (
                 <>
                   <Send className="mr-2 h-4 w-4" />
-                  Send Quote
+                  Enviar cotización
                 </>
               )}
             </AlertDialogAction>

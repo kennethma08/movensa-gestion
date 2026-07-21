@@ -16,8 +16,8 @@ export default async function NewProjectPage() {
           </Link>
         </Button>
         <div>
-          <h1 className="text-2xl font-bold">New Project</h1>
-          <p className="text-muted-foreground">Create a new project to organize your work</p>
+          <h1 className="text-2xl font-bold">Nuevo proyecto</h1>
+          <p className="text-muted-foreground">Cree un proyecto para organizar su trabajo</p>
         </div>
       </div>
 

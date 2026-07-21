@@ -23,8 +23,8 @@ export async function generateMetadata({ params }: PageProps) {
   const { id } = await params;
   const template = await getContractTemplateById(id);
   return {
-    title: template?.name || 'Contract Template',
-    description: 'View contract template details',
+    title: template?.name || 'Plantilla de contrato',
+    description: 'Ver detalles de la plantilla de contrato',
   };
 }
 
@@ -64,7 +64,7 @@ export default async function TemplateDetailPage({ params }: PageProps) {
             <Button asChild>
               <Link href={`/contracts/new?templateId=${id}`}>
                 <Plus className="mr-2 h-4 w-4" />
-                Create Contract
+                Crear contrato
               </Link>
             </Button>
           </div>
@@ -100,8 +100,8 @@ export default async function TemplateDetailPage({ params }: PageProps) {
 
         <Card>
           <CardHeader>
-            <CardTitle>Contract Content</CardTitle>
-            <CardDescription>Preview of the contract template</CardDescription>
+            <CardTitle>Contenido del contrato</CardTitle>
+            <CardDescription>Vista previa de la plantilla de contrato</CardDescription>
           </CardHeader>
           <CardContent>
             <ContractEditor
@@ -114,7 +114,7 @@ export default async function TemplateDetailPage({ params }: PageProps) {
 
         <Card>
           <CardHeader>
-            <CardTitle>Usage Statistics</CardTitle>
+            <CardTitle>Estadísticas de uso</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex items-center gap-2 text-muted-foreground">

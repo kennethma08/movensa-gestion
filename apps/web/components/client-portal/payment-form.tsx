@@ -64,7 +64,7 @@ function CheckoutForm({
     });
 
     if (stripeError) {
-      setError(stripeError.message || 'Payment failed. Please try again.');
+      setError(stripeError.message || 'No se pudo procesar el pago. Inténtelo nuevamente.');
       setIsProcessing(false);
     } else {
       onSuccess();
@@ -81,18 +81,18 @@ function CheckoutForm({
       )}
       <div className="flex gap-3 justify-end">
         <Button type="button" variant="outline" onClick={onCancel} disabled={isProcessing}>
-          Cancel
+          Cancelar
         </Button>
         <Button type="submit" disabled={isProcessing || !stripe}>
           {isProcessing ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Processing...
+              Procesando...
             </>
           ) : (
             <>
               <CreditCard className="mr-2 h-4 w-4" />
-              Pay {formatCurrency(amountDue, currency)}
+              Pagar {formatCurrency(amountDue, currency)}
             </>
           )}
         </Button>
@@ -128,7 +128,7 @@ export function PaymentForm(props: PaymentFormProps) {
       })
       .catch(() => {
         if (cancelled) return;
-        setError('Failed to initialize payment. Please try again.');
+        setError('No se pudo iniciar el pago. Inténtelo nuevamente.');
         setIsLoading(false);
       });
     return () => { cancelled = true; };
@@ -138,7 +138,7 @@ export function PaymentForm(props: PaymentFormProps) {
     return (
       <div className="flex items-center justify-center py-8">
         <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-        <span className="ml-2 text-muted-foreground">Setting up payment...</span>
+        <span className="ml-2 text-muted-foreground">Preparando el pago...</span>
       </div>
     );
   }
@@ -150,7 +150,7 @@ export function PaymentForm(props: PaymentFormProps) {
           <p className="text-sm text-destructive">{error}</p>
         </div>
         <Button variant="outline" onClick={props.onCancel}>
-          Cancel
+          Cancelar
         </Button>
       </div>
     );

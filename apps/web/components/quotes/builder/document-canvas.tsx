@@ -21,7 +21,7 @@ export function DocumentCanvas() {
   if (!document) {
     return (
       <div className="flex h-full items-center justify-center bg-muted/30">
-        <p className="text-muted-foreground">Loading document...</p>
+        <p className="text-muted-foreground">Cargando documento...</p>
       </div>
     );
   }
@@ -58,17 +58,17 @@ export function DocumentCanvas() {
               <div>
                 <h1 className="text-2xl font-bold">{document.title}</h1>
                 <p className="text-sm text-muted-foreground">
-                  Quote #{document.quoteNumber || 'DRAFT'}
+                  Cotización #{document.quoteNumber || 'BORRADOR'}
                 </p>
               </div>
               <div className="text-right text-sm">
-                <p className="font-medium">Issue Date</p>
+                <p className="font-medium">Fecha de emisión</p>
                 <p className="text-muted-foreground">
                   {new Date(document.issueDate).toLocaleDateString()}
                 </p>
                 {document.expirationDate && (
                   <>
-                    <p className="mt-2 font-medium">Valid Until</p>
+                    <p className="mt-2 font-medium">Válida hasta</p>
                     <p className="text-muted-foreground">
                       {new Date(document.expirationDate).toLocaleDateString()}
                     </p>
@@ -120,13 +120,13 @@ export function DocumentCanvas() {
                     </div>
                     {document.totals.discountAmount > 0 && (
                       <div className="flex justify-between text-sm text-green-600">
-                        <span>Discount</span>
+                        <span>Descuento</span>
                         <span>-{formatCurrency(document.totals.discountAmount, document.currency || document.settings.currency)}</span>
                       </div>
                     )}
                     {document.totals.taxTotal > 0 && (
                       <div className="flex justify-between text-sm">
-                        <span>Tax</span>
+                        <span>Impuesto</span>
                         <span>{formatCurrency(document.totals.taxTotal, document.currency || document.settings.currency)}</span>
                       </div>
                     )}
@@ -144,13 +144,13 @@ export function DocumentCanvas() {
               <div className="mt-8 space-y-4 text-sm">
                 {document.notes && (
                   <div>
-                    <h3 className="font-medium">Notes</h3>
+                    <h3 className="font-medium">Notas</h3>
                     <p className="text-muted-foreground">{document.notes}</p>
                   </div>
                 )}
                 {document.terms && (
                   <div>
-                    <h3 className="font-medium">Terms & Conditions</h3>
+                    <h3 className="font-medium">Términos y condiciones</h3>
                     <p className="text-muted-foreground">{document.terms}</p>
                   </div>
                 )}

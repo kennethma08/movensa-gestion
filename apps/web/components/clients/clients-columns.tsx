@@ -123,10 +123,10 @@ export function getClientColumns(options: ClientColumnsOptions = {}): ColumnDef<
             showQuickActions={false}
             actions={[
               ...(onView ? [{ label: 'View Details', icon: <User className="mr-2 h-4 w-4" />, onClick: onView }] : []),
-              ...(onEdit ? [{ label: 'Edit', icon: <Pencil className="mr-2 h-4 w-4" />, onClick: onEdit }] : []),
-              ...(onCreateQuote ? [{ label: 'Create Quote', icon: <FileText className="mr-2 h-4 w-4" />, onClick: onCreateQuote, separator: true }] : []),
-              ...(onCreateInvoice ? [{ label: 'Create Invoice', icon: <Receipt className="mr-2 h-4 w-4" />, onClick: onCreateInvoice }] : []),
-              ...(onDelete ? [{ label: 'Delete', icon: <Trash2 className="mr-2 h-4 w-4" />, onClick: onDelete, variant: 'destructive' as const, separator: true }] : []),
+              ...(onEdit ? [{ label: 'Editar', icon: <Pencil className="mr-2 h-4 w-4" />, onClick: onEdit }] : []),
+              ...(onCreateQuote ? [{ label: 'Crear cotización', icon: <FileText className="mr-2 h-4 w-4" />, onClick: onCreateQuote, separator: true }] : []),
+              ...(onCreateInvoice ? [{ label: 'Crear factura', icon: <Receipt className="mr-2 h-4 w-4" />, onClick: onCreateInvoice }] : []),
+              ...(onDelete ? [{ label: 'Eliminar', icon: <Trash2 className="mr-2 h-4 w-4" />, onClick: onDelete, variant: 'destructive' as const, separator: true }] : []),
             ]}
           />
         );

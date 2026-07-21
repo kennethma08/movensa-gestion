@@ -64,7 +64,7 @@ export function BuilderToolbar() {
 
   const handleSave = async (): Promise<boolean> => {
     if (!document) {
-      toast.error('No document to save');
+      toast.error('No hay un documento para guardar');
       return false;
     }
 
@@ -73,13 +73,13 @@ export function BuilderToolbar() {
       // New quote: create in database first
       if (!document.id) {
         if (!document.clientId) {
-          toast.error('Please select a client before saving');
+          toast.error('Seleccione un cliente antes de guardar');
           setSaving(false);
           return false;
         }
 
         const result = await createQuote({
-          title: document.title || 'Untitled Quote',
+          title: document.title || 'Cotización sin título',
           clientId: document.clientId,
           projectId: document.projectId,
           blocks: document.blocks,
@@ -88,11 +88,11 @@ export function BuilderToolbar() {
         if (result.success && result.quote) {
           updateDocumentId(result.quote.id, result.quote.quoteNumber);
           markSaved();
-          toast.success('Quote created successfully');
+          toast.success('Cotización creada correctamente');
           router.replace(`/quotes/${result.quote.id}/builder`);
           return true;
         } else {
-          toast.error(result.error || 'Failed to create quote');
+          toast.error(result.error || 'No se pudo crear la cotización');
           return false;
         }
       }
@@ -108,15 +108,15 @@ export function BuilderToolbar() {
 
       if (result.success) {
         markSaved();
-        toast.success('Quote saved successfully');
+        toast.success('Cotización guardada correctamente');
         return true;
       } else {
-        toast.error(result.error || 'Failed to save quote');
+        toast.error(result.error || 'No se pudo guardar la cotización');
         return false;
       }
     } catch (error) {
       console.error('Save error:', error);
-      toast.error('Failed to save quote');
+      toast.error('No se pudo guardar la cotización');
       return false;
     } finally {
       setSaving(false);
@@ -125,20 +125,20 @@ export function BuilderToolbar() {
 
   const handleExportPDF = async () => {
     if (!document || !document.id) {
-      toast.error('Please save the quote first');
+      toast.error('Guarde primero la cotización');
       return;
     }
     try {
-      toast.info('Generating PDF...');
+      toast.info('Generando PDF...');
       window.open(`/api/download/quote/${document.id}`, '_blank');
     } catch {
-      toast.error('Failed to export PDF');
+      toast.error('No se pudo exportar el PDF');
     }
   };
 
   const handleSend = async () => {
     if (!document || !document.id) {
-      toast.error('Please save the quote first');
+      toast.error('Guarde primero la cotización');
       return;
     }
 
@@ -154,17 +154,17 @@ export function BuilderToolbar() {
 
       if (result.success) {
         if (result.emailSent) {
-          toast.success('Quote sent and email delivered');
+          toast.success('Cotización enviada y correo entregado');
         } else {
-          toast.warning('Quote marked as sent, but email delivery failed. Please check your email configuration.');
+          toast.warning('La cotización se marcó como enviada, pero el correo no pudo entregarse. Revise la configuración del correo.');
         }
         router.push(`/quotes/${document.id}`);
       } else {
-        toast.error(result.error || 'Failed to send quote');
+        toast.error(result.error || 'No se pudo enviar la cotización');
       }
     } catch (error) {
       console.error('Send error:', error);
-      toast.error('Failed to send quote');
+      toast.error('No se pudo enviar la cotización');
     } finally {
       setIsSendLoading(false);
     }
@@ -174,7 +174,7 @@ export function BuilderToolbar() {
     <div className="flex items-center justify-between border-b bg-card px-2 py-2 md:px-4">
       {/* Left section */}
       <div className="flex items-center gap-1 md:gap-2">
-        <Button variant="ghost" size="icon" asChild aria-label="Back to quotes">
+        <Button variant="ghost" size="icon" asChild aria-label="Volver a cotizaciones">
           <Link href="/quotes">
             <ArrowLeft className="h-4 w-4" />
           </Link>
@@ -186,8 +186,8 @@ export function BuilderToolbar() {
           variant={showBlocksPanel ? 'secondary' : 'ghost'}
           size="icon"
           onClick={toggleBlocksPanel}
-          title={showBlocksPanel ? 'Hide blocks panel' : 'Show blocks panel'}
-          aria-label={showBlocksPanel ? 'Hide blocks panel' : 'Show blocks panel'}
+          title={showBlocksPanel ? 'Ocultar panel de bloques' : 'Mostrar panel de bloques'}
+          aria-label={showBlocksPanel ? 'Ocultar panel de bloques' : 'Mostrar panel de bloques'}
         >
           {showBlocksPanel ? (
             <PanelLeftClose className="h-4 w-4" />
@@ -200,8 +200,8 @@ export function BuilderToolbar() {
           variant={showPropertiesPanel ? 'secondary' : 'ghost'}
           size="icon"
           onClick={togglePropertiesPanel}
-          title={showPropertiesPanel ? 'Hide properties panel' : 'Show properties panel'}
-          aria-label={showPropertiesPanel ? 'Hide properties panel' : 'Show properties panel'}
+          title={showPropertiesPanel ? 'Ocultar panel de propiedades' : 'Mostrar panel de propiedades'}
+          aria-label={showPropertiesPanel ? 'Ocultar panel de propiedades' : 'Mostrar panel de propiedades'}
         >
           {showPropertiesPanel ? (
             <PanelRightClose className="h-4 w-4" />
@@ -217,8 +217,8 @@ export function BuilderToolbar() {
           size="icon"
           onClick={undo}
           disabled={!canUndo}
-          title="Undo (Ctrl+Z)"
-          aria-label="Undo"
+          title="Deshacer (Ctrl+Z)"
+          aria-label="Deshacer"
           className="hidden sm:inline-flex"
         >
           <Undo2 className="h-4 w-4" />
@@ -229,8 +229,8 @@ export function BuilderToolbar() {
           size="icon"
           onClick={redo}
           disabled={!canRedo}
-          title="Redo (Ctrl+Shift+Z)"
-          aria-label="Redo"
+          title="Rehacer (Ctrl+Shift+Z)"
+          aria-label="Rehacer"
           className="hidden sm:inline-flex"
         >
           <Redo2 className="h-4 w-4" />
@@ -240,10 +240,10 @@ export function BuilderToolbar() {
       {/* Center section - Document title */}
       <div className="flex items-center gap-2 min-w-0">
         <h1 className="font-medium truncate text-sm md:text-base">
-          {document?.title || 'Untitled Quote'}
+          {document?.title || 'Cotización sin título'}
         </h1>
         {isDirty && (
-          <span className="text-xs text-muted-foreground hidden sm:inline">(unsaved)</span>
+          <span className="text-xs text-muted-foreground hidden sm:inline">(sin guardar)</span>
         )}
       </div>
 
@@ -257,7 +257,7 @@ export function BuilderToolbar() {
             className="h-8 w-8"
             onClick={() => setZoom(Math.max(50, zoom - 10))}
             disabled={zoom <= 50}
-            aria-label="Zoom out"
+            aria-label="Alejar"
           >
             <ZoomOut className="h-3 w-3" />
           </Button>
@@ -268,7 +268,7 @@ export function BuilderToolbar() {
             className="h-8 w-8"
             onClick={() => setZoom(Math.min(200, zoom + 10))}
             disabled={zoom >= 200}
-            aria-label="Zoom in"
+            aria-label="Acercar"
           >
             <ZoomIn className="h-3 w-3" />
           </Button>
@@ -283,12 +283,12 @@ export function BuilderToolbar() {
           {previewMode ? (
             <>
               <EyeOff className="mr-2 h-4 w-4" />
-              Edit
+              Editar
             </>
           ) : (
             <>
               <Eye className="mr-2 h-4 w-4" />
-              Preview
+              Vista previa
             </>
           )}
         </Button>
@@ -298,7 +298,7 @@ export function BuilderToolbar() {
           variant={previewMode ? 'default' : 'outline'}
           size="icon"
           onClick={togglePreviewMode}
-          aria-label={previewMode ? 'Switch to edit mode' : 'Preview'}
+          aria-label={previewMode ? 'Cambiar al modo de edición' : 'Vista previa'}
           className="sm:hidden"
         >
           {previewMode ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -318,7 +318,7 @@ export function BuilderToolbar() {
           ) : (
             <Save className="mr-2 h-4 w-4" />
           )}
-          Save
+          Guardar
         </Button>
 
         {/* Mobile save icon-only */}
@@ -327,7 +327,7 @@ export function BuilderToolbar() {
           size="icon"
           onClick={handleSave}
           disabled={isSaving || !isDirty}
-          aria-label="Save"
+          aria-label="Guardar"
           className="md:hidden"
         >
           {isSaving ? (
@@ -341,19 +341,19 @@ export function BuilderToolbar() {
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size="sm" className="hidden md:inline-flex">
               <Download className="mr-2 h-4 w-4" />
-              Export
+              Exportar
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem onClick={handleExportPDF}>
-              Export as PDF
+              Exportar como PDF
             </DropdownMenuItem>
             <DropdownMenuItem disabled className="text-muted-foreground">
-              Export as Image (Coming Soon)
+              Exportar como imagen (próximamente)
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem disabled className="text-muted-foreground">
-              Copy shareable link (Coming Soon)
+              Copiar enlace para compartir (próximamente)
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -361,20 +361,20 @@ export function BuilderToolbar() {
         {/* Mobile Export icon-only */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="icon" aria-label="Export" className="md:hidden">
+            <Button variant="outline" size="icon" aria-label="Exportar" className="md:hidden">
               <Download className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem onClick={handleExportPDF}>
-              Export as PDF
+              Exportar como PDF
             </DropdownMenuItem>
             <DropdownMenuItem disabled className="text-muted-foreground">
-              Export as Image (Coming Soon)
+              Exportar como imagen (próximamente)
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem disabled className="text-muted-foreground">
-              Copy shareable link (Coming Soon)
+              Copiar enlace para compartir (próximamente)
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -385,11 +385,11 @@ export function BuilderToolbar() {
           ) : (
             <Send className="mr-2 h-4 w-4" />
           )}
-          Send
+          Enviar
         </Button>
 
         {/* Mobile Send icon-only */}
-        <Button size="icon" onClick={handleSend} disabled={isSendLoading} aria-label="Send" className="md:hidden">
+        <Button size="icon" onClick={handleSend} disabled={isSendLoading} aria-label="Enviar" className="md:hidden">
           {isSendLoading ? (
             <Loader2 className="h-4 w-4 animate-spin" />
           ) : (

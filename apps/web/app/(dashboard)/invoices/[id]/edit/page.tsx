@@ -12,9 +12,9 @@ export async function generateMetadata({ params }: InvoiceEditPageProps) {
   const { id } = await params;
   try {
     const invoice = await getInvoice(id);
-    return { title: invoice ? `Edit ${invoice.title}` : 'Edit Invoice' };
+    return { title: invoice ? `Editar ${invoice.title}` : 'Editar factura' };
   } catch {
-    return { title: 'Invoice Not Found' };
+    return { title: 'Factura no encontrada' };
   }
 }
 

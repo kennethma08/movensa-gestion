@@ -1,5 +1,5 @@
 export const metadata = {
-  title: 'New Client',
+  title: 'Nuevo cliente',
 };
 
 export default function NewClientLayout({ children }: { children: React.ReactNode }) {

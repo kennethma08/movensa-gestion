@@ -53,10 +53,10 @@ export function CreditNotesList({ creditNotes }: CreditNotesListProps) {
     try {
       const result = await issueCreditNote(creditNoteId);
       if (result.success) {
-        toast.success('Credit note issued');
+        toast.success('Nota de crédito emitida');
         router.refresh();
       } else {
-        toast.error(result.error || 'Failed to issue credit note');
+        toast.error(result.error || 'No se pudo emitir la nota de crédito');
       }
     } finally {
       setIssuingId(null);

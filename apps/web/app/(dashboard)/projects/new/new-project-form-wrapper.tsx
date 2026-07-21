@@ -26,10 +26,10 @@ export function NewProjectFormWrapper({ clients }: NewProjectFormWrapperProps) {
     setServerError(null);
     try {
       const result = await createProject(data);
-      toast.success('Project created successfully');
+      toast.success('Proyecto creado correctamente');
       router.push(`/projects/${result.id}`);
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to create project';
+      const errorMessage = error instanceof Error ? error.message : 'No se pudo crear el proyecto';
       setServerError(errorMessage);
       toast.error(errorMessage);
       setIsLoading(false);
@@ -46,9 +46,9 @@ export function NewProjectFormWrapper({ clients }: NewProjectFormWrapperProps) {
 
       {clients.length === 0 ? (
         <div className="rounded-md border p-8 text-center">
-          <p className="text-muted-foreground">No clients found. Please create a client first.</p>
+          <p className="text-muted-foreground">No se encontraron clientes. Primero debe crear un cliente.</p>
           <Button asChild className="mt-4">
-            <Link href="/clients/new">Create Client</Link>
+            <Link href="/clients/new">Crear cliente</Link>
           </Button>
         </div>
       ) : (
@@ -57,7 +57,7 @@ export function NewProjectFormWrapper({ clients }: NewProjectFormWrapperProps) {
           defaultValues={{ clientId }}
           onSubmit={handleSubmit}
           isLoading={isLoading}
-          submitLabel="Create Project"
+          submitLabel="Crear proyecto"
         />
       )}
     </>

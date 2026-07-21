@@ -69,17 +69,17 @@ const statusConfig: Record<
   { label: string; variant: 'default' | 'secondary' | 'destructive' | 'outline'; icon: React.ReactNode }
 > = {
   draft: {
-    label: 'Draft',
+    label: 'Borrador',
     variant: 'secondary',
     icon: <FileText className="h-3 w-3" />,
   },
   sent: {
-    label: 'Sent',
+    label: 'Enviado',
     variant: 'default',
     icon: <Mail className="h-3 w-3" />,
   },
   viewed: {
-    label: 'Viewed',
+    label: 'Visto',
     variant: 'outline',
     icon: <Eye className="h-3 w-3" />,
   },
@@ -89,7 +89,7 @@ const statusConfig: Record<
     icon: <CheckCircle2 className="h-3 w-3" />,
   },
   expired: {
-    label: 'Expired',
+    label: 'Vencido',
     variant: 'destructive',
     icon: <Clock className="h-3 w-3" />,
   },
@@ -130,9 +130,9 @@ export function ContractInstanceList({
       try {
         const result = await sendContractInstance(id);
         if (result.emailSent) {
-          toast.success('Contract sent and email delivered');
+          toast.success('Contrato enviado y correo entregado');
         } else {
-          toast.warning('Contract marked as sent, but email delivery failed. Please check your email configuration.');
+          toast.warning('El contrato se marcó como enviado, pero el correo no pudo entregarse. Revise la configuración del correo.');
         }
         router.refresh();
       } catch (error) {
@@ -160,7 +160,7 @@ export function ContractInstanceList({
         <div className="relative flex-1 max-w-sm">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
-            placeholder="Search contracts..."
+            placeholder="Buscar contratos..."
             value={search}
             onChange={(e) => handleSearch(e.target.value)}
             className="pl-10"
@@ -168,15 +168,15 @@ export function ContractInstanceList({
         </div>
         <Select value={status || 'all'} onValueChange={handleStatusChange}>
           <SelectTrigger className="w-40">
-            <SelectValue placeholder="All Status" />
+            <SelectValue placeholder="Todos los estados" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Status</SelectItem>
-            <SelectItem value="draft">Draft</SelectItem>
-            <SelectItem value="sent">Sent</SelectItem>
-            <SelectItem value="viewed">Viewed</SelectItem>
-            <SelectItem value="signed">Signed</SelectItem>
-            <SelectItem value="expired">Expired</SelectItem>
+            <SelectItem value="all">Todos los estados</SelectItem>
+            <SelectItem value="draft">Borrador</SelectItem>
+            <SelectItem value="sent">Enviado</SelectItem>
+            <SelectItem value="viewed">Visto</SelectItem>
+            <SelectItem value="signed">Firmado</SelectItem>
+            <SelectItem value="expired">Vencido</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -185,9 +185,9 @@ export function ContractInstanceList({
         <Card>
           <CardContent className="flex flex-col items-center justify-center py-12">
             <FileText className="h-12 w-12 text-muted-foreground mb-4" />
-            <h3 className="text-lg font-semibold">No contracts</h3>
+            <h3 className="text-lg font-semibold">No hay contratos</h3>
             <p className="text-muted-foreground text-center mt-1">
-              Create a contract from a template to get started.
+              Cree un contrato a partir de una plantilla para comenzar.
             </p>
           </CardContent>
         </Card>
@@ -196,12 +196,12 @@ export function ContractInstanceList({
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Contract</TableHead>
-                <TableHead>Client</TableHead>
-                <TableHead>Quote</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Signed</TableHead>
-                <TableHead>Created</TableHead>
+                <TableHead>Contrato</TableHead>
+                <TableHead>Cliente</TableHead>
+                <TableHead>Cotización</TableHead>
+                <TableHead>Estado</TableHead>
+                <TableHead>Firmado</TableHead>
+                <TableHead>Creado</TableHead>
                 <TableHead className="w-12"></TableHead>
               </TableRow>
             </TableHeader>
@@ -245,7 +245,7 @@ export function ContractInstanceList({
                           <DropdownMenuItem asChild>
                             <Link href={`/contracts/${instance.id}`}>
                               <Eye className="mr-2 h-4 w-4" />
-                              View
+                              Ver
                             </Link>
                           </DropdownMenuItem>
                           {instance.status === 'draft' && (
@@ -263,7 +263,7 @@ export function ContractInstanceList({
                             className="text-destructive focus:text-destructive"
                           >
                             <Trash2 className="mr-2 h-4 w-4" />
-                            Delete
+                            Eliminar
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
@@ -279,19 +279,19 @@ export function ContractInstanceList({
       <AlertDialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Contract</AlertDialogTitle>
+            <AlertDialogTitle>Eliminar contrato</AlertDialogTitle>
             <AlertDialogDescription>
               Are you sure you want to delete this contract? This action cannot be
               undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDelete}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              Delete
+              Eliminar
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

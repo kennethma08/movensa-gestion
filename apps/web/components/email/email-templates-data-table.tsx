@@ -60,10 +60,10 @@ function replaceVariables(text: string) {
   const unescaped = unescapeHtml(text);
   return unescaped
     // camelCase variables (used by DEFAULT_TEMPLATES and email-template-form)
-    .replace(/\{\{businessName\}\}/g, 'Acme Corp')
-    .replace(/\{\{clientName\}\}/g, 'John Smith')
+    .replace(/\{\{businessName\}\}/g, 'Empresa Ejemplo')
+    .replace(/\{\{clientName\}\}/g, 'Juan Pérez')
     .replace(/\{\{clientEmail\}\}/g, 'john@example.com')
-    .replace(/\{\{quoteName\}\}/g, 'Website Redesign')
+    .replace(/\{\{quoteName\}\}/g, 'Rediseño del sitio web')
     .replace(/\{\{quoteNumber\}\}/g, 'QT-0001')
     .replace(/\{\{quoteUrl\}\}/g, '#')
     .replace(/\{\{quoteTotal\}\}/g, '$5,000.00')
@@ -75,14 +75,14 @@ function replaceVariables(text: string) {
     .replace(/\{\{amountPaid\}\}/g, '$5,000.00')
     .replace(/\{\{amountDue\}\}/g, '$5,000.00')
     .replace(/\{\{daysOverdue\}\}/g, '7')
-    .replace(/\{\{contractName\}\}/g, 'Service Agreement')
+    .replace(/\{\{contractName\}\}/g, 'Contrato de servicios')
     .replace(/\{\{contractUrl\}\}/g, '#')
-    .replace(/\{\{message\}\}/g, 'Looking forward to working with you!')
+    .replace(/\{\{message\}\}/g, '¡Esperamos trabajar con usted!')
     // snake_case variables (fallback)
-    .replace(/\{\{business_name\}\}/g, 'Acme Corp')
-    .replace(/\{\{client_name\}\}/g, 'John Smith')
+    .replace(/\{\{business_name\}\}/g, 'Empresa Ejemplo')
+    .replace(/\{\{client_name\}\}/g, 'Juan Pérez')
     .replace(/\{\{client_email\}\}/g, 'john@example.com')
-    .replace(/\{\{quote_name\}\}/g, 'Website Redesign')
+    .replace(/\{\{quote_name\}\}/g, 'Rediseño del sitio web')
     .replace(/\{\{quote_number\}\}/g, 'QT-0001')
     .replace(/\{\{quote_link\}\}/g, '#')
     .replace(/\{\{quote_total\}\}/g, '$5,000.00')
@@ -128,19 +128,19 @@ function formatRelativeDate(date: Date): string {
   const diffMs = now.getTime() - date.getTime();
   const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
 
-  if (diffDays === 0) return 'Today';
-  if (diffDays === 1) return '1d ago';
-  if (diffDays < 7) return `${diffDays}d ago`;
+  if (diffDays === 0) return 'Hoy';
+  if (diffDays === 1) return 'Hace 1 día';
+  if (diffDays < 7) return `Hace ${diffDays} días`;
   if (diffDays < 30) {
     const weeks = Math.round(diffDays / 7);
-    return `${weeks}w ago`;
+    return `Hace ${weeks} sem.`;
   }
   if (diffDays < 365) {
     const months = Math.round(diffDays / 30.44); // Average days per month
-    return `${months}mo ago`;
+    return `Hace ${months} mes${months === 1 ? '' : 'es'}`;
   }
   const years = Math.round(diffDays / 365.25); // Account for leap years
-  return `${years}y ago`;
+  return `Hace ${years} año${years === 1 ? '' : 's'}`;
 }
 
 export function EmailTemplatesDataTable({ data }: EmailTemplatesDataTableProps) {
@@ -184,7 +184,7 @@ export function EmailTemplatesDataTable({ data }: EmailTemplatesDataTableProps) 
   const handleSaveTemplate = async () => {
     if (!editingTemplate) return;
     if (!editName.trim()) {
-      toast.error('Template name is required');
+      toast.error('El nombre de la plantilla es obligatorio');
       return;
     }
     setIsSaving(true);
@@ -196,11 +196,11 @@ export function EmailTemplatesDataTable({ data }: EmailTemplatesDataTableProps) 
         body: editBody,
         isActive: editIsActive,
       });
-      toast.success('Template updated');
+      toast.success('Plantilla actualizada');
       handleCloseEdit();
       router.refresh();
     } catch {
-      toast.error('Failed to update template');
+      toast.error('No se pudo actualizar la plantilla');
     } finally {
       setIsSaving(false);
     }
@@ -217,11 +217,11 @@ export function EmailTemplatesDataTable({ data }: EmailTemplatesDataTableProps) 
     setIsDeleting(true);
     try {
       await deleteEmailTemplate(deleteId);
-      toast.success('Template deleted');
+      toast.success('Plantilla eliminada');
       setDeleteId(null);
       router.refresh();
     } catch {
-      toast.error('Failed to delete template');
+      toast.error('No se pudo eliminar la plantilla');
     } finally {
       setIsDeleting(false);
     }
@@ -237,7 +237,7 @@ export function EmailTemplatesDataTable({ data }: EmailTemplatesDataTableProps) 
             (table.getIsSomePageRowsSelected() && 'indeterminate')
           }
           onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label="Select all"
+          aria-label="Seleccionar todo"
           className="translate-y-[2px]"
         />
       ),
@@ -245,7 +245,7 @@ export function EmailTemplatesDataTable({ data }: EmailTemplatesDataTableProps) 
         <Checkbox
           checked={row.getIsSelected()}
           onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label="Select row"
+          aria-label="Seleccionar fila"
           className="translate-y-[2px]"
         />
       ),
@@ -255,7 +255,7 @@ export function EmailTemplatesDataTable({ data }: EmailTemplatesDataTableProps) 
     {
       accessorKey: 'name',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Name" />
+        <DataTableColumnHeader column={column} title="Nombre" />
       ),
       cell: ({ row }) => (
         <button
@@ -270,7 +270,7 @@ export function EmailTemplatesDataTable({ data }: EmailTemplatesDataTableProps) 
     {
       accessorKey: 'subject',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Subject" />
+        <DataTableColumnHeader column={column} title="Asunto" />
       ),
       cell: ({ row }) => (
         <div className="text-muted-foreground">
@@ -281,11 +281,11 @@ export function EmailTemplatesDataTable({ data }: EmailTemplatesDataTableProps) 
     {
       accessorKey: 'activity',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Activity" />
+        <DataTableColumnHeader column={column} title="Actividad" />
       ),
       cell: ({ row }) => (
         <div className="text-muted-foreground">
-          {row.original.activity ?? 'No activity'}
+          {row.original.activity ?? 'Sin actividad'}
         </div>
       ),
       enableSorting: false,
@@ -293,7 +293,7 @@ export function EmailTemplatesDataTable({ data }: EmailTemplatesDataTableProps) 
     {
       accessorKey: 'createdAt',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Created" />
+        <DataTableColumnHeader column={column} title="Creada" />
       ),
       cell: ({ row }) => (
         <div className="text-muted-foreground">
@@ -317,14 +317,14 @@ export function EmailTemplatesDataTable({ data }: EmailTemplatesDataTableProps) 
   const emptyState = (
     <div className="flex flex-col items-center justify-center py-16">
       <Mail className="h-12 w-12 text-muted-foreground mb-4" />
-      <h3 className="text-lg font-medium">No email templates</h3>
+      <h3 className="text-lg font-medium">No hay plantillas de correo</h3>
       <p className="text-muted-foreground mb-4">
-        Create email templates for quotes, invoices, and reminders.
+        Cree plantillas para cotizaciones, facturas y recordatorios.
       </p>
       <Button asChild>
         <Link href="/settings/emails/new">
           <Plus className="mr-2 h-4 w-4" />
-          Create Template
+          Crear plantilla
         </Link>
       </Button>
     </div>
@@ -337,7 +337,7 @@ export function EmailTemplatesDataTable({ data }: EmailTemplatesDataTableProps) 
           <Button asChild>
             <Link href="/settings/emails/new">
               <Plus className="mr-2 h-4 w-4" />
-              Create Template
+              Crear plantilla
             </Link>
           </Button>
         </div>
@@ -347,7 +347,7 @@ export function EmailTemplatesDataTable({ data }: EmailTemplatesDataTableProps) 
         columns={columns}
         data={data}
         filterKey="name"
-        filterPlaceholder="Search templates..."
+        filterPlaceholder="Buscar plantillas..."
         pageSizes={[10, 25, 50, 100]}
         emptyState={emptyState}
         onRowSelect={setSelectedRows}
@@ -364,14 +364,14 @@ export function EmailTemplatesDataTable({ data }: EmailTemplatesDataTableProps) 
                   {previewTemplate?.type.replace(/_/g, ' ')}
                 </Badge>
                 {previewTemplate?.isDefault && (
-                  <Badge variant="secondary" className="text-xs">Default</Badge>
+                  <Badge variant="secondary" className="text-xs">Predeterminada</Badge>
                 )}
               </div>
             </DialogDescription>
           </DialogHeader>
           <div className="border rounded-lg p-4 bg-card space-y-3">
             <p className="text-sm">
-              <span className="text-muted-foreground">Subject: </span>
+              <span className="text-muted-foreground">Asunto: </span>
               <span className="font-medium">{replaceVariables(previewTemplate?.subject ?? '')}</span>
             </p>
             <hr />
@@ -382,10 +382,10 @@ export function EmailTemplatesDataTable({ data }: EmailTemplatesDataTableProps) 
           </div>
           <div className="flex justify-end gap-2 pt-2">
             <Button variant="outline" onClick={handleClosePreview}>
-              Close
+              Cerrar
             </Button>
             <Button onClick={() => previewTemplate && handleOpenEdit(previewTemplate)}>
-              Edit Template
+              Editar plantilla
             </Button>
           </div>
         </DialogContent>
@@ -396,9 +396,9 @@ export function EmailTemplatesDataTable({ data }: EmailTemplatesDataTableProps) 
         <DialogContent className="!flex !flex-col !max-w-[860px] !max-h-[90vh] !p-0 !gap-0 overflow-hidden">
           <div className="p-6 pb-4">
             <DialogHeader className="space-y-1">
-              <DialogTitle>Edit email template</DialogTitle>
+              <DialogTitle>Editar plantilla de correo</DialogTitle>
               <DialogDescription>
-                Customize this email template for your notifications.
+                Personalice esta plantilla para sus notificaciones.
               </DialogDescription>
             </DialogHeader>
           </div>
@@ -413,7 +413,7 @@ export function EmailTemplatesDataTable({ data }: EmailTemplatesDataTableProps) 
                   value={editName}
                   onChange={(e) => setEditName(e.target.value)}
                   className="text-base font-semibold !bg-transparent outline-none border-none shadow-none flex-1 placeholder:text-muted-foreground/40"
-                  placeholder="Template name"
+                  placeholder="Nombre de la plantilla"
                 />
                 <button
                   type="button"
@@ -421,43 +421,43 @@ export function EmailTemplatesDataTable({ data }: EmailTemplatesDataTableProps) 
                   onClick={handleDeleteFromDialog}
                 >
                   <Trash2 className="h-3.5 w-3.5" />
-                  Delete
+                  Eliminar
                 </button>
               </div>
 
               {/* Subject */}
               <div className="space-y-2">
-                <Label htmlFor="edit-subject">Subject Line</Label>
+                <Label htmlFor="edit-subject">Asunto</Label>
                 <Input
                   id="edit-subject"
                   value={editSubject}
                   onChange={(e) => setEditSubject(e.target.value)}
-                  placeholder="Email subject..."
+                  placeholder="Asunto del correo..."
                 />
                 <p className="text-xs text-muted-foreground">
-                  Use variables like {'{{business_name}}'}, {'{{quote_name}}'}, {'{{invoice_number}}'} for dynamic content.
+                  Use variables como {'{{business_name}}'}, {'{{quote_name}}'} o {'{{invoice_number}}'} para contenido dinámico.
                 </p>
               </div>
 
               {/* Body */}
               <div className="space-y-2">
-                <Label>Body</Label>
+                <Label>Contenido</Label>
                 <RichTextEditor
                   value={editBody}
                   onChange={setEditBody}
-                  placeholder="Email body content..."
+                  placeholder="Contenido del correo..."
                   showAttachment
-                  onAttachment={() => toast.info('Attachment feature coming soon')}
+                  onAttachment={() => toast.info('La función de adjuntos estará disponible próximamente')}
                 />
                 <p className="text-xs text-muted-foreground">
-                  Use variables like {'{{client_name}}'}, {'{{quote_link}}'}, {'{{invoice_link}}'} for personalized content.
+                  Use variables como {'{{client_name}}'}, {'{{quote_link}}'} o {'{{invoice_link}}'} para personalizar el contenido.
                 </p>
               </div>
 
               {/* Type (read-only) */}
               {editingTemplate && (
                 <div className="space-y-2">
-                  <Label>Type</Label>
+                  <Label>Tipo</Label>
                   <div>
                     <Badge variant="outline" className="text-xs capitalize">
                       {editingTemplate.type.replace(/_/g, ' ')}
@@ -469,9 +469,9 @@ export function EmailTemplatesDataTable({ data }: EmailTemplatesDataTableProps) 
               {/* Active toggle */}
               <div className="flex items-center justify-between rounded-lg border p-4">
                 <div className="space-y-0.5">
-                  <Label>Active</Label>
+                  <Label>Activa</Label>
                   <p className="text-sm text-muted-foreground">
-                    Enable this template for automated email notifications.
+                    Habilite esta plantilla para las notificaciones automáticas.
                   </p>
                 </div>
                 <Switch
@@ -487,14 +487,14 @@ export function EmailTemplatesDataTable({ data }: EmailTemplatesDataTableProps) 
                   disabled={isSaving}
                 >
                   {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  Save
+                  Guardar
                 </Button>
                 <Button
                   variant="outline"
                   onClick={handleCloseEdit}
                   disabled={isSaving}
                 >
-                  Cancel
+                  Cancelar
                 </Button>
               </div>
             </div>
@@ -506,20 +506,19 @@ export function EmailTemplatesDataTable({ data }: EmailTemplatesDataTableProps) 
       <AlertDialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Template</AlertDialogTitle>
+            <AlertDialogTitle>Eliminar plantilla</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete this email template? This action
-              cannot be undone.
+              ¿Confirma que desea eliminar esta plantilla de correo? Esta acción no se puede deshacer.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDelete}
               disabled={isDeleting}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              Delete
+              Eliminar
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

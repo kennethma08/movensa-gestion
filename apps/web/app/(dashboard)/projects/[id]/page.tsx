@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: ProjectPageProps) {
     };
   } catch {
     return {
-      title: 'Project Not Found',
+      title: 'Proyecto no encontrado',
     };
   }
 }

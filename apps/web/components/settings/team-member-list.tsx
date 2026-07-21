@@ -39,10 +39,10 @@ const roleIcons: Record<WorkspaceMemberRole, React.ReactNode> = {
 };
 
 const roleLabels: Record<WorkspaceMemberRole, string> = {
-  owner: 'Owner',
-  admin: 'Admin',
-  member: 'Member',
-  viewer: 'Viewer',
+  owner: 'Propietario',
+  admin: 'Administrador',
+  member: 'Miembro',
+  viewer: 'Observador',
 };
 
 interface TeamMemberListProps {
@@ -66,7 +66,7 @@ export function TeamMemberList({ members, currentUserRole }: TeamMemberListProps
     try {
       const result = await updateMemberRole(memberId, newRole);
       if (!result.success) {
-        setError(result.error || 'Failed to update role');
+        setError(result.error || 'No se pudo actualizar el rol');
       }
       router.refresh();
     } finally {
@@ -81,7 +81,7 @@ export function TeamMemberList({ members, currentUserRole }: TeamMemberListProps
     try {
       const result = await removeMember(memberId);
       if (!result.success) {
-        setError(result.error || 'Failed to remove member');
+        setError(result.error || 'No se pudo eliminar al miembro');
       }
       router.refresh();
     } finally {
@@ -131,26 +131,26 @@ export function TeamMemberList({ members, currentUserRole }: TeamMemberListProps
                       <SelectItem value="owner">
                         <div className="flex items-center gap-2">
                           {roleIcons.owner}
-                          Owner
+                          Propietario
                         </div>
                       </SelectItem>
                     )}
                     <SelectItem value="admin">
                       <div className="flex items-center gap-2">
                         {roleIcons.admin}
-                        Admin
+                        Administrador
                       </div>
                     </SelectItem>
                     <SelectItem value="member">
                       <div className="flex items-center gap-2">
                         {roleIcons.member}
-                        Member
+                        Miembro
                       </div>
                     </SelectItem>
                     <SelectItem value="viewer">
                       <div className="flex items-center gap-2">
                         {roleIcons.viewer}
-                        Viewer
+                        Observador
                       </div>
                     </SelectItem>
                   </SelectContent>
@@ -178,7 +178,7 @@ export function TeamMemberList({ members, currentUserRole }: TeamMemberListProps
                       onClick={() => setRemoveMemberId(member.id)}
                       className="text-destructive focus:text-destructive"
                     >
-                      Remove from workspace
+                      Eliminar del espacio de trabajo
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -190,7 +190,7 @@ export function TeamMemberList({ members, currentUserRole }: TeamMemberListProps
 
       {members.length === 0 && (
         <div className="rounded-lg border border-dashed p-8 text-center">
-          <p className="text-muted-foreground">No team members yet</p>
+          <p className="text-muted-foreground">Aún no hay miembros en el equipo</p>
         </div>
       )}
 
@@ -198,18 +198,18 @@ export function TeamMemberList({ members, currentUserRole }: TeamMemberListProps
       <AlertDialog open={!!removeMemberId} onOpenChange={(open) => !open && setRemoveMemberId(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Remove team member</AlertDialogTitle>
+            <AlertDialogTitle>Eliminar miembro del equipo</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to remove this member from the workspace? They will lose access to all workspace data.
+              ¿Confirma que desea eliminar a este miembro? Perderá el acceso a todos los datos del espacio de trabajo.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => removeMemberId && handleRemove(removeMemberId)}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              Remove
+              Eliminar
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

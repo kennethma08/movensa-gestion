@@ -57,7 +57,7 @@ export function createQuoteColumns({
             (table.getIsSomePageRowsSelected() && 'indeterminate')
           }
           onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label="Select all"
+          aria-label="Seleccionar todo"
           className="translate-y-[2px]"
         />
       ),
@@ -65,7 +65,7 @@ export function createQuoteColumns({
         <Checkbox
           checked={row.getIsSelected()}
           onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label="Select row"
+          aria-label="Seleccionar fila"
           className="translate-y-[2px]"
         />
       ),
@@ -76,7 +76,7 @@ export function createQuoteColumns({
       id: 'quote',
       accessorKey: 'quoteNumber',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Quote" />
+        <DataTableColumnHeader column={column} title="Cotización" />
       ),
       cell: ({ row }) => {
         const quote = row.original;
@@ -96,13 +96,13 @@ export function createQuoteColumns({
     {
       accessorKey: 'client',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Client" />
+        <DataTableColumnHeader column={column} title="Cliente" />
       ),
       cell: ({ row }) => {
         const client = row.original.client;
         if (!client) {
           return (
-            <div className="text-muted-foreground italic">No client</div>
+            <div className="text-muted-foreground italic">Sin cliente</div>
           );
         }
         return (
@@ -127,7 +127,7 @@ export function createQuoteColumns({
     {
       accessorKey: 'status',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Status" />
+        <DataTableColumnHeader column={column} title="Estado" />
       ),
       cell: ({ row }) => {
         const status = row.getValue('status') as QuoteStatus;
@@ -135,7 +135,7 @@ export function createQuoteColumns({
 
         return (
           <Badge variant={statusConfig.variant} className={statusConfig.className}>
-            {status.charAt(0).toUpperCase() + status.slice(1)}
+            {{ draft: 'Borrador', sent: 'Enviada', viewed: 'Vista', accepted: 'Aceptada', declined: 'Rechazada', expired: 'Vencida', converted: 'Convertida' }[status]}
           </Badge>
         );
       },
@@ -146,7 +146,7 @@ export function createQuoteColumns({
     {
       accessorKey: 'total',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Amount" />
+        <DataTableColumnHeader column={column} title="Monto" />
       ),
       cell: ({ row }) => {
         const total = row.getValue('total') as number;
@@ -161,7 +161,7 @@ export function createQuoteColumns({
       id: 'created',
       accessorKey: 'issueDate',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Created" />
+        <DataTableColumnHeader column={column} title="Creada" />
       ),
       cell: ({ row }) => {
         const issueDate = new Date(row.original.issueDate);
@@ -176,7 +176,7 @@ export function createQuoteColumns({
       id: 'expires',
       accessorKey: 'expirationDate',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Expires" />
+        <DataTableColumnHeader column={column} title="Vence" />
       ),
       cell: ({ row }) => {
         const expirationDate = row.original.expirationDate as string | null;

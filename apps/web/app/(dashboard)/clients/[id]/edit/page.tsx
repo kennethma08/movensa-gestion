@@ -23,7 +23,7 @@ export default async function EditClientPage({ params }: EditClientPageProps) {
       <div className="flex items-center gap-4">
         <BackButton />
         <div>
-          <h1 className="text-2xl font-bold">Edit Client</h1>
+          <h1 className="text-2xl font-bold">Editar cliente</h1>
           <p className="text-muted-foreground">{client.company || client.name}</p>
         </div>
       </div>

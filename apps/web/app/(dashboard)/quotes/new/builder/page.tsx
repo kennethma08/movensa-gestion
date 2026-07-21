@@ -31,7 +31,7 @@ import { BuilderToolbar } from '@/components/quotes/builder/builder-toolbar';
 
 export default function QuoteBuilderPage() {
   return (
-    <Suspense fallback={<div className="flex items-center justify-center h-screen">Loading builder...</div>}>
+    <Suspense fallback={<div className="flex items-center justify-center h-screen">Cargando editor...</div>}>
       <QuoteBuilderContent />
     </Suspense>
   );
@@ -182,7 +182,7 @@ function QuoteBuilderContent() {
       <div className="flex h-full items-center justify-center">
         <div className="text-center">
           <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent mx-auto mb-4" />
-          <p className="text-muted-foreground">Loading builder...</p>
+          <p className="text-muted-foreground">Cargando editor...</p>
         </div>
       </div>
     );

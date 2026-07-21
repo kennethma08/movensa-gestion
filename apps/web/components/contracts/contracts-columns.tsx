@@ -14,22 +14,22 @@ const statusConfig: Record<
   { label: string; className: string; icon: React.ReactNode }
 > = {
   draft: {
-    label: 'Draft',
+    label: 'Borrador',
     className: 'border-gray-300 text-gray-600 bg-gray-50 dark:border-gray-600 dark:text-gray-400 dark:bg-gray-900',
     icon: <FileText className="h-3 w-3" />,
   },
   sent: {
-    label: 'Sent',
+    label: 'Enviado',
     className: 'border-blue-300 text-blue-600 bg-blue-50 dark:border-blue-600 dark:text-blue-400 dark:bg-blue-950',
     icon: <Mail className="h-3 w-3" />,
   },
   viewed: {
-    label: 'Viewed',
+    label: 'Visto',
     className: 'border-yellow-300 text-yellow-700 bg-yellow-50 dark:border-yellow-600 dark:text-yellow-400 dark:bg-yellow-950',
     icon: <Eye className="h-3 w-3" />,
   },
   pending: {
-    label: 'Pending',
+    label: 'Pendiente',
     className: 'border-amber-300 text-amber-600 bg-amber-50 dark:border-amber-600 dark:text-amber-400 dark:bg-amber-950',
     icon: <Hourglass className="h-3 w-3" />,
   },
@@ -39,7 +39,7 @@ const statusConfig: Record<
     icon: <CheckCircle2 className="h-3 w-3" />,
   },
   expired: {
-    label: 'Expired',
+    label: 'Vencido',
     className: 'border-red-300 text-red-600 bg-red-50 dark:border-red-600 dark:text-red-400 dark:bg-red-950',
     icon: <Clock className="h-3 w-3" />,
   },
@@ -72,7 +72,7 @@ export function getContractColumns(
             (table.getIsSomePageRowsSelected() && 'indeterminate')
           }
           onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label="Select all"
+          aria-label="Seleccionar todo"
           className="translate-y-[2px]"
         />
       ),
@@ -80,7 +80,7 @@ export function getContractColumns(
         <Checkbox
           checked={row.getIsSelected()}
           onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label="Select row"
+          aria-label="Seleccionar fila"
           className="translate-y-[2px]"
         />
       ),
@@ -91,7 +91,7 @@ export function getContractColumns(
       id: 'contract',
       accessorKey: 'contractName',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Contract" />
+        <DataTableColumnHeader column={column} title="Contrato" />
       ),
       cell: ({ row }) => {
         const quoteName = row.original.quoteName;
@@ -117,12 +117,12 @@ export function getContractColumns(
     {
       accessorKey: 'status',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Status" />
+        <DataTableColumnHeader column={column} title="Estado" />
       ),
       cell: ({ row }) => {
         const status = row.getValue('status') as string;
         const config = statusConfig[status] || statusConfig.draft || {
-          label: 'Unknown',
+          label: 'Desconocido',
           className: 'border-gray-300 text-gray-600 bg-gray-50 dark:border-gray-600 dark:text-gray-400 dark:bg-gray-900',
           icon: <FileText className="h-3 w-3" />,
         };
@@ -142,7 +142,7 @@ export function getContractColumns(
       id: 'client',
       accessorKey: 'clientName',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Client" />
+        <DataTableColumnHeader column={column} title="Cliente" />
       ),
       cell: ({ row }) => {
         const clientName = row.original.clientName;
@@ -198,7 +198,7 @@ export function getContractColumns(
         }
         if (onEdit && contract.status === 'draft') {
           actions.push({
-            label: 'Edit',
+            label: 'Editar',
             icon: <Pencil className="mr-2 h-4 w-4" />,
             onClick: onEdit,
           });
@@ -213,7 +213,7 @@ export function getContractColumns(
         }
         if (onSend && contract.status === 'draft') {
           actions.push({
-            label: 'Send Contract',
+            label: 'Enviar contrato',
             icon: <Send className="mr-2 h-4 w-4" />,
             onClick: onSend,
             separator: true,
@@ -228,14 +228,14 @@ export function getContractColumns(
         }
         if (onCopyLink) {
           actions.push({
-            label: 'Copy Link',
+            label: 'Copiar enlace',
             icon: <Link2 className="mr-2 h-4 w-4" />,
             onClick: onCopyLink,
           });
         }
         if (onDownload) {
           actions.push({
-            label: 'Download PDF',
+            label: 'Descargar PDF',
             icon: <Download className="mr-2 h-4 w-4" />,
             onClick: onDownload,
             separator: true,
@@ -243,7 +243,7 @@ export function getContractColumns(
         }
         if (onDelete) {
           actions.push({
-            label: 'Delete',
+            label: 'Eliminar',
             icon: <Trash2 className="mr-2 h-4 w-4" />,
             onClick: onDelete,
             variant: 'destructive',
@@ -264,10 +264,10 @@ export function getContractColumns(
 }
 
 export const contractStatusOptions = [
-  { value: 'draft', label: 'Draft' },
-  { value: 'sent', label: 'Sent' },
-  { value: 'viewed', label: 'Viewed' },
+  { value: 'draft', label: 'Borrador' },
+  { value: 'sent', label: 'Enviado' },
+  { value: 'viewed', label: 'Visto' },
   { value: 'pending', label: 'Pending Countersign' },
-  { value: 'signed', label: 'Signed' },
-  { value: 'expired', label: 'Expired' },
+  { value: 'signed', label: 'Firmado' },
+  { value: 'expired', label: 'Vencido' },
 ];

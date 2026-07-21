@@ -41,7 +41,7 @@ export function HeaderBlockContent({ block }: HeaderBlockContentProps) {
           headingClasses,
           alignmentClass
         )}
-        placeholder="Enter heading text..."
+        placeholder="Escriba el encabezado..."
       />
     );
   }

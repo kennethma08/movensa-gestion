@@ -43,8 +43,8 @@ export function PropertiesPanel() {
       <div className="absolute md:relative right-0 top-0 z-20 flex h-full w-72 flex-col border-l bg-card shadow-lg md:shadow-none">
         <div className="flex items-center justify-between border-b px-4 py-3">
           <div>
-            <h2 className="font-semibold">Properties</h2>
-            <p className="text-xs text-muted-foreground">Document Settings</p>
+            <h2 className="font-semibold">Propiedades</h2>
+            <p className="text-xs text-muted-foreground">Configuración del documento</p>
           </div>
           <Button
             variant="ghost"
@@ -68,7 +68,7 @@ export function PropertiesPanel() {
     <div className="absolute md:relative right-0 top-0 z-20 flex h-full w-72 flex-col border-l bg-card shadow-lg md:shadow-none">
       <div className="flex items-center justify-between border-b px-4 py-3">
         <div>
-          <h2 className="font-semibold">Properties</h2>
+          <h2 className="font-semibold">Propiedades</h2>
           <p className="text-xs text-muted-foreground capitalize">
             {selectedBlock.type.replace('-', ' ')} Block
           </p>
@@ -116,14 +116,14 @@ function DocumentSettingsPanel({ contractTemplates }: { contractTemplates: { id:
       <div className="space-y-3">
         <div className="flex items-center gap-2">
           <FileText className="h-4 w-4 text-muted-foreground" />
-          <Label className="text-sm font-medium">Contract</Label>
+          <Label className="text-sm font-medium">Contrato</Label>
         </div>
         <Select value={contractTemplateId || 'none'} onValueChange={handleContractChange}>
           <SelectTrigger>
-            <SelectValue placeholder="Select a contract template..." />
+            <SelectValue placeholder="Seleccione una plantilla de contrato..." />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="none">No contract</SelectItem>
+            <SelectItem value="none">Sin contrato</SelectItem>
             {contractTemplates.map((template) => (
               <SelectItem key={template.id} value={template.id}>
                 {template.name}
@@ -198,16 +198,16 @@ function HeaderProperties({
   return (
     <>
       <div className="space-y-2">
-        <Label>Text</Label>
+        <Label>Texto</Label>
         <Input
           value={block.content.text}
           onChange={(e) => onUpdate({ text: e.target.value })}
-          placeholder="Enter heading text"
+          placeholder="Escriba el encabezado"
         />
       </div>
 
       <div className="space-y-2">
-        <Label>Heading Level</Label>
+        <Label>Nivel del encabezado</Label>
         <Select
           value={String(block.content.level)}
           onValueChange={(value) => onUpdate({ level: parseInt(value) as 1 | 2 | 3 })}
@@ -216,9 +216,9 @@ function HeaderProperties({
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="1">Heading 1 (Large)</SelectItem>
-            <SelectItem value="2">Heading 2 (Medium)</SelectItem>
-            <SelectItem value="3">Heading 3 (Small)</SelectItem>
+            <SelectItem value="1">Encabezado 1 (grande)</SelectItem>
+            <SelectItem value="2">Encabezado 2 (mediano)</SelectItem>
+            <SelectItem value="3">Encabezado 3 (pequeño)</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -243,9 +243,9 @@ function TextProperties({
   return (
     <>
       <div className="space-y-2">
-        <Label>Content</Label>
+        <Label>Contenido</Label>
         <p className="text-xs text-muted-foreground">
-          Edit text directly in the canvas
+          Edite el texto directamente en el lienzo
         </p>
       </div>
 
@@ -270,26 +270,26 @@ function ServiceItemProperties({
   return (
     <>
       <div className="space-y-2">
-        <Label>Service Name</Label>
+        <Label>Nombre del servicio</Label>
         <Input
           value={block.content.name}
           onChange={(e) => onUpdate({ name: e.target.value })}
-          placeholder="Service name"
+          placeholder="Nombre del servicio"
         />
       </div>
 
       <div className="space-y-2">
-        <Label>Description</Label>
+        <Label>Descripción</Label>
         <Input
           value={block.content.description}
           onChange={(e) => onUpdate({ description: e.target.value })}
-          placeholder="Optional description"
+          placeholder="Descripción opcional"
         />
       </div>
 
       <div className="grid grid-cols-2 gap-3">
         <div className="space-y-2">
-          <Label>Quantity</Label>
+          <Label>Cantidad</Label>
           <Input
             type="number"
             value={block.content.quantity}
@@ -299,7 +299,7 @@ function ServiceItemProperties({
           />
         </div>
         <div className="space-y-2">
-          <Label>Rate</Label>
+          <Label>Precio</Label>
           <Input
             type="number"
             value={block.content.rate}
@@ -312,7 +312,7 @@ function ServiceItemProperties({
 
       <div className="grid grid-cols-2 gap-3">
         <div className="space-y-2">
-          <Label>Unit</Label>
+          <Label>Unidad</Label>
           <Select
             value={block.content.unit}
             onValueChange={(value) => onUpdate({ unit: value })}
@@ -321,17 +321,17 @@ function ServiceItemProperties({
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="unit">Unit</SelectItem>
-              <SelectItem value="hour">Hour</SelectItem>
-              <SelectItem value="day">Day</SelectItem>
-              <SelectItem value="week">Week</SelectItem>
-              <SelectItem value="month">Month</SelectItem>
-              <SelectItem value="project">Project</SelectItem>
+              <SelectItem value="unit">Unidad</SelectItem>
+              <SelectItem value="hour">Hora</SelectItem>
+              <SelectItem value="day">Día</SelectItem>
+              <SelectItem value="week">Semana</SelectItem>
+              <SelectItem value="month">Mes</SelectItem>
+              <SelectItem value="project">Proyecto</SelectItem>
             </SelectContent>
           </Select>
         </div>
         <div className="space-y-2">
-          <Label>Tax Rate (%)</Label>
+          <Label>Tasa de impuesto (%)</Label>
           <Input
             type="number"
             value={block.content.taxRate || ''}
@@ -348,7 +348,7 @@ function ServiceItemProperties({
 
       <div className="pt-2 border-t">
         <div className="flex justify-between text-sm">
-          <span className="text-muted-foreground">Line Total</span>
+          <span className="text-muted-foreground">Total de línea</span>
           <span className="font-semibold">
             {formatCurrency(block.content.quantity * block.content.rate, document?.settings?.currency ?? 'USD')}
           </span>
@@ -369,7 +369,7 @@ function DividerProperties({
   return (
     <>
       <div className="space-y-2">
-        <Label>Style</Label>
+        <Label>Estilo</Label>
         <Select
           value={block.content.style}
           onValueChange={(value) =>
@@ -380,15 +380,15 @@ function DividerProperties({
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="solid">Solid</SelectItem>
-            <SelectItem value="dashed">Dashed</SelectItem>
-            <SelectItem value="dotted">Dotted</SelectItem>
+            <SelectItem value="solid">Continua</SelectItem>
+            <SelectItem value="dashed">Discontinua</SelectItem>
+            <SelectItem value="dotted">Punteada</SelectItem>
           </SelectContent>
         </Select>
       </div>
 
       <div className="space-y-2">
-        <Label>Thickness</Label>
+        <Label>Grosor</Label>
         <Select
           value={String(block.content.thickness)}
           onValueChange={(value) => onUpdate({ thickness: parseInt(value) as 1 | 2 | 3 })}
@@ -397,9 +397,9 @@ function DividerProperties({
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="1">Thin</SelectItem>
-            <SelectItem value="2">Medium</SelectItem>
-            <SelectItem value="3">Thick</SelectItem>
+            <SelectItem value="1">Fina</SelectItem>
+            <SelectItem value="2">Mediana</SelectItem>
+            <SelectItem value="3">Gruesa</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -435,7 +435,7 @@ function SpacerProperties({
 }) {
   return (
     <div className="space-y-2">
-      <Label>Height</Label>
+      <Label>Altura</Label>
       <Select
         value={block.content.height}
         onValueChange={(value) =>
@@ -446,10 +446,10 @@ function SpacerProperties({
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="sm">Small (16px)</SelectItem>
-          <SelectItem value="md">Medium (32px)</SelectItem>
-          <SelectItem value="lg">Large (64px)</SelectItem>
-          <SelectItem value="xl">Extra Large (96px)</SelectItem>
+          <SelectItem value="sm">Pequeño (16 px)</SelectItem>
+          <SelectItem value="md">Mediano (32 px)</SelectItem>
+          <SelectItem value="lg">Grande (64 px)</SelectItem>
+          <SelectItem value="xl">Muy grande (96 px)</SelectItem>
         </SelectContent>
       </Select>
     </div>
@@ -467,7 +467,7 @@ function ImageProperties({
   return (
     <>
       <div className="space-y-2">
-        <Label>Image URL</Label>
+        <Label>URL de la imagen</Label>
         <Input
           value={block.content.src}
           onChange={(e) => onUpdate({ src: e.target.value })}
@@ -476,25 +476,25 @@ function ImageProperties({
       </div>
 
       <div className="space-y-2">
-        <Label>Alt Text</Label>
+        <Label>Texto alternativo</Label>
         <Input
           value={block.content.alt}
           onChange={(e) => onUpdate({ alt: e.target.value })}
-          placeholder="Image description"
+          placeholder="Descripción de la imagen"
         />
       </div>
 
       <div className="space-y-2">
-        <Label>Caption</Label>
+        <Label>Pie de imagen</Label>
         <Input
           value={block.content.caption}
           onChange={(e) => onUpdate({ caption: e.target.value })}
-          placeholder="Optional caption"
+          placeholder="Pie de imagen opcional"
         />
       </div>
 
       <div className="space-y-2">
-        <Label>Width</Label>
+        <Label>Ancho</Label>
         <Select
           value={block.content.width === 'full' ? 'full' : 'custom'}
           onValueChange={(value) =>
@@ -505,8 +505,8 @@ function ImageProperties({
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="full">Full Width</SelectItem>
-            <SelectItem value="custom">Custom Width</SelectItem>
+            <SelectItem value="full">Ancho completo</SelectItem>
+            <SelectItem value="custom">Ancho personalizado</SelectItem>
           </SelectContent>
         </Select>
         {typeof block.content.width === 'number' && (
@@ -552,16 +552,16 @@ function SignatureProperties({
   return (
     <>
       <div className="space-y-2">
-        <Label>Label</Label>
+        <Label>Etiqueta</Label>
         <Input
           value={block.content.label}
           onChange={(e) => onUpdate({ label: e.target.value })}
-          placeholder="Client Signature"
+          placeholder="Firma del cliente"
         />
       </div>
 
       <div className="flex items-center justify-between">
-        <Label>Required</Label>
+        <Label>Obligatorio</Label>
         <Switch
           checked={block.content.required}
           onCheckedChange={(checked) => onUpdate({ required: checked })}
@@ -570,8 +570,8 @@ function SignatureProperties({
 
       {block.content.signatureData && (
         <div className="space-y-2 pt-2 border-t">
-          <Label>Status</Label>
-          <p className="text-sm text-green-600">Signed</p>
+          <Label>Estado</Label>
+          <p className="text-sm text-green-600">Firmado</p>
           {block.content.signerName && (
             <p className="text-sm text-muted-foreground">
               By: {block.content.signerName}
@@ -632,31 +632,31 @@ function TableProperties({
   return (
     <>
       <div className="space-y-2">
-        <Label>Columns ({block.content.headers.length})</Label>
+        <Label>Columnas ({block.content.headers.length})</Label>
         <div className="flex gap-2">
           <Button variant="outline" size="sm" className="flex-1" onClick={removeColumn} disabled={block.content.headers.length <= 1}>
-            Remove
+            Quitar
           </Button>
           <Button variant="outline" size="sm" className="flex-1" onClick={addColumn}>
-            Add
+            Agregar
           </Button>
         </div>
       </div>
 
       <div className="space-y-2">
-        <Label>Rows ({block.content.rows.length})</Label>
+        <Label>Filas ({block.content.rows.length})</Label>
         <div className="flex gap-2">
           <Button variant="outline" size="sm" className="flex-1" onClick={removeRow} disabled={block.content.rows.length <= 1}>
-            Remove
+            Quitar
           </Button>
           <Button variant="outline" size="sm" className="flex-1" onClick={addRow}>
-            Add
+            Agregar
           </Button>
         </div>
       </div>
 
       <div className="flex items-center justify-between">
-        <Label>Striped Rows</Label>
+        <Label>Filas alternadas</Label>
         <Switch
           checked={block.content.striped}
           onCheckedChange={(checked) => onUpdate({ striped: checked })}
@@ -664,7 +664,7 @@ function TableProperties({
       </div>
 
       <div className="flex items-center justify-between">
-        <Label>Bordered</Label>
+        <Label>Con bordes</Label>
         <Switch
           checked={block.content.bordered}
           onCheckedChange={(checked) => onUpdate({ bordered: checked })}
@@ -685,7 +685,7 @@ function ColumnsProperties({
   return (
     <>
       <div className="space-y-2">
-        <Label>Column Ratio</Label>
+        <Label>Proporción de columnas</Label>
         <Select
           value={block.content.ratio}
           onValueChange={(value) => onUpdate({ ratio: value as typeof block.content.ratio })}
@@ -694,17 +694,17 @@ function ColumnsProperties({
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="50-50">Equal (50/50)</SelectItem>
-            <SelectItem value="33-67">Narrow Left (33/67)</SelectItem>
-            <SelectItem value="67-33">Wide Left (67/33)</SelectItem>
-            <SelectItem value="25-75">Sidebar Left (25/75)</SelectItem>
-            <SelectItem value="75-25">Sidebar Right (75/25)</SelectItem>
+            <SelectItem value="50-50">Iguales (50/50)</SelectItem>
+            <SelectItem value="33-67">Izquierda estrecha (33/67)</SelectItem>
+            <SelectItem value="67-33">Izquierda amplia (67/33)</SelectItem>
+            <SelectItem value="25-75">Lateral izquierda (25/75)</SelectItem>
+            <SelectItem value="75-25">Lateral derecha (75/25)</SelectItem>
           </SelectContent>
         </Select>
       </div>
 
       <div className="space-y-2">
-        <Label>Gap</Label>
+        <Label>Espacio</Label>
         <Select
           value={block.content.gap}
           onValueChange={(value) => onUpdate({ gap: value as 'sm' | 'md' | 'lg' })}
@@ -713,15 +713,15 @@ function ColumnsProperties({
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="sm">Small</SelectItem>
-            <SelectItem value="md">Medium</SelectItem>
-            <SelectItem value="lg">Large</SelectItem>
+            <SelectItem value="sm">Pequeño</SelectItem>
+            <SelectItem value="md">Mediana</SelectItem>
+            <SelectItem value="lg">Grande</SelectItem>
           </SelectContent>
         </Select>
       </div>
 
       <p className="text-xs text-muted-foreground pt-2">
-        Edit column contents directly in the canvas.
+        Edite el contenido de las columnas directamente en el lienzo.
       </p>
     </>
   );
@@ -738,25 +738,25 @@ function ServiceGroupProperties({
   return (
     <>
       <div className="space-y-2">
-        <Label>Group Title</Label>
+        <Label>Título del grupo</Label>
         <Input
           value={block.content.title}
           onChange={(e) => onUpdate({ title: e.target.value })}
-          placeholder="Service Group"
+          placeholder="Grupo de servicios"
         />
       </div>
 
       <div className="space-y-2">
-        <Label>Description</Label>
+        <Label>Descripción</Label>
         <Input
           value={block.content.description}
           onChange={(e) => onUpdate({ description: e.target.value })}
-          placeholder="Optional description"
+          placeholder="Descripción opcional"
         />
       </div>
 
       <div className="flex items-center justify-between">
-        <Label>Collapsed by Default</Label>
+        <Label>Contraído de forma predeterminada</Label>
         <Switch
           checked={block.content.collapsed}
           onCheckedChange={(checked) => onUpdate({ collapsed: checked })}
@@ -766,7 +766,7 @@ function ServiceGroupProperties({
       <div className="pt-2 border-t">
         <p className="text-xs text-muted-foreground">
           {block.content.items.length} item{block.content.items.length !== 1 ? 's' : ''} in this group.
-          Add service items inside the group on the canvas.
+          Agregue conceptos de servicio dentro del grupo en el lienzo.
         </p>
       </div>
     </>
@@ -785,7 +785,7 @@ interface AlignmentSelectorProps {
 function AlignmentSelector({ value, onChange, options }: AlignmentSelectorProps) {
   return (
     <div className="space-y-2">
-      <Label>Alignment</Label>
+      <Label>Alineación</Label>
       <div className="flex gap-1">
         {options.map((option) => (
           <Button

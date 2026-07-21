@@ -32,13 +32,13 @@ interface DeclineQuoteDialogProps {
 }
 
 const DECLINE_REASONS = [
-  { value: 'price', label: 'Price too high' },
-  { value: 'scope', label: 'Scope doesn\'t match my needs' },
-  { value: 'timing', label: 'Timeline doesn\'t work' },
-  { value: 'competitor', label: 'Going with another provider' },
-  { value: 'budget', label: 'Budget constraints' },
-  { value: 'postponed', label: 'Project postponed' },
-  { value: 'other', label: 'Other reason' },
+  { value: 'price', label: 'El precio es demasiado alto' },
+  { value: 'scope', label: 'El alcance no se ajusta a mis necesidades' },
+  { value: 'timing', label: 'El plazo no me funciona' },
+  { value: 'competitor', label: 'Elegí otro proveedor' },
+  { value: 'budget', label: 'Limitaciones de presupuesto' },
+  { value: 'postponed', label: 'El proyecto fue pospuesto' },
+  { value: 'other', label: 'Otro motivo' },
 ];
 
 export function DeclineQuoteDialog({
@@ -62,13 +62,13 @@ export function DeclineQuoteDialog({
       });
 
       if (result.success) {
-        toast.success('Quote declined');
+        toast.success('Cotización rechazada');
         onDeclined();
       } else {
-        toast.error(result.error || 'Failed to decline quote');
+        toast.error(result.error || 'No se pudo rechazar la cotización');
       }
     } catch {
-      toast.error('An unexpected error occurred');
+      toast.error('Ocurrió un error inesperado');
     } finally {
       setIsSubmitting(false);
     }
@@ -89,21 +89,21 @@ export function DeclineQuoteDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <XCircle className="h-5 w-5 text-red-600" />
-            Decline Quote
+            Rechazar cotización
           </DialogTitle>
           <DialogDescription>
-            Let {quote.business.name} know why you&apos;re declining. This
-            feedback helps them improve.
+            Indique a {quote.business.name} por qué rechaza la cotización. Sus
+            comentarios nos ayudan a mejorar.
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4 py-4">
           {/* Reason Selection */}
           <div className="space-y-2">
-            <Label htmlFor="decline-reason">Reason (optional)</Label>
+            <Label htmlFor="decline-reason">Motivo (opcional)</Label>
             <Select value={reason} onValueChange={setReason} disabled={isSubmitting}>
               <SelectTrigger id="decline-reason">
-                <SelectValue placeholder="Select a reason..." />
+                <SelectValue placeholder="Seleccione un motivo..." />
               </SelectTrigger>
               <SelectContent>
                 {DECLINE_REASONS.map((r) => (
@@ -117,10 +117,10 @@ export function DeclineQuoteDialog({
 
           {/* Additional Comments */}
           <div className="space-y-2">
-            <Label htmlFor="decline-comment">Additional comments (optional)</Label>
+            <Label htmlFor="decline-comment">Comentarios adicionales (opcional)</Label>
             <Textarea
               id="decline-comment"
-              placeholder="Any additional feedback you'd like to share..."
+              placeholder="Comentarios adicionales que desee compartir..."
               value={comment}
               onChange={(e) => setComment(e.target.value)}
               disabled={isSubmitting}
@@ -131,7 +131,7 @@ export function DeclineQuoteDialog({
 
         <DialogFooter>
           <Button variant="outline" onClick={handleClose} disabled={isSubmitting}>
-            Cancel
+            Cancelar
           </Button>
           <Button
             variant="destructive"
@@ -141,12 +141,12 @@ export function DeclineQuoteDialog({
             {isSubmitting ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Declining...
+                Rechazando...
               </>
             ) : (
               <>
                 <XCircle className="mr-2 h-4 w-4" />
-                Decline Quote
+                Rechazar cotización
               </>
             )}
           </Button>

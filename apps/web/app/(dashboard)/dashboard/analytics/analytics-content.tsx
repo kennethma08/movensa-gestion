@@ -74,7 +74,7 @@ export function AnalyticsPageContent({
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Analytics</h1>
+          <h1 className="text-2xl font-bold">Analíticas</h1>
           <p className="text-muted-foreground">
             Business insights and performance metrics
           </p>
@@ -95,7 +95,7 @@ export function AnalyticsPageContent({
           </Select>
           <Button variant="outline" onClick={handleExport}>
             <Download className="mr-2 h-4 w-4" />
-            Export
+            Exportar
           </Button>
         </div>
       </div>
@@ -103,11 +103,11 @@ export function AnalyticsPageContent({
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList>
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="revenue">Revenue</TabsTrigger>
-          <TabsTrigger value="quotes">Quotes</TabsTrigger>
-          <TabsTrigger value="invoices">Invoices</TabsTrigger>
-          <TabsTrigger value="clients">Clients</TabsTrigger>
+          <TabsTrigger value="overview">Resumen</TabsTrigger>
+          <TabsTrigger value="revenue">Ingresos</TabsTrigger>
+          <TabsTrigger value="quotes">Cotizaciones</TabsTrigger>
+          <TabsTrigger value="invoices">Facturas</TabsTrigger>
+          <TabsTrigger value="clients">Clientes</TabsTrigger>
         </TabsList>
 
         {/* Overview Tab */}
@@ -212,7 +212,7 @@ function generateCSV(data: Record<string, unknown>): string {
 
   // Quote Status
   lines.push('');
-  lines.push('Quote Status,Count');
+  lines.push('Estado de cotización,Cantidad');
   const quoteStatus = data.quoteStatus as Record<string, number>;
   if (quoteStatus) {
     Object.entries(quoteStatus).forEach(([status, count]) => {
@@ -222,7 +222,7 @@ function generateCSV(data: Record<string, unknown>): string {
 
   // Invoice Status
   lines.push('');
-  lines.push('Invoice Status,Count');
+  lines.push('Estado de factura,Cantidad');
   const invoiceStatus = data.invoiceStatus as Record<string, number>;
   if (invoiceStatus) {
     Object.entries(invoiceStatus).forEach(([status, count]) => {

@@ -70,7 +70,7 @@ export function OnboardingBusinessStep({ onNext, initialComplete }: OnboardingBu
         router.refresh();
         onNext();
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to save business profile');
+        setError(err instanceof Error ? err.message : 'No se pudo guardar el perfil del negocio');
       }
     });
   };
@@ -81,7 +81,7 @@ export function OnboardingBusinessStep({ onNext, initialComplete }: OnboardingBu
         <div className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 mb-4">
           <Building2 className="h-6 w-6 text-primary" />
         </div>
-        <h3 className="text-lg font-semibold">Tell us about your business</h3>
+        <h3 className="text-lg font-semibold">Cuéntenos sobre su negocio</h3>
         <p className="text-sm text-muted-foreground">
           This information will appear on your quotes and invoices
         </p>
@@ -89,11 +89,11 @@ export function OnboardingBusinessStep({ onNext, initialComplete }: OnboardingBu
 
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-2 sm:col-span-2">
-          <Label htmlFor="businessName">Business Name *</Label>
+          <Label htmlFor="businessName">Nombre del negocio *</Label>
           <Input
             id="businessName"
             {...register('businessName')}
-            placeholder="Your Company Name"
+            placeholder="Nombre de su empresa"
           />
           {errors.businessName && (
             <p className="text-sm text-destructive">{errors.businessName.message}</p>
@@ -101,12 +101,12 @@ export function OnboardingBusinessStep({ onNext, initialComplete }: OnboardingBu
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="email">Business Email *</Label>
+          <Label htmlFor="email">Correo electrónico *</Label>
           <Input
             id="email"
             type="email"
             {...register('email')}
-            placeholder="hello@yourcompany.com"
+            placeholder="correo@suempresa.com"
           />
           {errors.email && (
             <p className="text-sm text-destructive">{errors.email.message}</p>
@@ -114,20 +114,20 @@ export function OnboardingBusinessStep({ onNext, initialComplete }: OnboardingBu
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="phone">Phone Number</Label>
+          <Label htmlFor="phone">Teléfono</Label>
           <Input
             id="phone"
             {...register('phone')}
-            placeholder="+1 (555) 123-4567"
+            placeholder="+506 0000-0000"
           />
         </div>
 
         <div className="space-y-2 sm:col-span-2">
-          <Label htmlFor="website">Website</Label>
+          <Label htmlFor="website">Sitio web</Label>
           <Input
             id="website"
             {...register('website')}
-            placeholder="https://yourcompany.com"
+            placeholder="https://suempresa.com"
           />
           {errors.website && (
             <p className="text-sm text-destructive">{errors.website.message}</p>
@@ -135,33 +135,33 @@ export function OnboardingBusinessStep({ onNext, initialComplete }: OnboardingBu
         </div>
 
         <div className="space-y-2 sm:col-span-2">
-          <Label htmlFor="street">Street Address</Label>
+          <Label htmlFor="street">Dirección exacta</Label>
           <Textarea
             id="street"
             {...register('street')}
-            placeholder="123 Main Street"
+            placeholder="Dirección exacta"
             rows={2}
           />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="city">City</Label>
-          <Input id="city" {...register('city')} placeholder="New York" />
+          <Label htmlFor="city">Ciudad</Label>
+          <Input id="city" {...register('city')} placeholder="Ciudad" />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="state">State/Province</Label>
+          <Label htmlFor="state">Provincia o región</Label>
           <Input id="state" {...register('state')} placeholder="NY" />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="zipCode">ZIP/Postal Code</Label>
+          <Label htmlFor="zipCode">Código postal</Label>
           <Input id="zipCode" {...register('zipCode')} placeholder="10001" />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="country">Country</Label>
-          <Input id="country" {...register('country')} placeholder="United States" />
+          <Label htmlFor="country">País</Label>
+          <Input id="country" {...register('country')} placeholder="Costa Rica" />
         </div>
       </div>
 

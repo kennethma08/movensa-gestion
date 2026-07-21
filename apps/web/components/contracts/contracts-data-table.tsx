@@ -37,22 +37,22 @@ import { SendEmailDialog } from '@/components/shared/send-email-dialog';
 
 const statusConfig: Record<string, { label: string; className: string; icon: React.ReactNode }> = {
   draft: {
-    label: 'Draft',
+    label: 'Borrador',
     className: 'border-gray-300 text-gray-600 bg-gray-50 dark:border-gray-600 dark:text-gray-400 dark:bg-gray-900',
     icon: <FileText className="h-3 w-3" />,
   },
   sent: {
-    label: 'Sent',
+    label: 'Enviado',
     className: 'border-blue-300 text-blue-600 bg-blue-50 dark:border-blue-600 dark:text-blue-400 dark:bg-blue-950',
     icon: <Mail className="h-3 w-3" />,
   },
   viewed: {
-    label: 'Viewed',
+    label: 'Visto',
     className: 'border-yellow-300 text-yellow-700 bg-yellow-50 dark:border-yellow-600 dark:text-yellow-400 dark:bg-yellow-950',
     icon: <Eye className="h-3 w-3" />,
   },
   pending: {
-    label: 'Pending',
+    label: 'Pendiente',
     className: 'border-amber-300 text-amber-600 bg-amber-50 dark:border-amber-600 dark:text-amber-400 dark:bg-amber-950',
     icon: <Hourglass className="h-3 w-3" />,
   },
@@ -62,7 +62,7 @@ const statusConfig: Record<string, { label: string; className: string; icon: Rea
     icon: <CheckCircle2 className="h-3 w-3" />,
   },
   expired: {
-    label: 'Expired',
+    label: 'Vencido',
     className: 'border-red-300 text-red-600 bg-red-50 dark:border-red-600 dark:text-red-400 dark:bg-red-950',
     icon: <Clock className="h-3 w-3" />,
   },
@@ -100,10 +100,10 @@ export function ContractsDataTable({ data: initialData }: ContractsDataTableProp
       if (detail) {
         setViewingContract(detail);
       } else {
-        toast.error('Contract not found');
+        toast.error('Contrato no encontrado');
       }
     } catch {
-      toast.error('Failed to load contract');
+      toast.error('No se pudo cargar el contrato');
     } finally {
       setIsLoadingContract(false);
     }
@@ -118,10 +118,10 @@ export function ContractsDataTable({ data: initialData }: ContractsDataTableProp
     setIsProcessing(true);
     try {
       await deleteContractInstance(contract.id);
-      toast.success('Contract deleted successfully');
+      toast.success('Contrato eliminado correctamente');
       setData((prev) => prev.filter((c) => c.id !== contract.id));
     } catch {
-      toast.error('Failed to delete contract');
+      toast.error('No se pudo eliminar el contrato');
     } finally {
       setIsProcessing(false);
     }
@@ -174,9 +174,9 @@ export function ContractsDataTable({ data: initialData }: ContractsDataTableProp
     const url = `${baseUrl}/c/${(contract as any).accessToken || contract.id}`;
     try {
       await navigator.clipboard.writeText(url);
-      toast.success('Link copied to clipboard');
+      toast.success('Enlace copiado al portapapeles');
     } catch {
-      toast.error('Failed to copy link');
+      toast.error('No se pudo copiar el enlace');
     }
   }, []);
 
@@ -199,9 +199,9 @@ export function ContractsDataTable({ data: initialData }: ContractsDataTableProp
   const emptyState = (
     <div className="flex flex-col items-center justify-center py-16">
       <FileText className="h-12 w-12 text-muted-foreground mb-4" />
-      <h3 className="text-lg font-medium">No contracts yet</h3>
+      <h3 className="text-lg font-medium">Aún no hay contratos</h3>
       <p className="text-muted-foreground mb-4">
-        Create your first contract from a template to get started
+        Cree su primer contrato a partir de una plantilla
       </p>
       <Button asChild>
         <Link href="/contracts/new">
@@ -234,7 +234,7 @@ export function ContractsDataTable({ data: initialData }: ContractsDataTableProp
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20">
           <div className="rounded-lg bg-background p-4 shadow-lg flex items-center gap-3">
             <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
-            <span className="text-sm text-muted-foreground">Loading contract...</span>
+            <span className="text-sm text-muted-foreground">Cargando contrato...</span>
           </div>
         </div>
       )}
@@ -242,7 +242,7 @@ export function ContractsDataTable({ data: initialData }: ContractsDataTableProp
       {/* Contract View Dialog */}
       <Dialog open={!!viewingContract} onOpenChange={(open) => !open && handleCloseView()}>
         <DialogContent className="!flex !flex-col !max-w-[860px] !max-h-[90vh] !p-0 !gap-0 overflow-hidden">
-          <DialogTitle className="sr-only">Contract Preview</DialogTitle>
+          <DialogTitle className="sr-only">Vista previa del contrato</DialogTitle>
           {contract && (
             <>
               {/* Header */}
@@ -271,39 +271,39 @@ export function ContractsDataTable({ data: initialData }: ContractsDataTableProp
                 <div className="p-6 space-y-6">
                   {/* Contract Details */}
                   <div>
-                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-3">Details</p>
+                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-3">Detalles</p>
                     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                       <div>
-                        <p className="text-xs text-muted-foreground mb-0.5">Client</p>
+                        <p className="text-xs text-muted-foreground mb-0.5">Cliente</p>
                         <p className="font-medium text-sm">{contract.clientName}</p>
                       </div>
                       {contract.quoteName && (
                         <div>
-                          <p className="text-xs text-muted-foreground mb-0.5">Related Quote</p>
+                          <p className="text-xs text-muted-foreground mb-0.5">Cotización relacionada</p>
                           <p className="font-medium text-sm">{contract.quoteName}</p>
                         </div>
                       )}
                       <div>
-                        <p className="text-xs text-muted-foreground mb-0.5">Sent</p>
+                        <p className="text-xs text-muted-foreground mb-0.5">Enviado</p>
                         <p className="font-medium text-sm">
-                          {contract.sentAt ? formatDate(contract.sentAt) : 'Not sent'}
+                          {contract.sentAt ? formatDate(contract.sentAt) : 'No enviado'}
                         </p>
                       </div>
                       <div>
-                        <p className="text-xs text-muted-foreground mb-0.5">Viewed</p>
+                        <p className="text-xs text-muted-foreground mb-0.5">Visto</p>
                         <p className="font-medium text-sm">
-                          {contract.viewedAt ? formatDate(contract.viewedAt) : 'Not viewed'}
+                          {contract.viewedAt ? formatDate(contract.viewedAt) : 'No visto'}
                         </p>
                       </div>
                       <div>
-                        <p className="text-xs text-muted-foreground mb-0.5">Signed</p>
+                        <p className="text-xs text-muted-foreground mb-0.5">Firmado</p>
                         <p className="font-medium text-sm">
-                          {contract.signedAt ? formatDate(contract.signedAt) : 'Not signed'}
+                          {contract.signedAt ? formatDate(contract.signedAt) : 'No firmado'}
                         </p>
                       </div>
                       {contract.signerIpAddress && (
                         <div>
-                          <p className="text-xs text-muted-foreground mb-0.5">Client IP</p>
+                          <p className="text-xs text-muted-foreground mb-0.5">IP del cliente</p>
                           <p className="font-medium text-sm font-mono">{contract.signerIpAddress}</p>
                         </div>
                       )}
@@ -315,11 +315,11 @@ export function ContractsDataTable({ data: initialData }: ContractsDataTableProp
                     <>
                       <Separator className="bg-border/60" />
                       <div>
-                        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-3">Signatures</p>
+                        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-3">Firmas</p>
                         <div className="grid gap-4 sm:grid-cols-2">
                           {/* Client Signature */}
                           <div className="rounded-lg border bg-background p-4">
-                            <p className="text-xs font-medium text-muted-foreground mb-2">Client Signature</p>
+                            <p className="text-xs font-medium text-muted-foreground mb-2">Firma del cliente</p>
                             {contract.signatureData ? (
                               <>
                                 {contract.signatureData.type === 'drawn' ? (
@@ -337,20 +337,20 @@ export function ContractsDataTable({ data: initialData }: ContractsDataTableProp
                                   </p>
                                 )}
                                 <p className="text-xs text-muted-foreground mt-2">
-                                  Signed by {contract.signatureData.name} on{' '}
+                                  Firmado por {contract.signatureData.name} el{' '}
                                   {formatDate(new Date(contract.signatureData.date))}
                                 </p>
                               </>
                             ) : (
                               <div className="h-16 border-2 border-dashed rounded flex items-center justify-center text-sm text-muted-foreground">
-                                Awaiting signature
+                                Firma pendiente
                               </div>
                             )}
                           </div>
 
                           {/* Business Signature */}
                           <div className="rounded-lg border bg-background p-4">
-                            <p className="text-xs font-medium text-muted-foreground mb-2">Business Signature</p>
+                            <p className="text-xs font-medium text-muted-foreground mb-2">Firma de la empresa</p>
                             {contract.countersignatureData ? (
                               <>
                                 {contract.countersignatureData.type === 'drawn' ? (
@@ -368,13 +368,13 @@ export function ContractsDataTable({ data: initialData }: ContractsDataTableProp
                                   </p>
                                 )}
                                 <p className="text-xs text-muted-foreground mt-2">
-                                  Countersigned by {contract.countersignatureData.name} on{' '}
+                                  Contrafirmado por {contract.countersignatureData.name} el{' '}
                                   {formatDate(new Date(contract.countersignatureData.date))}
                                 </p>
                               </>
                             ) : (
                               <div className="h-16 border-2 border-dashed rounded flex items-center justify-center text-sm text-muted-foreground">
-                                Awaiting countersignature
+                                Contrafirma pendiente
                               </div>
                             )}
                           </div>
@@ -387,7 +387,7 @@ export function ContractsDataTable({ data: initialData }: ContractsDataTableProp
 
                   {/* Contract Content */}
                   <div>
-                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-3">Contract Content</p>
+                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-3">Contenido del contrato</p>
                     <div className="rounded-lg border bg-background p-4 [&_.ProseMirror]:!min-h-[100px] [&_.ProseMirror]:!max-h-[300px] [&_.ProseMirror]:overflow-y-auto [&_.prose]:!prose-sm">
                       <ContractEditor
                         key={contract.id}
