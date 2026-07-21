@@ -828,28 +828,34 @@ export async function updateQuoteStatus(
     return { success: false, error: 'No se puede realizar ese cambio de estado.' };
   }
 
-  await prisma.quote.update({
-    where: {
-      id: quoteId,
-      workspaceId: workspace.id,
-    },
-    data: {
-      status,
-      acceptedAt: status === 'accepted' ? new Date() : null,
-      declinedAt: status === 'declined' ? new Date() : null,
-      ...(status === 'sent' && { sentAt: new Date() }),
-    },
-  });
+  try {
+    await prisma.$transaction(async (tx) => {
+      await tx.quote.update({
+        where: {
+          id: quoteId,
+          workspaceId: workspace.id,
+        },
+        data: {
+          status,
+          acceptedAt: status === 'accepted' ? new Date() : null,
+          declinedAt: status === 'declined' ? new Date() : null,
+          ...(status === 'sent' && { sentAt: new Date() }),
+        },
+      });
 
-  // Log event
-  await prisma.quoteEvent.create({
-    data: {
-      quoteId,
-      eventType: `status_changed_to_${status}`,
-      actorId: userId,
-      actorType: 'user',
-    },
-  });
+      await tx.quoteEvent.create({
+        data: {
+          quoteId,
+          eventType: `status_changed_to_${status}`,
+          actorId: userId,
+          actorType: 'user',
+        },
+      });
+    });
+  } catch (error) {
+    logger.error({ err: error, quoteId, status }, 'Failed to update quote status');
+    return { success: false, error: 'No se pudo cambiar el estado de la cotización. Inténtelo nuevamente.' };
+  }
 
   revalidatePath(ROUTES.quotes);
   revalidatePath(ROUTES.quoteDetail(quoteId));

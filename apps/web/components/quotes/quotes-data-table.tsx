@@ -27,6 +27,7 @@ import {
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogTitle,
 } from '@/components/ui/dialog';
 import Link from 'next/link';
@@ -320,6 +321,9 @@ export function QuotesDataTable({ data: initialData }: QuotesDataTableProps) {
       <Dialog open={!!viewingQuote} onOpenChange={(open) => !open && handleCloseView()}>
         <DialogContent className="!flex !flex-col !max-w-[520px] !max-h-[90vh] !p-0 !gap-0 overflow-hidden">
           <DialogTitle className="sr-only">Vista previa de la cotización</DialogTitle>
+          <DialogDescription className="sr-only">
+            Resumen de la cotización, conceptos, total y datos del cliente.
+          </DialogDescription>
           {quote && (
             <>
               {/* Scrollable content */}

@@ -474,6 +474,20 @@ describe('Quote Actions', () => {
       }));
     });
 
+    it('returns a controlled error when the database rejects the status', async () => {
+      mockPrisma.quote.findFirst.mockResolvedValue({
+        id: 'quote-1',
+        workspaceId: WORKSPACE_ID,
+        status: 'draft',
+      });
+      mockPrisma.$transaction.mockRejectedValueOnce(new Error('database constraint'));
+
+      const result = await updateQuoteStatus('quote-1', 'under_review');
+
+      expect(result.success).toBe(false);
+      expect(result.error).toContain('No se pudo cambiar el estado');
+    });
+
     it('returns error when quote not found', async () => {
       mockPrisma.quote.findFirst.mockResolvedValue(null);
 
