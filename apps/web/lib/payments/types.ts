@@ -76,18 +76,18 @@ export interface PaymentIntentResult {
 }
 
 export const PAYMENT_METHODS: { value: PaymentMethod; label: string }[] = [
-  { value: 'card', label: 'Credit/Debit Card' },
-  { value: 'bank_transfer', label: 'Bank Transfer' },
-  { value: 'cash', label: 'Cash' },
-  { value: 'check', label: 'Check' },
-  { value: 'other', label: 'Other' },
+  { value: 'card', label: 'Tarjeta de crédito o débito' },
+  { value: 'bank_transfer', label: 'Transferencia bancaria' },
+  { value: 'cash', label: 'Efectivo' },
+  { value: 'check', label: 'Cheque' },
+  { value: 'other', label: 'Otro' },
 ];
 
 export const PAYMENT_STATUSES: { value: PaymentStatus; label: string; color: string }[] = [
-  { value: 'pending', label: 'Pending', color: 'yellow' },
-  { value: 'processing', label: 'Processing', color: 'blue' },
-  { value: 'completed', label: 'Completed', color: 'green' },
-  { value: 'failed', label: 'Failed', color: 'red' },
-  { value: 'refunded', label: 'Refunded', color: 'purple' },
-  { value: 'cancelled', label: 'Cancelled', color: 'gray' },
+  { value: 'pending', label: 'Pendiente', color: 'yellow' },
+  { value: 'processing', label: 'En proceso', color: 'blue' },
+  { value: 'completed', label: 'Completado', color: 'green' },
+  { value: 'failed', label: 'Fallido', color: 'red' },
+  { value: 'refunded', label: 'Reembolsado', color: 'purple' },
+  { value: 'cancelled', label: 'Cancelado', color: 'gray' },
 ];

@@ -69,8 +69,14 @@ const notificationIcons: Record<string, typeof Bell> = {
   contract_signed: CheckCircle,
 };
 
-function formatTimeAgo(date: Date): string {
-  const now = new Date();
+function formatTimeAgo(date: Date, now: Date | null): string {
+  if (!now) {
+    return new Date(date).toLocaleDateString('es-CR', {
+      day: 'numeric',
+      month: 'short',
+      timeZone: 'America/Costa_Rica',
+    });
+  }
   const diff = now.getTime() - new Date(date).getTime();
   const minutes = Math.floor(diff / 60000);
   if (minutes < 1) return 'ahora';
@@ -79,7 +85,37 @@ function formatTimeAgo(date: Date): string {
   if (hours < 24) return `hace ${hours} h`;
   const days = Math.floor(hours / 24);
   if (days < 7) return `hace ${days} d`;
-  return new Date(date).toLocaleDateString('es-CR');
+  return new Date(date).toLocaleDateString('es-CR', {
+    timeZone: 'America/Costa_Rica',
+  });
+}
+
+function getNotificationReference(notification: NotificationData): string {
+  const match = notification.title.match(/(?:Quote|Invoice|Contract|Cotización|Factura|Contrato)\s+([A-Z0-9-]+)/i);
+  return match?.[1] ? ` ${match[1]}` : '';
+}
+
+function localizeNotification(notification: NotificationData): { title: string; message: string | null } {
+  const reference = getNotificationReference(notification);
+  const recipient = notification.message?.replace(/^(?:Sent to|Enviada a)\s+/i, '').trim();
+
+  const labels: Record<string, { title: string; message: string }> = {
+    quote_sent: { title: `Cotización${reference} enviada`, message: recipient ? `Enviada a ${recipient}` : 'La cotización fue enviada.' },
+    quote_viewed: { title: `Cotización${reference} vista`, message: 'El cliente abrió la cotización.' },
+    quote_accepted: { title: `Cotización${reference} aceptada`, message: 'El cliente aceptó la cotización.' },
+    quote_declined: { title: `Cotización${reference} rechazada`, message: 'El cliente rechazó la cotización.' },
+    invoice_sent: { title: `Factura${reference} enviada`, message: recipient ? `Enviada a ${recipient}` : 'La factura fue enviada.' },
+    invoice_viewed: { title: `Factura${reference} vista`, message: 'El cliente abrió la factura.' },
+    invoice_paid: { title: `Factura${reference} pagada`, message: 'El pago de la factura fue registrado.' },
+    invoice_overdue: { title: `Factura${reference} vencida`, message: 'La factura tiene un saldo pendiente vencido.' },
+    contract_sent: { title: `Contrato${reference} enviado`, message: 'El contrato fue enviado al cliente.' },
+    contract_signed: { title: `Contrato${reference} firmado`, message: 'El cliente firmó el contrato.' },
+  };
+
+  return labels[notification.type] || {
+    title: notification.title,
+    message: notification.message,
+  };
 }
 
 const pathNameMap: Record<string, string> = {
@@ -155,10 +191,12 @@ function generateBreadcrumbs(pathname: string) {
 export function AppHeader({ user, unreadCount = 0, notifications = [] }: AppHeaderProps) {
   const pathname = usePathname();
   const [commandOpen, setCommandOpen] = useState(false);
+  const [currentTime, setCurrentTime] = useState<Date | null>(null);
   const breadcrumbs = generateBreadcrumbs(pathname);
 
   // Register Cmd+K / Ctrl+K keyboard shortcut
   useEffect(() => {
+    setCurrentTime(new Date());
     const down = (e: KeyboardEvent) => {
       if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
@@ -282,6 +320,7 @@ export function AppHeader({ user, unreadCount = 0, notifications = [] }: AppHead
                 ) : (
                   notifications.map((notification) => {
                     const IconComponent = notificationIcons[notification.type] || Bell;
+                    const localized = localizeNotification(notification);
                     return (
                       <DropdownMenuItem
                         key={notification.id}
@@ -300,13 +339,13 @@ export function AppHeader({ user, unreadCount = 0, notifications = [] }: AppHead
                         </div>
                         <div className="flex-1 min-w-0">
                           <p className={`text-sm truncate ${!notification.isRead ? 'font-semibold' : ''}`}>
-                            {notification.title}
+                            {localized.title}
                           </p>
-                          {notification.message && (
-                            <p className="text-xs text-muted-foreground truncate">{notification.message}</p>
+                          {localized.message && (
+                            <p className="text-xs text-muted-foreground truncate">{localized.message}</p>
                           )}
                           <p className="text-xs text-muted-foreground mt-0.5">
-                            {formatTimeAgo(notification.createdAt)}
+                            {formatTimeAgo(notification.createdAt, currentTime)}
                           </p>
                         </div>
                         {!notification.isRead && (

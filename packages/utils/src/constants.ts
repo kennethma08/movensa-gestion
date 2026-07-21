@@ -127,6 +127,7 @@ export type EmailTemplateType = (typeof EMAIL_TEMPLATE_TYPE)[keyof typeof EMAIL_
  * Supported currencies (ISO 4217)
  */
 export const CURRENCIES = [
+  { code: 'CRC', name: 'Costa Rican Colón', symbol: '₡' },
   { code: 'USD', name: 'US Dollar', symbol: '$' },
   { code: 'EUR', name: 'Euro', symbol: '€' },
   { code: 'GBP', name: 'British Pound', symbol: '£' },

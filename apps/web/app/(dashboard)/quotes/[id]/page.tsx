@@ -333,7 +333,7 @@ export default async function QuoteDetailPage({ params }: QuoteDetailPageProps) 
                 </div>
                 <div className="space-y-1 text-sm">
                   <p><span className="text-muted-foreground">Firmado por:</span> {quote.signatureData.signerName}</p>
-                  <p><span className="text-muted-foreground">Fecha:</span> {new Date(quote.signatureData.signedAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
+                  <p><span className="text-muted-foreground">Fecha:</span> {new Date(quote.signatureData.signedAt).toLocaleDateString('es-CR', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'America/Costa_Rica' })}</p>
                   <p><span className="text-muted-foreground">IP:</span> {quote.signatureData.ipAddress}</p>
                 </div>
               </CardContent>
@@ -397,7 +397,7 @@ async function QuoteActivity({ quoteId }: { quoteId: string }) {
                 <div className="flex-1">
                   <p className="text-sm">{getEventLabel(event.eventType)}</p>
                   <p className="text-xs text-muted-foreground">
-                    {new Date(event.createdAt).toLocaleDateString('en-US', {
+                    {new Date(event.createdAt).toLocaleDateString('es-CR', {
                       year: 'numeric',
                       month: 'short',
                       day: 'numeric',

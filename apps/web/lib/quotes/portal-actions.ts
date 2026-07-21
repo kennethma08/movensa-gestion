@@ -201,7 +201,7 @@ export async function getQuoteByAccessToken(
       id: quote.id,
       quoteNumber: quote.quoteNumber,
       status: quote.status,
-      title: quote.title || 'Quote',
+      title: quote.title || 'Cotización',
       currency: quote.currency || (settings.currency as string) || 'USD',
       issueDate: quote.issueDate.toISOString().split('T')[0] ?? '',
       expirationDate: quote.expirationDate?.toISOString().split('T')[0] ?? null,
@@ -311,8 +311,8 @@ export async function trackQuoteView(accessToken: string): Promise<void> {
       await notifyWorkspaceMembers({
         workspaceId: quote.workspaceId,
         type: 'quote_viewed',
-        title: `Quote ${quote.quoteNumber} was viewed`,
-        message: 'Your client has opened the quote.',
+        title: `Cotización ${quote.quoteNumber} vista`,
+        message: 'El cliente abrió la cotización.',
         entityType: 'quote',
         entityId: quote.id,
         link: `/quotes/${quote.id}`,
@@ -529,8 +529,8 @@ export async function acceptQuote(data: {
     await notifyWorkspaceMembers({
       workspaceId: quote.workspaceId,
       type: 'quote_accepted',
-      title: `Quote accepted by ${data.signerName}`,
-      message: 'Your client has accepted and signed the quote.',
+      title: `Cotización aceptada por ${data.signerName}`,
+      message: 'El cliente aceptó y firmó la cotización.',
       entityType: 'quote',
       entityId: quote.id,
       link: `/quotes/${quote.id}`,
@@ -677,8 +677,8 @@ export async function declineQuote(data: {
     await notifyWorkspaceMembers({
       workspaceId: quote.workspaceId,
       type: 'quote_declined',
-      title: `Quote ${quote.quoteNumber} was declined`,
-      message: data.reason ? `Reason: ${data.reason}` : 'Your client has declined the quote.',
+      title: `Cotización ${quote.quoteNumber} rechazada`,
+      message: data.reason ? `Motivo: ${data.reason}` : 'El cliente rechazó la cotización.',
       entityType: 'quote',
       entityId: quote.id,
       link: `/quotes/${quote.id}`,
@@ -687,6 +687,6 @@ export async function declineQuote(data: {
     return { success: true };
   } catch (error) {
     logger.error({ err: error }, 'Error declining quote');
-    return { success: false, error: 'Failed to decline quote' };
+    return { success: false, error: 'No se pudo rechazar la cotización' };
   }
 }

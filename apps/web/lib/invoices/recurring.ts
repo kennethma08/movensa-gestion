@@ -239,7 +239,7 @@ export async function generateRecurringInvoice(
         projectId: parent.projectId,
         parentInvoiceId: parent.id,
         invoiceNumber,
-        title: parent.title || 'Invoice',
+        title: parent.title || 'Factura',
         status,
         currency: parent.currency,
         accessToken: generateAccessToken(),

@@ -828,6 +828,7 @@ export function EditInvoiceForm({
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
+                      <SelectItem value="CRC">CRC - Colón costarricense (₡)</SelectItem>
                       <SelectItem value="USD">USD - Dólar estadounidense</SelectItem>
                       <SelectItem value="EUR">EUR - Euro</SelectItem>
                       <SelectItem value="GBP">GBP - Libra esterlina</SelectItem>

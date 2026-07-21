@@ -25,7 +25,7 @@ export function toNumber(value: DecimalLike | number | null | undefined): number
 export function formatCurrency(
   amount: number,
   currency: string = 'USD',
-  locale: string = 'en-US'
+  locale: string = 'es-CR'
 ): string {
   const parts = new Intl.NumberFormat(locale, {
     style: 'currency',
@@ -50,7 +50,7 @@ export function formatDate(
     month: 'short',
     day: 'numeric',
   },
-  locale: string = 'en-US'
+  locale: string = 'es-CR'
 ): string {
   const d = typeof date === 'string' ? new Date(date) : date
   return new Intl.DateTimeFormat(locale, options).format(d)
@@ -61,7 +61,7 @@ export function formatDate(
  */
 export function formatRelativeTime(
   date: string | Date,
-  locale: string = 'en-US'
+  locale: string = 'es-CR'
 ): string {
   const d = typeof date === 'string' ? new Date(date) : date
   const now = new Date()

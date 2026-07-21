@@ -546,7 +546,7 @@ export async function getProjectActivity(projectId: string): Promise<ProjectActi
       activities.push({
         id: `qa-${quote.id}`,
         type: 'quote_accepted',
-        title: `Quote ${quote.quoteNumber} accepted`,
+        title: `Cotización ${quote.quoteNumber} aceptada`,
         amount: toNumber(quote.total),
         date: quote.createdAt,
       });
@@ -555,7 +555,7 @@ export async function getProjectActivity(projectId: string): Promise<ProjectActi
       activities.push({
         id: `qs-${quote.id}`,
         type: 'quote_sent',
-        title: `Quote ${quote.quoteNumber} sent`,
+        title: `Cotización ${quote.quoteNumber} enviada`,
         amount: toNumber(quote.total),
         date: quote.sentAt,
       });
@@ -567,7 +567,7 @@ export async function getProjectActivity(projectId: string): Promise<ProjectActi
     activities.push({
       id: `ic-${invoice.id}`,
       type: 'invoice_created',
-      title: `Invoice ${invoice.invoiceNumber} created`,
+      title: `Factura ${invoice.invoiceNumber} creada`,
       amount: toNumber(invoice.total),
       date: invoice.createdAt,
     });
@@ -575,7 +575,7 @@ export async function getProjectActivity(projectId: string): Promise<ProjectActi
       activities.push({
         id: `is-${invoice.id}`,
         type: 'invoice_sent',
-        title: `Invoice ${invoice.invoiceNumber} sent`,
+        title: `Factura ${invoice.invoiceNumber} enviada`,
         amount: toNumber(invoice.total),
         date: invoice.sentAt,
       });
@@ -584,7 +584,7 @@ export async function getProjectActivity(projectId: string): Promise<ProjectActi
       activities.push({
         id: `ip-${invoice.id}`,
         type: 'invoice_paid',
-        title: `Invoice ${invoice.invoiceNumber} paid`,
+        title: `Factura ${invoice.invoiceNumber} pagada`,
         amount: toNumber(invoice.amountPaid),
         date: invoice.paidAt,
       });

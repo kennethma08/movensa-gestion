@@ -41,9 +41,10 @@ const ACCENT_LIGHT = '#e3f2fa';
 const ACCENT_BG = 'bg-sky-50/60';
 
 function formatCurrency(amount: number, currency: string = 'USD'): string {
-  const parts = new Intl.NumberFormat('en-US', {
+  const parts = new Intl.NumberFormat('es-CR', {
     style: 'currency',
     currency,
+    currencyDisplay: 'narrowSymbol',
   }).formatToParts(amount);
   return parts.map((p, i) => {
     if (p.type === 'currency' && parts[i + 1]?.type !== 'literal') return p.value + ' ';
@@ -52,7 +53,7 @@ function formatCurrency(amount: number, currency: string = 'USD'): string {
 }
 
 function formatDate(dateString: string): string {
-  return new Date(dateString).toLocaleDateString('en-US', {
+  return new Date(dateString).toLocaleDateString('es-CR', {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
@@ -175,7 +176,7 @@ export function QuotesDataTable({ data: initialData }: QuotesDataTableProps) {
       return;
     }
 
-    toast.loading('Converting quote to invoice...', { id: 'convert' });
+    toast.loading('Convirtiendo cotización en factura...', { id: 'convert' });
     try {
       const result = await createInvoiceFromQuote(quote.id);
       if (result.success && result.invoice) {

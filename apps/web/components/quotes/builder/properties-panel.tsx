@@ -579,7 +579,7 @@ function SignatureProperties({
           )}
           {block.content.signedAt && (
             <p className="text-sm text-muted-foreground">
-              On: {new Date(block.content.signedAt).toLocaleDateString()}
+              Fecha: {new Date(block.content.signedAt).toLocaleDateString('es-CR')}
             </p>
           )}
           <Button

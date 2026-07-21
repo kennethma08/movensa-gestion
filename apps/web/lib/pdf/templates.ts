@@ -30,9 +30,10 @@ function isSafeUrl(url: string): boolean {
  * Format currency for display
  */
 function formatCurrency(amount: number, currency: string = 'USD'): string {
-  const parts = new Intl.NumberFormat('en-US', {
+  const parts = new Intl.NumberFormat('es-CR', {
     style: 'currency',
     currency,
+    currencyDisplay: 'narrowSymbol',
   }).formatToParts(amount);
   return parts.map((p, i) => {
     if (p.type === 'currency' && parts[i + 1]?.type !== 'literal') return p.value + ' ';
@@ -44,11 +45,49 @@ function formatCurrency(amount: number, currency: string = 'USD'): string {
  * Format date for display
  */
 function formatDate(date: string): string {
-  return new Date(date).toLocaleDateString('en-US', {
+  return new Date(date).toLocaleDateString('es-CR', {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
   });
+}
+
+/**
+ * Translate persisted status values for customer-facing PDFs.
+ */
+function formatStatus(status: string): string {
+  const labels: Record<string, string> = {
+    draft: 'Borrador',
+    sent: 'Enviado',
+    viewed: 'Visto',
+    accepted: 'Aceptado',
+    declined: 'Rechazado',
+    expired: 'Vencido',
+    converted: 'Convertido',
+    pending: 'Pendiente',
+    signed: 'Firmado',
+    paid: 'Pagado',
+    overdue: 'Vencido',
+    void: 'Anulado',
+    voided: 'Anulado',
+    issued: 'Emitido',
+    refunded: 'Reembolsado',
+  };
+
+  return labels[status.toLowerCase()] || status;
+}
+
+function formatPaymentMethod(method: string): string {
+  const labels: Record<string, string> = {
+    cash: 'Efectivo',
+    bank_transfer: 'Transferencia bancaria',
+    credit_card: 'Tarjeta de crédito',
+    debit_card: 'Tarjeta de débito',
+    check: 'Cheque',
+    other: 'Otro',
+  };
+
+  return labels[method.toLowerCase()] || method;
 }
 
 /**
@@ -465,10 +504,10 @@ export function generateQuotePdfHtml(data: QuotePdfData): string {
     ? `
       <div class="signature-section">
         <div class="signature-box">
-          <div class="signature-label">Client Signature</div>
-          ${data.signature.data.startsWith('data:image/png;base64,') ? `<img src="${escapeHtml(data.signature.data)}" alt="Signature" class="signature-image" />` : ''}
+          <div class="signature-label">Firma del cliente</div>
+          ${data.signature.data.startsWith('data:image/png;base64,') ? `<img src="${escapeHtml(data.signature.data)}" alt="Firma" class="signature-image" />` : ''}
           <div class="signature-name">${escapeHtml(data.signature.signerName)}</div>
-          <div class="signature-date">Signed on ${formatDate(data.signature.signedAt)}</div>
+          <div class="signature-date">Firmado el ${formatDate(data.signature.signedAt)}</div>
         </div>
       </div>
     `
@@ -481,13 +520,13 @@ export function generateQuotePdfHtml(data: QuotePdfData): string {
     <html>
       <head>
         <meta charset="utf-8">
-        <title>Quote ${safeQuoteNumber}</title>
+        <title>Cotización ${safeQuoteNumber}</title>
         <style>${getBaseStyles(primaryColor)}</style>
       </head>
       <body>
         <div class="print-bar">
-          <span>Quote ${safeQuoteNumber}</span>
-          <button class="print-btn" onclick="window.print()">Print / Save as PDF</button>
+          <span>Cotización ${safeQuoteNumber}</span>
+          <button class="print-btn" onclick="window.print()">Imprimir / Guardar como PDF</button>
         </div>
         <div class="container">
           <div class="header">
@@ -495,21 +534,21 @@ export function generateQuotePdfHtml(data: QuotePdfData): string {
               ${data.business.logoUrl && isSafeUrl(data.business.logoUrl) ? `<img src="${escapeHtml(data.business.logoUrl)}" alt="${escapeHtml(data.business.name)}" class="logo" />` : `<div class="party-name">${escapeHtml(data.business.name)}</div>`}
             </div>
             <div class="document-title">
-              <h1>Quote</h1>
+              <h1>Cotización</h1>
               <div class="document-number">${safeQuoteNumber}</div>
             </div>
           </div>
 
           <div class="parties">
             <div class="party">
-              <div class="party-label">From</div>
+              <div class="party-label">De</div>
               <div class="party-name">${escapeHtml(data.business.name)}</div>
               ${data.business.email ? `<div class="party-detail">${escapeHtml(data.business.email)}</div>` : ''}
               ${data.business.phone ? `<div class="party-detail">${escapeHtml(data.business.phone)}</div>` : ''}
               ${data.business.address ? `<div class="party-detail">${formatAddress(data.business.address)}</div>` : ''}
             </div>
             <div class="party">
-              <div class="party-label">To</div>
+              <div class="party-label">Para</div>
               <div class="party-name">${escapeHtml(data.client.company || data.client.name)}</div>
               ${data.client.company ? `<div class="party-detail">${escapeHtml(data.client.name)}</div>` : ''}
               <div class="party-detail">${escapeHtml(data.client.email)}</div>
@@ -520,23 +559,23 @@ export function generateQuotePdfHtml(data: QuotePdfData): string {
 
           <div class="meta-info">
             <div class="meta-item">
-              <div class="meta-label">Issue Date</div>
+              <div class="meta-label">Fecha de emisión</div>
               <div class="meta-value">${formatDate(data.issueDate)}</div>
             </div>
             ${
               data.expirationDate
                 ? `
               <div class="meta-item">
-                <div class="meta-label">Valid Until</div>
+                <div class="meta-label">Válida hasta</div>
                 <div class="meta-value">${formatDate(data.expirationDate)}</div>
               </div>
             `
                 : ''
             }
             <div class="meta-item">
-              <div class="meta-label">Status</div>
+              <div class="meta-label">Estado</div>
               <div class="meta-value">
-                <span class="status-badge status-${escapeHtml(data.status)}">${escapeHtml(data.status)}</span>
+                <span class="status-badge status-${escapeHtml(data.status)}">${escapeHtml(formatStatus(data.status))}</span>
               </div>
             </div>
           </div>
@@ -544,11 +583,11 @@ export function generateQuotePdfHtml(data: QuotePdfData): string {
           <table class="items-table">
             <thead>
               <tr>
-                <th>Description</th>
-                <th>Qty</th>
-                <th>Rate</th>
-                <th>Tax</th>
-                <th>Amount</th>
+                <th>Descripción</th>
+                <th>Cant.</th>
+                <th>Precio</th>
+                <th>Impuesto</th>
+                <th>Importe</th>
               </tr>
             </thead>
             <tbody>
@@ -565,7 +604,7 @@ export function generateQuotePdfHtml(data: QuotePdfData): string {
               data.totals.discountAmount > 0
                 ? `
               <div class="totals-row">
-                <span class="totals-label">Discount</span>
+                <span class="totals-label">Descuento</span>
                 <span class="totals-value">-${formatCurrency(data.totals.discountAmount, data.currency)}</span>
               </div>
             `
@@ -575,7 +614,7 @@ export function generateQuotePdfHtml(data: QuotePdfData): string {
               data.totals.taxTotal > 0
                 ? `
               <div class="totals-row">
-                <span class="totals-label">Tax</span>
+                <span class="totals-label">Impuesto</span>
                 <span class="totals-value">${formatCurrency(data.totals.taxTotal, data.currency)}</span>
               </div>
             `
@@ -591,7 +630,7 @@ export function generateQuotePdfHtml(data: QuotePdfData): string {
             data.notes
               ? `
             <div class="notes">
-              <div class="notes-title">Notes</div>
+              <div class="notes-title">Notas</div>
               <div class="notes-content">${escapeHtml(data.notes)}</div>
             </div>
           `
@@ -602,7 +641,7 @@ export function generateQuotePdfHtml(data: QuotePdfData): string {
             data.terms
               ? `
             <div class="terms">
-              <div class="terms-title">Terms & Conditions</div>
+              <div class="terms-title">Términos y condiciones</div>
               <div class="terms-content">${escapeHtml(data.terms)}</div>
             </div>
           `
@@ -643,12 +682,12 @@ export function generateInvoicePdfHtml(data: InvoicePdfData): string {
     data.payments.length > 0
       ? `
       <div class="payments-section">
-        <div class="payments-title">Payments Received</div>
+        <div class="payments-title">Pagos recibidos</div>
         ${data.payments
           .map(
             (payment) => `
           <div class="payment-row">
-            <span class="payment-info">${formatDate(payment.paidAt)} - ${escapeHtml(payment.method)}${payment.reference ? ` (${escapeHtml(payment.reference)})` : ''}</span>
+            <span class="payment-info">${formatDate(payment.paidAt)} - ${escapeHtml(formatPaymentMethod(payment.method))}${payment.reference ? ` (${escapeHtml(payment.reference)})` : ''}</span>
             <span class="payment-amount">${formatCurrency(payment.amount, data.currency)}</span>
           </div>
         `
@@ -665,13 +704,13 @@ export function generateInvoicePdfHtml(data: InvoicePdfData): string {
     <html>
       <head>
         <meta charset="utf-8">
-        <title>Invoice ${safeInvoiceNumber}</title>
+        <title>Factura ${safeInvoiceNumber}</title>
         <style>${getBaseStyles(primaryColor)}</style>
       </head>
       <body>
         <div class="print-bar">
-          <span>Invoice ${safeInvoiceNumber}</span>
-          <button class="print-btn" onclick="window.print()">Print / Save as PDF</button>
+          <span>Factura ${safeInvoiceNumber}</span>
+          <button class="print-btn" onclick="window.print()">Imprimir / Guardar como PDF</button>
         </div>
         <div class="container">
           <div class="header">
@@ -679,21 +718,21 @@ export function generateInvoicePdfHtml(data: InvoicePdfData): string {
               ${data.business.logoUrl && isSafeUrl(data.business.logoUrl) ? `<img src="${escapeHtml(data.business.logoUrl)}" alt="${escapeHtml(data.business.name)}" class="logo" />` : `<div class="party-name">${escapeHtml(data.business.name)}</div>`}
             </div>
             <div class="document-title">
-              <h1>Invoice</h1>
+              <h1>Factura</h1>
               <div class="document-number">${safeInvoiceNumber}</div>
             </div>
           </div>
 
           <div class="parties">
             <div class="party">
-              <div class="party-label">From</div>
+              <div class="party-label">De</div>
               <div class="party-name">${escapeHtml(data.business.name)}</div>
               ${data.business.email ? `<div class="party-detail">${escapeHtml(data.business.email)}</div>` : ''}
               ${data.business.phone ? `<div class="party-detail">${escapeHtml(data.business.phone)}</div>` : ''}
               ${data.business.address ? `<div class="party-detail">${formatAddress(data.business.address)}</div>` : ''}
             </div>
             <div class="party">
-              <div class="party-label">Bill To</div>
+              <div class="party-label">Facturar a</div>
               <div class="party-name">${escapeHtml(data.client.company || data.client.name)}</div>
               ${data.client.company ? `<div class="party-detail">${escapeHtml(data.client.name)}</div>` : ''}
               <div class="party-detail">${escapeHtml(data.client.email)}</div>
@@ -704,17 +743,17 @@ export function generateInvoicePdfHtml(data: InvoicePdfData): string {
 
           <div class="meta-info">
             <div class="meta-item">
-              <div class="meta-label">Issue Date</div>
+              <div class="meta-label">Fecha de emisión</div>
               <div class="meta-value">${formatDate(data.issueDate)}</div>
             </div>
             <div class="meta-item">
-              <div class="meta-label">Due Date</div>
+              <div class="meta-label">Fecha de vencimiento</div>
               <div class="meta-value">${formatDate(data.dueDate)}</div>
             </div>
             <div class="meta-item">
-              <div class="meta-label">Status</div>
+              <div class="meta-label">Estado</div>
               <div class="meta-value">
-                <span class="status-badge status-${escapeHtml(data.status)}">${escapeHtml(data.status)}</span>
+                <span class="status-badge status-${escapeHtml(data.status)}">${escapeHtml(formatStatus(data.status))}</span>
               </div>
             </div>
           </div>
@@ -722,11 +761,11 @@ export function generateInvoicePdfHtml(data: InvoicePdfData): string {
           <table class="items-table">
             <thead>
               <tr>
-                <th>Description</th>
-                <th>Qty</th>
-                <th>Rate</th>
-                <th>Tax</th>
-                <th>Amount</th>
+                <th>Descripción</th>
+                <th>Cant.</th>
+                <th>Precio</th>
+                <th>Impuesto</th>
+                <th>Importe</th>
               </tr>
             </thead>
             <tbody>
@@ -743,7 +782,7 @@ export function generateInvoicePdfHtml(data: InvoicePdfData): string {
               data.totals.discountAmount > 0
                 ? `
               <div class="totals-row">
-                <span class="totals-label">Discount</span>
+                <span class="totals-label">Descuento</span>
                 <span class="totals-value">-${formatCurrency(data.totals.discountAmount, data.currency)}</span>
               </div>
             `
@@ -753,7 +792,7 @@ export function generateInvoicePdfHtml(data: InvoicePdfData): string {
               data.totals.taxTotal > 0
                 ? `
               <div class="totals-row">
-                <span class="totals-label">Tax</span>
+                <span class="totals-label">Impuesto</span>
                 <span class="totals-value">${formatCurrency(data.totals.taxTotal, data.currency)}</span>
               </div>
             `
@@ -767,14 +806,14 @@ export function generateInvoicePdfHtml(data: InvoicePdfData): string {
               data.totals.amountPaid > 0
                 ? `
               <div class="totals-row">
-                <span class="totals-label">Amount Paid</span>
+                <span class="totals-label">Monto pagado</span>
                 <span class="totals-value" style="color: #047857;">${formatCurrency(data.totals.amountPaid, data.currency)}</span>
               </div>
             `
                 : ''
             }
             <div class="totals-row total">
-              <span class="totals-label">Amount Due</span>
+              <span class="totals-label">Saldo pendiente</span>
               <span class="totals-value">${formatCurrency(data.totals.amountDue, data.currency)}</span>
             </div>
           </div>
@@ -785,7 +824,7 @@ export function generateInvoicePdfHtml(data: InvoicePdfData): string {
             data.notes
               ? `
             <div class="notes">
-              <div class="notes-title">Notes</div>
+              <div class="notes-title">Notas</div>
               <div class="notes-content">${escapeHtml(data.notes)}</div>
             </div>
           `
@@ -796,7 +835,7 @@ export function generateInvoicePdfHtml(data: InvoicePdfData): string {
             data.terms
               ? `
             <div class="terms">
-              <div class="terms-title">Payment Terms</div>
+              <div class="terms-title">Condiciones de pago</div>
               <div class="terms-content">${escapeHtml(data.terms)}</div>
             </div>
           `
@@ -838,13 +877,13 @@ export function generateCreditNotePdfHtml(data: CreditNotePdfData): string {
     <html>
       <head>
         <meta charset="utf-8">
-        <title>Credit Note ${safeCreditNoteNumber}</title>
+        <title>Nota de crédito ${safeCreditNoteNumber}</title>
         <style>${getBaseStyles(primaryColor)}</style>
       </head>
       <body>
         <div class="print-bar">
-          <span>Credit Note ${safeCreditNoteNumber}</span>
-          <button class="print-btn" onclick="window.print()">Print / Save as PDF</button>
+          <span>Nota de crédito ${safeCreditNoteNumber}</span>
+          <button class="print-btn" onclick="window.print()">Imprimir / Guardar como PDF</button>
         </div>
         <div class="container">
           <div class="header">
@@ -852,21 +891,21 @@ export function generateCreditNotePdfHtml(data: CreditNotePdfData): string {
               ${data.business.logoUrl && isSafeUrl(data.business.logoUrl) ? `<img src="${escapeHtml(data.business.logoUrl)}" alt="${escapeHtml(data.business.name)}" class="logo" />` : `<div class="party-name">${escapeHtml(data.business.name)}</div>`}
             </div>
             <div class="document-title">
-              <h1>Credit Note</h1>
+              <h1>Nota de crédito</h1>
               <div class="document-number">${safeCreditNoteNumber}</div>
             </div>
           </div>
 
           <div class="parties">
             <div class="party">
-              <div class="party-label">From</div>
+              <div class="party-label">De</div>
               <div class="party-name">${escapeHtml(data.business.name)}</div>
               ${data.business.email ? `<div class="party-detail">${escapeHtml(data.business.email)}</div>` : ''}
               ${data.business.phone ? `<div class="party-detail">${escapeHtml(data.business.phone)}</div>` : ''}
               ${data.business.address ? `<div class="party-detail">${formatAddress(data.business.address)}</div>` : ''}
             </div>
             <div class="party">
-              <div class="party-label">Credit To</div>
+              <div class="party-label">Acreditar a</div>
               <div class="party-name">${escapeHtml(data.client.company || data.client.name)}</div>
               ${data.client.company ? `<div class="party-detail">${escapeHtml(data.client.name)}</div>` : ''}
               <div class="party-detail">${escapeHtml(data.client.email)}</div>
@@ -877,33 +916,33 @@ export function generateCreditNotePdfHtml(data: CreditNotePdfData): string {
 
           <div class="meta-info">
             <div class="meta-item">
-              <div class="meta-label">Original Invoice</div>
+              <div class="meta-label">Factura original</div>
               <div class="meta-value">${safeInvoiceNumber}</div>
             </div>
             <div class="meta-item">
-              <div class="meta-label">Date</div>
+              <div class="meta-label">Fecha</div>
               <div class="meta-value">${data.issuedAt ? formatDate(data.issuedAt) : formatDate(data.createdAt)}</div>
             </div>
             <div class="meta-item">
-              <div class="meta-label">Status</div>
+              <div class="meta-label">Estado</div>
               <div class="meta-value">
-                <span class="status-badge status-${escapeHtml(data.status)}">${escapeHtml(data.status)}</span>
+                <span class="status-badge status-${escapeHtml(data.status)}">${escapeHtml(formatStatus(data.status))}</span>
               </div>
             </div>
           </div>
 
           <div style="margin-bottom: 24px; padding: 12px 16px; background-color: #fef3c7; border-radius: 8px;">
-            <div style="font-weight: 600; font-size: 12px; color: #92400e; margin-bottom: 4px;">Reason</div>
+            <div style="font-weight: 600; font-size: 12px; color: #92400e; margin-bottom: 4px;">Motivo</div>
             <div style="color: #78350f;">${escapeHtml(data.reason)}</div>
           </div>
 
           <table class="items-table">
             <thead>
               <tr>
-                <th>Description</th>
-                <th>Qty</th>
-                <th>Rate</th>
-                <th>Amount</th>
+                <th>Descripción</th>
+                <th>Cant.</th>
+                <th>Precio</th>
+                <th>Importe</th>
               </tr>
             </thead>
             <tbody>
@@ -913,7 +952,7 @@ export function generateCreditNotePdfHtml(data: CreditNotePdfData): string {
 
           <div class="totals">
             <div class="totals-row total">
-              <span class="totals-label">Credit Total</span>
+              <span class="totals-label">Total acreditado</span>
               <span class="totals-value">${formatCurrency(data.totals.total, data.currency)}</span>
             </div>
           </div>
@@ -922,7 +961,7 @@ export function generateCreditNotePdfHtml(data: CreditNotePdfData): string {
             data.notes
               ? `
             <div class="notes">
-              <div class="notes-title">Notes</div>
+              <div class="notes-title">Notas</div>
               <div class="notes-content">${escapeHtml(data.notes)}</div>
             </div>
           `
@@ -945,7 +984,7 @@ export function generateContractPdfHtml(data: ContractPdfData): string {
       return `
         <div class="signature-box">
           <p class="signature-label">${escapeHtml(label)}</p>
-          <div class="signature-placeholder">Awaiting signature</div>
+          <div class="signature-placeholder">Pendiente de firma</div>
         </div>
       `;
     }
@@ -957,7 +996,7 @@ export function generateContractPdfHtml(data: ContractPdfData): string {
       <div class="signature-box">
         <p class="signature-label">${escapeHtml(label)}</p>
         ${sigDisplay}
-        <p class="signature-meta">Signed by ${escapeHtml(sig.name || signerName || '')} on ${formatDate(sig.date)}</p>
+        <p class="signature-meta">Firmado por ${escapeHtml(sig.name || signerName || '')} el ${formatDate(sig.date)}</p>
       </div>
     `;
   };
@@ -1010,18 +1049,18 @@ export function generateContractPdfHtml(data: ContractPdfData): string {
           </div>
           <div class="header-right">
             <div class="contract-title">${escapeHtml(data.contractName)}</div>
-            <div class="meta">Created ${formatDate(data.createdAt)}</div>
-            <span class="status-badge status-${data.status}">${escapeHtml(data.status)}</span>
+            <div class="meta">Creado el ${formatDate(data.createdAt)}</div>
+            <span class="status-badge status-${data.status}">${escapeHtml(formatStatus(data.status))}</span>
           </div>
         </div>
 
         <div class="parties">
           <div class="party">
-            <p class="party-label">Business</p>
+            <p class="party-label">Empresa</p>
             <p class="party-name">${escapeHtml(data.business.name)}</p>
           </div>
           <div class="party">
-            <p class="party-label">Client</p>
+            <p class="party-label">Cliente</p>
             <p class="party-name">${escapeHtml(data.clientName)}</p>
             ${data.clientEmail ? `<p class="meta">${escapeHtml(data.clientEmail)}</p>` : ''}
           </div>
@@ -1032,8 +1071,8 @@ export function generateContractPdfHtml(data: ContractPdfData): string {
         </div>
 
         <div class="signatures">
-          ${signatureHtml(data.signatureData, 'Client Signature')}
-          ${signatureHtml(data.countersignatureData, 'Business Signature', data.countersignerName)}
+          ${signatureHtml(data.signatureData, 'Firma del cliente')}
+          ${signatureHtml(data.countersignatureData, 'Firma de la empresa', data.countersignerName)}
         </div>
       </body>
     </html>

@@ -115,11 +115,11 @@ export function StatusTooltip({ active, payload }: ChartTooltipProps) {
       </div>
       <div className="mt-1 space-y-0.5 text-sm">
         <p>
-          <span className="text-muted-foreground">Count: </span>
+          <span className="text-muted-foreground">Cantidad: </span>
           <span className="font-medium">{data.value}</span>
         </p>
         <p>
-          <span className="text-muted-foreground">Percentage: </span>
+          <span className="text-muted-foreground">Porcentaje: </span>
           <span className="font-medium">{percentage}%</span>
         </p>
       </div>

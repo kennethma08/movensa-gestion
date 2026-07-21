@@ -2,7 +2,6 @@
 
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
-import { format } from 'date-fns';
 import {
   Mail,
   Clock,
@@ -61,7 +60,7 @@ type StatusConfigItem = {
 const statusConfig: Record<string, StatusConfigItem> = {
   pending: { icon: Clock, variant: 'secondary', label: 'Pendiente' },
   sent: { icon: CheckCircle, variant: 'default', label: 'Enviado' },
-  failed: { icon: AlertCircle, variant: 'destructive', label: 'Failed' },
+  failed: { icon: AlertCircle, variant: 'destructive', label: 'Fallido' },
   cancelled: { icon: XCircle, variant: 'secondary', label: 'Cancelado' },
 };
 
@@ -92,7 +91,7 @@ export function ScheduledEmailList({ emails }: ScheduledEmailListProps) {
           <Mail className="h-12 w-12 text-muted-foreground mb-4" />
           <h3 className="text-lg font-semibold">No hay correos programados</h3>
           <p className="text-muted-foreground text-center mt-1">
-            Scheduled emails will appear here when you set up automated reminders.
+            Los correos aparecerán aquí cuando configure recordatorios automáticos.
           </p>
         </CardContent>
       </Card>
@@ -105,7 +104,7 @@ export function ScheduledEmailList({ emails }: ScheduledEmailListProps) {
         <CardHeader>
           <CardTitle>Correos programados</CardTitle>
           <CardDescription>
-            View and manage scheduled email notifications
+            Consulte y administre los correos que se enviarán más adelante.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -137,7 +136,11 @@ export function ScheduledEmailList({ emails }: ScheduledEmailListProps) {
                       {email.subject}
                     </TableCell>
                     <TableCell>
-                      {format(new Date(email.scheduledFor), 'MMM d, yyyy h:mm a')}
+                      {new Intl.DateTimeFormat('es-CR', {
+                        dateStyle: 'medium',
+                        timeStyle: 'short',
+                        timeZone: 'America/Costa_Rica',
+                      }).format(new Date(email.scheduledFor))}
                     </TableCell>
                     <TableCell>
                       <Badge variant={config.variant} className="gap-1">

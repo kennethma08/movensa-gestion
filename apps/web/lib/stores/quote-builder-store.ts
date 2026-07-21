@@ -110,7 +110,7 @@ const createEmptyDocument = (): QuoteDocument => ({
   projectId: null,
   quoteNumber: '',
   status: 'draft',
-  title: 'Untitled Quote',
+  title: 'Cotización sin título',
   currency: 'USD',
   issueDate: new Date().toISOString().split('T')[0] ?? new Date().toISOString().slice(0, 10),
   expirationDate: null,

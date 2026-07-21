@@ -27,12 +27,12 @@ import { createInvoiceFromQuote } from '@/lib/invoices/actions';
 import { sendInvoice } from '@/lib/invoices/actions';
 
 const PAYMENT_TERMS = [
-  { value: '7', label: 'Net 7 (7 days)' },
-  { value: '15', label: 'Net 15 (15 days)' },
-  { value: '30', label: 'Net 30 (30 days)' },
-  { value: '45', label: 'Net 45 (45 days)' },
-  { value: '60', label: 'Net 60 (60 days)' },
-  { value: '90', label: 'Net 90 (90 days)' },
+  { value: '7', label: '7 días' },
+  { value: '15', label: '15 días' },
+  { value: '30', label: '30 días' },
+  { value: '45', label: '45 días' },
+  { value: '60', label: '60 días' },
+  { value: '90', label: '90 días' },
 ];
 
 interface ConvertToInvoiceButtonProps {
@@ -43,7 +43,7 @@ interface ConvertToInvoiceButtonProps {
 }
 
 function formatMoney(amount: number, currency: string): string {
-  const parts = new Intl.NumberFormat('en-US', { style: 'currency', currency }).formatToParts(amount);
+  const parts = new Intl.NumberFormat('es-CR', { style: 'currency', currency, currencyDisplay: 'narrowSymbol' }).formatToParts(amount);
   return parts.map((p, i) => {
     if (p.type === 'currency' && parts[i + 1]?.type !== 'literal') return p.value + ' ';
     return p.value;
@@ -85,7 +85,7 @@ export function ConvertToInvoiceButton({
         setError(result.error || 'No se pudo crear la factura');
       }
     } catch (err) {
-      setError('An unexpected error occurred');
+      setError('Ocurrió un error inesperado al crear la factura');
     } finally {
       setIsConverting(false);
     }
@@ -103,8 +103,7 @@ export function ConvertToInvoiceButton({
         <DialogHeader>
           <DialogTitle>Convertir cotización en factura</DialogTitle>
           <DialogDescription>
-            This will create a new invoice from this quote. All line items, notes, and terms will
-            be copied to the invoice.
+            Se creará una factura nueva con todos los conceptos, notas y condiciones de esta cotización.
           </DialogDescription>
         </DialogHeader>
 
@@ -138,7 +137,7 @@ export function ConvertToInvoiceButton({
                 </SelectContent>
               </Select>
               <p className="text-xs text-muted-foreground mt-1">
-                Due: {dueDate.toLocaleDateString()}
+                Vence: {dueDate.toLocaleDateString('es-CR')}
               </p>
             </div>
             <div className="flex items-center space-x-2">

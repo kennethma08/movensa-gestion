@@ -20,7 +20,7 @@ export async function GET(
     const clientIp = _request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
     const rl = await checkRateLimit(`pdf:${clientIp}`, { limit: 20, windowMs: 60000 });
     if (rl.limited) {
-      return new NextResponse('Too many PDF requests', { status: 429 });
+      return new NextResponse('Demasiadas solicitudes de PDF', { status: 429 });
     }
 
     const { invoiceId } = await params;
@@ -35,20 +35,20 @@ export async function GET(
         select: { id: true },
       });
       if (!invoice) {
-        return new NextResponse('Unauthorized', { status: 401 });
+        return new NextResponse('No autorizado', { status: 401 });
       }
       data = await getInvoicePdfDataByToken(accessToken);
     } else {
       // Authenticated access
       const session = await auth();
       if (!session?.user?.id) {
-        return new NextResponse('Unauthorized', { status: 401 });
+        return new NextResponse('No autorizado', { status: 401 });
       }
       data = await getInvoicePdfData(invoiceId);
     }
 
     if (!data) {
-      return new NextResponse('Invoice not found', { status: 404 });
+      return new NextResponse('Factura no encontrada', { status: 404 });
     }
 
     const html = generateInvoicePdfHtml(data);
@@ -63,6 +63,6 @@ export async function GET(
     });
   } catch (error) {
     logger.error({ err: error }, 'Error generating invoice PDF HTML');
-    return new NextResponse('Internal Server Error', { status: 500 });
+    return new NextResponse('Error interno del servidor', { status: 500 });
   }
 }

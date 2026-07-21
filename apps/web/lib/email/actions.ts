@@ -122,7 +122,7 @@ export async function createEmailTemplate(
 
   // MEDIUM #15: Basic input validation
   if (!input.name || typeof input.name !== 'string' || !input.name.trim()) {
-    throw new Error('Email template name is required');
+    throw new Error('El nombre de la plantilla de correo es obligatorio');
   }
 
   // MEDIUM #27: Wrap default swap + create in a transaction for atomicity
@@ -177,7 +177,7 @@ export async function updateEmailTemplate(
 
   // MEDIUM #15: Basic input validation
   if (input.name !== undefined && (typeof input.name !== 'string' || !input.name.trim())) {
-    throw new Error('Email template name cannot be empty');
+    throw new Error('El nombre de la plantilla de correo no puede estar vacío');
   }
 
   const existing = await prisma.emailTemplate.findFirst({
@@ -185,7 +185,7 @@ export async function updateEmailTemplate(
   });
 
   if (!existing) {
-    throw new Error('Email template not found');
+    throw new Error('No se encontró la plantilla de correo');
   }
 
   // MEDIUM #28: Wrap default swap + update in a transaction for atomicity
@@ -241,7 +241,7 @@ export async function deleteEmailTemplate(id: string): Promise<void> {
   });
 
   if (!existing) {
-    throw new Error('Email template not found');
+    throw new Error('No se encontró la plantilla de correo');
   }
 
   await prisma.emailTemplate.update({
@@ -310,7 +310,7 @@ export async function sendTemplatedEmail(params: {
   const body = customBody || template?.body || defaultTemplate?.body || '';
 
   if (!subject || !body) {
-    return { success: false, error: 'No active template found for this email type' };
+    return { success: false, error: 'No hay una plantilla activa para este tipo de correo' };
   }
 
   const processedSubject = processTemplate(subject, variables);
@@ -380,7 +380,7 @@ export async function cancelScheduledEmail(id: string): Promise<void> {
   });
 
   if (!existing) {
-    throw new Error('Scheduled email not found or already processed');
+    throw new Error('No se encontró el correo programado o ya fue procesado');
   }
 
   await prisma.scheduledEmail.update({
@@ -414,18 +414,18 @@ export async function sendContractSentEmail(params: {
   });
 
   if (!instance) {
-    throw new Error('Contract instance not found');
+    throw new Error('No se encontró el contrato');
   }
 
   const baseUrl = getBaseUrl();
   const contractUrl = `${baseUrl}/c/${instance.accessToken}`;
 
   const variables: EmailVariables = {
-    businessName: instance.workspace.businessProfile?.businessName || 'Your Business',
+    businessName: instance.workspace.businessProfile?.businessName || 'Su negocio',
     businessEmail: instance.workspace.businessProfile?.email || undefined,
-    clientName: instance.client?.company || instance.client?.name || 'Client',
+    clientName: instance.client?.company || instance.client?.name || 'Cliente',
     clientEmail: instance.client?.email || '',
-    contractName: instance.contract?.name || 'Contract',
+    contractName: instance.contract?.name || 'Contrato',
     contractUrl,
     message: params.message,
   };
@@ -459,25 +459,25 @@ export async function sendContractSignedEmail(params: {
   });
 
   if (!instance) {
-    throw new Error('Contract instance not found');
+    throw new Error('No se encontró el contrato');
   }
 
   const baseUrl = getBaseUrl();
   const contractUrl = `${baseUrl}/contracts/${instance.id}`;
 
   const variables: EmailVariables = {
-    businessName: instance.workspace.businessProfile?.businessName || 'Your Business',
+    businessName: instance.workspace.businessProfile?.businessName || 'Su negocio',
     businessEmail: instance.workspace.businessProfile?.email || undefined,
-    clientName: instance.client?.company || instance.client?.name || 'Client',
+    clientName: instance.client?.company || instance.client?.name || 'Cliente',
     clientEmail: instance.client?.email || '',
-    contractName: instance.contract?.name || 'Contract',
+    contractName: instance.contract?.name || 'Contrato',
     contractUrl,
   };
 
   // Send to the business owner
   const businessEmail = instance.workspace.businessProfile?.email;
   if (!businessEmail) {
-    return { success: false, error: 'No business email configured' };
+    return { success: false, error: 'No hay un correo del negocio configurado' };
   }
 
   return sendTemplatedEmail({

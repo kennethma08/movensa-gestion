@@ -41,7 +41,7 @@ export async function getQuotePdfData(quoteId: string): Promise<QuotePdfData | n
   return {
     id: quote.id,
     quoteNumber: quote.quoteNumber,
-    title: quote.title || 'Quote',
+    title: quote.title || 'Cotización',
     status: quote.status,
     issueDate: quote.issueDate.toISOString().split('T')[0] ?? '',
     expirationDate: quote.expirationDate?.toISOString().split('T')[0] ?? null,
@@ -139,7 +139,7 @@ export async function getQuotePdfDataByToken(accessToken: string): Promise<Quote
   return {
     id: quote.id,
     quoteNumber: quote.quoteNumber,
-    title: quote.title || 'Quote',
+    title: quote.title || 'Cotización',
     status: quote.status,
     issueDate: quote.issueDate.toISOString().split('T')[0] ?? '',
     expirationDate: quote.expirationDate?.toISOString().split('T')[0] ?? null,
@@ -230,7 +230,7 @@ export async function getInvoicePdfData(invoiceId: string): Promise<InvoicePdfDa
   return {
     id: invoice.id,
     invoiceNumber: invoice.invoiceNumber,
-    title: invoice.title || 'Invoice',
+    title: invoice.title || 'Factura',
     status: invoice.status,
     issueDate: invoice.issueDate.toISOString().split('T')[0] ?? '',
     dueDate: invoice.dueDate.toISOString().split('T')[0] ?? '',
@@ -333,7 +333,7 @@ export async function getInvoicePdfDataByToken(accessToken: string): Promise<Inv
   return {
     id: invoice.id,
     invoiceNumber: invoice.invoiceNumber,
-    title: invoice.title || 'Invoice',
+    title: invoice.title || 'Factura',
     status: invoice.status,
     issueDate: invoice.issueDate.toISOString().split('T')[0] ?? '',
     dueDate: invoice.dueDate.toISOString().split('T')[0] ?? '',
@@ -420,8 +420,8 @@ export async function getContractPdfData(contractInstanceId: string): Promise<Co
 
   return {
     id: instance.id,
-    contractName: instance.contract?.name ?? 'Contract',
-    clientName: instance.client?.company || instance.client?.name || 'Client',
+    contractName: instance.contract?.name ?? 'Contrato',
+    clientName: instance.client?.company || instance.client?.name || 'Cliente',
     clientEmail: instance.client?.email || null,
     content: instance.content,
     status: instance.status,
@@ -430,7 +430,7 @@ export async function getContractPdfData(contractInstanceId: string): Promise<Co
     signedAt: instance.signedAt?.toISOString() || null,
     countersignedAt: instance.countersignedAt?.toISOString() || null,
     business: {
-      name: profile?.businessName || 'Business',
+      name: profile?.businessName || 'Empresa',
       email: profile?.email || null,
       phone: profile?.phone || null,
       logoUrl: profile?.logoUrl || null,
@@ -481,8 +481,8 @@ export async function getContractPdfDataByToken(accessToken: string): Promise<Co
 
   return {
     id: instance.id,
-    contractName: instance.contract?.name ?? 'Contract',
-    clientName: instance.client?.company || instance.client?.name || 'Client',
+    contractName: instance.contract?.name ?? 'Contrato',
+    clientName: instance.client?.company || instance.client?.name || 'Cliente',
     clientEmail: instance.client?.email || null,
     content: instance.content,
     status: instance.status,
@@ -491,7 +491,7 @@ export async function getContractPdfDataByToken(accessToken: string): Promise<Co
     signedAt: instance.signedAt?.toISOString() || null,
     countersignedAt: instance.countersignedAt?.toISOString() || null,
     business: {
-      name: profile?.businessName || 'Business',
+      name: profile?.businessName || 'Empresa',
       email: profile?.email || null,
       phone: profile?.phone || null,
       logoUrl: profile?.logoUrl || null,

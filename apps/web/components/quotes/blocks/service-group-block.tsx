@@ -29,7 +29,7 @@ export function ServiceGroupBlockContent({ block }: ServiceGroupBlockContentProp
   );
 
   // Bug #81: Use document locale instead of hardcoded en-US
-  const locale = (document?.settings as any)?.locale ?? 'en-US';
+  const locale = (document?.settings as any)?.locale ?? 'es-CR';
   const formatCurrency = (amount: number) => {
     const parts = new Intl.NumberFormat(locale, {
       style: 'currency',

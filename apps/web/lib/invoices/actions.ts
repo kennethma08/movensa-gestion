@@ -16,7 +16,7 @@ import { createNotification } from '@/lib/notifications/internal';
 import { logger } from '@/lib/logger';
 import { formatCurrency, toNumber, getBaseUrl } from '@/lib/utils';
 import { ROUTES } from '@/lib/routes';
-import { generateInvoiceNumber } from './internal';
+import { generateInvoiceNumber, generateInvoiceNumberWithTransaction } from './internal';
 import { domainEvents } from '@/lib/events/emitter';
 
 /** Generate a cryptographically secure access token (64 hex chars = 256 bits) */
@@ -103,7 +103,7 @@ export async function createInvoice(data: CreateInvoiceData) {
 
   // Bug #456: RBAC — viewers cannot create invoices
   if (role === 'viewer') {
-    return { success: false, error: 'Insufficient permissions: viewers cannot create invoices' };
+    return { success: false, error: 'No tiene permisos para crear facturas' };
   }
 
   // MEDIUM #13: Basic input validation
@@ -275,7 +275,7 @@ export async function createInvoiceFromQuote(quoteId: string, options?: { dueDay
 
   // Bug #456: RBAC — viewers cannot convert quotes to invoices
   if (role === 'viewer') {
-    return { success: false, error: 'Insufficient permissions: viewers cannot create invoices' };
+    return { success: false, error: 'No tiene permisos para crear facturas' };
   }
 
   // Get the quote with line items
@@ -294,13 +294,13 @@ export async function createInvoiceFromQuote(quoteId: string, options?: { dueDay
   });
 
   if (!quote) {
-    return { success: false, error: 'Quote not found' };
+    return { success: false, error: 'No se encontró la cotización' };
   }
 
   // Only accepted or sent quotes can be converted to invoices
   const convertibleStatuses = ['accepted', 'sent', 'viewed'];
   if (!convertibleStatuses.includes(quote.status)) {
-    return { success: false, error: `Cannot convert a ${quote.status} quote to an invoice. Quote must be accepted or sent first.` };
+    return { success: false, error: 'La cotización debe estar enviada, vista o aceptada antes de convertirla en factura' };
   }
 
   // Bug #123: Validate discount values from source quote
@@ -317,14 +317,14 @@ export async function createInvoiceFromQuote(quoteId: string, options?: { dueDay
 
   if (quote.discountType === 'percentage') {
     if (discountValue < 0 || discountValue > 100) {
-      return { success: false, error: 'Discount percentage must be between 0 and 100' };
+      return { success: false, error: 'El porcentaje de descuento debe estar entre 0 y 100' };
     }
     // Recalculate percentage-based discount amount from actual line item subtotal
     discountAmount = Math.round(lineItemSubtotal * (discountValue / 100) * 100) / 100;
   } else {
     // For fixed amount discounts, cap at the actual subtotal
     if (discountAmount < 0) {
-      return { success: false, error: 'Discount amount cannot be negative' };
+      return { success: false, error: 'El descuento no puede ser negativo' };
     }
     if (discountAmount > lineItemSubtotal) {
       discountAmount = lineItemSubtotal;
@@ -338,17 +338,17 @@ export async function createInvoiceFromQuote(quoteId: string, options?: { dueDay
 
   let invoice;
   try {
-  invoice = await prisma.$transaction(async (tx) => {
-    // Bug #7: Check for existing invoice INSIDE transaction to prevent race condition
-    const existingInvoice = await tx.invoice.findFirst({
-      where: { quoteId: quote.id },
-    });
+    invoice = await prisma.$transaction(async (tx) => {
+      // Bug #7: Check for existing invoice INSIDE transaction to prevent race condition
+      const existingInvoice = await tx.invoice.findFirst({
+        where: { quoteId: quote.id },
+      });
 
-    if (existingInvoice) {
-      throw new Error('DUPLICATE_INVOICE');
-    }
+      if (existingInvoice) {
+        throw new Error('DUPLICATE_INVOICE');
+      }
 
-    const invoiceNumber = await generateInvoiceNumber(workspace.id);
+      const invoiceNumber = await generateInvoiceNumberWithTransaction(tx, workspace.id);
 
     // Create the invoice
     const newInvoice = await tx.invoice.create({
@@ -358,7 +358,7 @@ export async function createInvoiceFromQuote(quoteId: string, options?: { dueDay
         projectId: quote.projectId,
         quoteId: quote.id,
         invoiceNumber,
-        title: quote.title || 'Invoice',
+        title: quote.title || 'Factura',
         status: 'draft',
         currency: quote.currency,
         issueDate: new Date(),
@@ -421,13 +421,17 @@ export async function createInvoiceFromQuote(quoteId: string, options?: { dueDay
       },
     });
 
-    return newInvoice;
-  });
+      return newInvoice;
+    });
   } catch (err) {
     if (err instanceof Error && err.message === 'DUPLICATE_INVOICE') {
-      return { success: false, error: 'Invoice already exists for this quote' };
+      return { success: false, error: 'Ya existe una factura para esta cotización' };
     }
-    throw err;
+    logger.error({ err, quoteId }, 'Error al convertir la cotización en factura');
+    return {
+      success: false,
+      error: 'No se pudo crear la factura. Inténtelo de nuevo.',
+    };
   }
 
   revalidatePath(ROUTES.invoices);
@@ -441,22 +445,7 @@ export async function createInvoiceFromQuote(quoteId: string, options?: { dueDay
   return {
     success: true,
     invoice: {
-      ...invoice,
-      subtotal: toNumber(invoice.subtotal),
-      discountValue: invoice.discountValue ? Number(invoice.discountValue) : null,
-      discountAmount: toNumber(invoice.discountAmount),
-      taxTotal: toNumber(invoice.taxTotal),
-      total: toNumber(invoice.total),
-      amountPaid: toNumber(invoice.amountPaid),
-      amountDue: toNumber(invoice.amountDue),
-      lineItems: invoice.lineItems.map((li) => ({
-        ...li,
-        quantity: toNumber(li.quantity),
-        rate: toNumber(li.rate),
-        amount: toNumber(li.amount),
-        taxRate: li.taxRate ? Number(li.taxRate) : null,
-        taxAmount: toNumber(li.taxAmount),
-      })),
+      id: invoice.id,
     },
   };
 }
@@ -628,7 +617,7 @@ export async function getInvoice(invoiceId: string): Promise<InvoiceDocument | n
     invoiceNumber: invoice.invoiceNumber,
     accessToken: invoice.accessToken,
     status: invoice.status as InvoiceStatus,
-    title: invoice.title || 'Invoice',
+    title: invoice.title || 'Factura',
     currency: invoice.currency,
     issueDate: invoice.issueDate.toISOString().split('T')[0] ?? '',
     dueDate: invoice.dueDate.toISOString().split('T')[0] ?? '',
@@ -731,7 +720,7 @@ export async function getInvoices(filters?: {
       invoiceNumber: invoice.invoiceNumber,
       // Bug #176: Partially-paid overdue invoices should also show as overdue
       status: (isOverdue ? 'overdue' : invoice.status) as InvoiceStatus,
-      title: invoice.title || 'Invoice',
+      title: invoice.title || 'Factura',
       currency: invoice.currency,
       issueDate: invoice.issueDate.toISOString().split('T')[0] ?? '',
       dueDate: invoice.dueDate.toISOString().split('T')[0] ?? '',
@@ -927,7 +916,7 @@ export async function sendInvoice(invoiceId: string, emailOptions?: SendEmailOpt
     }
   } catch (err) {
     logger.error({ err }, 'Failed to send invoice email');
-    return { success: false, error: 'Email could not be sent. Please check your email settings.', emailSent: false };
+    return { success: false, error: 'No se pudo enviar el correo. Revise la configuración de correo.', emailSent: false };
   }
 
   // Email sent successfully — update status to 'sent' (skip if already sent)
@@ -944,8 +933,8 @@ export async function sendInvoice(invoiceId: string, emailOptions?: SendEmailOpt
     userId,
     workspaceId: workspace.id,
     type: 'invoice_sent',
-    title: `Invoice ${invoice.invoiceNumber} sent`,
-    message: `Sent to ${invoice.client.email}`,
+    title: `Factura ${invoice.invoiceNumber} enviada`,
+    message: `Enviada a ${invoice.client.email}`,
     entityType: 'invoice',
     entityId: invoiceId,
     link: `/invoices/${invoiceId}`,
@@ -1166,7 +1155,7 @@ export async function duplicateInvoice(invoiceId: string) {
       clientId: original.clientId,
       projectId: original.projectId,
       invoiceNumber,
-      title: `${original.title || 'Invoice'} (Copy)`,
+      title: `${original.title || 'Factura'} (copia)`,
       status: 'draft',
       currency: original.currency,
       accessToken: generateAccessToken(),

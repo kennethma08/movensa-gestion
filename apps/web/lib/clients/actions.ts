@@ -285,7 +285,7 @@ export async function getClientActivity(clientId: string): Promise<ClientActivit
     activities.push({
       id: `quote-created-${quote.id}`,
       type: 'quote_created',
-      title: `Quote created: ${quote.title}`,
+      title: `Cotización creada: ${quote.title}`,
       amount: toNumber(quote.total),
       date: quote.createdAt,
       relatedId: quote.id,
@@ -295,7 +295,7 @@ export async function getClientActivity(clientId: string): Promise<ClientActivit
       activities.push({
         id: `quote-sent-${quote.id}`,
         type: 'quote_sent',
-        title: `Quote sent: ${quote.title}`,
+        title: `Cotización enviada: ${quote.title}`,
         amount: toNumber(quote.total),
         date: quote.sentAt,
         relatedId: quote.id,
@@ -306,7 +306,7 @@ export async function getClientActivity(clientId: string): Promise<ClientActivit
       activities.push({
         id: `quote-accepted-${quote.id}`,
         type: 'quote_accepted',
-        title: `Quote accepted: ${quote.title}`,
+        title: `Cotización aceptada: ${quote.title}`,
         amount: toNumber(quote.total),
         date: quote.acceptedAt,
         relatedId: quote.id,
@@ -317,7 +317,7 @@ export async function getClientActivity(clientId: string): Promise<ClientActivit
       activities.push({
         id: `quote-declined-${quote.id}`,
         type: 'quote_declined',
-        title: `Quote declined: ${quote.title}`,
+        title: `Cotización rechazada: ${quote.title}`,
         amount: toNumber(quote.total),
         date: quote.declinedAt,
         relatedId: quote.id,
@@ -330,7 +330,7 @@ export async function getClientActivity(clientId: string): Promise<ClientActivit
     activities.push({
       id: `invoice-created-${invoice.id}`,
       type: 'invoice_created',
-      title: `Invoice created: ${invoice.invoiceNumber}`,
+      title: `Factura creada: ${invoice.invoiceNumber}`,
       amount: toNumber(invoice.total),
       date: invoice.createdAt,
       relatedId: invoice.id,
@@ -340,7 +340,7 @@ export async function getClientActivity(clientId: string): Promise<ClientActivit
       activities.push({
         id: `invoice-sent-${invoice.id}`,
         type: 'invoice_sent',
-        title: `Invoice sent: ${invoice.invoiceNumber}`,
+        title: `Factura enviada: ${invoice.invoiceNumber}`,
         amount: toNumber(invoice.total),
         date: invoice.sentAt,
         relatedId: invoice.id,
@@ -351,7 +351,7 @@ export async function getClientActivity(clientId: string): Promise<ClientActivit
       activities.push({
         id: `invoice-paid-${invoice.id}`,
         type: 'invoice_paid',
-        title: `Invoice paid: ${invoice.invoiceNumber}`,
+        title: `Factura pagada: ${invoice.invoiceNumber}`,
         amount: toNumber(invoice.total),
         date: invoice.paidAt,
         relatedId: invoice.id,
@@ -369,9 +369,9 @@ export async function getClientActivity(clientId: string): Promise<ClientActivit
       activities.push({
         id: `invoice-overdue-${invoice.id}`,
         type: 'invoice_overdue',
-        title: `Invoice overdue: ${invoice.invoiceNumber}`,
+        title: `Factura vencida: ${invoice.invoiceNumber}`,
         // Low #100: Use consistent date format instead of toLocaleDateString (server locale may differ)
-        description: `Due date was ${invoice.dueDate.toISOString().split('T')[0]}`,
+        description: `La fecha de vencimiento fue ${invoice.dueDate.toISOString().split('T')[0]}`,
         amount: toNumber(invoice.total),
         date: invoice.dueDate,
         relatedId: invoice.id,

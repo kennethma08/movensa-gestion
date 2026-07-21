@@ -39,7 +39,7 @@ export function SignatureBlockContent({ block }: SignatureBlockContentProps) {
           )}
           {block.content.signedAt && (
             <p className="text-xs text-green-600">
-              Signed on {new Date(block.content.signedAt).toLocaleDateString()}
+              Firmado el {new Date(block.content.signedAt).toLocaleDateString('es-CR')}
             </p>
           )}
         </div>

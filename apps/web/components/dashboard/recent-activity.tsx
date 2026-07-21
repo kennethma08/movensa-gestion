@@ -1,5 +1,7 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+
 import Link from 'next/link';
 import {
   FileText,
@@ -17,7 +19,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { formatCurrency, formatRelativeTime } from '@/lib/utils';
+import { formatCurrency, formatDate, formatRelativeTime } from '@/lib/utils';
 import type { ActivityItem } from '@/lib/dashboard/types';
 
 interface RecentActivityProps {
@@ -56,6 +58,12 @@ const activityColors: Record<ActivityItem['type'], string> = {
 };
 
 export function RecentActivity({ activities, currency = 'USD' }: RecentActivityProps) {
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
+
   return (
     <Card className="h-full flex flex-col">
       <CardHeader className="pb-4">
@@ -101,7 +109,11 @@ export function RecentActivity({ activities, currency = 'USD' }: RecentActivityP
                         {activity.title}
                       </p>
                       <div className="flex items-center gap-1 text-[11px] text-muted-foreground/70 mt-0.5">
-                        <span>{formatRelativeTime(activity.date)}</span>
+                        <span>
+                          {isHydrated
+                            ? formatRelativeTime(activity.date)
+                            : formatDate(activity.date, { day: 'numeric', month: 'short' }, 'es-CR')}
+                        </span>
                         {activity.amount && activity.amount > 0 && (
                           <>
                             <span>&middot;</span>

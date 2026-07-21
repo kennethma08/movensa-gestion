@@ -15,7 +15,13 @@ export const metadata = {
 };
 
 function getGreeting() {
-  const hour = new Date().getHours();
+  const hour = Number(
+    new Intl.DateTimeFormat('es-CR', {
+      hour: '2-digit',
+      hourCycle: 'h23',
+      timeZone: 'America/Costa_Rica',
+    }).format(new Date())
+  );
   if (hour < 12) return 'Buenos días';
   if (hour < 18) return 'Buenas tardes';
   return 'Buenas noches';
@@ -26,6 +32,7 @@ function formatToday() {
     weekday: 'long',
     month: 'long',
     day: 'numeric',
+    timeZone: 'America/Costa_Rica',
   });
 }
 

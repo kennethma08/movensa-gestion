@@ -306,8 +306,8 @@ export async function getRecentQuotes(limit = 5): Promise<RecentQuote[]> {
 
   return quotes.map((q) => ({
     id: q.id,
-    title: q.title || 'Untitled Quote',
-    clientName: q.client?.company || q.client?.name || 'Unknown Client',
+    title: q.title || 'Cotización sin título',
+    clientName: q.client?.company || q.client?.name || 'Cliente desconocido',
     total: toNumber(q.total),
     status: q.status,
     createdAt: q.createdAt,
@@ -331,7 +331,7 @@ export async function getRecentInvoices(limit = 5): Promise<RecentInvoice[]> {
   return invoices.map((i) => ({
     id: i.id,
     invoiceNumber: i.invoiceNumber,
-    clientName: i.client?.company || i.client?.name || 'Unknown Client',
+    clientName: i.client?.company || i.client?.name || 'Cliente desconocido',
     total: toNumber(i.total),
     amountPaid: toNumber(i.amountPaid),
     status: i.status,
@@ -382,8 +382,8 @@ export async function getRecentActivity(limit = 10): Promise<ActivityItem[]> {
       .map((e) => ({
         id: e.id,
         type: mapQuoteEventType(e.eventType),
-        title: getEventTitle(e.eventType, e.quote?.title || 'Untitled'),
-        clientName: e.quote?.client?.company || e.quote?.client?.name || 'Unknown Client',
+        title: getEventTitle(e.eventType, e.quote?.title || 'Cotización sin título'),
+        clientName: e.quote?.client?.company || e.quote?.client?.name || 'Cliente desconocido',
         amount: toNumber(e.quote?.total),
         date: e.createdAt,
         relatedId: e.quoteId,
@@ -394,8 +394,8 @@ export async function getRecentActivity(limit = 10): Promise<ActivityItem[]> {
       .map((e) => ({
         id: e.id,
         type: mapInvoiceEventType(e.eventType),
-        title: getEventTitle(e.eventType, e.invoice?.invoiceNumber || 'Unknown'),
-        clientName: e.invoice?.client?.company || e.invoice?.client?.name || 'Unknown Client',
+        title: getEventTitle(e.eventType, e.invoice?.invoiceNumber || 'Factura desconocida'),
+        clientName: e.invoice?.client?.company || e.invoice?.client?.name || 'Cliente desconocido',
         amount: toNumber(e.invoice?.total),
         date: e.createdAt,
         relatedId: e.invoiceId,
@@ -424,8 +424,8 @@ export async function getRecentActivity(limit = 10): Promise<ActivityItem[]> {
       ...recentQuotes.map((q) => ({
         id: `quote-${q.id}`,
         type: 'quote_created' as const,
-        title: `${q.title || 'Untitled Quote'} was created`,
-        clientName: q.client?.company || q.client?.name || 'Unknown Client',
+        title: `${q.title || 'Cotización sin título'} fue creada`,
+        clientName: q.client?.company || q.client?.name || 'Cliente desconocido',
         amount: toNumber(q.total),
         date: q.createdAt,
         relatedId: q.id,
@@ -434,8 +434,8 @@ export async function getRecentActivity(limit = 10): Promise<ActivityItem[]> {
       ...recentInvoices.map((i) => ({
         id: `invoice-${i.id}`,
         type: 'invoice_created' as const,
-        title: `${i.invoiceNumber} was created`,
-        clientName: i.client?.company || i.client?.name || 'Unknown Client',
+        title: `${i.invoiceNumber} fue creada`,
+        clientName: i.client?.company || i.client?.name || 'Cliente desconocido',
         amount: toNumber(i.total),
         date: i.createdAt,
         relatedId: i.id,
@@ -489,25 +489,25 @@ function mapInvoiceEventType(type: string): ActivityItem['type'] {
 function getEventTitle(type: string, reference: string): string {
   switch (type) {
     case 'created':
-      return `${reference} was created`;
+      return `${reference} fue creada`;
     case 'sent':
-      return `${reference} was sent`;
+      return `${reference} fue enviada`;
     case 'viewed':
-      return `${reference} was viewed`;
+      return `${reference} fue vista`;
     case 'accepted':
-      return `${reference} was accepted`;
+      return `${reference} fue aceptada`;
     case 'declined':
-      return `${reference} was declined`;
+      return `${reference} fue rechazada`;
     case 'expired':
-      return `${reference} expired`;
+      return `${reference} venció`;
     case 'paid':
-      return `${reference} was paid`;
+      return `${reference} fue pagada`;
     case 'overdue':
-      return `${reference} is overdue`;
+      return `${reference} está vencida`;
     case 'voided':
-      return `${reference} was voided`;
+      return `${reference} fue anulada`;
     default:
-      return `${reference} was updated`;
+      return `${reference} fue actualizada`;
   }
 }
 
@@ -851,10 +851,10 @@ export async function getClientDistributionData(
 
   clients.forEach((client) => {
     // Parse address to get region (state/country)
-    let region = 'Unknown';
+    let region = 'Desconocida';
     if (client.address) {
       const addr = client.address as { state?: string; country?: string };
-      region = addr.state || addr.country || 'Unknown';
+      region = addr.state || addr.country || 'Desconocida';
     }
 
     const existing = regionMap.get(region) || {

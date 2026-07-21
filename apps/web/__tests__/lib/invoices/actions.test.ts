@@ -28,7 +28,10 @@ vi.mock('@/lib/utils', () => ({ formatCurrency: vi.fn((v: number) => `$${v.toFix
 vi.mock('@/lib/routes', () => ({ ROUTES: { quotes: '/quotes', invoices: '/invoices', quoteDetail: (id: string) => `/quotes/${id}`, invoiceDetail: (id: string) => `/invoices/${id}` } }));
 vi.mock('@/lib/events/emitter', () => ({ domainEvents: { emit: vi.fn() } }));
 vi.mock('@/lib/workspace/get-current-workspace', () => ({ getCurrentUserWorkspace: mockGetCurrentUserWorkspace }));
-vi.mock('@/lib/invoices/internal', () => ({ generateInvoiceNumber: vi.fn().mockResolvedValue('INV-0001') }));
+vi.mock('@/lib/invoices/internal', () => ({
+  generateInvoiceNumber: vi.fn().mockResolvedValue('INV-0001'),
+  generateInvoiceNumberWithTransaction: vi.fn().mockResolvedValue('INV-0001'),
+}));
 vi.mock('@oreko/database', () => ({
   prisma: mockPrisma,
   Prisma: { InputJsonValue: {}, TransactionClient: {} },
@@ -208,7 +211,7 @@ describe('Invoice Actions', () => {
       const result = await createInvoiceFromQuote('quote-1');
 
       expect(result.success).toBe(false);
-      expect(result.error).toContain('already');
+      expect(result.error).toContain('Ya existe');
     });
 
     it('returns error when quote not found', async () => {
@@ -217,7 +220,7 @@ describe('Invoice Actions', () => {
       const result = await createInvoiceFromQuote('nonexistent');
 
       expect(result.success).toBe(false);
-      expect(result.error).toContain('Quote not found');
+      expect(result.error).toContain('No se encontró la cotización');
     });
   });
 

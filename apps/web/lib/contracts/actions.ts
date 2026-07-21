@@ -692,8 +692,8 @@ export async function sendContractInstance(id: string, emailOptions?: SendEmailO
     userId,
     workspaceId,
     type: 'contract_sent',
-    title: `Contract sent to ${instance.client?.name || 'client'}`,
-    message: instance.contract?.name || 'Contract',
+    title: `Contrato enviado a ${instance.client?.name || 'cliente'}`,
+    message: instance.contract?.name || 'Contrato',
     entityType: 'contract',
     entityId: id,
     link: `/contracts/${id}`,
@@ -836,10 +836,10 @@ export async function signContract(input: SignContractInput & { otpCode?: string
   notifyWorkspaceMembers({
     workspaceId: instance.workspaceId,
     type: 'contract_signed',
-    title: autoCountersign ? 'Contract fully signed' : 'Contract signed by client',
+    title: autoCountersign ? 'Contrato firmado por ambas partes' : 'Contrato firmado por el cliente',
     message: autoCountersign
-      ? 'Your client has signed the contract and it was automatically countersigned.'
-      : 'Your client has signed the contract. It is now awaiting your countersignature.',
+      ? 'El cliente firmó el contrato y la contrafirma se agregó automáticamente.'
+      : 'El cliente firmó el contrato. Ahora está pendiente de su contrafirma.',
     entityType: 'contract',
     entityId: instance.id,
     link: `/contracts/${instance.id}`,

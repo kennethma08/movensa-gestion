@@ -51,22 +51,22 @@ export function ChartCard({
           {(onExport || onExpand) && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="More actions">
+                <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="Más acciones">
                   <MoreHorizontal className="h-4 w-4" />
-                  <span className="sr-only">More options</span>
+                  <span className="sr-only">Más opciones</span>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 {onExport && (
                   <DropdownMenuItem onClick={onExport}>
                     <Download className="mr-2 h-4 w-4" />
-                    Export
+                    Exportar
                   </DropdownMenuItem>
                 )}
                 {onExpand && (
                   <DropdownMenuItem onClick={onExpand}>
                     <Maximize2 className="mr-2 h-4 w-4" />
-                    Expand
+                    Ampliar
                   </DropdownMenuItem>
                 )}
               </DropdownMenuContent>

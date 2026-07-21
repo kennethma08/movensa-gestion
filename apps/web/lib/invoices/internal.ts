@@ -14,34 +14,33 @@ function generateAccessToken(): string {
 /**
  * Generate next invoice number for a workspace (atomic, race-condition safe).
  */
-export async function generateInvoiceNumber(workspaceId: string): Promise<string> {
-  const result = await prisma.$transaction(async (tx) => {
-    const updated = await tx.numberSequence.upsert({
-      where: { workspaceId_type: { workspaceId, type: 'invoice' } },
-      update: { currentValue: { increment: 1 } },
-      create: {
-        workspaceId,
-        type: 'invoice',
-        prefix: 'INV',
-        currentValue: 1,
-        padding: 4,
-      },
-    });
-    return {
-      prefix: updated.prefix || 'INV',
-      suffix: updated.suffix,
-      value: updated.currentValue,
-      padding: updated.padding,
-    };
+export async function generateInvoiceNumberWithTransaction(
+  tx: Prisma.TransactionClient,
+  workspaceId: string
+): Promise<string> {
+  const updated = await tx.numberSequence.upsert({
+    where: { workspaceId_type: { workspaceId, type: 'invoice' } },
+    update: { currentValue: { increment: 1 } },
+    create: {
+      workspaceId,
+      type: 'invoice',
+      prefix: 'INV',
+      currentValue: 1,
+      padding: 4,
+    },
   });
 
-  const paddedValue = String(result.value).padStart(result.padding, '0');
-  const prefix = result.prefix.replace(/-$/, '');
+  const paddedValue = String(updated.currentValue).padStart(updated.padding, '0');
+  const prefix = (updated.prefix || 'INV').replace(/-$/, '');
   const parts = [prefix, paddedValue];
-  if (result.suffix) {
-    parts.push(result.suffix);
+  if (updated.suffix) {
+    parts.push(updated.suffix);
   }
   return parts.join('-');
+}
+
+export async function generateInvoiceNumber(workspaceId: string): Promise<string> {
+  return prisma.$transaction((tx) => generateInvoiceNumberWithTransaction(tx, workspaceId));
 }
 
 /**
@@ -119,7 +118,7 @@ export async function createInvoiceFromQuoteInternal(
         projectId: quote.projectId,
         quoteId: quote.id,
         invoiceNumber,
-        title: quote.title || 'Invoice',
+        title: quote.title || 'Factura',
         accessToken: generateAccessToken(),
         status: 'sent', // Auto-generated from quote acceptance — ready for client payment
         sentAt: new Date(), // Bug #8: Set sentAt when auto-creating with 'sent' status
