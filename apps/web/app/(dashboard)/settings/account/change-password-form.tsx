@@ -16,16 +16,16 @@ import { passwordSchema as passwordValidation } from '@/lib/validations/auth';
 // Schema for changing password (requires current password)
 const changePasswordSchema = z
   .object({
-    currentPassword: z.string().min(1, 'Current password is required'),
+    currentPassword: z.string().min(1, 'La contraseña actual es obligatoria'),
     newPassword: passwordValidation,
     confirmPassword: z.string(),
   })
   .refine((data) => data.newPassword === data.confirmPassword, {
-    message: 'Passwords do not match',
+    message: 'Las contraseñas no coinciden',
     path: ['confirmPassword'],
   })
   .refine((data) => data.currentPassword !== data.newPassword, {
-    message: 'New password must be different from current password',
+    message: 'La contraseña nueva debe ser distinta de la actual',
     path: ['newPassword'],
   });
 
@@ -37,7 +37,7 @@ const setPasswordSchema = z
     confirmPassword: z.string(),
   })
   .refine((data) => data.newPassword === data.confirmPassword, {
-    message: 'Passwords do not match',
+    message: 'Las contraseñas no coinciden',
     path: ['confirmPassword'],
   });
 
@@ -74,14 +74,14 @@ export function ChangePasswordForm({ hasExistingPassword }: ChangePasswordFormPr
       });
 
       if (!result.success) {
-        toast.error(result.error || 'Failed to update password');
+        toast.error(result.error || 'No se pudo actualizar la contraseña');
         return;
       }
 
-      toast.success(hasExistingPassword ? 'Password changed successfully' : 'Password set successfully');
+      toast.success(hasExistingPassword ? 'Contraseña actualizada correctamente' : 'Contraseña definida correctamente');
       reset();
     } catch {
-      toast.error('Something went wrong. Please try again.');
+      toast.error('Ocurrió un error. Inténtelo nuevamente.');
     } finally {
       setIsLoading(false);
     }
@@ -91,7 +91,7 @@ export function ChangePasswordForm({ hasExistingPassword }: ChangePasswordFormPr
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 max-w-md">
       {hasExistingPassword && (
         <div className="space-y-2">
-          <Label htmlFor="currentPassword">Current password</Label>
+          <Label htmlFor="currentPassword">Contraseña actual</Label>
           <Input
             id="currentPassword"
             type="password"
@@ -109,7 +109,7 @@ export function ChangePasswordForm({ hasExistingPassword }: ChangePasswordFormPr
 
       <div className="space-y-2">
         <Label htmlFor="newPassword">
-          {hasExistingPassword ? 'New password' : 'Password'}
+          {hasExistingPassword ? 'Contraseña nueva' : 'Contraseña'}
         </Label>
         <Input
           id="newPassword"
@@ -126,7 +126,7 @@ export function ChangePasswordForm({ hasExistingPassword }: ChangePasswordFormPr
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="confirmPassword">Confirm {hasExistingPassword ? 'new ' : ''}password</Label>
+        <Label htmlFor="confirmPassword">Confirmar {hasExistingPassword ? 'contraseña nueva' : 'contraseña'}</Label>
         <Input
           id="confirmPassword"
           type="password"
@@ -142,18 +142,18 @@ export function ChangePasswordForm({ hasExistingPassword }: ChangePasswordFormPr
       </div>
 
       <div className="rounded-md bg-muted p-3 text-sm text-muted-foreground">
-        <p className="font-medium">Password requirements:</p>
+        <p className="font-medium">Requisitos de la contraseña:</p>
         <ul className="mt-1 list-inside list-disc space-y-0.5">
-          <li>At least 8 characters</li>
-          <li>One uppercase letter</li>
-          <li>One lowercase letter</li>
-          <li>One number</li>
+          <li>Al menos 8 caracteres</li>
+          <li>Una letra mayúscula</li>
+          <li>Una letra minúscula</li>
+          <li>Un número</li>
         </ul>
       </div>
 
       <Button type="submit" disabled={isLoading}>
         {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-        {hasExistingPassword ? 'Change password' : 'Set password'}
+        {hasExistingPassword ? 'Cambiar contraseña' : 'Definir contraseña'}
       </Button>
     </form>
   );

@@ -17,8 +17,8 @@ import { updateProfile } from '@/lib/auth/actions';
 const profileSchema = z.object({
   name: z
     .string()
-    .min(2, 'Name must be at least 2 characters')
-    .max(100, 'Name must be less than 100 characters'),
+    .min(2, 'El nombre debe tener al menos 2 caracteres')
+    .max(100, 'El nombre debe tener menos de 100 caracteres'),
 });
 
 type ProfileFormData = z.infer<typeof profileSchema>;
@@ -51,7 +51,7 @@ export function ProfileForm({ initialName, initialEmail }: ProfileFormProps) {
       const result = await updateProfile({ name: data.name });
 
       if (!result.success) {
-        toast.error(result.error || 'Failed to update profile');
+        toast.error(result.error || 'No se pudo actualizar el perfil');
         return;
       }
 
@@ -59,9 +59,9 @@ export function ProfileForm({ initialName, initialEmail }: ProfileFormProps) {
       await updateSession({ name: data.name });
       router.refresh();
 
-      toast.success('Profile updated successfully');
+      toast.success('Perfil actualizado correctamente');
     } catch {
-      toast.error('Something went wrong. Please try again.');
+      toast.error('Ocurrió un error. Inténtelo nuevamente.');
     } finally {
       setIsLoading(false);
     }
@@ -70,7 +70,7 @@ export function ProfileForm({ initialName, initialEmail }: ProfileFormProps) {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 max-w-md">
       <div className="space-y-2">
-        <Label htmlFor="name">Name</Label>
+        <Label htmlFor="name">Nombre</Label>
         <Input
           id="name"
           type="text"
@@ -84,7 +84,7 @@ export function ProfileForm({ initialName, initialEmail }: ProfileFormProps) {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="email">Email</Label>
+        <Label htmlFor="email">Correo electrónico</Label>
         <Input
           id="email"
           type="email"
@@ -93,13 +93,13 @@ export function ProfileForm({ initialName, initialEmail }: ProfileFormProps) {
           className="bg-muted"
         />
         <p className="text-sm text-muted-foreground">
-          Email cannot be changed. Contact support if you need to update it.
+          El correo electrónico no se puede cambiar desde esta pantalla.
         </p>
       </div>
 
       <Button type="submit" disabled={isLoading || !isDirty}>
         {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-        Save changes
+        Guardar cambios
       </Button>
     </form>
   );

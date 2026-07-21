@@ -39,7 +39,7 @@ async function getUserProfile() {
 
   // Bug #90: Check password existence without fetching the full hash into memory
   const [{ has_password }] = await prisma.$queryRaw<[{ has_password: boolean }]>`
-    SELECT password_hash IS NOT NULL AS has_password FROM "User" WHERE id = ${session.user.id}
+    SELECT password_hash IS NOT NULL AS has_password FROM users WHERE id = ${session.user.id}::uuid
   `;
 
   return {
@@ -53,7 +53,7 @@ async function getUserProfile() {
 }
 
 export const metadata = {
-  title: 'Account Settings',
+  title: 'Mi cuenta | Movensa Gestión',
 };
 
 export default async function AccountSettingsPage() {
@@ -61,12 +61,12 @@ export default async function AccountSettingsPage() {
 
   return (
     <div className="space-y-4">
-      {/* Profile Section */}
+      {/* Perfil */}
       <Card>
         <CardHeader>
-          <CardTitle>Profile</CardTitle>
+          <CardTitle>Perfil</CardTitle>
           <CardDescription>
-            Update your personal information.
+            Actualice su información personal.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -79,14 +79,14 @@ export default async function AccountSettingsPage() {
         </CardContent>
       </Card>
 
-      {/* Password Section */}
+      {/* Contraseña */}
       <Card>
         <CardHeader>
-          <CardTitle>Password</CardTitle>
+          <CardTitle>Contraseña</CardTitle>
           <CardDescription>
             {user.hasPassword
-              ? 'Change your password to keep your account secure.'
-              : 'Set a password to enable email/password login.'}
+              ? 'Cambie su contraseña para mantener la cuenta segura.'
+              : 'Defina una contraseña para iniciar sesión con su correo electrónico.'}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -94,8 +94,8 @@ export default async function AccountSettingsPage() {
             <Alert className="mb-4">
               <InfoIcon className="h-4 w-4" />
               <AlertDescription>
-                You signed up with {user.oauthProviders.join(' and ')}.
-                Setting a password will allow you to also log in with your email.
+                Se registró con {user.oauthProviders.join(' y ')}. Al definir una
+                contraseña también podrá iniciar sesión con su correo electrónico.
               </AlertDescription>
             </Alert>
           )}
@@ -105,13 +105,13 @@ export default async function AccountSettingsPage() {
         </CardContent>
       </Card>
 
-      {/* Connected Accounts Section */}
+      {/* Cuentas conectadas */}
       {user.oauthProviders.length > 0 && (
         <Card>
           <CardHeader>
-            <CardTitle>Connected Accounts</CardTitle>
+            <CardTitle>Cuentas conectadas</CardTitle>
             <CardDescription>
-              Accounts you&apos;ve connected for sign-in.
+              Cuentas vinculadas para iniciar sesión.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -149,7 +149,7 @@ export default async function AccountSettingsPage() {
                     )}
                     <span className="font-medium capitalize">{provider}</span>
                   </div>
-                  <span className="text-sm text-muted-foreground">Connected</span>
+                  <span className="text-sm text-muted-foreground">Conectada</span>
                 </div>
               ))}
             </div>
