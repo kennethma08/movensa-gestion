@@ -157,13 +157,13 @@ export const DEFAULT_INVOICE_SETTINGS: InvoiceSettings = {
 };
 
 export const PAYMENT_TERMS = [
-  { value: 'due_on_receipt', label: 'Due on Receipt' },
-  { value: 'net7', label: 'Net 7' },
-  { value: 'net15', label: 'Net 15' },
-  { value: 'net30', label: 'Net 30' },
-  { value: 'net45', label: 'Net 45' },
-  { value: 'net60', label: 'Net 60' },
-  { value: 'custom', label: 'Custom' },
+  { value: 'due_on_receipt', label: 'Pago inmediato' },
+  { value: 'net7', label: '7 días' },
+  { value: 'net15', label: '15 días' },
+  { value: 'net30', label: '30 días' },
+  { value: 'net45', label: '45 días' },
+  { value: 'net60', label: '60 días' },
+  { value: 'custom', label: 'Personalizado' },
 ];
 
 /**

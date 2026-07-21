@@ -30,8 +30,8 @@ export function IntegrationsManager({ initialData }: IntegrationsManagerProps) {
           <CardHeader>
             <CardTitle>Webhooks</CardTitle>
             <CardDescription>
-              Webhooks are the foundation for all integrations. Set up webhook endpoints to send
-              real-time event data to external services.
+              Los webhooks permiten conectar el sistema con servicios externos y enviarles
+              información de eventos en tiempo real.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -47,7 +47,7 @@ export function IntegrationsManager({ initialData }: IntegrationsManagerProps) {
               </div>
               <Button size="sm" asChild>
                 <Link href="/settings/webhooks">
-                  Configure
+                  Configurar
                   <ArrowRight className="ml-2 h-3.5 w-3.5" />
                 </Link>
               </Button>
@@ -59,11 +59,11 @@ export function IntegrationsManager({ initialData }: IntegrationsManagerProps) {
       {/* Automation Tools */}
       <Card>
         <CardHeader>
-          <CardTitle>Automation Tools</CardTitle>
+          <CardTitle>Herramientas de automatización</CardTitle>
           <CardDescription>
-            Connect Oreko to thousands of apps using these automation platforms.
-            All of them work through webhooks — configure a webhook first, then use
-            the webhook URL as a trigger in your automation tool.
+            Conecte Movensa Gestión con otras aplicaciones mediante estas plataformas.
+            Todas funcionan a través de webhooks: primero configure uno y luego utilice
+            su dirección como activador en la herramienta de automatización.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -86,11 +86,11 @@ export function IntegrationsManager({ initialData }: IntegrationsManagerProps) {
             ))}
           </div>
           <p className="mt-4 text-sm text-muted-foreground">
-            To get started, create a webhook in{' '}
+            Para comenzar, cree un webhook en{' '}
             <Link href="/settings/webhooks" className="text-primary underline underline-offset-4 hover:text-primary/80">
-              Webhook Settings
+              Configuración de webhooks
             </Link>
-            , then paste the webhook URL into your automation tool as a trigger.
+            {' '}y copie su dirección en la herramienta de automatización como activador.
           </p>
         </CardContent>
       </Card>

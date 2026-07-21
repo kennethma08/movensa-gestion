@@ -7,7 +7,7 @@ import { getWebhookEndpoints } from '@/lib/webhooks/actions';
 import { WebhookEndpointsList } from '@/components/settings/webhook-endpoints-list';
 
 export const metadata = {
-  title: 'Webhooks - Settings',
+  title: 'Webhooks',
 };
 
 export default async function WebhooksSettingsPage() {
@@ -24,7 +24,7 @@ export default async function WebhooksSettingsPage() {
         <div>
           <h1 className="text-2xl font-bold">Webhooks</h1>
           <p className="text-muted-foreground">
-            Configure outbound webhooks to integrate with external services
+            Configure notificaciones automáticas para conectar servicios externos.
           </p>
         </div>
       </div>

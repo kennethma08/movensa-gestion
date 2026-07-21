@@ -47,7 +47,7 @@ export function DataTableRowActions<TData>({
 
     if (onView) {
       result.push({
-        label: 'View',
+        label: 'Ver',
         icon: <Eye className="mr-2 h-4 w-4" />,
         onClick: onView,
       });
@@ -55,7 +55,7 @@ export function DataTableRowActions<TData>({
 
     if (onEdit) {
       result.push({
-        label: 'Edit',
+        label: 'Editar',
         icon: <Pencil className="mr-2 h-4 w-4" />,
         onClick: onEdit,
       });
@@ -63,7 +63,7 @@ export function DataTableRowActions<TData>({
 
     if (onDuplicate) {
       result.push({
-        label: 'Duplicate',
+        label: 'Duplicar',
         icon: <Copy className="mr-2 h-4 w-4" />,
         onClick: onDuplicate,
       });
@@ -71,7 +71,7 @@ export function DataTableRowActions<TData>({
 
     if (onDownload) {
       result.push({
-        label: 'Download PDF',
+        label: 'Descargar PDF',
         icon: <Download className="mr-2 h-4 w-4" />,
         onClick: onDownload,
         separator: true,
@@ -80,7 +80,7 @@ export function DataTableRowActions<TData>({
 
     if (onDelete) {
       result.push({
-        label: 'Delete',
+        label: 'Eliminar',
         icon: <Trash2 className="mr-2 h-4 w-4" />,
         onClick: onDelete,
         variant: 'destructive',
@@ -107,7 +107,7 @@ export function DataTableRowActions<TData>({
             className="flex h-8 w-8 p-0 data-[state=open]:bg-muted"
           >
             <MoreHorizontal className="h-4 w-4" />
-            <span className="sr-only">Open menu</span>
+            <span className="sr-only">Abrir menú</span>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-[160px]">

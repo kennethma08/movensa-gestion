@@ -4,7 +4,7 @@ import { NumberSequenceForm } from '@/components/settings';
 import { getNumberSequences } from '@/lib/settings/actions';
 
 export const metadata = {
-  title: 'Quote Settings',
+  title: 'Configuración de cotizaciones',
 };
 
 export default async function QuoteSettingsPage() {
@@ -14,8 +14,8 @@ export default async function QuoteSettingsPage() {
   return (
     <NumberSequenceForm
       type="quote"
-      title="Quote Numbering"
-      description="Configure how quote numbers are generated."
+      title="Numeración de cotizaciones"
+      description="Configure el formato utilizado para generar los números de cotización."
       initialData={quoteSequence}
     />
   );

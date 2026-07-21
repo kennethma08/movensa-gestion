@@ -86,10 +86,10 @@ export function ContractTemplateList({
         setEditContent(template.content);
         setEditVariables(template.variables);
       } else {
-        toast.error('Template not found');
+        toast.error('No se encontró la plantilla');
       }
     } catch {
-      toast.error('Failed to load template');
+      toast.error('No se pudo cargar la plantilla');
     } finally {
       setIsLoadingTemplate(false);
     }
@@ -104,7 +104,7 @@ export function ContractTemplateList({
   const handleSaveTemplate = async () => {
     if (!editingTemplate) return;
     if (!editName.trim()) {
-      toast.error('Template name is required');
+      toast.error('El nombre de la plantilla es obligatorio');
       return;
     }
     setIsSaving(true);
@@ -115,11 +115,11 @@ export function ContractTemplateList({
         content: editContent,
         variables: editVariables,
       });
-      toast.success('Template updated');
+      toast.success('Plantilla actualizada');
       handleCloseEdit();
       router.refresh();
     } catch {
-      toast.error('Failed to update template');
+      toast.error('No se pudo actualizar la plantilla');
     } finally {
       setIsSaving(false);
     }
@@ -156,10 +156,10 @@ export function ContractTemplateList({
     startTransition(async () => {
       try {
         await duplicateContractTemplate(template.id);
-        toast.success('Template duplicated');
+        toast.success('Plantilla duplicada');
         router.refresh();
       } catch {
-        toast.error('Failed to duplicate template');
+        toast.error('No se pudo duplicar la plantilla');
       }
     });
   };
@@ -169,11 +169,11 @@ export function ContractTemplateList({
     setIsDeleting(true);
     try {
       await deleteContractTemplate(deleteId);
-      toast.success('Template deleted');
+      toast.success('Plantilla eliminada');
       setDeleteId(null);
       router.refresh();
     } catch {
-      toast.error('Failed to delete template');
+      toast.error('No se pudo eliminar la plantilla');
     } finally {
       setIsDeleting(false);
     }
@@ -184,11 +184,11 @@ export function ContractTemplateList({
     setIsDeleting(true);
     try {
       await Promise.all(selectedRows.map((t) => deleteContractTemplate(t.id)));
-      toast.success(`${selectedRows.length} template(s) deleted`);
+      toast.success(`${selectedRows.length} plantilla(s) eliminada(s)`);
       setSelectedRows([]);
       router.refresh();
     } catch {
-      toast.error('Failed to delete templates');
+      toast.error('No se pudieron eliminar las plantillas');
     } finally {
       setIsDeleting(false);
     }
@@ -198,11 +198,11 @@ export function ContractTemplateList({
     if (selectedRows.length === 0) return;
     try {
       await Promise.all(selectedRows.map((t) => duplicateContractTemplate(t.id)));
-      toast.success(`${selectedRows.length} template(s) duplicated`);
+      toast.success(`${selectedRows.length} plantilla(s) duplicada(s)`);
       setSelectedRows([]);
       router.refresh();
     } catch {
-      toast.error('Failed to duplicate templates');
+      toast.error('No se pudieron duplicar las plantillas');
     }
   };
 
@@ -216,7 +216,7 @@ export function ContractTemplateList({
             (table.getIsSomePageRowsSelected() && 'indeterminate')
           }
           onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label="Select all"
+          aria-label="Seleccionar todo"
           className="translate-y-[2px]"
         />
       ),
@@ -224,7 +224,7 @@ export function ContractTemplateList({
         <Checkbox
           checked={row.getIsSelected()}
           onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label="Select row"
+          aria-label="Seleccionar fila"
           className="translate-y-[2px]"
         />
       ),
@@ -234,7 +234,7 @@ export function ContractTemplateList({
     {
       accessorKey: 'name',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Name" />
+        <DataTableColumnHeader column={column} title="Nombre" />
       ),
       cell: ({ row }) => {
         const template = row.original;
@@ -252,7 +252,7 @@ export function ContractTemplateList({
     {
       accessorKey: 'updatedAt',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Created" />
+        <DataTableColumnHeader column={column} title="Actualizada" />
       ),
       cell: ({ row }) => (
         <div className="text-muted-foreground">
@@ -262,10 +262,10 @@ export function ContractTemplateList({
     },
     {
       id: 'type',
-      header: 'Type',
+      header: 'Tipo',
       cell: () => (
         <Badge variant="outline" className="capitalize">
-          Manual Entry
+          Entrada manual
         </Badge>
       ),
     },
@@ -286,14 +286,14 @@ export function ContractTemplateList({
   const emptyState = (
     <div className="flex flex-col items-center justify-center py-16">
       <FileText className="h-12 w-12 text-muted-foreground mb-4" />
-      <h3 className="text-lg font-medium">No contract templates</h3>
+      <h3 className="text-lg font-medium">No hay plantillas de contrato</h3>
       <p className="text-muted-foreground mb-4">
-        Create your first contract template to get started.
+        Cree su primera plantilla de contrato para comenzar.
       </p>
       <Button asChild>
         <Link href="/templates/new">
           <Plus className="mr-2 h-4 w-4" />
-          Create Template
+          Crear plantilla
         </Link>
       </Button>
     </div>
@@ -306,14 +306,14 @@ export function ContractTemplateList({
         <Button asChild size="sm">
           <Link href="/templates/new">
             <Plus className="mr-2 h-4 w-4" />
-            Create Template
+            Crear plantilla
           </Link>
         </Button>
       </div>
       {selectedRows.length > 0 && (
         <div className="flex items-center gap-2 mb-4">
           <span className="text-sm text-muted-foreground">
-            {selectedRows.length} selected
+            {selectedRows.length} seleccionada(s)
           </span>
           <Button
             variant="outline"
@@ -321,7 +321,7 @@ export function ContractTemplateList({
             onClick={handleBulkDuplicate}
           >
             <Copy className="mr-2 h-4 w-4" />
-            Duplicate
+            Duplicar
           </Button>
           <Button
             variant="destructive"
@@ -330,7 +330,7 @@ export function ContractTemplateList({
             disabled={isDeleting}
           >
             <Trash2 className="mr-2 h-4 w-4" />
-            Delete Selected
+            Eliminar seleccionadas
           </Button>
         </div>
       )}
@@ -339,7 +339,7 @@ export function ContractTemplateList({
         columns={columns}
         data={templates}
         filterKey="name"
-        filterPlaceholder="Search templates..."
+        filterPlaceholder="Buscar plantillas..."
         pageSizes={[10, 25, 50, 100]}
         emptyState={emptyState}
         onRowSelect={setSelectedRows}
@@ -351,9 +351,9 @@ export function ContractTemplateList({
           {/* Header */}
           <div className="p-6 pb-4">
             <DialogHeader className="space-y-1">
-              <DialogTitle>Edit contract template</DialogTitle>
+              <DialogTitle>Editar plantilla de contrato</DialogTitle>
               <DialogDescription>
-                Template changes will not affect previously signed contracts.
+                Los cambios no afectarán los contratos firmados anteriormente.
               </DialogDescription>
             </DialogHeader>
           </div>
@@ -369,7 +369,7 @@ export function ContractTemplateList({
                   value={editName}
                   onChange={(e) => setEditName(e.target.value)}
                   className="text-base font-semibold !bg-transparent outline-none border-none shadow-none flex-1 placeholder:text-muted-foreground/40"
-                  placeholder="Template name"
+                  placeholder="Nombre de la plantilla"
                 />
                 <button
                   type="button"
@@ -377,7 +377,7 @@ export function ContractTemplateList({
                   onClick={handleDeleteFromDialog}
                 >
                   <Trash2 className="h-3.5 w-3.5" />
-                  Delete
+                  Eliminar
                 </button>
               </div>
 
@@ -397,7 +397,7 @@ export function ContractTemplateList({
                   <Input
                     value={newFieldName}
                     onChange={(e) => setNewFieldName(e.target.value)}
-                    placeholder="Field name (e.g., Event Address)"
+                    placeholder="Nombre del campo (ej.: Dirección del evento)"
                     className="flex-1"
                     autoFocus
                     onKeyDown={(e) => {
@@ -417,7 +417,7 @@ export function ContractTemplateList({
                     onClick={handleAddVariable}
                     disabled={!newFieldName.trim()}
                   >
-                    Add
+                    Agregar
                   </Button>
                   <Button
                     type="button"
@@ -428,7 +428,7 @@ export function ContractTemplateList({
                       setNewFieldName('');
                     }}
                   >
-                    Cancel
+                    Cancelar
                   </Button>
                 </div>
               ) : (
@@ -438,7 +438,7 @@ export function ContractTemplateList({
                   onClick={() => setShowNewFieldInput(true)}
                 >
                   <Plus className="h-3.5 w-3.5" />
-                  Custom Field
+                  Campo personalizado
                 </button>
               )}
 
@@ -470,14 +470,14 @@ export function ContractTemplateList({
                   disabled={isSaving}
                 >
                   {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  Save
+                  Guardar
                 </Button>
                 <Button
                   variant="outline"
                   onClick={handleCloseEdit}
                   disabled={isSaving}
                 >
-                  Cancel
+                  Cancelar
                 </Button>
               </div>
             </div>
@@ -489,20 +489,20 @@ export function ContractTemplateList({
       <AlertDialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Template</AlertDialogTitle>
+            <AlertDialogTitle>Eliminar plantilla</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete this contract template? This action
-              cannot be undone.
+              ¿Confirma que desea eliminar esta plantilla de contrato? Esta acción
+              no se puede deshacer.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDelete}
               disabled={isDeleting}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              Delete
+              Eliminar
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

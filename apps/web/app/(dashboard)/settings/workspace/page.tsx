@@ -7,7 +7,7 @@ import { getWorkspaceSettings, getCurrentUserRole } from '@/lib/settings/actions
 import { redirect } from 'next/navigation';
 
 export const metadata = {
-  title: 'Workspace - Settings',
+  title: 'Espacio de trabajo',
 };
 
 export default async function WorkspaceSettingsPage() {
@@ -24,9 +24,9 @@ export default async function WorkspaceSettingsPage() {
     <div className="space-y-4">
       <Card>
         <CardHeader>
-          <CardTitle>General</CardTitle>
+          <CardTitle>Información general</CardTitle>
           <CardDescription>
-            Basic workspace information
+            Datos principales del espacio de trabajo.
           </CardDescription>
         </CardHeader>
         <CardContent>

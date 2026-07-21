@@ -36,7 +36,7 @@ export function DangerZone() {
       if (result.success) {
         router.push('/');
       } else {
-        setError(result.error || 'Failed to delete workspace');
+        setError(result.error || 'No se pudo eliminar el espacio de trabajo');
       }
     } finally {
       setIsDeleting(false);
@@ -48,46 +48,46 @@ export function DangerZone() {
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-destructive">
           <AlertTriangle className="h-5 w-5" />
-          Danger Zone
+          Zona de riesgo
         </CardTitle>
         <CardDescription>
-          Irreversible and destructive actions
+          Acciones irreversibles que eliminan información
         </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="flex items-center justify-between">
           <div>
-            <h4 className="font-medium">Delete Workspace</h4>
+            <h4 className="font-medium">Eliminar espacio de trabajo</h4>
             <p className="text-sm text-muted-foreground">
-              Permanently delete this workspace and all its data
+              Elimine permanentemente este espacio de trabajo y todos sus datos.
             </p>
           </div>
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-              <Button variant="destructive">Delete Workspace</Button>
+              <Button variant="destructive">Eliminar espacio de trabajo</Button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
                 <DialogTitle className="flex items-center gap-2">
                   <AlertTriangle className="h-5 w-5 text-destructive" />
-                  Delete Workspace
+                  Eliminar espacio de trabajo
                 </DialogTitle>
                 <DialogDescription>
-                  This action cannot be undone. This will permanently delete your
-                  workspace and remove all associated data including:
+                  Esta acción no se puede deshacer. Se eliminarán permanentemente el
+                  espacio de trabajo y todos sus datos asociados, incluidos:
                 </DialogDescription>
               </DialogHeader>
 
               <ul className="list-disc list-inside text-sm text-muted-foreground space-y-1 my-4">
-                <li>All quotes and invoices</li>
-                <li>All clients</li>
-                <li>All rate cards and templates</li>
-                <li>All team members will lose access</li>
+                <li>Todas las cotizaciones y facturas</li>
+                <li>Todos los clientes</li>
+                <li>Todas las tarifas y plantillas</li>
+                <li>El acceso de todos los miembros del equipo</li>
               </ul>
 
               <div className="grid gap-2">
                 <Label htmlFor="confirmation">
-                  Type <strong>DELETE</strong> to confirm
+                  Escriba <strong>DELETE</strong> para confirmar
                 </Label>
                 <Input
                   id="confirmation"
@@ -107,7 +107,7 @@ export function DangerZone() {
                   onClick={() => setOpen(false)}
                   disabled={isDeleting}
                 >
-                  Cancel
+                  Cancelar
                 </Button>
                 <Button
                   variant="destructive"
@@ -115,7 +115,7 @@ export function DangerZone() {
                   disabled={confirmation !== 'DELETE' || isDeleting}
                 >
                   {isDeleting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  Delete Workspace
+                  Eliminar espacio de trabajo
                 </Button>
               </DialogFooter>
             </DialogContent>

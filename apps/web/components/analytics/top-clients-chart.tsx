@@ -15,7 +15,7 @@ interface TopClientsChartProps {
 }
 
 function formatCurrency(amount: number, currency: string = 'USD'): string {
-  const parts = new Intl.NumberFormat('en-US', {
+  const parts = new Intl.NumberFormat('es-CR', {
     style: 'currency',
     currency,
     minimumFractionDigits: 0,
@@ -43,11 +43,11 @@ export function TopClientsChart({ data: propData, currency = 'USD' }: TopClients
     return (
       <Card>
         <CardHeader className="pb-4">
-          <CardTitle className="text-sm font-medium">Top Clients</CardTitle>
+          <CardTitle className="text-sm font-medium">Principales clientes</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="h-[200px] flex items-center justify-center text-sm text-muted-foreground">
-            No client revenue data available
+            Aún no hay ingresos asociados a clientes.
           </div>
         </CardContent>
       </Card>
@@ -58,9 +58,9 @@ export function TopClientsChart({ data: propData, currency = 'USD' }: TopClients
     <Card>
       <CardHeader className="pb-4">
         <div className="flex items-baseline justify-between">
-          <CardTitle className="text-sm font-medium">Top Clients</CardTitle>
+          <CardTitle className="text-sm font-medium">Principales clientes</CardTitle>
           <span className="text-xs text-muted-foreground/60">
-            {formatCurrency(totalRevenue, currency)} total
+            {formatCurrency(totalRevenue, currency)} en total
           </span>
         </div>
       </CardHeader>

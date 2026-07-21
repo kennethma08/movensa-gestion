@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { EmailTemplateForm } from '@/components/email';
 
 export const metadata = {
-  title: 'New Email Template',
+  title: 'Nueva plantilla de correo',
 };
 
 export default function NewEmailTemplatePage() {
@@ -16,7 +16,7 @@ export default function NewEmailTemplatePage() {
             <ArrowLeft className="h-4 w-4" />
           </Link>
         </Button>
-        <h2 className="text-lg font-semibold">Create Email Template</h2>
+        <h2 className="text-lg font-semibold">Crear plantilla de correo</h2>
       </div>
 
       <EmailTemplateForm />

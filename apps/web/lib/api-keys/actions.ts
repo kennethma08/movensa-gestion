@@ -28,11 +28,11 @@ export async function generateApiKey(data: {
   const { workspaceId, role } = await getCurrentUserWorkspace();
 
   if (role !== 'owner' && role !== 'admin') {
-    return { success: false, error: 'Only owners and admins can create API keys' };
+    return { success: false, error: 'Solo propietarios y administradores pueden crear claves de API' };
   }
 
   if (!data.name?.trim()) {
-    return { success: false, error: 'API key name is required' };
+    return { success: false, error: 'El nombre de la clave es obligatorio' };
   }
 
   // Generate a secure random key with prefix
@@ -84,7 +84,7 @@ export async function revokeApiKey(id: string): Promise<{ success: boolean; erro
   const { workspaceId, role } = await getCurrentUserWorkspace();
 
   if (role !== 'owner' && role !== 'admin') {
-    return { success: false, error: 'Only owners and admins can revoke API keys' };
+    return { success: false, error: 'Solo propietarios y administradores pueden revocar claves de API' };
   }
 
   const key = await prisma.apiKey.findFirst({
@@ -92,7 +92,7 @@ export async function revokeApiKey(id: string): Promise<{ success: boolean; erro
   });
 
   if (!key) {
-    return { success: false, error: 'API key not found' };
+    return { success: false, error: 'No se encontró la clave de API' };
   }
 
   await prisma.apiKey.update({

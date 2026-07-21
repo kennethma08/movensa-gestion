@@ -10,6 +10,7 @@ import {
 } from 'recharts';
 import { DateRange } from 'react-day-picker';
 import { format } from 'date-fns';
+import { es } from 'date-fns/locale';
 import { ArrowUpRight, ArrowDownRight, TrendingUp } from 'lucide-react';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -28,7 +29,7 @@ interface RevenueForecastChartProps {
 }
 
 function formatCurrency(amount: number, currency: string = 'USD'): string {
-  const parts = new Intl.NumberFormat('en-US', {
+  const parts = new Intl.NumberFormat('es-CR', {
     style: 'currency',
     currency,
     minimumFractionDigits: 0,
@@ -42,11 +43,11 @@ function formatCurrency(amount: number, currency: string = 'USD'): string {
 
 const chartConfig = {
   projected: {
-    label: 'Projected',
+    label: 'Proyectado',
     color: 'var(--primary-300)',
   },
   actual: {
-    label: 'Actual',
+    label: 'Real',
     color: 'var(--primary-500)',
   },
 } satisfies ChartConfig;
@@ -57,7 +58,7 @@ export function RevenueForecastChart({ forecastData, currency = 'USD' }: Revenue
       return [];
     }
     return forecastData.map((point) => ({
-      month: format(new Date(point.date + '-01'), 'MMM'),
+      month: format(new Date(point.date + '-01'), 'MMM', { locale: es }),
       projected: point.forecast ?? point.actual ?? 0,
       actual: point.isProjection ? null : point.actual,
     }));
@@ -73,12 +74,12 @@ export function RevenueForecastChart({ forecastData, currency = 'USD' }: Revenue
         <CardHeader className="pb-2">
           <div className="flex items-center gap-2">
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
-            <CardTitle className="text-sm font-medium">Revenue Forecast</CardTitle>
+            <CardTitle className="text-sm font-medium">Proyección de ingresos</CardTitle>
           </div>
         </CardHeader>
         <CardContent>
           <div className="h-[260px] flex items-center justify-center text-sm text-muted-foreground">
-            No forecast data available
+            Aún no hay datos suficientes para generar una proyección.
           </div>
         </CardContent>
       </Card>
@@ -91,14 +92,14 @@ export function RevenueForecastChart({ forecastData, currency = 'USD' }: Revenue
         <div>
           <div className="flex items-center gap-2">
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
-            <CardTitle className="text-sm font-medium">Revenue Forecast</CardTitle>
+            <CardTitle className="text-sm font-medium">Proyección de ingresos</CardTitle>
           </div>
           <p className="text-2xl font-semibold tracking-tight mt-1">
             {formatCurrency(totalActual || totalProjected, currency)}
           </p>
         </div>
         <div className="flex items-center gap-1.5 rounded-md border bg-muted/50 px-2.5 py-1">
-          <span className="text-xs text-muted-foreground">Variance</span>
+          <span className="text-xs text-muted-foreground">Variación</span>
           <span
             className={`inline-flex items-center gap-0.5 text-xs font-semibold ${
               variance >= 0
@@ -149,7 +150,7 @@ export function RevenueForecastChart({ forecastData, currency = 'USD' }: Revenue
               axisLine={false}
               className="text-[11px]"
               tickFormatter={(value) => {
-                const symbol = new Intl.NumberFormat('en-US', { style: 'currency', currency, maximumFractionDigits: 0 })
+                const symbol = new Intl.NumberFormat('es-CR', { style: 'currency', currency, maximumFractionDigits: 0 })
                   .formatToParts(0)
                   .find(p => p.type === 'currency')?.value ?? '$';
                 return `${symbol} ${value / 1000}k`;
@@ -163,7 +164,7 @@ export function RevenueForecastChart({ forecastData, currency = 'USD' }: Revenue
             <Area
               type="monotone"
               dataKey="projected"
-              name="Projected"
+              name="Proyectado"
               stroke="var(--color-projected)"
               strokeWidth={2}
               strokeDasharray="5 5"
@@ -172,7 +173,7 @@ export function RevenueForecastChart({ forecastData, currency = 'USD' }: Revenue
             <Area
               type="natural"
               dataKey="actual"
-              name="Actual"
+              name="Real"
               stroke="url(#forecastStrokeActual)"
               strokeWidth={2}
               fill="url(#forecastFillActual)"
@@ -183,11 +184,11 @@ export function RevenueForecastChart({ forecastData, currency = 'USD' }: Revenue
         <div className="mt-3 flex items-center justify-center gap-6 text-xs text-muted-foreground">
           <div className="flex items-center gap-2">
             <span className="h-px w-5 border-t-[1.5px] border-dashed border-primary/50" />
-            <span>Projected</span>
+            <span>Proyectado</span>
           </div>
           <div className="flex items-center gap-2">
             <span className="h-0.5 w-5 rounded-full bg-primary" />
-            <span>Actual</span>
+            <span>Real</span>
           </div>
         </div>
       </CardContent>

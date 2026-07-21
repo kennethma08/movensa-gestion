@@ -19,7 +19,7 @@ interface ClientLifetimeValueCardProps {
 }
 
 function formatCurrency(amount: number, currency: string = 'USD'): string {
-  const parts = new Intl.NumberFormat('en-US', {
+  const parts = new Intl.NumberFormat('es-CR', {
     style: 'currency',
     currency,
     minimumFractionDigits: 0,
@@ -44,11 +44,11 @@ export function ClientLifetimeValueCard({ data: propData, currency = 'USD' }: Cl
     return (
       <Card>
         <CardHeader className="pb-4">
-          <CardTitle className="text-sm font-medium">Client Lifetime Value</CardTitle>
+          <CardTitle className="text-sm font-medium">Valor acumulado por cliente</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="h-[200px] flex items-center justify-center text-sm text-muted-foreground">
-            No client LTV data available
+            Aún no hay datos suficientes para calcular este indicador.
           </div>
         </CardContent>
       </Card>
@@ -59,9 +59,9 @@ export function ClientLifetimeValueCard({ data: propData, currency = 'USD' }: Cl
     <Card>
       <CardHeader className="pb-4">
         <div className="flex items-baseline justify-between">
-          <CardTitle className="text-sm font-medium">Client Lifetime Value</CardTitle>
+          <CardTitle className="text-sm font-medium">Valor acumulado por cliente</CardTitle>
           <span className="text-xs text-muted-foreground/60">
-            Avg {formatCurrency(averageLTV, currency)}
+            Promedio {formatCurrency(averageLTV, currency)}
           </span>
         </div>
       </CardHeader>

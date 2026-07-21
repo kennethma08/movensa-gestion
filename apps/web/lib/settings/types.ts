@@ -192,21 +192,21 @@ export type CustomFieldType = 'text' | 'number' | 'date' | 'dropdown' | 'multise
 export type CustomFieldEntity = 'quote' | 'invoice' | 'client' | 'project';
 
 export const CUSTOM_FIELD_TYPE_LABELS: Record<CustomFieldType, string> = {
-  text: 'Text',
-  number: 'Number',
-  date: 'Date',
-  dropdown: 'Dropdown',
-  multiselect: 'Multi-Select',
-  checkbox: 'Checkbox',
+  text: 'Texto',
+  number: 'Número',
+  date: 'Fecha',
+  dropdown: 'Lista desplegable',
+  multiselect: 'Selección múltiple',
+  checkbox: 'Casilla',
   url: 'URL',
-  email: 'Email',
+  email: 'Correo electrónico',
 };
 
 export const CUSTOM_FIELD_ENTITY_LABELS: Record<CustomFieldEntity, string> = {
-  quote: 'Quotes',
-  invoice: 'Invoices',
-  client: 'Clients',
-  project: 'Projects',
+  quote: 'Cotizaciones',
+  invoice: 'Facturas',
+  client: 'Clientes',
+  project: 'Proyectos',
 };
 
 export interface CustomFieldData {

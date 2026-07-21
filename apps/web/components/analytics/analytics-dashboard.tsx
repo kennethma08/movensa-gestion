@@ -31,11 +31,11 @@ interface ClientLTV {
 }
 
 const PERIOD_OPTIONS = [
-  { label: '7D', value: '7d' },
-  { label: '30D', value: '30d' },
-  { label: '90D', value: '90d' },
-  { label: 'MTD', value: 'month' },
-  { label: 'YTD', value: 'ytd' },
+  { label: '7 días', value: '7d' },
+  { label: '30 días', value: '30d' },
+  { label: '90 días', value: '90d' },
+  { label: 'Este mes', value: 'month' },
+  { label: 'Este año', value: 'ytd' },
 ];
 
 function getDateRangeFromPreset(preset: string): DateRange {
@@ -58,7 +58,7 @@ function getDateRangeFromPreset(preset: string): DateRange {
 }
 
 function formatCurrency(amount: number, currency: string = 'USD'): string {
-  const parts = new Intl.NumberFormat('en-US', {
+  const parts = new Intl.NumberFormat('es-CR', {
     style: 'currency',
     currency,
     minimumFractionDigits: 0,
@@ -174,29 +174,29 @@ export function AnalyticsDashboard({
       {/* Overview Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 rounded-lg border bg-card divide-x divide-border relative">
         <span className="absolute -top-5 right-0 text-[11px] text-muted-foreground/60">
-          All amounts in {currency}
+          Todos los importes en {currency}
         </span>
         <StatItem
-          title="Total Revenue"
+          title="Ingresos totales"
           value={formatCurrency(stats.totalRevenue, currency)}
           trend={revenueTrend}
-          detail="vs last month"
+          detail="frente al mes anterior"
         />
         <StatItem
-          title="Total Quotes"
+          title="Cotizaciones"
           value={stats.totalQuotes}
           trend={quotesTrend}
-          detail="vs last month"
+          detail="frente al mes anterior"
         />
         <StatItem
-          title="Conversion Rate"
+          title="Tasa de conversión"
           value={`${stats.conversionRate.toFixed(2)}%`}
-          detail="Quotes to invoices"
+          detail="Cotizaciones convertidas en facturas"
         />
         <StatItem
-          title="Outstanding"
+          title="Saldo pendiente"
           value={formatCurrency(stats.outstandingAmount, currency)}
-          detail={`${formatCurrency(stats.overdueAmount, currency)} overdue`}
+          detail={`${formatCurrency(stats.overdueAmount, currency)} vencido`}
         />
       </div>
 

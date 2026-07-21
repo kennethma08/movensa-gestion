@@ -1,5 +1,5 @@
 export const metadata = {
-  title: 'Appearance',
+  title: 'Apariencia',
 };
 
 export default function AppearanceLayout({ children }: { children: React.ReactNode }) {

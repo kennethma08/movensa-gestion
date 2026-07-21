@@ -17,12 +17,12 @@ interface FontSizeOption {
 }
 
 export const FONT_SIZE_OPTIONS: FontSizeOption[] = [
-  { key: 'xs', label: 'Extra Small', scale: 0.85, description: 'Compact view with smaller text' },
-  { key: 'sm', label: 'Small', scale: 0.925, description: 'Slightly smaller than default' },
-  { key: 'default', label: 'Default', scale: 1, description: 'Standard font size' },
-  { key: 'md', label: 'Medium', scale: 1.03, description: 'A touch larger than default' },
-  { key: 'lg', label: 'Large', scale: 1.075, description: 'Slightly larger than default' },
-  { key: 'xl', label: 'Extra Large', scale: 1.15, description: 'Maximum readability' },
+  { key: 'xs', label: 'Muy pequeño', scale: 0.85, description: 'Vista compacta con texto reducido' },
+  { key: 'sm', label: 'Pequeño', scale: 0.925, description: 'Un poco menor que el tamaño estándar' },
+  { key: 'default', label: 'Estándar', scale: 1, description: 'Tamaño recomendado del sistema' },
+  { key: 'md', label: 'Mediano', scale: 1.03, description: 'Un poco mayor que el tamaño estándar' },
+  { key: 'lg', label: 'Grande', scale: 1.075, description: 'Texto amplio para facilitar la lectura' },
+  { key: 'xl', label: 'Muy grande', scale: 1.15, description: 'Máxima legibilidad' },
 ];
 
 export interface SidebarStyleOption {
@@ -32,8 +32,8 @@ export interface SidebarStyleOption {
 }
 
 export const SIDEBAR_STYLE_OPTIONS: SidebarStyleOption[] = [
-  { key: 'default', label: 'Flat', description: 'White background across the entire app' },
-  { key: 'elevated', label: 'Elevated', description: 'Gray canvas with cards and content on white' },
+  { key: 'default', label: 'Plano', description: 'Fondo blanco en toda la aplicación' },
+  { key: 'elevated', label: 'Elevado', description: 'Fondo gris con tarjetas y contenido sobre blanco' },
 ];
 
 const FONT_SIZE_STORAGE_KEY = 'oreko-font-size';

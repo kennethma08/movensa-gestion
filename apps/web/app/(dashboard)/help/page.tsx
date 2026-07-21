@@ -21,26 +21,26 @@ import {
 const helpTopics = [
   {
     icon: FileText,
-    title: 'Getting Started',
-    description: 'Learn the basics of creating quotes and invoices',
+    title: 'Primeros pasos',
+    description: 'Conozca el flujo para crear cotizaciones y facturas',
     href: '/help#getting-started',
   },
   {
     icon: BookOpen,
-    title: 'Documentation',
-    description: 'Comprehensive guides and API references',
+    title: 'Documentación',
+    description: 'Guías de uso y referencias para integraciones',
     href: '/help#docs',
   },
   {
     icon: Video,
-    title: 'Video Tutorials',
-    description: 'Watch step-by-step tutorials',
+    title: 'Tutoriales',
+    description: 'Aprenda cada proceso paso a paso',
     href: '/help#tutorials',
   },
   {
     icon: Lightbulb,
-    title: 'Tips & Tricks',
-    description: 'Get the most out of Oreko',
+    title: 'Consejos prácticos',
+    description: 'Aproveche mejor las herramientas de gestión',
     href: '/help#tips',
   },
 ];
@@ -48,45 +48,45 @@ const helpTopics = [
 const supportOptions = [
   {
     icon: MessageCircle,
-    title: 'Live Chat',
-    description: 'Chat with our support team',
-    action: 'Start Chat',
+    title: 'Chat en vivo',
+    description: 'Canal de atención en preparación',
+    action: 'Iniciar chat',
     available: false,
   },
   {
     icon: Mail,
-    title: 'Email Support',
-    description: 'We\'ll respond within 24 hours',
-    action: 'Send Email',
-    href: 'mailto:support@oreko.app',
+    title: 'Soporte por correo',
+    description: 'Envíe su consulta al equipo de Grupo Movensa',
+    action: 'Enviar correo',
+    href: 'mailto:info@grupomovensa.com',
     available: true,
   },
   {
     icon: Bug,
-    title: 'Report a Bug',
-    description: 'Found an issue? Let us know',
-    action: 'Report Bug',
-    href: 'mailto:support@oreko.app?subject=Bug%20Report',
+    title: 'Reportar un problema',
+    description: 'Indique qué ocurrió y cómo podemos reproducirlo',
+    action: 'Reportar problema',
+    href: 'mailto:info@grupomovensa.com?subject=Reporte%20del%20sistema%20de%20gesti%C3%B3n',
     available: true,
   },
 ];
 
 const faqs = [
   {
-    question: 'How do I create my first quote?',
-    answer: 'Navigate to Quotes in the sidebar, click "New Quote", fill in the client details and line items, then save or send to your client.',
+    question: '¿Cómo creo una cotización?',
+    answer: 'Abra Cotizaciones en el menú lateral, seleccione Nueva cotización, elija el cliente, agregue los conceptos y guarde el documento. Después podrá enviarlo o descargarlo.',
   },
   {
-    question: 'Can I convert a quote to an invoice?',
-    answer: 'Yes! Once a quote is accepted, you can convert it to an invoice with one click. All the details will be automatically transferred.',
+    question: '¿Puedo convertir una cotización en factura?',
+    answer: 'Sí. Cuando la cotización esté aceptada puede convertirla en factura y el sistema trasladará automáticamente el cliente, los conceptos y los importes.',
   },
   {
-    question: 'How do I set up payment processing?',
-    answer: 'Go to Settings > Payments and connect your Stripe account. Once connected, your clients can pay invoices directly.',
+    question: '¿Cómo configuro los pagos en línea?',
+    answer: 'Abra Configuración > Pagos. Si las credenciales de Stripe están habilitadas, podrá vincular la cuenta y recibir pagos desde las facturas.',
   },
   {
-    question: 'Can I customize the look of my quotes?',
-    answer: 'Yes! Go to Settings > Branding to customize colors, fonts, and add your logo to all your documents.',
+    question: '¿Puedo personalizar los documentos?',
+    answer: 'Sí. En Configuración puede definir la marca, los colores, los datos comerciales y el logotipo que aparecerán en cotizaciones, contratos y facturas.',
   },
 ];
 
@@ -94,15 +94,15 @@ export default function HelpPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">Help & Support</h1>
+        <h1 className="text-2xl font-bold tracking-tight">Ayuda y soporte</h1>
         <p className="text-muted-foreground">
-          Find answers, learn best practices, and get support
+          Encuentre respuestas, conozca los procesos y contacte al equipo de soporte.
         </p>
       </div>
 
       {/* Low #78: Added IDs for anchor navigation from help topic links */}
       <section id="getting-started">
-        <h2 className="text-sm font-medium text-muted-foreground mb-3">Resources</h2>
+        <h2 className="text-sm font-medium text-muted-foreground mb-3">Recursos</h2>
         <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
           {helpTopics.map((topic) => (
             <a
@@ -124,7 +124,7 @@ export default function HelpPage() {
 
       {/* FAQs */}
       <section id="tips">
-        <h2 className="text-sm font-medium text-muted-foreground mb-3">Frequently Asked Questions</h2>
+        <h2 className="text-sm font-medium text-muted-foreground mb-3">Preguntas frecuentes</h2>
         <div className="rounded-lg border">
           <Accordion type="single" collapsible className="px-4">
             {faqs.map((faq, index) => (
@@ -143,7 +143,7 @@ export default function HelpPage() {
 
       {/* Support Options */}
       <section id="docs">
-        <h2 className="text-sm font-medium text-muted-foreground mb-3">Get Support</h2>
+        <h2 className="text-sm font-medium text-muted-foreground mb-3">Obtener soporte</h2>
         <div className="rounded-lg border divide-y">
           {supportOptions.map((option) => (
             <div key={option.title} className="flex items-center justify-between p-4">
@@ -168,7 +168,7 @@ export default function HelpPage() {
                   <Button variant="outline" size="sm">{option.action}</Button>
                 )
               ) : (
-                <span className="text-xs text-muted-foreground">Coming soon</span>
+                <span className="text-xs text-muted-foreground">Próximamente</span>
               )}
             </div>
           ))}

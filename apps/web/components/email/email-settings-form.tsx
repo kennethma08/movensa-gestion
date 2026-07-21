@@ -10,7 +10,7 @@ import { toast } from 'sonner';
 import { getEmailSettings, updateEmailSettings } from '@/lib/settings/actions';
 
 const DEFAULT_FOOTER =
-  'This email and any attachments are intended solely for the use of the individual or entity to whom they are addressed. If you have received this message in error, please notify the sender immediately. Unauthorized use, disclosure, or distribution is prohibited.';
+  'Este correo y sus archivos adjuntos están destinados exclusivamente a la persona o entidad indicada. Si recibió este mensaje por error, notifíquelo al remitente. Se prohíbe su uso, divulgación o distribución no autorizada.';
 
 export function EmailSettingsForm() {
   const [isLoading, setIsLoading] = React.useState(true);
@@ -30,7 +30,7 @@ export function EmailSettingsForm() {
           setClientEmail(settings.clientEmail || '');
         }
       } catch {
-        toast.error('Failed to load email settings');
+        toast.error('No se pudo cargar la configuración de correo');
       } finally {
         setIsLoading(false);
       }
@@ -47,9 +47,9 @@ export function EmailSettingsForm() {
         emailFooter: footer,
         clientEmail: clientEmail,
       });
-      toast.success('Email settings saved successfully');
+      toast.success('Configuración de correo guardada');
     } catch {
-      toast.error('Failed to save email settings');
+      toast.error('No se pudo guardar la configuración de correo');
     } finally {
       setIsSaving(false);
     }
@@ -78,16 +78,16 @@ export function EmailSettingsForm() {
       {/* Email Signature */}
       <Card>
         <CardHeader>
-          <CardTitle>Email Signature</CardTitle>
+          <CardTitle>Firma de correo</CardTitle>
           <CardDescription>
-            This signature will be appended to all outgoing emails to your clients.
+            Esta firma se agregará a los correos enviados a los clientes.
           </CardDescription>
         </CardHeader>
         <CardContent>
           <Textarea
             value={signature}
             onChange={(e) => setSignature(e.target.value)}
-            placeholder="Your Name&#10;your@email.com"
+            placeholder="Grupo Movensa&#10;info@grupomovensa.com"
             className="min-h-[100px]"
             rows={4}
           />
@@ -97,16 +97,16 @@ export function EmailSettingsForm() {
       {/* Email Footer */}
       <Card>
         <CardHeader>
-          <CardTitle>Email Footer</CardTitle>
+          <CardTitle>Pie de correo</CardTitle>
           <CardDescription>
-            This disclaimer text appears at the bottom of every email sent from your account.
+            Este texto legal aparecerá al final de los correos enviados.
           </CardDescription>
         </CardHeader>
         <CardContent>
           <Textarea
             value={footer}
             onChange={(e) => setFooter(e.target.value)}
-            placeholder="Enter your email footer / disclaimer text..."
+            placeholder="Escriba el texto legal del pie de correo…"
             rows={4}
           />
         </CardContent>
@@ -115,9 +115,9 @@ export function EmailSettingsForm() {
       {/* Email Setup */}
       <Card>
         <CardHeader>
-          <CardTitle>Email Setup</CardTitle>
+          <CardTitle>Dirección de envío</CardTitle>
           <CardDescription>
-            Configure the email address used for sending client-facing emails.
+            Configure la dirección visible en los mensajes dirigidos a clientes.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -127,30 +127,30 @@ export function EmailSettingsForm() {
                 <Mail className="h-5 w-5 text-primary" />
               </div>
               <div>
-                <p className="text-sm font-medium">Current sending email</p>
+                <p className="text-sm font-medium">Correo remitente actual</p>
                 <p className="text-sm text-muted-foreground">
-                  {clientEmail || 'No email configured — emails will be sent from the default system address.'}
+                  {clientEmail || 'No hay un correo configurado; se utilizará la dirección predeterminada del sistema.'}
                 </p>
               </div>
             </div>
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium">Client-facing email address</label>
+            <label className="text-sm font-medium">Correo visible para clientes</label>
             <div className="flex gap-3">
               <Input
                 value={clientEmail}
                 onChange={(e) => setClientEmail(e.target.value)}
-                placeholder="you@yourdomain.com"
+                placeholder="info@grupomovensa.com"
                 type="email"
                 className="flex-1"
               />
-              <Button type="button" variant="outline" disabled title="Email verification coming soon">
-                Verify
+              <Button type="button" variant="outline" disabled title="Verificación de correo próximamente">
+                Verificar
               </Button>
             </div>
             <p className="text-xs text-muted-foreground">
-              Clients will see this address as the sender on all emails from your workspace.
+              Los clientes verán esta dirección como remitente de los correos del sistema.
             </p>
           </div>
         </CardContent>
@@ -158,7 +158,7 @@ export function EmailSettingsForm() {
 
       <div className="flex justify-end">
         <Button onClick={handleSave} disabled={isSaving}>
-          {isSaving ? 'Saving...' : 'Save Changes'}
+          {isSaving ? 'Guardando…' : 'Guardar cambios'}
         </Button>
       </div>
     </div>

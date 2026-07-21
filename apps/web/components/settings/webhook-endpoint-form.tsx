@@ -36,35 +36,35 @@ interface WebhookEndpointFormProps {
 
 const EVENT_GROUPS = [
   {
-    label: 'Quotes',
+    label: 'Cotizaciones',
     events: [
-      { value: 'quote.created', label: 'Quote Created' },
-      { value: 'quote.sent', label: 'Quote Sent' },
-      { value: 'quote.accepted', label: 'Quote Accepted' },
-      { value: 'quote.declined', label: 'Quote Declined' },
+      { value: 'quote.created', label: 'Cotización creada' },
+      { value: 'quote.sent', label: 'Cotización enviada' },
+      { value: 'quote.accepted', label: 'Cotización aceptada' },
+      { value: 'quote.declined', label: 'Cotización rechazada' },
     ],
   },
   {
-    label: 'Invoices',
+    label: 'Facturas',
     events: [
-      { value: 'invoice.created', label: 'Invoice Created' },
-      { value: 'invoice.sent', label: 'Invoice Sent' },
-      { value: 'invoice.paid', label: 'Invoice Paid' },
-      { value: 'invoice.voided', label: 'Invoice Voided' },
+      { value: 'invoice.created', label: 'Factura creada' },
+      { value: 'invoice.sent', label: 'Factura enviada' },
+      { value: 'invoice.paid', label: 'Factura pagada' },
+      { value: 'invoice.voided', label: 'Factura anulada' },
     ],
   },
   {
-    label: 'Payments',
+    label: 'Pagos',
     events: [
-      { value: 'payment.received', label: 'Payment Received' },
-      { value: 'payment.refunded', label: 'Payment Refunded' },
+      { value: 'payment.received', label: 'Pago recibido' },
+      { value: 'payment.refunded', label: 'Pago reembolsado' },
     ],
   },
   {
-    label: 'Other',
+    label: 'Otros',
     events: [
-      { value: 'client.created', label: 'Client Created' },
-      { value: 'credit_note.issued', label: 'Credit Note Issued' },
+      { value: 'client.created', label: 'Cliente creado' },
+      { value: 'credit_note.issued', label: 'Nota de crédito emitida' },
     ],
   },
 ];
@@ -104,12 +104,12 @@ export function WebhookEndpointForm({ endpoint, onCreated, onUpdated, onCancel }
     setError(null);
 
     if (!url.trim()) {
-      setError('URL is required');
+      setError('La dirección URL es obligatoria');
       return;
     }
 
     if (selectedEvents.length === 0) {
-      setError('Select at least one event');
+      setError('Seleccione al menos un evento');
       return;
     }
 
@@ -121,7 +121,7 @@ export function WebhookEndpointForm({ endpoint, onCreated, onUpdated, onCancel }
           events: selectedEvents,
         });
         if (result.success && result.endpoint) {
-          toast.success('Webhook endpoint updated');
+          toast.success('Punto de conexión actualizado');
           onUpdated?.({
             id: result.endpoint.id,
             url: result.endpoint.url,
@@ -132,7 +132,7 @@ export function WebhookEndpointForm({ endpoint, onCreated, onUpdated, onCancel }
             totalDeliveries: endpoint.totalDeliveries,
           });
         } else {
-          setError(result.error || 'Failed to update');
+          setError(result.error || 'No se pudo actualizar');
         }
       } else {
         const result = await createWebhookEndpoint({
@@ -140,7 +140,7 @@ export function WebhookEndpointForm({ endpoint, onCreated, onUpdated, onCancel }
           events: selectedEvents,
         });
         if (result.success && result.endpoint) {
-          toast.success('Webhook endpoint created');
+          toast.success('Punto de conexión creado');
           onCreated?.({
             id: result.endpoint.id,
             url: result.endpoint.url,
@@ -152,11 +152,11 @@ export function WebhookEndpointForm({ endpoint, onCreated, onUpdated, onCancel }
             secret: result.endpoint.secret,
           });
         } else {
-          setError(result.error || 'Failed to create');
+          setError(result.error || 'No se pudo crear');
         }
       }
     } catch {
-      setError('Something went wrong');
+      setError('Ocurrió un error inesperado');
     } finally {
       setIsSubmitting(false);
     }
@@ -167,18 +167,18 @@ export function WebhookEndpointForm({ endpoint, onCreated, onUpdated, onCancel }
       <DialogContent className="max-w-lg max-h-[85vh] overflow-y-auto">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
-            <DialogTitle>{isEditing ? 'Edit' : 'Create'} Webhook Endpoint</DialogTitle>
+            <DialogTitle>{isEditing ? 'Editar' : 'Crear'} punto de conexión de webhook</DialogTitle>
             <DialogDescription>
               {isEditing
-                ? 'Update the URL or events for this webhook endpoint.'
-                : 'Enter a URL and select which events should trigger this webhook.'}
+                ? 'Actualice la dirección o los eventos de este punto de conexión.'
+                : 'Ingrese una dirección y seleccione los eventos que activarán este webhook.'}
             </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-5 py-4">
             {/* URL */}
             <div className="space-y-2">
-              <Label htmlFor="webhook-url">Endpoint URL</Label>
+              <Label htmlFor="webhook-url">Dirección del punto de conexión</Label>
               <Input
                 id="webhook-url"
                 type="url"
@@ -188,14 +188,14 @@ export function WebhookEndpointForm({ endpoint, onCreated, onUpdated, onCancel }
                 required
               />
               <p className="text-xs text-muted-foreground">
-                Must be a publicly accessible HTTPS URL.
+                Debe ser una dirección HTTPS accesible públicamente.
               </p>
             </div>
 
             {/* Events */}
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <Label>Events to subscribe</Label>
+                <Label>Eventos que se enviarán</Label>
                 <Button
                   type="button"
                   variant="ghost"
@@ -203,7 +203,7 @@ export function WebhookEndpointForm({ endpoint, onCreated, onUpdated, onCancel }
                   className="text-xs h-auto py-1"
                   onClick={toggleAll}
                 >
-                  {allSelected ? 'Deselect All' : 'Select All'}
+                  {allSelected ? 'Deseleccionar todos' : 'Seleccionar todos'}
                 </Button>
               </div>
 
@@ -256,7 +256,7 @@ export function WebhookEndpointForm({ endpoint, onCreated, onUpdated, onCancel }
               </div>
 
               <p className="text-xs text-muted-foreground">
-                {selectedEvents.length} of {ALL_EVENTS.length} events selected
+                {selectedEvents.length} de {ALL_EVENTS.length} eventos seleccionados
               </p>
             </div>
 
@@ -267,11 +267,11 @@ export function WebhookEndpointForm({ endpoint, onCreated, onUpdated, onCancel }
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={onCancel} disabled={isSubmitting}>
-              Cancel
+              Cancelar
             </Button>
             <Button type="submit" disabled={isSubmitting}>
               {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {isEditing ? 'Update' : 'Create'} Endpoint
+              {isEditing ? 'Actualizar' : 'Crear'} punto de conexión
             </Button>
           </DialogFooter>
         </form>

@@ -120,98 +120,98 @@ export const DEFAULT_TEMPLATES: Record<
   { name: string; subject: string; body: string }
 > = {
   quote_sent: {
-    name: 'Quote Sent',
-    subject: 'Quote: {{quoteName}} from {{businessName}}',
-    body: `<p>Hi {{clientName}},</p>
-<p>{{businessName}} has sent you a quote: <strong>{{quoteName}}</strong></p>
+    name: 'Cotización enviada',
+    subject: 'Cotización: {{quoteName}} de {{businessName}}',
+    body: `<p>Hola {{clientName}},</p>
+<p>{{businessName}} le ha enviado una cotización: <strong>{{quoteName}}</strong></p>
 {{#if message}}<p>{{message}}</p>{{/if}}
-{{#if quoteValidUntil}}<p>This quote is valid until {{quoteValidUntil}}.</p>{{/if}}
-<p><a href="{{quoteUrl}}" style="background-color: #3B82F6; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">View Quote</a></p>`,
+{{#if quoteValidUntil}}<p>Esta cotización es válida hasta el {{quoteValidUntil}}.</p>{{/if}}
+<p><a href="{{quoteUrl}}" style="background-color: #3B82F6; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">Ver cotización</a></p>`,
   },
   quote_accepted: {
-    name: 'Quote Accepted',
-    subject: 'Quote Accepted: {{quoteName}} - {{quoteTotal}}',
-    body: `<p>Great news!</p>
-<p><strong>{{clientName}}</strong> has accepted your quote: {{quoteName}}</p>
-<p><strong>Amount:</strong> {{quoteTotal}}</p>
-<p><a href="{{quoteUrl}}" style="background-color: #10B981; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">View Quote</a></p>`,
+    name: 'Cotización aceptada',
+    subject: 'Cotización aceptada: {{quoteName}} - {{quoteTotal}}',
+    body: `<p>¡Buenas noticias!</p>
+<p><strong>{{clientName}}</strong> aceptó la cotización: {{quoteName}}</p>
+<p><strong>Importe:</strong> {{quoteTotal}}</p>
+<p><a href="{{quoteUrl}}" style="background-color: #10B981; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">Ver cotización</a></p>`,
   },
   quote_declined: {
-    name: 'Quote Declined',
-    subject: 'Quote Declined: {{quoteName}}',
-    body: `<p>{{clientName}} has declined your quote: {{quoteName}}</p>
-<p><a href="{{quoteUrl}}" style="background-color: #3B82F6; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">View Quote</a></p>`,
+    name: 'Cotización rechazada',
+    subject: 'Cotización rechazada: {{quoteName}}',
+    body: `<p>{{clientName}} rechazó la cotización: {{quoteName}}</p>
+<p><a href="{{quoteUrl}}" style="background-color: #3B82F6; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">Ver cotización</a></p>`,
   },
   quote_reminder: {
-    name: 'Quote Reminder',
-    subject: 'Reminder: Quote {{quoteName}} expires soon',
-    body: `<p>Hi {{clientName}},</p>
-<p>This is a friendly reminder that the quote <strong>{{quoteName}}</strong> from {{businessName}} will expire on {{quoteValidUntil}}.</p>
-<p><a href="{{quoteUrl}}" style="background-color: #F59E0B; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">Review Quote</a></p>`,
+    name: 'Recordatorio de cotización',
+    subject: 'Recordatorio: la cotización {{quoteName}} vence pronto',
+    body: `<p>Hola {{clientName}},</p>
+<p>Le recordamos que la cotización <strong>{{quoteName}}</strong> de {{businessName}} vence el {{quoteValidUntil}}.</p>
+<p><a href="{{quoteUrl}}" style="background-color: #F59E0B; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">Revisar cotización</a></p>`,
   },
   invoice_sent: {
-    name: 'Invoice Sent',
-    subject: 'Invoice {{invoiceNumber}} from {{businessName}} - {{invoiceTotal}}',
-    body: `<p>Hi {{clientName}},</p>
-<p>{{businessName}} has sent you an invoice:</p>
-<p><strong>Invoice:</strong> {{invoiceNumber}}<br>
-<strong>Amount:</strong> {{invoiceTotal}}<br>
-<strong>Due Date:</strong> {{invoiceDueDate}}</p>
+    name: 'Factura enviada',
+    subject: 'Factura {{invoiceNumber}} de {{businessName}} - {{invoiceTotal}}',
+    body: `<p>Hola {{clientName}},</p>
+<p>{{businessName}} le ha enviado una factura:</p>
+<p><strong>Factura:</strong> {{invoiceNumber}}<br>
+<strong>Importe:</strong> {{invoiceTotal}}<br>
+<strong>Fecha de vencimiento:</strong> {{invoiceDueDate}}</p>
 {{#if message}}<p>{{message}}</p>{{/if}}
-<p><a href="{{invoiceUrl}}" style="background-color: #10B981; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">View & Pay Invoice</a></p>`,
+<p><a href="{{invoiceUrl}}" style="background-color: #10B981; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">Ver y pagar factura</a></p>`,
   },
   invoice_reminder: {
-    name: 'Invoice Reminder',
-    subject: 'Reminder: Invoice {{invoiceNumber}} from {{businessName}}',
-    body: `<p>Hi {{clientName}},</p>
-<p>This is a friendly reminder that invoice {{invoiceNumber}} is due on {{invoiceDueDate}}.</p>
-<p><strong>Amount Due:</strong> {{amountDue}}</p>
-<p><a href="{{invoiceUrl}}" style="background-color: #F59E0B; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">Pay Now</a></p>`,
+    name: 'Recordatorio de factura',
+    subject: 'Recordatorio: factura {{invoiceNumber}} de {{businessName}}',
+    body: `<p>Hola {{clientName}},</p>
+<p>Le recordamos que la factura {{invoiceNumber}} vence el {{invoiceDueDate}}.</p>
+<p><strong>Importe pendiente:</strong> {{amountDue}}</p>
+<p><a href="{{invoiceUrl}}" style="background-color: #F59E0B; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">Pagar ahora</a></p>`,
   },
   invoice_overdue: {
-    name: 'Invoice Overdue',
-    subject: 'Overdue: Invoice {{invoiceNumber}} - {{daysOverdue}} days past due',
-    body: `<p>Hi {{clientName}},</p>
-<p>This is a reminder that invoice {{invoiceNumber}} is now {{daysOverdue}} days past due.</p>
-<p><strong>Amount Due:</strong> {{amountDue}}</p>
-<p><a href="{{invoiceUrl}}" style="background-color: #EF4444; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">Pay Now</a></p>`,
+    name: 'Factura vencida',
+    subject: 'Factura vencida: {{invoiceNumber}} - {{daysOverdue}} días de atraso',
+    body: `<p>Hola {{clientName}},</p>
+<p>Le recordamos que la factura {{invoiceNumber}} tiene {{daysOverdue}} días de atraso.</p>
+<p><strong>Importe pendiente:</strong> {{amountDue}}</p>
+<p><a href="{{invoiceUrl}}" style="background-color: #EF4444; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">Pagar ahora</a></p>`,
   },
   payment_received: {
-    name: 'Payment Received',
-    subject: 'Payment Received - Invoice {{invoiceNumber}}',
-    body: `<p>Hi {{clientName}},</p>
-<p>Thank you! We have received your payment of <strong>{{amountPaid}}</strong> for invoice {{invoiceNumber}}.</p>`,
+    name: 'Pago recibido',
+    subject: 'Pago recibido - Factura {{invoiceNumber}}',
+    body: `<p>Hola {{clientName}},</p>
+<p>¡Gracias! Recibimos su pago de <strong>{{amountPaid}}</strong> correspondiente a la factura {{invoiceNumber}}.</p>`,
   },
   contract_sent: {
-    name: 'Contract Sent',
-    subject: 'Contract: {{contractName}} from {{businessName}}',
-    body: `<p>Hi {{clientName}},</p>
-<p>{{businessName}} has sent you a contract to review and sign: <strong>{{contractName}}</strong></p>
+    name: 'Contrato enviado',
+    subject: 'Contrato: {{contractName}} de {{businessName}}',
+    body: `<p>Hola {{clientName}},</p>
+<p>{{businessName}} le ha enviado un contrato para revisar y firmar: <strong>{{contractName}}</strong></p>
 {{#if message}}<p>{{message}}</p>{{/if}}
-<p><a href="{{contractUrl}}" style="background-color: #3B82F6; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">Review & Sign</a></p>`,
+<p><a href="{{contractUrl}}" style="background-color: #3B82F6; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">Revisar y firmar</a></p>`,
   },
   contract_signed: {
-    name: 'Contract Signed',
-    subject: 'Contract Signed: {{contractName}}',
-    body: `<p>Great news!</p>
-<p><strong>{{clientName}}</strong> has signed the contract: {{contractName}}</p>
-<p><a href="{{contractUrl}}" style="background-color: #10B981; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">View Signed Contract</a></p>`,
+    name: 'Contrato firmado',
+    subject: 'Contrato firmado: {{contractName}}',
+    body: `<p>¡Buenas noticias!</p>
+<p><strong>{{clientName}}</strong> firmó el contrato: {{contractName}}</p>
+<p><a href="{{contractUrl}}" style="background-color: #10B981; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">Ver contrato firmado</a></p>`,
   },
 };
 
 // Get human-readable template type name
 export function getTemplateTypeName(type: EmailTemplateType): string {
   const names: Record<EmailTemplateType, string> = {
-    quote_sent: 'Quote Sent',
-    quote_accepted: 'Quote Accepted',
-    quote_declined: 'Quote Declined',
-    quote_reminder: 'Quote Reminder',
-    invoice_sent: 'Invoice Sent',
-    invoice_reminder: 'Invoice Reminder',
-    invoice_overdue: 'Invoice Overdue',
-    payment_received: 'Payment Received',
-    contract_sent: 'Contract Sent',
-    contract_signed: 'Contract Signed',
+    quote_sent: 'Cotización enviada',
+    quote_accepted: 'Cotización aceptada',
+    quote_declined: 'Cotización rechazada',
+    quote_reminder: 'Recordatorio de cotización',
+    invoice_sent: 'Factura enviada',
+    invoice_reminder: 'Recordatorio de factura',
+    invoice_overdue: 'Factura vencida',
+    payment_received: 'Pago recibido',
+    contract_sent: 'Contrato enviado',
+    contract_signed: 'Contrato firmado',
   };
   return names[type] || type;
 }

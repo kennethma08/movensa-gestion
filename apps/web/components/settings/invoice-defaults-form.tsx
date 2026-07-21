@@ -33,12 +33,12 @@ export function InvoiceDefaultsForm({ initialData }: InvoiceDefaultsFormProps) {
     try {
       const result = await updateInvoiceDefaults(data);
       if (result.success) {
-        toast.success('Invoice defaults saved');
+        toast.success('Valores predeterminados guardados');
       } else {
-        toast.error(result.error || 'Failed to save settings');
+        toast.error(result.error || 'No se pudo guardar la configuración');
       }
     } catch {
-      toast.error('Failed to save settings');
+      toast.error('No se pudo guardar la configuración');
     } finally {
       setSaving(false);
     }
@@ -47,15 +47,15 @@ export function InvoiceDefaultsForm({ initialData }: InvoiceDefaultsFormProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Invoice Defaults</CardTitle>
+        <CardTitle>Valores predeterminados de facturación</CardTitle>
         <CardDescription>
-          Set default payment terms and messages for new invoices.
+          Defina los plazos, mensajes y condiciones para las nuevas facturas.
         </CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
-            <Label htmlFor="paymentTerms">Default Payment Terms</Label>
+            <Label htmlFor="paymentTerms">Plazo de pago predeterminado</Label>
             <Select
               value={data.paymentTerms}
               onValueChange={(value) => setData({ ...data, paymentTerms: value })}
@@ -74,23 +74,23 @@ export function InvoiceDefaultsForm({ initialData }: InvoiceDefaultsFormProps) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="defaultNotes">Default Notes</Label>
+            <Label htmlFor="defaultNotes">Notas predeterminadas</Label>
             <Textarea
               id="defaultNotes"
               value={data.defaultNotes}
               onChange={(e) => setData({ ...data, defaultNotes: e.target.value })}
-              placeholder="Default notes that appear on every invoice..."
+              placeholder="Notas que aparecerán en cada factura…"
               rows={3}
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="defaultTerms">Default Terms & Conditions</Label>
+            <Label htmlFor="defaultTerms">Términos y condiciones predeterminados</Label>
             <Textarea
               id="defaultTerms"
               value={data.defaultTerms}
               onChange={(e) => setData({ ...data, defaultTerms: e.target.value })}
-              placeholder="Default terms and conditions..."
+              placeholder="Términos y condiciones para las nuevas facturas…"
               rows={3}
             />
           </div>
@@ -98,9 +98,9 @@ export function InvoiceDefaultsForm({ initialData }: InvoiceDefaultsFormProps) {
           <div className="space-y-4 rounded-lg border p-4">
             <div className="flex items-center justify-between">
               <div>
-                <Label>Late Fee</Label>
+                <Label>Cargo por atraso</Label>
                 <p className="text-sm text-muted-foreground">
-                  Automatically apply late fees to overdue invoices
+                  Aplica automáticamente un cargo a las facturas vencidas.
                 </p>
               </div>
               <Switch
@@ -111,7 +111,7 @@ export function InvoiceDefaultsForm({ initialData }: InvoiceDefaultsFormProps) {
             {data.lateFeeEnabled && (
               <div className="flex gap-4">
                 <div className="w-32">
-                  <Label>Type</Label>
+                  <Label>Tipo</Label>
                   <Select
                     value={data.lateFeeType}
                     onValueChange={(value: 'percentage' | 'fixed') =>
@@ -122,13 +122,13 @@ export function InvoiceDefaultsForm({ initialData }: InvoiceDefaultsFormProps) {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="percentage">Percentage</SelectItem>
-                      <SelectItem value="fixed">Fixed Amount</SelectItem>
+                      <SelectItem value="percentage">Porcentaje</SelectItem>
+                      <SelectItem value="fixed">Importe fijo</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <div className="flex-1">
-                  <Label>{data.lateFeeType === 'percentage' ? 'Rate (%)' : 'Amount ($)'}</Label>
+                  <Label>{data.lateFeeType === 'percentage' ? 'Porcentaje (%)' : 'Importe'}</Label>
                   <Input
                     type="number"
                     value={data.lateFeeValue}
@@ -144,9 +144,9 @@ export function InvoiceDefaultsForm({ initialData }: InvoiceDefaultsFormProps) {
 
           <div className="flex items-center justify-between rounded-lg border p-4">
             <div>
-              <Label>Payment Reminders</Label>
+              <Label>Recordatorios de pago</Label>
               <p className="text-sm text-muted-foreground">
-                Send automatic reminders before and after due dates
+                Envía recordatorios automáticos antes y después del vencimiento.
               </p>
             </div>
             <Switch
@@ -157,7 +157,7 @@ export function InvoiceDefaultsForm({ initialData }: InvoiceDefaultsFormProps) {
 
           <Button type="submit" disabled={saving}>
             {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            Save Defaults
+            Guardar valores
           </Button>
         </form>
       </CardContent>

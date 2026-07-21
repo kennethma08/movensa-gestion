@@ -66,10 +66,10 @@ export function PaymentSettingsForm({ initialData, stripeEnabled }: PaymentSetti
     startTransition(async () => {
       try {
         await updatePaymentSettings(settings);
-        toast.success('Payment settings saved');
+        toast.success('Configuración de pagos guardada');
         router.refresh();
       } catch {
-        toast.error('Failed to save payment settings');
+        toast.error('No se pudo guardar la configuración de pagos');
       }
     });
   };
@@ -110,7 +110,7 @@ export function PaymentSettingsForm({ initialData, stripeEnabled }: PaymentSetti
             <div>
               <CardTitle>Stripe Connect</CardTitle>
               <CardDescription>
-                Accept credit card payments from your clients
+                Reciba pagos con tarjeta directamente desde las facturas.
               </CardDescription>
             </div>
           </div>
@@ -120,9 +120,9 @@ export function PaymentSettingsForm({ initialData, stripeEnabled }: PaymentSetti
             <div className="flex items-start gap-3 rounded-lg border border-amber-200 bg-amber-50 p-4">
               <AlertCircle className="h-5 w-5 text-amber-600 mt-0.5" />
               <div>
-                <p className="font-medium text-amber-900">Stripe Not Configured</p>
+                <p className="font-medium text-amber-900">Stripe no está configurado</p>
                 <p className="text-sm text-amber-700 mt-1">
-                  Stripe API keys are not configured. Please set STRIPE_SECRET_KEY in your environment variables to enable payment processing.
+                  Debe configurar las credenciales privadas de Stripe en el servidor para habilitar los pagos.
                 </p>
               </div>
             </div>
@@ -131,14 +131,14 @@ export function PaymentSettingsForm({ initialData, stripeEnabled }: PaymentSetti
               <div className="flex items-center gap-3">
                 <CheckCircle className="h-5 w-5 text-green-600" />
                 <div>
-                  <p className="font-medium">Connected to Stripe</p>
+                  <p className="font-medium">Conectado con Stripe</p>
                   <p className="text-sm text-muted-foreground">
-                    You can accept card payments from clients
+                    Ya puede recibir pagos con tarjeta de sus clientes.
                   </p>
                 </div>
               </div>
               <Badge variant="secondary" className="bg-green-100 text-green-800">
-                Active
+                Activo
               </Badge>
             </div>
           ) : stripeStatus.connected ? (
@@ -147,20 +147,20 @@ export function PaymentSettingsForm({ initialData, stripeEnabled }: PaymentSetti
                 <div className="flex items-center gap-3">
                   <AlertCircle className="h-5 w-5 text-amber-600" />
                   <div>
-                    <p className="font-medium">Onboarding Incomplete</p>
+                    <p className="font-medium">Configuración incompleta</p>
                     <p className="text-sm text-muted-foreground">
-                      Complete your Stripe account setup to accept payments
+                      Complete la configuración de la cuenta para recibir pagos.
                     </p>
                   </div>
                 </div>
                 <Badge variant="secondary" className="bg-amber-100 text-amber-800">
-                  Pending
+                  Pendiente
                 </Badge>
               </div>
               <div className="flex gap-2">
                 <Button onClick={handleStripeConnect} disabled={isPending}>
                   {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  Continue Setup
+                  Continuar configuración
                   <ExternalLink className="ml-2 h-4 w-4" />
                 </Button>
                 <Button
@@ -169,18 +169,18 @@ export function PaymentSettingsForm({ initialData, stripeEnabled }: PaymentSetti
                   disabled={isCheckingStatus}
                 >
                   {isCheckingStatus && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  Check Status
+                  Revisar estado
                 </Button>
               </div>
             </div>
           ) : (
             <div className="space-y-4">
               <p className="text-muted-foreground">
-                Connect your Stripe account to accept credit card and other digital payments directly through invoices.
+                Conecte su cuenta de Stripe para aceptar tarjetas y otros medios de pago digitales desde las facturas.
               </p>
               <Button onClick={handleStripeConnect} disabled={isPending}>
                 {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Connect with Stripe
+                Conectar con Stripe
                 <ExternalLink className="ml-2 h-4 w-4" />
               </Button>
             </div>
@@ -191,17 +191,17 @@ export function PaymentSettingsForm({ initialData, stripeEnabled }: PaymentSetti
       {/* Payment Options */}
       <Card>
         <CardHeader>
-          <CardTitle>Payment Options</CardTitle>
+          <CardTitle>Opciones de pago</CardTitle>
           <CardDescription>
-            Configure how payments are processed for your invoices
+            Configure cómo se procesan y vencen los pagos de las facturas.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
-              <Label htmlFor="passProcessingFees">Pass Processing Fees to Client</Label>
+              <Label htmlFor="passProcessingFees">Trasladar la comisión al cliente</Label>
               <p className="text-sm text-muted-foreground">
-                Add Stripe processing fees (2.9% + $0.30) to the invoice total
+                Agrega la comisión de Stripe al total de la factura.
               </p>
             </div>
             <Switch
@@ -214,7 +214,7 @@ export function PaymentSettingsForm({ initialData, stripeEnabled }: PaymentSetti
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="defaultPaymentTerms">Default Payment Terms</Label>
+            <Label htmlFor="defaultPaymentTerms">Plazo de pago predeterminado</Label>
             <Select
               value={settings.defaultPaymentTerms.toString()}
               onValueChange={(value) =>
@@ -225,23 +225,23 @@ export function PaymentSettingsForm({ initialData, stripeEnabled }: PaymentSetti
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="0">Due on Receipt</SelectItem>
-                <SelectItem value="7">Net 7</SelectItem>
-                <SelectItem value="15">Net 15</SelectItem>
-                <SelectItem value="30">Net 30</SelectItem>
-                <SelectItem value="45">Net 45</SelectItem>
-                <SelectItem value="60">Net 60</SelectItem>
+                <SelectItem value="0">Pago inmediato</SelectItem>
+                <SelectItem value="7">7 días</SelectItem>
+                <SelectItem value="15">15 días</SelectItem>
+                <SelectItem value="30">30 días</SelectItem>
+                <SelectItem value="45">45 días</SelectItem>
+                <SelectItem value="60">60 días</SelectItem>
               </SelectContent>
             </Select>
             <p className="text-sm text-muted-foreground">
-              Default number of days until payment is due
+              Cantidad de días antes del vencimiento del pago.
             </p>
           </div>
 
           <div className="flex justify-end">
             <Button onClick={handleSave} disabled={isPending}>
               {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Save Changes
+              Guardar cambios
             </Button>
           </div>
         </CardContent>

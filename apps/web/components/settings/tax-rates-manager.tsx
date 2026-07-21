@@ -74,13 +74,13 @@ export function TaxRatesManager({ initialData }: TaxRatesManagerProps) {
     if (!editingRate) return;
 
     if (!editingRate.name.trim()) {
-      toast.error('Name is required');
+      toast.error('El nombre es obligatorio');
       return;
     }
 
     const rate = Math.round(parseFloat(editingRate.rate) * 100) / 100;
     if (isNaN(rate) || rate < 0 || rate > 100) {
-      toast.error('Rate must be between 0 and 100');
+      toast.error('La tasa debe estar entre 0 y 100');
       return;
     }
 
@@ -111,7 +111,7 @@ export function TaxRatesManager({ initialData }: TaxRatesManagerProps) {
                 : tr
           )
         );
-        toast.success('Tax rate updated');
+        toast.success('Tasa de impuesto actualizada');
       } else {
         const result = await createTaxRate(input);
         setTaxRates((prev) => [
@@ -130,12 +130,12 @@ export function TaxRatesManager({ initialData }: TaxRatesManagerProps) {
             updatedAt: new Date(),
           },
         ]);
-        toast.success('Tax rate created');
+        toast.success('Tasa de impuesto creada');
       }
 
       setEditingRate(null);
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Failed to save tax rate');
+      toast.error(error instanceof Error ? error.message : 'No se pudo guardar la tasa de impuesto');
     } finally {
       setIsSaving(false);
     }
@@ -148,10 +148,10 @@ export function TaxRatesManager({ initialData }: TaxRatesManagerProps) {
     try {
       await deleteTaxRate(deleteId);
       setTaxRates((prev) => prev.filter((tr) => tr.id !== deleteId));
-      toast.success('Tax rate deleted');
+      toast.success('Tasa de impuesto eliminada');
       setDeleteId(null);
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Failed to delete tax rate');
+      toast.error(error instanceof Error ? error.message : 'No se pudo eliminar la tasa de impuesto');
     } finally {
       setIsDeleting(false);
     }
@@ -163,15 +163,15 @@ export function TaxRatesManager({ initialData }: TaxRatesManagerProps) {
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle>Tax Rates</CardTitle>
+              <CardTitle>Tasas de impuestos</CardTitle>
               <CardDescription>
-                Configure tax rates for your quotes and invoices.
+                Configure los impuestos que se aplican a cotizaciones y facturas.
               </CardDescription>
             </div>
             {!editingRate && (
               <Button onClick={handleAddNew} size="sm">
                 <Plus className="mr-2 h-4 w-4" />
-                Add Tax Rate
+                Agregar tasa
               </Button>
             )}
           </div>
@@ -181,24 +181,24 @@ export function TaxRatesManager({ initialData }: TaxRatesManagerProps) {
           {editingRate && (
             <div className="mb-6 rounded-lg border p-4">
               <div className="mb-4 text-sm font-medium">
-                {editingRate.id ? 'Edit Tax Rate' : 'New Tax Rate'}
+                {editingRate.id ? 'Editar tasa de impuesto' : 'Nueva tasa de impuesto'}
               </div>
               <div className="space-y-4">
                 <div className="grid gap-4 md:grid-cols-2">
                   <div className="space-y-2">
-                    <Label htmlFor="name">Name *</Label>
+                    <Label htmlFor="name">Nombre *</Label>
                     <Input
                       id="name"
                       value={editingRate.name}
                       onChange={(e) =>
                         setEditingRate({ ...editingRate, name: e.target.value })
                       }
-                      placeholder="e.g., Sales Tax"
+                      placeholder="Por ejemplo: IVA"
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="rate">Rate (%) *</Label>
+                    <Label htmlFor="rate">Tasa (%) *</Label>
                     <Input
                       id="rate"
                       type="number"
@@ -209,20 +209,20 @@ export function TaxRatesManager({ initialData }: TaxRatesManagerProps) {
                       onChange={(e) =>
                         setEditingRate({ ...editingRate, rate: e.target.value })
                       }
-                      placeholder="e.g., 8.25"
+                      placeholder="Por ejemplo: 13"
                     />
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="description">Description</Label>
+                  <Label htmlFor="description">Descripción</Label>
                   <Input
                     id="description"
                     value={editingRate.description}
                     onChange={(e) =>
                       setEditingRate({ ...editingRate, description: e.target.value })
                     }
-                    placeholder="Optional description"
+                    placeholder="Descripción opcional"
                   />
                 </div>
 
@@ -236,7 +236,7 @@ export function TaxRatesManager({ initialData }: TaxRatesManagerProps) {
                       }
                     />
                     <Label htmlFor="isInclusive" className="cursor-pointer">
-                      Tax Inclusive
+                      Impuesto incluido
                     </Label>
                   </div>
 
@@ -249,7 +249,7 @@ export function TaxRatesManager({ initialData }: TaxRatesManagerProps) {
                       }
                     />
                     <Label htmlFor="isDefault" className="cursor-pointer">
-                      Default Rate
+                      Tasa predeterminada
                     </Label>
                   </div>
 
@@ -262,7 +262,7 @@ export function TaxRatesManager({ initialData }: TaxRatesManagerProps) {
                       }
                     />
                     <Label htmlFor="isActive" className="cursor-pointer">
-                      Active
+                      Activa
                     </Label>
                   </div>
                 </div>
@@ -274,11 +274,11 @@ export function TaxRatesManager({ initialData }: TaxRatesManagerProps) {
                     disabled={isSaving}
                   >
                     <X className="mr-1 h-4 w-4" />
-                    Cancel
+                    Cancelar
                   </Button>
                   <Button onClick={handleSave} disabled={isSaving}>
                     <Check className="mr-1 h-4 w-4" />
-                    {isSaving ? 'Saving...' : 'Save'}
+                    {isSaving ? 'Guardando…' : 'Guardar'}
                   </Button>
                 </div>
               </div>
@@ -288,7 +288,7 @@ export function TaxRatesManager({ initialData }: TaxRatesManagerProps) {
           {/* Tax Rates List */}
           {taxRates.length === 0 ? (
             <p className="py-8 text-center text-muted-foreground">
-              No tax rates configured
+              No hay tasas de impuestos configuradas.
             </p>
           ) : (
             <div className="space-y-2">
@@ -308,14 +308,14 @@ export function TaxRatesManager({ initialData }: TaxRatesManagerProps) {
                       {taxRate.isDefault && (
                         <Badge variant="default" className="gap-1">
                           <Star className="h-3 w-3" />
-                          Default
+                          Predeterminada
                         </Badge>
                       )}
                       {taxRate.isInclusive && (
-                        <Badge variant="secondary">Inclusive</Badge>
+                        <Badge variant="secondary">Incluido</Badge>
                       )}
                       {!taxRate.isActive && (
-                        <Badge variant="outline">Inactive</Badge>
+                        <Badge variant="outline">Inactiva</Badge>
                       )}
                     </div>
                     {taxRate.description && (
@@ -352,20 +352,19 @@ export function TaxRatesManager({ initialData }: TaxRatesManagerProps) {
       <AlertDialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Tax Rate</AlertDialogTitle>
+            <AlertDialogTitle>Eliminar tasa de impuesto</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete this tax rate? This action cannot be
-              undone.
+              ¿Confirma que desea eliminar esta tasa? Esta acción no se puede deshacer.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel disabled={isDeleting}>Cancelar</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDelete}
               disabled={isDeleting}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              {isDeleting ? 'Deleting...' : 'Delete'}
+              {isDeleting ? 'Eliminando…' : 'Eliminar'}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

@@ -48,9 +48,9 @@ import type { EmailTemplateDetail, EmailTemplateType } from '@/lib/email/types';
 
 const emailTemplateSchema = z.object({
   type: z.enum(EMAIL_TEMPLATE_TYPES as unknown as [string, ...string[]]),
-  name: z.string().min(1, 'Name is required').max(100),
-  subject: z.string().min(1, 'Subject is required'),
-  body: z.string().min(1, 'Body is required'),
+  name: z.string().min(1, 'El nombre es obligatorio').max(100),
+  subject: z.string().min(1, 'El asunto es obligatorio'),
+  body: z.string().min(1, 'El contenido es obligatorio'),
   isActive: z.boolean(),
   isDefault: z.boolean(),
 });
@@ -112,51 +112,51 @@ export function EmailTemplateForm({ template }: EmailTemplateFormProps) {
             type: data.type as EmailTemplateType,
           });
         }
-        toast.success(template ? 'Template updated' : 'Template created');
+        toast.success(template ? 'Plantilla actualizada' : 'Plantilla creada');
         router.push('/settings/emails');
         router.refresh();
       } catch (error) {
         console.error('Failed to save template:', error);
-        toast.error('Failed to save template');
+        toast.error('No se pudo guardar la plantilla');
       }
     });
   };
 
   // Sample preview data
   const previewHtml = body
-    .replace(/{{businessName}}/g, 'Acme Corp')
-    .replace(/{{clientName}}/g, 'John Smith')
-    .replace(/{{clientEmail}}/g, 'john@example.com')
-    .replace(/{{quoteName}}/g, 'Website Redesign')
+    .replace(/{{businessName}}/g, 'Grupo Movensa')
+    .replace(/{{clientName}}/g, 'María Rodríguez')
+    .replace(/{{clientEmail}}/g, 'maria@ejemplo.com')
+    .replace(/{{quoteName}}/g, 'Desarrollo de sitio web')
     .replace(/{{quoteNumber}}/g, 'QT-0001')
     .replace(/{{quoteUrl}}/g, '#')
     .replace(/{{quoteTotal}}/g, '$5,000.00')
-    .replace(/{{quoteValidUntil}}/g, new Date(Date.now() + 30 * 86400000).toLocaleDateString('en-US'))
+    .replace(/{{quoteValidUntil}}/g, new Date(Date.now() + 30 * 86400000).toLocaleDateString('es-CR'))
     .replace(/{{invoiceNumber}}/g, 'INV-0001')
     .replace(/{{invoiceUrl}}/g, '#')
     .replace(/{{invoiceTotal}}/g, '$5,000.00')
-    .replace(/{{invoiceDueDate}}/g, new Date(Date.now() + 14 * 86400000).toLocaleDateString('en-US'))
+    .replace(/{{invoiceDueDate}}/g, new Date(Date.now() + 14 * 86400000).toLocaleDateString('es-CR'))
     .replace(/{{amountPaid}}/g, '$5,000.00')
     .replace(/{{amountDue}}/g, '$5,000.00')
     .replace(/{{daysOverdue}}/g, '7')
-    .replace(/{{contractName}}/g, 'Service Agreement')
+    .replace(/{{contractName}}/g, 'Contrato de servicios')
     .replace(/{{contractUrl}}/g, '#')
-    .replace(/{{message}}/g, 'Looking forward to working with you!')
+    .replace(/{{message}}/g, 'Gracias por confiar en Grupo Movensa.')
     .replace(/{{#if\s+\w+}}([\s\S]*?){{\/if}}/g, '$1');
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle>{template ? 'Edit Template' : 'Create Template'}</CardTitle>
+          <CardTitle>{template ? 'Editar plantilla' : 'Crear plantilla'}</CardTitle>
           <CardDescription>
-            Customize email templates sent to your clients.
+            Personalice los correos electrónicos que se envían a sus clientes.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="type">Template Type</Label>
+              <Label htmlFor="type">Tipo de plantilla</Label>
               <Select
                 value={selectedType}
                 onValueChange={(value) =>
@@ -178,11 +178,11 @@ export function EmailTemplateForm({ template }: EmailTemplateFormProps) {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="name">Template Name</Label>
+              <Label htmlFor="name">Nombre de la plantilla</Label>
               <Input
                 id="name"
                 {...register('name')}
-                placeholder="e.g., Quote Sent - Custom"
+                placeholder="Ej.: Cotización enviada - personalizada"
               />
               {errors.name && (
                 <p className="text-sm text-destructive">{errors.name.message}</p>
@@ -192,50 +192,50 @@ export function EmailTemplateForm({ template }: EmailTemplateFormProps) {
 
           {!template && (
             <Button type="button" variant="outline" onClick={loadDefaultTemplate}>
-              Load Default Template
+              Cargar plantilla predeterminada
             </Button>
           )}
 
           <div className="space-y-2">
-            <Label htmlFor="subject">Email Subject</Label>
+            <Label htmlFor="subject">Asunto del correo electrónico</Label>
             <Input
               id="subject"
               {...register('subject')}
-              placeholder="e.g., Quote: {{quoteName}} from {{businessName}}"
+              placeholder="Ej.: Cotización {{quoteName}} de {{businessName}}"
             />
             {errors.subject && (
               <p className="text-sm text-destructive">{errors.subject.message}</p>
             )}
             <p className="text-xs text-muted-foreground">
-              Use variables like {'{{clientName}}'}, {'{{quoteName}}'}, etc.
+              Puede utilizar variables como {'{{clientName}}'} y {'{{quoteName}}'}.
             </p>
           </div>
 
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <Label htmlFor="body">Email Body</Label>
+              <Label htmlFor="body">Contenido del correo electrónico</Label>
               <Dialog open={previewOpen} onOpenChange={setPreviewOpen}>
                 <DialogTrigger asChild>
                   <Button type="button" variant="outline" size="sm">
                     <Eye className="mr-2 h-4 w-4" />
-                    Preview
+                    Vista previa
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="max-w-2xl max-h-[80vh] overflow-auto">
                   <DialogHeader>
-                    <DialogTitle>Email Preview</DialogTitle>
+                    <DialogTitle>Vista previa del correo</DialogTitle>
                     <DialogDescription>
-                      Preview with sample data
+                      Ejemplo con datos simulados
                     </DialogDescription>
                   </DialogHeader>
                   <div className="border rounded-lg p-4 bg-card">
                     <p className="text-sm text-muted-foreground mb-2">
-                      <strong>Subject:</strong> {subject
-                        .replace(/{{businessName}}/g, 'Acme Corp')
-                        .replace(/{{quoteName}}/g, 'Website Redesign')
+                      <strong>Asunto:</strong> {subject
+                        .replace(/{{businessName}}/g, 'Grupo Movensa')
+                        .replace(/{{quoteName}}/g, 'Desarrollo de sitio web')
                         .replace(/{{quoteTotal}}/g, '$5,000.00')
                         .replace(/{{invoiceNumber}}/g, 'INV-0001')
-                        .replace(/{{contractName}}/g, 'Service Agreement')
+                        .replace(/{{contractName}}/g, 'Contrato de servicios')
                         .replace(/{{daysOverdue}}/g, '7')}
                     </p>
                     <hr className="my-2" />
@@ -250,7 +250,7 @@ export function EmailTemplateForm({ template }: EmailTemplateFormProps) {
             <RichTextEditor
               value={body}
               onChange={(val) => setValue('body', val, { shouldValidate: true })}
-              placeholder="Hi {{clientName}}, ..."
+              placeholder="Hola {{clientName}}, ..."
             />
             {errors.body && (
               <p className="text-sm text-destructive">{errors.body.message}</p>
@@ -258,7 +258,7 @@ export function EmailTemplateForm({ template }: EmailTemplateFormProps) {
           </div>
 
           <div className="bg-muted/50 rounded-lg p-4">
-            <p className="text-sm font-medium mb-2">Available Variables:</p>
+            <p className="text-sm font-medium mb-2">Variables disponibles:</p>
             <div className="grid gap-1 text-xs text-muted-foreground sm:grid-cols-2 lg:grid-cols-3">
               <code>{'{{businessName}}'}</code>
               <code>{'{{clientName}}'}</code>
@@ -280,7 +280,7 @@ export function EmailTemplateForm({ template }: EmailTemplateFormProps) {
               <code>{'{{message}}'}</code>
             </div>
             <p className="text-xs text-muted-foreground mt-2">
-              Conditional: {'{{#if message}}...{{/if}}'}
+              Condicional: {'{{#if message}}...{{/if}}'}
             </p>
           </div>
 
@@ -291,7 +291,7 @@ export function EmailTemplateForm({ template }: EmailTemplateFormProps) {
                 checked={watch('isActive')}
                 onCheckedChange={(checked) => setValue('isActive', checked)}
               />
-              <Label htmlFor="isActive">Active</Label>
+              <Label htmlFor="isActive">Activa</Label>
             </div>
             <div className="flex items-center gap-2">
               <Switch
@@ -299,7 +299,7 @@ export function EmailTemplateForm({ template }: EmailTemplateFormProps) {
                 checked={watch('isDefault')}
                 onCheckedChange={(checked) => setValue('isDefault', checked)}
               />
-              <Label htmlFor="isDefault">Default for this type</Label>
+              <Label htmlFor="isDefault">Predeterminada para este tipo</Label>
             </div>
           </div>
         </CardContent>
@@ -312,11 +312,11 @@ export function EmailTemplateForm({ template }: EmailTemplateFormProps) {
           onClick={() => router.push('/settings/emails')}
           disabled={isPending}
         >
-          Cancel
+          Cancelar
         </Button>
         <Button type="submit" disabled={isPending}>
           {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          {template ? 'Update Template' : 'Create Template'}
+          {template ? 'Actualizar plantilla' : 'Crear plantilla'}
         </Button>
       </div>
     </form>

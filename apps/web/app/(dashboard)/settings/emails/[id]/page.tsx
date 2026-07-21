@@ -10,7 +10,7 @@ interface EmailTemplatePageProps {
 }
 
 export const metadata = {
-  title: 'Edit Email Template',
+  title: 'Editar plantilla de correo',
 };
 
 export default async function EditEmailTemplatePage({ params }: EmailTemplatePageProps) {
@@ -29,7 +29,7 @@ export default async function EditEmailTemplatePage({ params }: EmailTemplatePag
             <ArrowLeft className="h-4 w-4" />
           </Link>
         </Button>
-        <h2 className="text-lg font-semibold">Edit Email Template</h2>
+        <h2 className="text-lg font-semibold">Editar plantilla de correo</h2>
       </div>
 
       <EmailTemplateForm template={template} />

@@ -8,14 +8,8 @@ import { getCurrentUserRole, getBillingInfo } from '@/lib/settings/actions';
 import { redirect } from 'next/navigation';
 
 export const metadata = {
-  title: 'Subscription - Settings',
+  title: 'Plan y facturación',
 };
-
-const MOCK_INVOICES = [
-  { date: 'Feb 10, 2026', description: 'Trial period for Starter Plan', amount: '$0.00', status: 'Paid' as const },
-  { date: 'Jan 10, 2026', description: 'Pro Plan - Monthly', amount: '$9.00', status: 'Paid' as const },
-  { date: 'Dec 10, 2025', description: 'Pro Plan - Monthly', amount: '$9.00', status: 'Paid' as const },
-];
 
 export default async function BillingSettingsPage() {
   const currentUserRole = await getCurrentUserRole();
@@ -30,14 +24,14 @@ export default async function BillingSettingsPage() {
 
   return (
     <div className="space-y-8">
-      {/* Your Subscription */}
+      {/* Plan actual */}
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle>Your Subscription</CardTitle>
+              <CardTitle>Plan actual</CardTitle>
               <CardDescription>
-                All subscription transactions are processed using Stripe with your billing email address.
+                Consulte el estado del plan y la información de cobro del sistema.
               </CardDescription>
             </div>
           </div>
@@ -50,12 +44,12 @@ export default async function BillingSettingsPage() {
                   <CreditCard className="h-6 w-6 text-primary" />
                 </div>
                 <div>
-                  <h3 className="font-semibold capitalize">{currentPlan === 'free' ? 'Free Plan' : `${currentPlan} Plan`}</h3>
+                  <h3 className="font-semibold capitalize">{currentPlan === 'free' ? 'Plan interno' : `Plan ${currentPlan}`}</h3>
                   <p className="text-sm text-muted-foreground">
                     {/* Low #51: Fixed label — nextBillingDate is not the start date */}
                     {billing?.nextBillingDate
-                      ? `Next billing on ${new Date(billing.nextBillingDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`
-                      : 'Free tier — no billing'}
+                      ? `Próximo cobro: ${new Date(billing.nextBillingDate).toLocaleDateString('es-CR', { day: 'numeric', month: 'short', year: 'numeric' })}`
+                      : 'Sin cobros programados'}
                   </p>
                 </div>
               </div>
@@ -69,13 +63,13 @@ export default async function BillingSettingsPage() {
                       </p>
                       {billing?.nextBillingDate && (
                         <p className="text-xs text-muted-foreground">
-                          Next billing: {new Date(billing.nextBillingDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                          Próximo cobro: {new Date(billing.nextBillingDate).toLocaleDateString('es-CR', { day: 'numeric', month: 'short', year: 'numeric' })}
                         </p>
                       )}
                     </>
                   )}
                 </div>
-                <Button variant="ghost" size="icon" aria-label="More actions">
+                <Button variant="ghost" size="icon" aria-label="Más acciones">
                   <MoreHorizontal className="h-4 w-4" />
                 </Button>
               </div>
@@ -86,12 +80,12 @@ export default async function BillingSettingsPage() {
               {billing?.status === 'active' ? (
                 <Badge variant="default" className="gap-1">
                   <CheckCircle className="h-3 w-3" />
-                  Active
+                  Activo
                 </Badge>
               ) : (
                 <Badge variant="secondary" className="gap-1">
                   <AlertCircle className="h-3 w-3" />
-                  {billing?.status || 'Free'}
+                  {billing?.status || 'Sin cobro'}
                 </Badge>
               )}
             </div>
@@ -99,19 +93,19 @@ export default async function BillingSettingsPage() {
         </CardContent>
       </Card>
 
-      {/* Payment Methods */}
+      {/* Métodos de pago */}
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle>Payment Methods</CardTitle>
+              <CardTitle>Métodos de pago</CardTitle>
               <CardDescription>
-                Add a payment method that will be billed for your subscription.
+                Administre el método utilizado para los cobros del plan.
               </CardDescription>
             </div>
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" disabled>
               <Plus className="mr-1 h-4 w-4" />
-              Add a Payment Method
+              Agregar método de pago
             </Button>
           </div>
         </CardHeader>
@@ -124,51 +118,38 @@ export default async function BillingSettingsPage() {
                 </div>
                 <div>
                   <p className="font-medium">
-                    {billing.paymentMethod.brand} ending in {billing.paymentMethod.last4}
+                    {billing.paymentMethod.brand} terminada en {billing.paymentMethod.last4}
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    Expires {billing.paymentMethod.expMonth}/{billing.paymentMethod.expYear}
+                    Vence {billing.paymentMethod.expMonth}/{billing.paymentMethod.expYear}
                   </p>
                 </div>
               </div>
-              <Button variant="outline" size="sm">Update</Button>
+              <Button variant="outline" size="sm" disabled>Actualizar</Button>
             </div>
           ) : (
             <div className="rounded-lg border border-dashed p-8 text-center">
-              <p className="text-muted-foreground mb-2">No payment method on file</p>
-              <p className="text-sm text-muted-foreground">Add a payment method to upgrade your plan or enable auto-renewal.</p>
+              <p className="text-muted-foreground mb-2">No hay un método de pago registrado</p>
+              <p className="text-sm text-muted-foreground">No se requiere un método mientras no existan cobros programados.</p>
             </div>
           )}
         </CardContent>
       </Card>
 
-      {/* Invoice History */}
+      {/* Historial de cobros */}
       <Card>
         <CardHeader>
-          <CardTitle>Invoice History</CardTitle>
+          <CardTitle>Historial de cobros</CardTitle>
           <CardDescription>
-            Track all of your payments here and download receipts.
+            Aquí aparecerán los cargos y comprobantes asociados al plan.
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="space-y-0 divide-y">
-            {MOCK_INVOICES.map((invoice, index) => (
-              <div key={index} className="flex items-center justify-between py-4 first:pt-0 last:pb-0">
-                <div className="flex items-center gap-6">
-                  <span className="w-[100px] text-sm text-muted-foreground">{invoice.date}</span>
-                  <span className="text-sm">{invoice.description}</span>
-                </div>
-                <div className="flex items-center gap-4">
-                  <span className="text-sm font-medium">{invoice.amount}</span>
-                  <Badge variant="default" className="bg-green-500/10 text-green-600 hover:bg-green-500/20 dark:text-green-400">
-                    {invoice.status}
-                  </Badge>
-                  <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="More actions">
-                    <MoreHorizontal className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-            ))}
+          <div className="rounded-lg border border-dashed p-8 text-center">
+            <p className="font-medium">No hay cobros registrados</p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              El sistema no mostrará cargos de ejemplo ni movimientos simulados.
+            </p>
           </div>
         </CardContent>
       </Card>

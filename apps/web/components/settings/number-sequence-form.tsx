@@ -48,9 +48,9 @@ export function NumberSequenceForm({
         currentValue,
         padding,
       });
-      toast.success('Number sequence updated');
+      toast.success('Numeración actualizada');
     } catch {
-      toast.error('Failed to update number sequence');
+      toast.error('No se pudo actualizar la numeración');
     } finally {
       setIsSaving(false);
     }
@@ -65,7 +65,7 @@ export function NumberSequenceForm({
       <CardContent className="space-y-4">
         <div className="grid gap-4 md:grid-cols-2">
           <div className="space-y-2">
-            <Label htmlFor={`${type}-prefix`}>Prefix</Label>
+            <Label htmlFor={`${type}-prefix`}>Prefijo</Label>
             <Input
               id={`${type}-prefix`}
               value={prefix}
@@ -74,28 +74,28 @@ export function NumberSequenceForm({
               maxLength={10}
             />
             <p className="text-xs text-muted-foreground">
-              Text before the number
+              Texto que aparece antes del número.
             </p>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor={`${type}-suffix`}>Suffix</Label>
+            <Label htmlFor={`${type}-suffix`}>Sufijo</Label>
             <Input
               id={`${type}-suffix`}
               value={suffix}
               onChange={(e) => setSuffix(e.target.value)}
-              placeholder="(optional)"
+              placeholder="Opcional"
               maxLength={10}
             />
             <p className="text-xs text-muted-foreground">
-              Text after the number
+              Texto que aparece después del número.
             </p>
           </div>
         </div>
 
         <div className="grid gap-4 md:grid-cols-2">
           <div className="space-y-2">
-            <Label htmlFor={`${type}-current`}>Next Number Starts At</Label>
+            <Label htmlFor={`${type}-current`}>Valor actual</Label>
             <Input
               id={`${type}-current`}
               type="number"
@@ -104,12 +104,12 @@ export function NumberSequenceForm({
               onChange={(e) => setCurrentValue(Math.max(0, parseInt(e.target.value) || 0))}
             />
             <p className="text-xs text-muted-foreground">
-              The next {type} will use this + 1
+              El próximo documento utilizará el siguiente número consecutivo.
             </p>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor={`${type}-padding`}>Number Padding</Label>
+            <Label htmlFor={`${type}-padding`}>Cantidad de dígitos</Label>
             <Input
               id={`${type}-padding`}
               type="number"
@@ -119,22 +119,22 @@ export function NumberSequenceForm({
               onChange={(e) => setPadding(parseInt(e.target.value) || 4)}
             />
             <p className="text-xs text-muted-foreground">
-              Minimum digits (e.g., 4 = 0001)
+              Mínimo de dígitos; por ejemplo, 4 produce 0001.
             </p>
           </div>
         </div>
 
         <div className="rounded-lg border bg-muted/50 p-4">
-          <p className="mb-1 text-sm font-medium">Preview</p>
+          <p className="mb-1 text-sm font-medium">Vista previa</p>
           <p className="text-2xl font-mono">{previewNumber}</p>
           <p className="mt-1 text-xs text-muted-foreground">
-            Next {type} number
+            Próximo número generado
           </p>
         </div>
 
         <div className="flex justify-end">
           <Button onClick={handleSave} disabled={isSaving}>
-            {isSaving ? 'Saving...' : 'Save Changes'}
+            {isSaving ? 'Guardando…' : 'Guardar cambios'}
           </Button>
         </div>
       </CardContent>

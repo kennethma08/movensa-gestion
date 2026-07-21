@@ -5,10 +5,10 @@ import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 
 const templateTabs = [
-  { label: 'Contracts', href: '/templates/contracts' },
-  { label: 'Invoice Items', href: '/templates/invoice-items' },
-  { label: 'Invoice Templates', href: '/templates/invoices' },
-  { label: 'Emails', href: '/templates/emails' },
+  { label: 'Contratos', href: '/templates/contracts' },
+  { label: 'Conceptos de factura', href: '/templates/invoice-items' },
+  { label: 'Plantillas de factura', href: '/templates/invoices' },
+  { label: 'Correos electrónicos', href: '/templates/emails' },
 ];
 
 // Low #75: Extracted to client component so layout can be server component

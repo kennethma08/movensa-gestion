@@ -52,7 +52,7 @@ function StatusBadge({ status, statusCode }: { status: string; statusCode: numbe
     <div className="flex items-center gap-2">
       <StatusIcon status={status} />
       <Badge variant={variant}>
-        {isSuccess(status) ? 'Delivered' : status === 'failed' ? 'Failed' : 'Pending'}
+        {isSuccess(status) ? 'Entregado' : status === 'failed' ? 'Fallido' : 'Pendiente'}
       </Badge>
       {statusCode && (
         <span className="text-xs text-muted-foreground font-mono">{statusCode}</span>
@@ -63,7 +63,7 @@ function StatusBadge({ status, statusCode }: { status: string; statusCode: numbe
 
 function formatDate(dateStr: string): string {
   const date = new Date(dateStr);
-  return date.toLocaleString(undefined, {
+  return date.toLocaleString('es-CR', {
     month: 'short',
     day: 'numeric',
     hour: '2-digit',
@@ -94,9 +94,9 @@ export function WebhookDeliveryLog({ endpointId, onClose }: WebhookDeliveryLogPr
     <Dialog open onOpenChange={() => onClose()}>
       <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Delivery Log</DialogTitle>
+          <DialogTitle>Historial de entregas</DialogTitle>
           <DialogDescription>
-            Recent webhook delivery attempts for this endpoint.
+            Intentos recientes de entrega de este punto de conexión.
           </DialogDescription>
         </DialogHeader>
 
@@ -107,16 +107,16 @@ export function WebhookDeliveryLog({ endpointId, onClose }: WebhookDeliveryLogPr
             </div>
           ) : deliveries.length === 0 ? (
             <p className="py-12 text-center text-muted-foreground">
-              No deliveries yet. Webhooks will appear here once events are triggered.
+              Aún no hay entregas. Aparecerán aquí cuando se activen eventos.
             </p>
           ) : (
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Event</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Attempts</TableHead>
-                  <TableHead>Time</TableHead>
+                  <TableHead>Evento</TableHead>
+                  <TableHead>Estado</TableHead>
+                  <TableHead>Intentos</TableHead>
+                  <TableHead>Fecha y hora</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -145,7 +145,7 @@ export function WebhookDeliveryLog({ endpointId, onClose }: WebhookDeliveryLogPr
 
         <DialogFooter>
           <Button variant="outline" onClick={onClose}>
-            Close
+            Cerrar
           </Button>
         </DialogFooter>
       </DialogContent>

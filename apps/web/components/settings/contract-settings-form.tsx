@@ -28,9 +28,9 @@ export function ContractSettingsForm({ initialData }: ContractSettingsFormProps)
     setIsSaving(true);
     try {
       await updateContractSettings({ autoCountersign });
-      toast.success('Contract settings updated');
+      toast.success('Configuración de contratos actualizada');
     } catch {
-      toast.error('Failed to update settings');
+      toast.error('No se pudo actualizar la configuración');
     } finally {
       setIsSaving(false);
     }
@@ -39,18 +39,18 @@ export function ContractSettingsForm({ initialData }: ContractSettingsFormProps)
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Contract Settings</CardTitle>
+        <CardTitle>Configuración de contratos</CardTitle>
         <CardDescription>
-          Configure how contracts are signed and processed.
+          Configure cómo se firman y procesan los contratos.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="flex items-center justify-between">
           <div className="space-y-0.5">
-            <Label htmlFor="auto-countersign">Auto Countersign</Label>
+            <Label htmlFor="auto-countersign">Contrafirma automática</Label>
             <p className="text-sm text-muted-foreground">
-              Automatically apply your business signature after the client signs.
-              When disabled, contracts will require manual countersigning.
+              Aplica automáticamente la firma de Grupo Movensa después de que firme el cliente.
+              Si se desactiva, será necesario contrafirmar cada contrato manualmente.
             </p>
           </div>
           <Switch
@@ -62,7 +62,7 @@ export function ContractSettingsForm({ initialData }: ContractSettingsFormProps)
 
         <Button onClick={handleSave} disabled={isSaving}>
           {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          Save Changes
+          Guardar cambios
         </Button>
       </CardContent>
     </Card>

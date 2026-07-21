@@ -4,7 +4,7 @@ import { TaxRatesManager } from '@/components/settings';
 import { getTaxRates } from '@/lib/settings/actions';
 
 export const metadata = {
-  title: 'Tax Rates - Settings',
+  title: 'Tasas de impuestos',
 };
 
 export default async function TaxRatesSettingsPage() {

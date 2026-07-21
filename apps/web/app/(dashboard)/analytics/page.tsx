@@ -13,8 +13,8 @@ import { getWorkspaceCurrency } from '@/lib/settings/actions';
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: 'Analytics',
-  description: 'View your business analytics and insights',
+  title: 'Analítica',
+  description: 'Indicadores y análisis del rendimiento comercial',
 };
 
 async function AnalyticsContent() {
@@ -47,9 +47,9 @@ export default async function AnalyticsPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Analytics</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">Analítica</h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Detailed insights into your business performance.
+          Indicadores detallados del rendimiento comercial de Grupo Movensa.
         </p>
       </div>
 

@@ -51,21 +51,21 @@ export function ApiKeysManager({ keys }: ApiKeysManagerProps) {
 
   const handleCreate = async () => {
     if (!keyName.trim()) {
-      toast.error('Please enter a name for the key');
+      toast.error('Indique un nombre para la clave');
       return;
     }
     setIsCreating(true);
     try {
       const result = await generateApiKey({ name: keyName });
       if (!result.success) {
-        toast.error(result.error || 'Failed to create API key');
+        toast.error(result.error || 'No se pudo crear la clave de API');
         return;
       }
       setNewKey(result.key!);
       setKeyName('');
       router.refresh();
     } catch {
-      toast.error('Failed to create API key');
+      toast.error('No se pudo crear la clave de API');
     } finally {
       setIsCreating(false);
     }
@@ -74,7 +74,7 @@ export function ApiKeysManager({ keys }: ApiKeysManagerProps) {
   const handleCopyKey = () => {
     if (newKey) {
       navigator.clipboard.writeText(newKey);
-      toast.success('API key copied to clipboard');
+      toast.success('Clave copiada al portapapeles');
     }
   };
 
@@ -89,14 +89,14 @@ export function ApiKeysManager({ keys }: ApiKeysManagerProps) {
     try {
       const result = await revokeApiKey(revokeId);
       if (!result.success) {
-        toast.error(result.error || 'Failed to revoke key');
+        toast.error(result.error || 'No se pudo revocar la clave');
         return;
       }
-      toast.success('API key revoked');
+      toast.success('Clave de API revocada');
       setRevokeId(null);
       router.refresh();
     } catch {
-      toast.error('Failed to revoke key');
+      toast.error('No se pudo revocar la clave');
     } finally {
       setIsRevoking(false);
     }
@@ -107,14 +107,14 @@ export function ApiKeysManager({ keys }: ApiKeysManagerProps) {
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
-            <CardTitle>API Keys</CardTitle>
+            <CardTitle>Claves de API</CardTitle>
             <CardDescription>
-              Use API keys to authenticate requests to the Oreko REST API.
+              Utilice claves privadas para autenticar integraciones con la API del sistema.
             </CardDescription>
           </div>
           <Button onClick={() => setCreateOpen(true)} size="sm">
             <Plus className="mr-2 h-4 w-4" />
-            Create Key
+            Crear clave
           </Button>
         </CardHeader>
         <CardContent>
@@ -122,7 +122,7 @@ export function ApiKeysManager({ keys }: ApiKeysManagerProps) {
             <div className="flex flex-col items-center justify-center py-8 text-center">
               <Key className="h-10 w-10 text-muted-foreground mb-3" />
               <p className="text-sm text-muted-foreground">
-                No API keys yet. Create one to start using the API.
+                No hay claves de API activas.
               </p>
             </div>
           ) : (
@@ -136,13 +136,13 @@ export function ApiKeysManager({ keys }: ApiKeysManagerProps) {
                     <p className="font-medium text-sm">{key.name}</p>
                     <div className="flex items-center gap-3 text-xs text-muted-foreground">
                       <span className="font-mono">{key.keyPrefix}...••••••</span>
-                      <span>Created {formatDate(key.createdAt)}</span>
+                      <span>Creada {formatDate(key.createdAt)}</span>
                       {key.lastUsedAt && (
-                        <span>Last used {formatDate(key.lastUsedAt)}</span>
+                        <span>Último uso {formatDate(key.lastUsedAt)}</span>
                       )}
                       {key.expiresAt && (
                         <span>
-                          Expires {formatDate(key.expiresAt)}
+                          Vence {formatDate(key.expiresAt)}
                         </span>
                       )}
                     </div>
@@ -166,29 +166,29 @@ export function ApiKeysManager({ keys }: ApiKeysManagerProps) {
       <Dialog open={createOpen && !newKey} onOpenChange={(open) => !open && setCreateOpen(false)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Create API Key</DialogTitle>
+            <DialogTitle>Crear clave de API</DialogTitle>
             <DialogDescription>
-              Give your key a name so you can identify it later.
+              Asigne un nombre que permita identificar la integración.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-3 py-2">
             <div className="space-y-2">
-              <Label htmlFor="key-name">Key Name</Label>
+              <Label htmlFor="key-name">Nombre de la clave</Label>
               <Input
                 id="key-name"
                 value={keyName}
                 onChange={(e) => setKeyName(e.target.value)}
-                placeholder="e.g. Zapier Integration"
+                placeholder="Por ejemplo: Integración del sitio web"
               />
             </div>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setCreateOpen(false)} disabled={isCreating}>
-              Cancel
+              Cancelar
             </Button>
             <Button onClick={handleCreate} disabled={isCreating || !keyName.trim()}>
               {isCreating && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Generate Key
+              Generar clave
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -198,9 +198,9 @@ export function ApiKeysManager({ keys }: ApiKeysManagerProps) {
       <Dialog open={!!newKey} onOpenChange={() => handleCloseNewKey()}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>API Key Created</DialogTitle>
+            <DialogTitle>Clave de API creada</DialogTitle>
             <DialogDescription>
-              Copy this key now. You won&apos;t be able to see it again.
+              Copie la clave ahora. Por seguridad, no volverá a mostrarse.
             </DialogDescription>
           </DialogHeader>
           <div className="py-2">
@@ -216,7 +216,7 @@ export function ApiKeysManager({ keys }: ApiKeysManagerProps) {
             </div>
           </div>
           <DialogFooter>
-            <Button onClick={handleCloseNewKey}>Done</Button>
+            <Button onClick={handleCloseNewKey}>Listo</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -225,19 +225,19 @@ export function ApiKeysManager({ keys }: ApiKeysManagerProps) {
       <AlertDialog open={!!revokeId} onOpenChange={() => setRevokeId(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Revoke API Key</AlertDialogTitle>
+            <AlertDialogTitle>Revocar clave de API</AlertDialogTitle>
             <AlertDialogDescription>
-              This will permanently disable this API key. Any integrations using it will stop working immediately.
+              La clave quedará deshabilitada permanentemente y las integraciones que la utilicen dejarán de funcionar.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleRevoke}
               disabled={isRevoking}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              Revoke Key
+              Revocar clave
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

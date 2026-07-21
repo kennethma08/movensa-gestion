@@ -6,9 +6,9 @@ export default function TemplatesLayout({ children }: { children: ReactNode }) {
   return (
     <div className="space-y-4">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">Templates</h1>
+        <h1 className="text-2xl font-bold tracking-tight">Plantillas</h1>
         <p className="text-muted-foreground">
-          Manage your contract, invoice, and email templates
+          Administre las plantillas de contratos, facturas y correos electrónicos.
         </p>
       </div>
       <TemplateTabs />

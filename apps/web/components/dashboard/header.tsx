@@ -50,7 +50,7 @@ export function DashboardHeader({ user }: DashboardHeaderProps) {
           <div className="relative">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
-              placeholder="Search..."
+              placeholder="Buscar..."
               className="w-40 sm:w-60 md:w-80 pl-9"
               autoFocus
               onBlur={() => setSearchOpen(false)}
@@ -59,7 +59,7 @@ export function DashboardHeader({ user }: DashboardHeaderProps) {
         ) : (
           <Button variant="ghost" size="sm" onClick={() => setSearchOpen(true)}>
             <Search className="h-4 w-4 sm:mr-2" />
-            <span className="hidden sm:inline">Search</span>
+            <span className="hidden sm:inline">Buscar</span>
             <kbd className="ml-4 hidden rounded bg-muted px-2 py-0.5 text-xs text-muted-foreground md:inline">
               ⌘K
             </kbd>
@@ -75,7 +75,7 @@ export function DashboardHeader({ user }: DashboardHeaderProps) {
         {/* Notifications */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="relative" aria-label="Notifications">
+            <Button variant="ghost" size="icon" className="relative" aria-label="Notificaciones">
               <Bell className="h-4 w-4" />
               {/* Low #40: Only show notification dot when there are actual notifications */}
               {/* TODO: Replace with real notification count check */}
@@ -83,7 +83,7 @@ export function DashboardHeader({ user }: DashboardHeaderProps) {
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-80" align="end" forceMount>
             <DropdownMenuLabel className="flex items-center justify-between">
-              <span>Notifications</span>
+              <span>Notificaciones</span>
               {/* Low #41: Button is non-functional until notifications are implemented */}
               <Button
                 variant="ghost"
@@ -91,16 +91,16 @@ export function DashboardHeader({ user }: DashboardHeaderProps) {
                 className="h-auto p-0 text-xs text-muted-foreground hover:text-foreground"
                 disabled
               >
-                Mark all as read
+                Marcar todas como leídas
               </Button>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <div className="max-h-80 overflow-y-auto">
               <div className="flex flex-col items-center justify-center py-8 text-center">
                 <Bell className="h-8 w-8 text-muted-foreground mb-2" />
-                <p className="text-sm font-medium">No new notifications</p>
+                <p className="text-sm font-medium">No hay notificaciones nuevas</p>
                 <p className="text-xs text-muted-foreground">
-                  We&apos;ll notify you when something arrives
+                  Le avisaremos cuando haya novedades.
                 </p>
               </div>
             </div>
@@ -116,7 +116,7 @@ export function DashboardHeader({ user }: DashboardHeaderProps) {
               data-testid="user-menu"
             >
               <Avatar className="h-9 w-9">
-                <AvatarImage src={user.avatarUrl || undefined} alt={user.name || 'User'} />
+              <AvatarImage src={user.avatarUrl || undefined} alt={user.name || 'Usuario'} />
                 <AvatarFallback>{initials}</AvatarFallback>
               </Avatar>
             </Button>
@@ -124,7 +124,7 @@ export function DashboardHeader({ user }: DashboardHeaderProps) {
           <DropdownMenuContent className="w-56" align="end" forceMount>
             <DropdownMenuLabel className="font-normal">
               <div className="flex flex-col space-y-1">
-                <p className="text-sm font-medium leading-none">{user.name || 'User'}</p>
+                <p className="text-sm font-medium leading-none">{user.name || 'Usuario'}</p>
                 <p className="text-xs leading-none text-muted-foreground">{user.email}</p>
               </div>
             </DropdownMenuLabel>
@@ -132,19 +132,19 @@ export function DashboardHeader({ user }: DashboardHeaderProps) {
             <DropdownMenuItem asChild>
               <Link href="/settings/account">
                 <User className="mr-2 h-4 w-4" />
-                Profile
+                Perfil
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
               <Link href="/settings">
                 <Settings className="mr-2 h-4 w-4" />
-                Settings
+                Configuración
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
               <Link href="/help">
                 <HelpCircle className="mr-2 h-4 w-4" />
-                Help & Support
+                Ayuda y soporte
               </Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
@@ -153,7 +153,7 @@ export function DashboardHeader({ user }: DashboardHeaderProps) {
               onClick={() => signOut({ callbackUrl: '/login' })}
             >
               <LogOut className="mr-2 h-4 w-4" />
-              Log out
+              Cerrar sesión
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

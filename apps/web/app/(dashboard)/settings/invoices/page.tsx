@@ -4,7 +4,7 @@ import { NumberSequenceForm, InvoiceDefaultsForm } from '@/components/settings';
 import { getNumberSequences, getInvoiceDefaults } from '@/lib/settings/actions';
 
 export const metadata = {
-  title: 'Invoice Settings',
+  title: 'Configuración de facturas',
 };
 
 export default async function InvoiceSettingsPage() {
@@ -18,8 +18,8 @@ export default async function InvoiceSettingsPage() {
     <div className="space-y-6">
       <NumberSequenceForm
         type="invoice"
-        title="Invoice Numbering"
-        description="Configure how invoice numbers are generated."
+        title="Numeración de facturas"
+        description="Configure el formato utilizado para generar los números de factura."
         initialData={invoiceSequence}
       />
 

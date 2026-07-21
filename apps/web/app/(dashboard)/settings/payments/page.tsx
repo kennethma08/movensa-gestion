@@ -5,7 +5,7 @@ import { getPaymentSettings } from '@/lib/payments/actions';
 import { isStripeEnabled } from '@/lib/services/stripe';
 
 export const metadata = {
-  title: 'Payment Settings',
+  title: 'Configuración de pagos',
 };
 
 export default async function PaymentSettingsPage() {

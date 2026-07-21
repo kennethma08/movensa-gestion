@@ -4,7 +4,7 @@ import { ContractTemplateList } from '@/components/contracts/contract-template-l
 import { getContractTemplates } from '@/lib/contracts/actions';
 
 export const metadata = {
-  title: 'Contract Templates',
+  title: 'Plantillas de contratos',
 };
 
 interface PageProps {

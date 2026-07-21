@@ -108,7 +108,7 @@ export function CustomFieldsManager({ initialData }: CustomFieldsManagerProps) {
   const handleAddOption = () => {
     if (!editingField || !editingField.newOption.trim()) return;
     if (editingField.options.includes(editingField.newOption.trim())) {
-      toast.error('Option already exists');
+      toast.error('La opción ya existe');
       return;
     }
     setEditingField({
@@ -130,17 +130,17 @@ export function CustomFieldsManager({ initialData }: CustomFieldsManagerProps) {
     if (!editingField) return;
 
     if (!editingField.name.trim()) {
-      toast.error('Field name is required');
+      toast.error('El nombre del campo es obligatorio');
       return;
     }
 
     if (editingField.appliesTo.length === 0) {
-      toast.error('Select at least one entity');
+      toast.error('Seleccione al menos un tipo de registro');
       return;
     }
 
     if (hasOptions(editingField.fieldType) && editingField.options.length < 2) {
-      toast.error('Add at least 2 options for dropdown/multi-select fields');
+      toast.error('Agregue al menos dos opciones para este tipo de campo');
       return;
     }
 
@@ -164,7 +164,7 @@ export function CustomFieldsManager({ initialData }: CustomFieldsManagerProps) {
               : f
           )
         );
-        toast.success('Custom field updated');
+        toast.success('Campo personalizado actualizado');
       } else {
         const result = await createCustomField(input);
         setFields((prev) => [
@@ -177,12 +177,12 @@ export function CustomFieldsManager({ initialData }: CustomFieldsManagerProps) {
             updatedAt: new Date(),
           },
         ]);
-        toast.success('Custom field created');
+        toast.success('Campo personalizado creado');
       }
 
       setEditingField(null);
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Failed to save custom field');
+      toast.error(error instanceof Error ? error.message : 'No se pudo guardar el campo personalizado');
     } finally {
       setIsSaving(false);
     }
@@ -195,10 +195,10 @@ export function CustomFieldsManager({ initialData }: CustomFieldsManagerProps) {
     try {
       await deleteCustomField(deleteId);
       setFields((prev) => prev.filter((f) => f.id !== deleteId));
-      toast.success('Custom field deleted');
+      toast.success('Campo personalizado eliminado');
       setDeleteId(null);
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Failed to delete custom field');
+      toast.error(error instanceof Error ? error.message : 'No se pudo eliminar el campo personalizado');
     } finally {
       setIsDeleting(false);
     }
@@ -210,15 +210,15 @@ export function CustomFieldsManager({ initialData }: CustomFieldsManagerProps) {
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle>Custom Fields</CardTitle>
+              <CardTitle>Campos personalizados</CardTitle>
               <CardDescription>
-                Define custom fields for your quotes, invoices, clients, and projects.
+                Agregue datos específicos a cotizaciones, facturas, clientes y proyectos.
               </CardDescription>
             </div>
             {!editingField && (
               <Button onClick={handleAddNew} size="sm">
                 <Plus className="mr-2 h-4 w-4" />
-                Add Field
+                Agregar campo
               </Button>
             )}
           </div>
@@ -228,24 +228,24 @@ export function CustomFieldsManager({ initialData }: CustomFieldsManagerProps) {
           {editingField && (
             <div className="mb-6 rounded-lg border p-4">
               <div className="mb-4 text-sm font-medium">
-                {editingField.id ? 'Edit Custom Field' : 'New Custom Field'}
+                {editingField.id ? 'Editar campo personalizado' : 'Nuevo campo personalizado'}
               </div>
               <div className="space-y-4">
                 <div className="grid gap-4 md:grid-cols-2">
                   <div className="space-y-2">
-                    <Label htmlFor="field-name">Field Name *</Label>
+                    <Label htmlFor="field-name">Nombre del campo *</Label>
                     <Input
                       id="field-name"
                       value={editingField.name}
                       onChange={(e) =>
                         setEditingField({ ...editingField, name: e.target.value })
                       }
-                      placeholder="e.g., PO Number"
+                      placeholder="Por ejemplo: Número de orden"
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="field-type">Field Type *</Label>
+                    <Label htmlFor="field-type">Tipo de campo *</Label>
                     <Select
                       value={editingField.fieldType}
                       onValueChange={(value: CustomFieldType) =>
@@ -253,7 +253,7 @@ export function CustomFieldsManager({ initialData }: CustomFieldsManagerProps) {
                       }
                     >
                       <SelectTrigger id="field-type">
-                        <SelectValue placeholder="Select type" />
+                        <SelectValue placeholder="Seleccione el tipo" />
                       </SelectTrigger>
                       <SelectContent>
                         {ALL_FIELD_TYPES.map((type) => (
@@ -268,7 +268,7 @@ export function CustomFieldsManager({ initialData }: CustomFieldsManagerProps) {
 
                 {/* Applies To */}
                 <div className="space-y-2">
-                  <Label>Applies To *</Label>
+                  <Label>Aplicar a *</Label>
                   <div className="flex flex-wrap gap-4">
                     {ALL_ENTITIES.map((entity) => (
                       <div key={entity} className="flex items-center gap-2">
@@ -291,7 +291,7 @@ export function CustomFieldsManager({ initialData }: CustomFieldsManagerProps) {
                 {/* Options editor for dropdown/multiselect */}
                 {hasOptions(editingField.fieldType) && (
                   <div className="space-y-2">
-                    <Label>Options *</Label>
+                    <Label>Opciones *</Label>
                     <div className="space-y-2">
                       {editingField.options.map((option, index) => (
                         <div key={index} className="flex items-center gap-2">
@@ -322,7 +322,7 @@ export function CustomFieldsManager({ initialData }: CustomFieldsManagerProps) {
                               handleAddOption();
                             }
                           }}
-                          placeholder="Add an option..."
+                          placeholder="Agregar una opción…"
                           className="flex-1"
                         />
                         <Button
@@ -333,7 +333,7 @@ export function CustomFieldsManager({ initialData }: CustomFieldsManagerProps) {
                           disabled={!editingField.newOption.trim()}
                         >
                           <Plus className="mr-1 h-4 w-4" />
-                          Add
+                          Agregar
                         </Button>
                       </div>
                     </div>
@@ -351,7 +351,7 @@ export function CustomFieldsManager({ initialData }: CustomFieldsManagerProps) {
                       }
                     />
                     <Label htmlFor="isRequired" className="cursor-pointer">
-                      Required
+                      Obligatorio
                     </Label>
                   </div>
 
@@ -364,7 +364,7 @@ export function CustomFieldsManager({ initialData }: CustomFieldsManagerProps) {
                       }
                     />
                     <Label htmlFor="isActive" className="cursor-pointer">
-                      Active
+                      Activo
                     </Label>
                   </div>
                 </div>
@@ -377,11 +377,11 @@ export function CustomFieldsManager({ initialData }: CustomFieldsManagerProps) {
                     disabled={isSaving}
                   >
                     <X className="mr-1 h-4 w-4" />
-                    Cancel
+                    Cancelar
                   </Button>
                   <Button onClick={handleSave} disabled={isSaving}>
                     <Check className="mr-1 h-4 w-4" />
-                    {isSaving ? 'Saving...' : 'Save'}
+                    {isSaving ? 'Guardando…' : 'Guardar'}
                   </Button>
                 </div>
               </div>
@@ -391,7 +391,7 @@ export function CustomFieldsManager({ initialData }: CustomFieldsManagerProps) {
           {/* Fields List */}
           {fields.length === 0 ? (
             <p className="py-8 text-center text-muted-foreground">
-              No custom fields configured. Add one to get started.
+              No hay campos personalizados configurados.
             </p>
           ) : (
             <div className="space-y-2">
@@ -409,10 +409,10 @@ export function CustomFieldsManager({ initialData }: CustomFieldsManagerProps) {
                         {CUSTOM_FIELD_TYPE_LABELS[field.fieldType]}
                       </Badge>
                       {field.isRequired && (
-                        <Badge variant="default">Required</Badge>
+                        <Badge variant="default">Obligatorio</Badge>
                       )}
                       {!field.isActive && (
-                        <Badge variant="outline">Inactive</Badge>
+                        <Badge variant="outline">Inactivo</Badge>
                       )}
                     </div>
                     <div className="flex items-center gap-1.5 flex-wrap">
@@ -423,7 +423,7 @@ export function CustomFieldsManager({ initialData }: CustomFieldsManagerProps) {
                       ))}
                       {hasOptions(field.fieldType) && field.options.length > 0 && (
                         <span className="text-xs text-muted-foreground ml-1">
-                          {field.options.length} option{field.options.length !== 1 ? 's' : ''}
+                          {field.options.length} {field.options.length === 1 ? 'opción' : 'opciones'}
                         </span>
                       )}
                     </div>
@@ -456,20 +456,20 @@ export function CustomFieldsManager({ initialData }: CustomFieldsManagerProps) {
       <AlertDialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Custom Field</AlertDialogTitle>
+            <AlertDialogTitle>Eliminar campo personalizado</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete this custom field? Any data stored in this
-              field on existing records will be lost. This action cannot be undone.
+              ¿Confirma que desea eliminar este campo? Los datos almacenados en registros
+              existentes se perderán y la acción no se puede deshacer.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel disabled={isDeleting}>Cancelar</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDelete}
               disabled={isDeleting}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              {isDeleting ? 'Deleting...' : 'Delete'}
+              {isDeleting ? 'Eliminando…' : 'Eliminar'}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

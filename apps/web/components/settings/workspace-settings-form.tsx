@@ -27,12 +27,12 @@ export function WorkspaceSettingsForm({ initialData }: WorkspaceSettingsFormProp
     setIsSubmitting(true);
 
     if (name.trim().length < 1) {
-      setError('Workspace name is required');
+      setError('El nombre del espacio de trabajo es obligatorio');
       setIsSubmitting(false);
       return;
     }
     if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) {
-      setError('Slug must be lowercase letters, numbers, and hyphens only');
+      setError('El identificador solo puede contener letras minúsculas, números y guiones');
       setIsSubmitting(false);
       return;
     }
@@ -44,11 +44,11 @@ export function WorkspaceSettingsForm({ initialData }: WorkspaceSettingsFormProp
         setTimeout(() => setSuccess(false), 3000);
         router.refresh();
       } else {
-        setError(result.error || 'Failed to update workspace settings');
+        setError(result.error || 'No se pudo actualizar la configuración del espacio de trabajo');
       }
     } catch {
       // Bug #165: Catch unexpected errors (network failure, etc.)
-      setError('An unexpected error occurred. Please try again.');
+      setError('Ocurrió un error inesperado. Inténtelo nuevamente.');
     } finally {
       setIsSubmitting(false);
     }
@@ -64,7 +64,7 @@ export function WorkspaceSettingsForm({ initialData }: WorkspaceSettingsFormProp
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="grid gap-2">
-        <Label htmlFor="name">Workspace Name</Label>
+        <Label htmlFor="name">Nombre del espacio de trabajo</Label>
         <Input
           id="name"
           value={name}
@@ -75,13 +75,13 @@ export function WorkspaceSettingsForm({ initialData }: WorkspaceSettingsFormProp
               setSlug(generateSlug(e.target.value));
             }
           }}
-          placeholder="My Company"
+          placeholder="Grupo Movensa"
           required
         />
       </div>
 
       <div className="grid gap-2">
-        <Label htmlFor="slug">Workspace URL</Label>
+        <Label htmlFor="slug">Dirección del espacio de trabajo</Label>
         <div className="flex items-center gap-2">
           <span className="text-sm text-muted-foreground">oreko.app/</span>
           <Input
@@ -94,14 +94,14 @@ export function WorkspaceSettingsForm({ initialData }: WorkspaceSettingsFormProp
           />
         </div>
         <p className="text-xs text-muted-foreground">
-          This is your workspace's unique identifier in URLs
+          Este es el identificador único que se utiliza en las direcciones del sistema.
         </p>
         {initialData?.slug && slug !== initialData.slug && slug.length > 0 && (
           <div className="flex items-start gap-2 rounded-md border border-yellow-500/50 bg-yellow-500/10 p-3 text-sm text-yellow-700 dark:text-yellow-400">
             <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
             <p>
-              Changing your workspace URL may break existing bookmarks and shared links.
-              The old URL will be saved for redirect purposes.
+              Cambiar esta dirección puede afectar marcadores y enlaces compartidos existentes.
+              La dirección anterior se conservará para redirigirlos.
             </p>
           </div>
         )}
@@ -112,12 +112,12 @@ export function WorkspaceSettingsForm({ initialData }: WorkspaceSettingsFormProp
       )}
 
       {success && (
-        <p className="text-sm text-green-600 dark:text-green-400">Settings saved successfully</p>
+        <p className="text-sm text-green-600 dark:text-green-400">Configuración guardada correctamente</p>
       )}
 
       <Button type="submit" disabled={isSubmitting}>
         {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-        Save Changes
+        Guardar cambios
       </Button>
     </form>
   );

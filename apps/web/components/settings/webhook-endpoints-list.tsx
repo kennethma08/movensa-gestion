@@ -58,12 +58,12 @@ export function WebhookEndpointsList({ initialEndpoints }: WebhookEndpointsListP
       const result = await deleteWebhookEndpoint(deleteId);
       if (result.success) {
         setEndpoints((prev) => prev.filter((ep) => ep.id !== deleteId));
-        toast.success('Webhook endpoint deleted');
+        toast.success('Punto de conexión eliminado');
       } else {
-        toast.error(result.error || 'Failed to delete');
+        toast.error(result.error || 'No se pudo eliminar');
       }
     } catch {
-      toast.error('Failed to delete webhook endpoint');
+      toast.error('No se pudo eliminar el punto de conexión');
     } finally {
       setIsDeleting(false);
       setDeleteId(null);
@@ -81,12 +81,12 @@ export function WebhookEndpointsList({ initialEndpoints }: WebhookEndpointsListP
             ep.id === endpoint.id ? { ...ep, isActive: !ep.isActive } : ep
           )
         );
-        toast.success(endpoint.isActive ? 'Webhook disabled' : 'Webhook enabled');
+        toast.success(endpoint.isActive ? 'Webhook desactivado' : 'Webhook activado');
       } else {
-        toast.error(result.error || 'Failed to update');
+        toast.error(result.error || 'No se pudo actualizar');
       }
     } catch {
-      toast.error('Failed to update webhook endpoint');
+      toast.error('No se pudo actualizar el punto de conexión');
     }
   };
 
@@ -111,9 +111,9 @@ export function WebhookEndpointsList({ initialEndpoints }: WebhookEndpointsListP
       {createdSecret && (
         <Card className="border-amber-500/50 bg-amber-50 dark:bg-amber-950/20">
           <CardHeader>
-            <CardTitle className="text-base">Webhook Secret Created</CardTitle>
+            <CardTitle className="text-base">Clave secreta del webhook creada</CardTitle>
             <CardDescription>
-              Copy this secret now. It will not be shown again.
+              Copie esta clave ahora. No volverá a mostrarse.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -126,17 +126,17 @@ export function WebhookEndpointsList({ initialEndpoints }: WebhookEndpointsListP
                 variant="outline"
                 onClick={() => {
                   navigator.clipboard.writeText(createdSecret);
-                  toast.success('Secret copied to clipboard');
+                  toast.success('Clave copiada al portapapeles');
                 }}
               >
-                Copy
+                Copiar
               </Button>
               <Button
                 size="sm"
                 variant="ghost"
                 onClick={() => setCreatedSecret(null)}
               >
-                Dismiss
+                Ocultar
               </Button>
             </div>
           </CardContent>
@@ -146,29 +146,29 @@ export function WebhookEndpointsList({ initialEndpoints }: WebhookEndpointsListP
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
-            <CardTitle>Webhook Endpoints</CardTitle>
+            <CardTitle>Puntos de conexión de webhooks</CardTitle>
             <CardDescription>
-              Send real-time event notifications to external services
+              Envíe notificaciones de eventos en tiempo real a servicios externos.
             </CardDescription>
           </div>
           <Button onClick={() => { setShowForm(true); setEditingEndpoint(null); }}>
             <Plus className="mr-2 h-4 w-4" />
-            Add Endpoint
+            Agregar punto de conexión
           </Button>
         </CardHeader>
         <CardContent>
           {endpoints.length === 0 && !showForm ? (
             <p className="py-8 text-center text-muted-foreground">
-              No webhook endpoints configured. Add one to start receiving event notifications.
+              No hay puntos de conexión configurados. Agregue uno para enviar notificaciones de eventos.
             </p>
           ) : (
             <Table>
               <TableHeader>
                 <TableRow>
                   <TableHead>URL</TableHead>
-                  <TableHead>Events</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
+                  <TableHead>Eventos</TableHead>
+                  <TableHead>Estado</TableHead>
+                  <TableHead className="text-right">Acciones</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -187,14 +187,14 @@ export function WebhookEndpointsList({ initialEndpoints }: WebhookEndpointsListP
                           ))
                         ) : (
                           <Badge variant="secondary" className="text-xs">
-                            {endpoint.events.length} events
+                            {endpoint.events.length} eventos
                           </Badge>
                         )}
                       </div>
                     </TableCell>
                     <TableCell>
                       <Badge variant={endpoint.isActive ? 'default' : 'outline'}>
-                        {endpoint.isActive ? 'Active' : 'Inactive'}
+                        {endpoint.isActive ? 'Activo' : 'Inactivo'}
                       </Badge>
                     </TableCell>
                     <TableCell className="text-right">
@@ -203,7 +203,7 @@ export function WebhookEndpointsList({ initialEndpoints }: WebhookEndpointsListP
                           variant="ghost"
                           size="icon"
                           onClick={() => setViewDeliveriesId(endpoint.id)}
-                          title="View deliveries"
+                          title="Ver entregas"
                         >
                           <Eye className="h-4 w-4" />
                         </Button>
@@ -211,7 +211,7 @@ export function WebhookEndpointsList({ initialEndpoints }: WebhookEndpointsListP
                           variant="ghost"
                           size="icon"
                           onClick={() => handleToggleActive(endpoint)}
-                          title={endpoint.isActive ? 'Disable' : 'Enable'}
+                          title={endpoint.isActive ? 'Desactivar' : 'Activar'}
                         >
                           {endpoint.isActive ? (
                             <ToggleRight className="h-4 w-4" />
@@ -226,7 +226,7 @@ export function WebhookEndpointsList({ initialEndpoints }: WebhookEndpointsListP
                             setEditingEndpoint(endpoint);
                             setShowForm(true);
                           }}
-                          title="Edit"
+                          title="Editar"
                         >
                           <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
                         </Button>
@@ -234,7 +234,7 @@ export function WebhookEndpointsList({ initialEndpoints }: WebhookEndpointsListP
                           variant="ghost"
                           size="icon"
                           onClick={() => setDeleteId(endpoint.id)}
-                          title="Delete"
+                          title="Eliminar"
                         >
                           <Trash2 className="h-4 w-4 text-destructive" />
                         </Button>
@@ -270,20 +270,20 @@ export function WebhookEndpointsList({ initialEndpoints }: WebhookEndpointsListP
       <AlertDialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Webhook Endpoint</AlertDialogTitle>
+            <AlertDialogTitle>Eliminar punto de conexión</AlertDialogTitle>
             <AlertDialogDescription>
-              This will permanently delete this webhook endpoint and all its delivery history.
-              This action cannot be undone.
+              Se eliminarán permanentemente este punto de conexión y todo su historial de entregas.
+              Esta acción no se puede deshacer.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDelete}
               disabled={isDeleting}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              {isDeleting ? 'Deleting...' : 'Delete'}
+              {isDeleting ? 'Eliminando...' : 'Eliminar'}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

@@ -12,7 +12,7 @@ import {
 } from '@/components/providers/font-size-provider';
 import { cn } from '@/lib/utils';
 
-const PREVIEW_TEXT = 'The quick brown fox jumps over the lazy dog. 0123456789';
+const PREVIEW_TEXT = 'Vista previa del tamaño y la legibilidad del texto. 0123456789';
 
 function CanvasPreview({ styleKey }: { styleKey: SidebarStyleKey }) {
   const isElevated = styleKey === 'elevated';
@@ -60,7 +60,7 @@ export default function AppearanceSettingsPage() {
     <div className="space-y-4">
       {/* Low #55: Note about localStorage persistence */}
       <p className="text-xs text-muted-foreground">
-        Appearance preferences are saved to this browser. They won&apos;t sync across devices.
+        Las preferencias se guardan en su cuenta y también en este navegador.
       </p>
 
       {/* Font Size */}
@@ -68,10 +68,10 @@ export default function AppearanceSettingsPage() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Type className="h-5 w-5" />
-            Font Size
+            Tamaño de fuente
           </CardTitle>
           <CardDescription>
-            Choose a font size that works best for you. This applies across the entire application.
+            Elija el tamaño de texto más cómodo. El cambio se aplica a todo el sistema.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -118,7 +118,7 @@ export default function AppearanceSettingsPage() {
 
           <div className="rounded-lg border bg-muted/30 p-4 mt-6">
             <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">
-              Preview
+              Vista previa
             </p>
             <p className="text-base">{PREVIEW_TEXT}</p>
             <p className="text-sm text-muted-foreground mt-1">{PREVIEW_TEXT}</p>
@@ -127,7 +127,7 @@ export default function AppearanceSettingsPage() {
           {fontSize !== 'default' && (
             <div className="flex justify-end">
               <Button variant="outline" size="sm" onClick={() => setFontSize('default')}>
-                Reset to default
+                Restablecer
               </Button>
             </div>
           )}
@@ -139,10 +139,10 @@ export default function AppearanceSettingsPage() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Monitor className="h-5 w-5" />
-            Canvas Style
+            Estilo de interfaz
           </CardTitle>
           <CardDescription>
-            Choose the overall look of the app. Elevated adds a subtle gray canvas with content sitting on white.
+            Elija la apariencia general. El estilo elevado utiliza un fondo gris suave y tarjetas blancas.
           </CardDescription>
         </CardHeader>
         <CardContent>

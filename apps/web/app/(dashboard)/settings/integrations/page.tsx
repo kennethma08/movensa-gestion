@@ -4,7 +4,7 @@ import { IntegrationsManager } from '@/components/settings/integrations-manager'
 import { getIntegrations } from '@/lib/settings/actions';
 
 export const metadata = {
-  title: 'Integrations - Settings',
+  title: 'Integraciones',
 };
 
 export default async function IntegrationsSettingsPage() {

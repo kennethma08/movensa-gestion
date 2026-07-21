@@ -4,7 +4,7 @@ import { ContractSettingsForm } from '@/components/settings/contract-settings-fo
 import { getContractSettings } from '@/lib/contracts/actions';
 
 export const metadata = {
-  title: 'Contract Settings',
+  title: 'Configuración de contratos',
 };
 
 export default async function ContractSettingsPage() {

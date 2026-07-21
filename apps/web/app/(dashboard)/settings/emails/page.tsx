@@ -7,7 +7,7 @@ import { getEmailTemplates } from '@/lib/email/actions';
 import { Button } from '@/components/ui/button';
 
 export const metadata = {
-  title: 'Email - Settings',
+  title: 'Configuración de correo',
 };
 
 export default async function EmailSettingsPage() {
@@ -21,15 +21,15 @@ export default async function EmailSettingsPage() {
       <div className="rounded-lg border p-6">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h3 className="font-semibold">Email Templates</h3>
+            <h3 className="font-semibold">Plantillas de correo</h3>
             <p className="text-sm text-muted-foreground">
-              {templates.length} template{templates.length !== 1 ? 's' : ''} configured
+              {templates.length} {templates.length === 1 ? 'plantilla configurada' : 'plantillas configuradas'}
             </p>
           </div>
           <Button size="sm" asChild>
             <Link href="/settings/emails/new">
               <Plus className="mr-2 h-4 w-4" />
-              New Template
+              Nueva plantilla
             </Link>
           </Button>
         </div>
