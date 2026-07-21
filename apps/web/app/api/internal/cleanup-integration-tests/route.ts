@@ -44,17 +44,19 @@ export async function POST(request: NextRequest) {
   }
 
   const clientIds = clients.map((client) => client.id);
-  const projectsDeleted = await prisma.project.count({
-    where: { workspaceId: workspace.id, clientId: { in: clientIds } },
-  });
-
-  const deleted = await prisma.client.deleteMany({
-    where: { workspaceId: workspace.id, id: { in: clientIds } },
+  const result = await prisma.$transaction(async (tx) => {
+    const projects = await tx.project.deleteMany({
+      where: { workspaceId: workspace.id, clientId: { in: clientIds } },
+    });
+    const deleted = await tx.client.deleteMany({
+      where: { workspaceId: workspace.id, id: { in: clientIds } },
+    });
+    return { projectsDeleted: projects.count, clientsDeleted: deleted.count };
   });
 
   return NextResponse.json({
     ok: true,
-    clientsDeleted: deleted.count,
-    projectsDeleted,
+    clientsDeleted: result.clientsDeleted,
+    projectsDeleted: result.projectsDeleted,
   });
 }
