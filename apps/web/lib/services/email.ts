@@ -51,6 +51,102 @@ export interface EmailResult {
 let resend: Resend | null = null;
 let smtpTransporter: Transporter | null = null;
 
+interface MicrosoftGraphConfig {
+  tenantId: string;
+  clientId: string;
+  clientSecret: string;
+  sender: string;
+}
+
+function getMicrosoftGraphConfig(): MicrosoftGraphConfig | null {
+  const tenantId = process.env.MS_GRAPH_TENANT_ID;
+  const clientId = process.env.MS_GRAPH_CLIENT_ID;
+  const clientSecret = process.env.MS_GRAPH_CLIENT_SECRET;
+  const sender = process.env.MS_GRAPH_SENDER;
+
+  if (!tenantId || !clientId || !clientSecret || !sender) return null;
+  return { tenantId, clientId, clientSecret, sender };
+}
+
+function graphRecipient(address: string) {
+  return { emailAddress: { address } };
+}
+
+function graphRecipients(addresses?: string | string[]) {
+  if (!addresses) return [];
+  return (Array.isArray(addresses) ? addresses : [addresses]).map(graphRecipient);
+}
+
+async function sendWithMicrosoftGraph(
+  config: MicrosoftGraphConfig,
+  options: EmailOptions,
+  safeSubject: string,
+  htmlContent: string,
+  textContent: string
+): Promise<EmailResult> {
+  const tokenResponse = await fetch(
+    `https://login.microsoftonline.com/${encodeURIComponent(config.tenantId)}/oauth2/v2.0/token`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({
+        client_id: config.clientId,
+        client_secret: config.clientSecret,
+        grant_type: 'client_credentials',
+        scope: 'https://graph.microsoft.com/.default',
+      }),
+    }
+  );
+
+  if (!tokenResponse.ok) {
+    throw new Error(`Microsoft Graph no pudo autenticar el envío (${tokenResponse.status}).`);
+  }
+
+  const token = await tokenResponse.json() as { access_token?: string };
+  if (!token.access_token) throw new Error('Microsoft Graph no devolvió un token de acceso.');
+
+  const attachments = options.attachments?.map((attachment) => ({
+    '@odata.type': '#microsoft.graph.fileAttachment',
+    name: attachment.filename,
+    contentType: attachment.contentType || 'application/octet-stream',
+    contentBytes: Buffer.isBuffer(attachment.content)
+      ? attachment.content.toString('base64')
+      : Buffer.from(attachment.content).toString('base64'),
+  }));
+
+  const sendResponse = await fetch(
+    `https://graph.microsoft.com/v1.0/users/${encodeURIComponent(config.sender)}/sendMail`,
+    {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token.access_token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        message: {
+          subject: safeSubject,
+          body: {
+            contentType: options.html ? 'HTML' : 'Text',
+            content: options.html ? htmlContent : textContent,
+          },
+          toRecipients: graphRecipients(options.to),
+          ccRecipients: graphRecipients(options.cc),
+          bccRecipients: graphRecipients(options.bcc),
+          replyTo: graphRecipients(options.replyTo || process.env.EMAIL_REPLY_TO),
+          ...(attachments?.length ? { attachments } : {}),
+        },
+        saveToSentItems: true,
+      }),
+    }
+  );
+
+  if (!sendResponse.ok) {
+    throw new Error(`Microsoft Graph rechazó el envío (${sendResponse.status}).`);
+  }
+
+  return { success: true, messageId: `microsoft-graph-${Date.now()}` };
+}
+
 function getSmtpClient(): Transporter | null {
   if (smtpTransporter) return smtpTransporter;
 
@@ -93,7 +189,7 @@ function getDefaultConfig(): EmailConfig {
 
 // Check if email is enabled
 export function isEmailEnabled(): boolean {
-  return getSmtpClient() !== null || getEmailClient() !== null;
+  return getMicrosoftGraphConfig() !== null || getSmtpClient() !== null || getEmailClient() !== null;
 }
 
 // Send email (with optional rate limiting by key)
@@ -113,10 +209,11 @@ export async function sendEmail(
     }
   }
 
-  const smtpClient = getSmtpClient();
-  const client = smtpClient ? null : getEmailClient();
+  const graphConfig = getMicrosoftGraphConfig();
+  const smtpClient = graphConfig ? null : getSmtpClient();
+  const client = graphConfig || smtpClient ? null : getEmailClient();
 
-  if (!smtpClient && !client) {
+  if (!graphConfig && !smtpClient && !client) {
     logger.warn({ subject: options.subject }, 'Email client not configured. Email not sent');
     return {
       success: false,
@@ -147,6 +244,16 @@ export async function sendEmail(
       .replace(/&#39;/g, "'")
       .replace(/\n{3,}/g, '\n\n')
       .trim();
+
+    if (graphConfig) {
+      return await sendWithMicrosoftGraph(
+        graphConfig,
+        options,
+        safeSubject,
+        htmlContent,
+        textContent
+      );
+    }
 
     if (smtpClient) {
       const result = await smtpClient.sendMail({
