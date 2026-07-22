@@ -18,6 +18,7 @@ import { formatCurrency, toNumber, getBaseUrl } from '@/lib/utils';
 import { ROUTES } from '@/lib/routes';
 import { generateInvoiceNumber, generateInvoiceNumberWithTransaction } from './internal';
 import { domainEvents } from '@/lib/events/emitter';
+import { notifyInvoicePaymentAdmins } from '@/lib/admin-alerts';
 
 /** Generate a cryptographically secure access token (64 hex chars = 256 bits) */
 function generateAccessToken(): string {
@@ -1110,6 +1111,13 @@ export async function recordPayment(
   revalidatePath(ROUTES.invoiceDetail(invoiceId));
 
   domainEvents.emit({ type: 'payment.received', payload: { paymentId: result.paymentId, invoiceId, workspaceId: workspace.id, amount: data.amount } });
+
+  await notifyInvoicePaymentAdmins({
+    invoiceId,
+    paymentId: result.paymentId,
+    amount: data.amount,
+    source: 'manual',
+  }).catch((error) => logger.error({ err: error, invoiceId }, 'Failed to send payment admin alert'));
 
   return { success: true };
 }

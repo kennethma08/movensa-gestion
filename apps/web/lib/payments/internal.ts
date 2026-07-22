@@ -18,6 +18,7 @@ import { formatCurrency } from '@/lib/utils';
 import type { PaymentIntentResult } from './types';
 import { domainEvents } from '@/lib/events/emitter';
 import { logger } from '@/lib/logger';
+import { notifyInvoicePaymentAdmins } from '@/lib/admin-alerts';
 
 /**
  * Create payment intent for invoice (called from checkout API route).
@@ -437,6 +438,13 @@ export async function processPaymentWebhook(
         receiptUrl: receiptUrl || undefined,
         rateLimitKey: `workspace:${payment.invoice.workspaceId}`,
       }).catch((err) => logger.error({ err }, 'Failed to send payment confirmation email'));
+
+      await notifyInvoicePaymentAdmins({
+        invoiceId: payment.invoiceId,
+        paymentId: payment.id,
+        amount: paymentAmount,
+        source: 'stripe',
+      }).catch((err) => logger.error({ err, invoiceId: payment.invoiceId }, 'Failed to send payment admin alert'));
     } else {
       // Payment failed
       await prisma.payment.update({
