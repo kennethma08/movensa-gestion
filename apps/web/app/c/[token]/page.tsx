@@ -11,8 +11,8 @@ export async function generateMetadata({ params }: PageProps) {
   const { token } = await params;
   const instance = await getContractInstanceByToken(token);
   return {
-    title: instance?.contractName || 'Contract',
-    description: 'View and sign your contract',
+    title: instance?.contractName || 'Contrato',
+    description: 'Revise y firme su contrato',
     robots: { index: false, follow: false },
   };
 }

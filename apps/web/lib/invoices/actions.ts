@@ -169,16 +169,19 @@ export async function createInvoice(data: CreateInvoiceData) {
       return { success: false, error: 'Discount amount cannot be negative' };
     }
     // Cap fixed discount at subtotal (calculateTotals also clamps, but reject early for clarity)
-    const preliminarySubtotal = data.lineItems.reduce((sum, item) => sum + Math.round(item.quantity * item.rate * 100) / 100, 0);
+    const preliminarySubtotal = data.lineItems.reduce(
+      (sum, item) => sum + Math.round(item.quantity * item.rate * 100) / 100,
+      0
+    );
     if (data.discountValue > preliminarySubtotal) {
       data.discountValue = preliminarySubtotal;
     }
   }
 
-  const { subtotal, taxTotal, discountAmount, total } = calculateTotals(
-    data.lineItems,
-    { type: data.discountType, value: data.discountValue }
-  );
+  const { subtotal, taxTotal, discountAmount, total } = calculateTotals(data.lineItems, {
+    type: data.discountType,
+    value: data.discountValue,
+  });
 
   const lineItems = data.lineItems.map((item, index) => ({
     name: item.name,
@@ -241,7 +244,10 @@ export async function createInvoice(data: CreateInvoiceData) {
   revalidatePath(ROUTES.invoices);
 
   try {
-    domainEvents.emit({ type: 'invoice.created', payload: { invoiceId: invoice.id, workspaceId: workspace.id } });
+    domainEvents.emit({
+      type: 'invoice.created',
+      payload: { invoiceId: invoice.id, workspaceId: workspace.id },
+    });
   } catch {}
 
   return {
@@ -301,7 +307,10 @@ export async function createInvoiceFromQuote(quoteId: string, options?: { dueDay
   // Only accepted or sent quotes can be converted to invoices
   const convertibleStatuses = ['accepted', 'sent', 'viewed'];
   if (!convertibleStatuses.includes(quote.status)) {
-    return { success: false, error: 'La cotización debe estar enviada, vista o aceptada antes de convertirla en factura' };
+    return {
+      success: false,
+      error: 'La cotización debe estar enviada, vista o aceptada antes de convertirla en factura',
+    };
   }
 
   // Bug #123: Validate discount values from source quote
@@ -311,10 +320,7 @@ export async function createInvoiceFromQuote(quoteId: string, options?: { dueDay
 
   // Bug #13: Recalculate discount during quote-to-invoice conversion
   // Recalculate subtotal from actual line items to ensure discount doesn't exceed it
-  const lineItemSubtotal = quote.lineItems.reduce(
-    (sum, item) => sum + toNumber(item.amount),
-    0
-  );
+  const lineItemSubtotal = quote.lineItems.reduce((sum, item) => sum + toNumber(item.amount), 0);
 
   if (quote.discountType === 'percentage') {
     if (discountValue < 0 || discountValue > 100) {
@@ -351,76 +357,76 @@ export async function createInvoiceFromQuote(quoteId: string, options?: { dueDay
 
       const invoiceNumber = await generateInvoiceNumberWithTransaction(tx, workspace.id);
 
-    // Create the invoice
-    const newInvoice = await tx.invoice.create({
-      data: {
-        workspaceId: workspace.id,
-        clientId: quote.clientId,
-        projectId: quote.projectId,
-        quoteId: quote.id,
-        invoiceNumber,
-        title: quote.title || 'Factura',
-        status: 'draft',
-        currency: quote.currency,
-        issueDate: new Date(),
-        dueDate,
-        subtotal: lineItemSubtotal,
-        discountType: quote.discountType,
-        discountValue: quote.discountValue,
-        discountAmount: discountAmount,
-        taxTotal: quote.taxTotal,
-        total: lineItemSubtotal - discountAmount + toNumber(quote.taxTotal),
-        amountDue: lineItemSubtotal - discountAmount + toNumber(quote.taxTotal),
-        notes: quote.notes,
-        terms: quote.terms,
-        settings: {} as unknown as Prisma.InputJsonValue,
-        lineItems: {
-          create: quote.lineItems.map((item: (typeof quote.lineItems)[number]) => ({
-            name: item.name,
-            description: item.description,
-            quantity: item.quantity,
-            rate: item.rate,
-            amount: item.amount,
-            taxRate: item.taxRate,
-            taxAmount: item.taxAmount,
-            sortOrder: item.sortOrder,
-          })),
+      // Create the invoice
+      const newInvoice = await tx.invoice.create({
+        data: {
+          workspaceId: workspace.id,
+          clientId: quote.clientId,
+          projectId: quote.projectId,
+          quoteId: quote.id,
+          invoiceNumber,
+          title: quote.title || 'Factura',
+          status: 'draft',
+          currency: quote.currency,
+          issueDate: new Date(),
+          dueDate,
+          subtotal: lineItemSubtotal,
+          discountType: quote.discountType,
+          discountValue: quote.discountValue,
+          discountAmount: discountAmount,
+          taxTotal: quote.taxTotal,
+          total: lineItemSubtotal - discountAmount + toNumber(quote.taxTotal),
+          amountDue: lineItemSubtotal - discountAmount + toNumber(quote.taxTotal),
+          notes: quote.notes,
+          terms: quote.terms,
+          settings: {} as unknown as Prisma.InputJsonValue,
+          lineItems: {
+            create: quote.lineItems.map((item: (typeof quote.lineItems)[number]) => ({
+              name: item.name,
+              description: item.description,
+              quantity: item.quantity,
+              rate: item.rate,
+              amount: item.amount,
+              taxRate: item.taxRate,
+              taxAmount: item.taxAmount,
+              sortOrder: item.sortOrder,
+            })),
+          },
         },
-      },
-      include: {
-        lineItems: true,
-        client: true,
-        project: true,
-      },
-    });
+        include: {
+          lineItems: true,
+          client: true,
+          project: true,
+        },
+      });
 
-    // Update quote status to converted
-    await tx.quote.update({
-      where: { id: quote.id },
-      data: { status: 'converted' },
-    });
+      // Update quote status to converted
+      await tx.quote.update({
+        where: { id: quote.id },
+        data: { status: 'converted' },
+      });
 
-    // Log the conversion event on the quote
-    await tx.quoteEvent.create({
-      data: {
-        quoteId: quote.id,
-        eventType: 'converted_to_invoice',
-        actorId: userId,
-        actorType: 'user',
-        metadata: { invoiceId: newInvoice.id },
-      },
-    });
+      // Log the conversion event on the quote
+      await tx.quoteEvent.create({
+        data: {
+          quoteId: quote.id,
+          eventType: 'converted_to_invoice',
+          actorId: userId,
+          actorType: 'user',
+          metadata: { invoiceId: newInvoice.id },
+        },
+      });
 
-    // H01 fix: Create activity event on the new invoice
-    await tx.invoiceEvent.create({
-      data: {
-        invoiceId: newInvoice.id,
-        eventType: 'created',
-        actorId: userId,
-        actorType: 'user',
-        metadata: { fromQuoteId: quote.id },
-      },
-    });
+      // H01 fix: Create activity event on the new invoice
+      await tx.invoiceEvent.create({
+        data: {
+          invoiceId: newInvoice.id,
+          eventType: 'created',
+          actorId: userId,
+          actorType: 'user',
+          metadata: { fromQuoteId: quote.id },
+        },
+      });
 
       return newInvoice;
     });
@@ -440,7 +446,10 @@ export async function createInvoiceFromQuote(quoteId: string, options?: { dueDay
   revalidatePath(ROUTES.quoteDetail(quoteId));
 
   try {
-    domainEvents.emit({ type: 'invoice.created', payload: { invoiceId: invoice.id, workspaceId: workspace.id } });
+    domainEvents.emit({
+      type: 'invoice.created',
+      payload: { invoiceId: invoice.id, workspaceId: workspace.id },
+    });
   } catch {}
 
   return {
@@ -450,7 +459,6 @@ export async function createInvoiceFromQuote(quoteId: string, options?: { dueDay
     },
   };
 }
-
 
 /**
  * Update an existing invoice
@@ -488,12 +496,16 @@ export async function updateInvoice(invoiceId: string, data: UpdateInvoiceData) 
   let total = toNumber(existingInvoice.total);
 
   // Resolve discount: use provided values, fall back to existing invoice values
-  const discountType = data.discountType !== undefined
-    ? data.discountType
-    : (existingInvoice.discountType as 'percentage' | 'fixed' | null);
-  const discountValue = data.discountValue !== undefined
-    ? data.discountValue
-    : (existingInvoice.discountValue ? Number(existingInvoice.discountValue) : null);
+  const discountType =
+    data.discountType !== undefined
+      ? data.discountType
+      : (existingInvoice.discountType as 'percentage' | 'fixed' | null);
+  const discountValue =
+    data.discountValue !== undefined
+      ? data.discountValue
+      : existingInvoice.discountValue
+        ? Number(existingInvoice.discountValue)
+        : null;
 
   if (data.lineItems) {
     for (const item of data.lineItems) {
@@ -544,7 +556,9 @@ export async function updateInvoice(invoiceId: string, data: UpdateInvoiceData) 
         // Always persist discount fields if they changed
         ...(data.discountType !== undefined && { discountType: data.discountType || null }),
         ...(data.discountValue !== undefined && { discountValue: data.discountValue ?? null }),
-        ...((data.lineItems || data.discountType !== undefined || data.discountValue !== undefined) && {
+        ...((data.lineItems ||
+          data.discountType !== undefined ||
+          data.discountValue !== undefined) && {
           subtotal,
           discountAmount,
           taxTotal,
@@ -744,16 +758,16 @@ export async function getInvoices(filters?: {
 /**
  * Update invoice status
  */
-export async function updateInvoiceStatus(
-  invoiceId: string,
-  status: InvoiceStatus
-) {
+export async function updateInvoiceStatus(invoiceId: string, status: InvoiceStatus) {
   const { userId, workspace } = await getActiveWorkspace();
   const { role } = await getCurrentUserWorkspace();
 
   // Bug #456: RBAC — viewers cannot change invoice status
   if (role === 'viewer') {
-    return { success: false, error: 'Insufficient permissions: viewers cannot change invoice status' };
+    return {
+      success: false,
+      error: 'Insufficient permissions: viewers cannot change invoice status',
+    };
   }
 
   const invoice = await prisma.invoice.findFirst({
@@ -846,9 +860,15 @@ export async function updateInvoiceStatus(
 
   try {
     if (status === 'paid') {
-      domainEvents.emit({ type: 'invoice.paid', payload: { invoiceId, workspaceId: workspace.id, amount: toNumber(invoice.total) } });
+      domainEvents.emit({
+        type: 'invoice.paid',
+        payload: { invoiceId, workspaceId: workspace.id, amount: toNumber(invoice.total) },
+      });
     } else if (status === 'voided') {
-      domainEvents.emit({ type: 'invoice.voided', payload: { invoiceId, workspaceId: workspace.id } });
+      domainEvents.emit({
+        type: 'invoice.voided',
+        payload: { invoiceId, workspaceId: workspace.id },
+      });
     }
   } catch {}
 
@@ -897,7 +917,13 @@ export async function sendInvoice(invoiceId: string, emailOptions?: SendEmailOpt
       to: emailRecipients,
       variables: {
         businessName: workspace.name,
-        businessEmail: (await prisma.businessProfile.findUnique({ where: { workspaceId: workspace.id }, select: { email: true } }))?.email || '',
+        businessEmail:
+          (
+            await prisma.businessProfile.findUnique({
+              where: { workspaceId: workspace.id },
+              select: { email: true },
+            })
+          )?.email || '',
         clientName: invoice.client.name,
         clientEmail: invoice.client.email,
         invoiceNumber: invoice.invoiceNumber,
@@ -905,7 +931,13 @@ export async function sendInvoice(invoiceId: string, emailOptions?: SendEmailOpt
         invoiceTotal: formatCurrency(toNumber(invoice.total), invoice.currency),
         amountDue: formatCurrency(toNumber(invoice.amountDue), invoice.currency),
         amountPaid: formatCurrency(toNumber(invoice.amountPaid), invoice.currency),
-        invoiceDueDate: invoice.dueDate ? invoice.dueDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : undefined,
+        invoiceDueDate: invoice.dueDate
+          ? invoice.dueDate.toLocaleDateString('es-CR', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+            })
+          : undefined,
         message: emailOptions?.message || undefined,
       },
       customSubject: emailOptions?.subject || undefined,
@@ -913,11 +945,19 @@ export async function sendInvoice(invoiceId: string, emailOptions?: SendEmailOpt
     emailSent = emailResult.success;
     if (!emailResult.success) {
       logger.error({ err: emailResult.error }, 'Failed to send invoice email');
-      return { success: false, error: 'Email could not be sent. Please check your email settings.', emailSent: false };
+      return {
+        success: false,
+        error: 'Email could not be sent. Please check your email settings.',
+        emailSent: false,
+      };
     }
   } catch (err) {
     logger.error({ err }, 'Failed to send invoice email');
-    return { success: false, error: 'No se pudo enviar el correo. Revise la configuración de correo.', emailSent: false };
+    return {
+      success: false,
+      error: 'No se pudo enviar el correo. Revise la configuración de correo.',
+      emailSent: false,
+    };
   }
 
   // Email sent successfully — update status to 'sent' (skip if already sent)
@@ -942,7 +982,10 @@ export async function sendInvoice(invoiceId: string, emailOptions?: SendEmailOpt
   }).catch(() => {});
 
   try {
-    domainEvents.emit({ type: 'invoice.sent', payload: { invoiceId, workspaceId: workspace.id, clientEmail: invoice.client.email } });
+    domainEvents.emit({
+      type: 'invoice.sent',
+      payload: { invoiceId, workspaceId: workspace.id, clientEmail: invoice.client.email },
+    });
   } catch {}
 
   return { success: true, emailSent: true };
@@ -1041,7 +1084,10 @@ export async function recordPayment(
   const total = toNumber(invoice.total);
   const maxPayable = total - currentAmountPaid;
   if (data.amount > maxPayable) {
-    return { success: false, error: `Payment exceeds remaining balance. Maximum payable: $${maxPayable.toFixed(2)}` };
+    return {
+      success: false,
+      error: `Payment exceeds remaining balance. Maximum payable: $${maxPayable.toFixed(2)}`,
+    };
   }
 
   // Bug #67: Use interactive transaction with atomic increment to prevent race conditions
@@ -1110,14 +1156,24 @@ export async function recordPayment(
   revalidatePath(ROUTES.invoices);
   revalidatePath(ROUTES.invoiceDetail(invoiceId));
 
-  domainEvents.emit({ type: 'payment.received', payload: { paymentId: result.paymentId, invoiceId, workspaceId: workspace.id, amount: data.amount } });
+  domainEvents.emit({
+    type: 'payment.received',
+    payload: {
+      paymentId: result.paymentId,
+      invoiceId,
+      workspaceId: workspace.id,
+      amount: data.amount,
+    },
+  });
 
   await notifyInvoicePaymentAdmins({
     invoiceId,
     paymentId: result.paymentId,
     amount: data.amount,
     source: 'manual',
-  }).catch((error) => logger.error({ err: error, invoiceId }, 'Failed to send payment admin alert'));
+  }).catch((error) =>
+    logger.error({ err: error, invoiceId }, 'Failed to send payment admin alert')
+  );
 
   return { success: true };
 }
@@ -1181,7 +1237,7 @@ export async function duplicateInvoice(invoiceId: string) {
       terms: original.terms,
       settings: original.settings as Prisma.InputJsonValue,
       lineItems: {
-        create: original.lineItems.map((item: typeof original.lineItems[number]) => ({
+        create: original.lineItems.map((item: (typeof original.lineItems)[number]) => ({
           name: item.name,
           description: item.description,
           quantity: item.quantity,
@@ -1257,7 +1313,10 @@ export async function getInvoiceTemplates(filter?: { search?: string; page?: num
     description: t.description ?? '',
     paymentTerms: t.paymentTerms,
     currency: t.currency,
-    lineItems: (typeof t.lineItems === 'string' ? JSON.parse(t.lineItems) : t.lineItems) as InvoiceTemplateLineItem[] ?? [],
+    lineItems:
+      ((typeof t.lineItems === 'string'
+        ? JSON.parse(t.lineItems)
+        : t.lineItems) as InvoiceTemplateLineItem[]) ?? [],
     notes: t.notes ?? '',
     terms: t.terms ?? '',
     usageCount: t.usageCount,
@@ -1301,7 +1360,7 @@ export async function createInvoiceTemplate(data: {
   }
 
   // Validate line items structure
-  const lineItems = (data.lineItems ?? []).map(item => ({
+  const lineItems = (data.lineItems ?? []).map((item) => ({
     id: String(item.id || ''),
     name: String(item.name || ''),
     description: String(item.description || ''),

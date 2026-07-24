@@ -64,11 +64,15 @@ const durationOptions = [
 ];
 
 function formatCurrencyValue(amount: number, currency: string = 'USD') {
-  const parts = new Intl.NumberFormat('en-US', { style: 'currency', currency }).formatToParts(amount);
-  return parts.map((p, i) => {
-    if (p.type === 'currency' && parts[i + 1]?.type !== 'literal') return p.value + ' ';
-    return p.value;
-  }).join('');
+  const parts = new Intl.NumberFormat('es-CR', { style: 'currency', currency }).formatToParts(
+    amount
+  );
+  return parts
+    .map((p, i) => {
+      if (p.type === 'currency' && parts[i + 1]?.type !== 'literal') return p.value + ' ';
+      return p.value;
+    })
+    .join('');
 }
 
 function formatRelativeDate(dateStr: string) {
@@ -140,15 +144,18 @@ export function InvoiceItemsClient({ initialItems, currency = 'USD' }: InvoiceIt
         router.refresh();
         // Optimistic: add to local state
         if (result.item) {
-          setItems((prev) => [{
-            id: result.item!.id,
-            name: result.item!.name,
-            description: result.item!.description,
-            price: result.item!.price,
-            duration: result.item!.duration,
-            taxable: result.item!.taxable,
-            createdAt: new Date().toISOString(),
-          }, ...prev]);
+          setItems((prev) => [
+            {
+              id: result.item!.id,
+              name: result.item!.name,
+              description: result.item!.description,
+              price: result.item!.price,
+              duration: result.item!.duration,
+              taxable: result.item!.taxable,
+              createdAt: new Date().toISOString(),
+            },
+            ...prev,
+          ]);
         }
       } else {
         toast.error(result.error || 'No se pudo crear el concepto');
@@ -192,14 +199,20 @@ export function InvoiceItemsClient({ initialItems, currency = 'USD' }: InvoiceIt
         toast.success('Concepto actualizado');
         handleCloseEdit();
         // Update local state
-        setItems((prev) => prev.map((i) => i.id === editingItem.id ? {
-          ...i,
-          name: editName,
-          description: editDescription || null,
-          price: parseFloat(editPrice) || 0,
-          duration: editDuration === '-' ? null : editDuration,
-          taxable: editTaxable,
-        } : i));
+        setItems((prev) =>
+          prev.map((i) =>
+            i.id === editingItem.id
+              ? {
+                  ...i,
+                  name: editName,
+                  description: editDescription || null,
+                  price: parseFloat(editPrice) || 0,
+                  duration: editDuration === '-' ? null : editDuration,
+                  taxable: editTaxable,
+                }
+              : i
+          )
+        );
       } else {
         toast.error(result.error || 'No se pudo actualizar el concepto');
       }
@@ -282,13 +295,11 @@ export function InvoiceItemsClient({ initialItems, currency = 'USD' }: InvoiceIt
     },
     {
       accessorKey: 'name',
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Nombre" />
-      ),
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Nombre" />,
       cell: ({ row }) => (
         <button
           type="button"
-          className="font-medium text-primary hover:underline text-left"
+          className="text-primary text-left font-medium hover:underline"
           onClick={() => handleOpenEdit(row.original)}
         >
           {row.original.name}
@@ -297,20 +308,14 @@ export function InvoiceItemsClient({ initialItems, currency = 'USD' }: InvoiceIt
     },
     {
       accessorKey: 'duration',
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Duration" />
-      ),
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Duration" />,
       cell: ({ row }) => (
-        <span className="text-muted-foreground">
-          {row.original.duration || '-'}
-        </span>
+        <span className="text-muted-foreground">{row.original.duration || '-'}</span>
       ),
     },
     {
       accessorKey: 'price',
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Price" />
-      ),
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Price" />,
       cell: ({ row }) => (
         <span className="text-muted-foreground">
           {formatCurrencyValue(row.original.price, currency)}
@@ -319,13 +324,9 @@ export function InvoiceItemsClient({ initialItems, currency = 'USD' }: InvoiceIt
     },
     {
       accessorKey: 'createdAt',
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Creado" />
-      ),
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Creado" />,
       cell: ({ row }) => (
-        <span className="text-muted-foreground">
-          {formatRelativeDate(row.original.createdAt)}
-        </span>
+        <span className="text-muted-foreground">{formatRelativeDate(row.original.createdAt)}</span>
       ),
     },
     {
@@ -342,7 +343,7 @@ export function InvoiceItemsClient({ initialItems, currency = 'USD' }: InvoiceIt
 
   const emptyState = (
     <div className="flex flex-col items-center justify-center py-16">
-      <Receipt className="h-12 w-12 text-muted-foreground mb-4" />
+      <Receipt className="text-muted-foreground mb-4 h-12 w-12" />
       <h3 className="text-lg font-medium">No hay conceptos guardados</h3>
       <p className="text-muted-foreground mb-4">
         Cree conceptos reutilizables para sus cotizaciones y facturas.
@@ -356,10 +357,12 @@ export function InvoiceItemsClient({ initialItems, currency = 'USD' }: InvoiceIt
 
   return (
     <>
-      <div className="flex items-center justify-between mb-6">
+      <div className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Conceptos de factura</h1>
-          <p className="text-muted-foreground">Conceptos reutilizables para cotizaciones y facturas</p>
+          <p className="text-muted-foreground">
+            Conceptos reutilizables para cotizaciones y facturas
+          </p>
         </div>
         <Button onClick={handleOpenCreate}>
           <Plus className="mr-2 h-4 w-4" />
@@ -368,16 +371,9 @@ export function InvoiceItemsClient({ initialItems, currency = 'USD' }: InvoiceIt
       </div>
 
       {selectedRows.length > 0 && (
-        <div className="flex items-center gap-2 mb-4">
-          <span className="text-sm text-muted-foreground">
-            {selectedRows.length} selected
-          </span>
-          <Button
-            variant="destructive"
-            size="sm"
-            onClick={handleBulkDelete}
-            disabled={isDeleting}
-          >
+        <div className="mb-4 flex items-center gap-2">
+          <span className="text-muted-foreground text-sm">{selectedRows.length} selected</span>
+          <Button variant="destructive" size="sm" onClick={handleBulkDelete} disabled={isDeleting}>
             <Trash2 className="mr-2 h-4 w-4" />
             Eliminar seleccionados
           </Button>
@@ -396,7 +392,7 @@ export function InvoiceItemsClient({ initialItems, currency = 'USD' }: InvoiceIt
 
       {/* Create Item Dialog */}
       <Dialog open={createOpen} onOpenChange={setCreateOpen}>
-        <DialogContent className="!flex !flex-col !max-w-[860px] !max-h-[90vh] !p-0 !gap-0 overflow-hidden">
+        <DialogContent className="!flex !max-h-[90vh] !max-w-[860px] !flex-col !gap-0 overflow-hidden !p-0">
           <div className="p-6 pb-4">
             <DialogHeader className="space-y-1">
               <DialogTitle>Nuevo concepto de factura</DialogTitle>
@@ -406,8 +402,8 @@ export function InvoiceItemsClient({ initialItems, currency = 'USD' }: InvoiceIt
             </DialogHeader>
           </div>
           <Separator />
-          <div className="flex-1 overflow-y-auto bg-muted/20">
-            <div className="p-6 space-y-5">
+          <div className="bg-muted/20 flex-1 overflow-y-auto">
+            <div className="space-y-5 p-6">
               <div className="space-y-2">
                 <Label htmlFor="create-name">Nombre</Label>
                 <Input
@@ -459,21 +455,22 @@ export function InvoiceItemsClient({ initialItems, currency = 'USD' }: InvoiceIt
               <div className="flex items-center justify-between rounded-lg border p-4">
                 <div className="space-y-0.5">
                   <Label>Gravado</Label>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-muted-foreground text-sm">
                     Apply tax to this line item on invoices.
                   </p>
                 </div>
-                <Switch
-                  checked={createTaxable}
-                  onCheckedChange={setCreateTaxable}
-                />
+                <Switch checked={createTaxable} onCheckedChange={setCreateTaxable} />
               </div>
               <div className="flex items-center gap-2 pt-1">
                 <Button onClick={handleCreate} disabled={isCreating}>
                   {isCreating && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                   Create
                 </Button>
-                <Button variant="outline" onClick={() => setCreateOpen(false)} disabled={isCreating}>
+                <Button
+                  variant="outline"
+                  onClick={() => setCreateOpen(false)}
+                  disabled={isCreating}
+                >
                   Cancelar
                 </Button>
               </div>
@@ -484,7 +481,7 @@ export function InvoiceItemsClient({ initialItems, currency = 'USD' }: InvoiceIt
 
       {/* Edit Item Dialog */}
       <Dialog open={!!editingItem} onOpenChange={(open) => !open && handleCloseEdit()}>
-        <DialogContent className="!flex !flex-col !max-w-[860px] !max-h-[90vh] !p-0 !gap-0 overflow-hidden">
+        <DialogContent className="!flex !max-h-[90vh] !max-w-[860px] !flex-col !gap-0 overflow-hidden !p-0">
           <div className="p-6 pb-4">
             <DialogHeader className="space-y-1">
               <DialogTitle>Editar concepto de factura</DialogTitle>
@@ -494,18 +491,18 @@ export function InvoiceItemsClient({ initialItems, currency = 'USD' }: InvoiceIt
             </DialogHeader>
           </div>
           <Separator />
-          <div className="flex-1 overflow-y-auto bg-muted/20">
-            <div className="p-6 space-y-5">
+          <div className="bg-muted/20 flex-1 overflow-y-auto">
+            <div className="space-y-5 p-6">
               <div className="flex items-center justify-between gap-4">
                 <input
                   value={editName}
                   onChange={(e) => setEditName(e.target.value)}
-                  className="text-base font-semibold !bg-transparent outline-none border-none shadow-none flex-1 placeholder:text-muted-foreground/40"
+                  className="placeholder:text-muted-foreground/40 flex-1 border-none !bg-transparent text-base font-semibold shadow-none outline-none"
                   placeholder="Nombre del concepto"
                 />
                 <button
                   type="button"
-                  className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-destructive transition-colors shrink-0"
+                  className="text-muted-foreground hover:text-destructive flex shrink-0 items-center gap-1.5 text-xs transition-colors"
                   onClick={handleDeleteFromDialog}
                 >
                   <Trash2 className="h-3.5 w-3.5" />
@@ -554,14 +551,11 @@ export function InvoiceItemsClient({ initialItems, currency = 'USD' }: InvoiceIt
               <div className="flex items-center justify-between rounded-lg border p-4">
                 <div className="space-y-0.5">
                   <Label>Gravado</Label>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-muted-foreground text-sm">
                     Apply tax to this line item on invoices.
                   </p>
                 </div>
-                <Switch
-                  checked={editTaxable}
-                  onCheckedChange={setEditTaxable}
-                />
+                <Switch checked={editTaxable} onCheckedChange={setEditTaxable} />
               </div>
               <div className="flex items-center gap-2 pt-1">
                 <Button onClick={handleSaveItem} disabled={isSaving}>
@@ -583,8 +577,7 @@ export function InvoiceItemsClient({ initialItems, currency = 'USD' }: InvoiceIt
           <AlertDialogHeader>
             <AlertDialogTitle>Eliminar concepto</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete this invoice item? This action
-              cannot be undone.
+              Are you sure you want to delete this invoice item? This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

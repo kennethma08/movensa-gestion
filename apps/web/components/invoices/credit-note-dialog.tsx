@@ -62,11 +62,13 @@ export function CreditNoteDialog(props: CreditNoteDialogProps) {
     setLineItems(lineItems.filter((_, i) => i !== index));
   };
 
-  const handleLineItemChange = (index: number, field: keyof LineItemInput, value: string | number) => {
+  const handleLineItemChange = (
+    index: number,
+    field: keyof LineItemInput,
+    value: string | number
+  ) => {
     setLineItems((prev) =>
-      prev.map((item, i) =>
-        i === index ? { ...item, [field]: value } as LineItemInput : item
-      )
+      prev.map((item, i) => (i === index ? ({ ...item, [field]: value } as LineItemInput) : item))
     );
   };
 
@@ -120,14 +122,16 @@ export function CreditNoteDialog(props: CreditNoteDialogProps) {
   };
 
   const formatCurrency = (amount: number) => {
-    const parts = new Intl.NumberFormat('en-US', {
+    const parts = new Intl.NumberFormat('es-CR', {
       style: 'currency',
       currency: props.currency || 'USD',
     }).formatToParts(amount);
-    return parts.map((p, i) => {
-      if (p.type === 'currency' && parts[i + 1]?.type !== 'literal') return p.value + ' ';
-      return p.value;
-    }).join('');
+    return parts
+      .map((p, i) => {
+        if (p.type === 'currency' && parts[i + 1]?.type !== 'literal') return p.value + ' ';
+        return p.value;
+      })
+      .join('');
   };
 
   return (
@@ -137,11 +141,12 @@ export function CreditNoteDialog(props: CreditNoteDialogProps) {
           Emitir nota de crédito
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Crear nota de crédito</DialogTitle>
           <DialogDescription>
-            Emita una nota de crédito asociada a esta factura y conserve el registro formal del ajuste.
+            Emita una nota de crédito asociada a esta factura y conserve el registro formal del
+            ajuste.
           </DialogDescription>
         </DialogHeader>
 
@@ -158,7 +163,7 @@ export function CreditNoteDialog(props: CreditNoteDialogProps) {
           </div>
 
           <div>
-            <div className="flex items-center justify-between mb-2">
+            <div className="mb-2 flex items-center justify-between">
               <Label>Líneas de detalle</Label>
               <Button type="button" variant="outline" size="sm" onClick={handleAddLineItem}>
                 <Plus className="mr-1 h-3 w-3" />
@@ -187,7 +192,9 @@ export function CreditNoteDialog(props: CreditNoteDialogProps) {
                           min="0"
                           step="0.01"
                           value={item.quantity}
-                          onChange={(e) => handleLineItemChange(index, 'quantity', parseFloat(e.target.value) || 0)}
+                          onChange={(e) =>
+                            handleLineItemChange(index, 'quantity', parseFloat(e.target.value) || 0)
+                          }
                         />
                       </div>
                       <div className="w-32">
@@ -197,12 +204,14 @@ export function CreditNoteDialog(props: CreditNoteDialogProps) {
                           min="0"
                           step="0.01"
                           value={item.rate}
-                          onChange={(e) => handleLineItemChange(index, 'rate', parseFloat(e.target.value) || 0)}
+                          onChange={(e) =>
+                            handleLineItemChange(index, 'rate', parseFloat(e.target.value) || 0)
+                          }
                         />
                       </div>
                       <div className="w-32">
                         <Label className="text-xs">Importe</Label>
-                        <div className="flex items-center h-10 px-3 text-sm font-medium text-muted-foreground">
+                        <div className="text-muted-foreground flex h-10 items-center px-3 text-sm font-medium">
                           {formatCurrency(Math.round(item.quantity * item.rate * 100) / 100)}
                         </div>
                       </div>
@@ -213,7 +222,7 @@ export function CreditNoteDialog(props: CreditNoteDialogProps) {
                       type="button"
                       variant="ghost"
                       size="icon"
-                      className="shrink-0 text-muted-foreground hover:text-destructive"
+                      className="text-muted-foreground hover:text-destructive shrink-0"
                       onClick={() => handleRemoveLineItem(index)}
                     >
                       <Trash2 className="h-4 w-4" />
@@ -223,7 +232,7 @@ export function CreditNoteDialog(props: CreditNoteDialogProps) {
               ))}
             </div>
             <div className="mt-3 text-right">
-              <span className="text-sm text-muted-foreground">Total: </span>
+              <span className="text-muted-foreground text-sm">Total: </span>
               <span className="text-lg font-bold">{formatCurrency(totalAmount)}</span>
             </div>
           </div>

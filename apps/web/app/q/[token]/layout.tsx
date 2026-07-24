@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'View Quote',
-  description: 'View and respond to your quote',
+  title: 'Ver cotización',
+  description: 'Revise, descargue y responda su cotización',
   robots: {
     index: false,
     follow: false,
@@ -11,8 +11,6 @@ export const metadata: Metadata = {
 
 export default function QuotePortalLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-muted/30 to-background">
-      {children}
-    </div>
+    <div className="from-muted/30 to-background min-h-screen bg-gradient-to-b">{children}</div>
   );
 }

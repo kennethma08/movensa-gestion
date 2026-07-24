@@ -2,18 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
-import {
-  Elements,
-  PaymentElement,
-  useStripe,
-  useElements,
-} from '@stripe/react-stripe-js';
+import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { Loader2, CreditCard } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
-);
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
 interface PaymentFormProps {
   invoiceId: string;
@@ -25,14 +18,16 @@ interface PaymentFormProps {
 }
 
 function formatCurrency(amount: number, currency: string = 'USD'): string {
-  const parts = new Intl.NumberFormat('en-US', {
+  const parts = new Intl.NumberFormat('es-CR', {
     style: 'currency',
     currency,
   }).formatToParts(amount);
-  return parts.map((p, i) => {
-    if (p.type === 'currency' && parts[i + 1]?.type !== 'literal') return p.value + ' ';
-    return p.value;
-  }).join('');
+  return parts
+    .map((p, i) => {
+      if (p.type === 'currency' && parts[i + 1]?.type !== 'literal') return p.value + ' ';
+      return p.value;
+    })
+    .join('');
 }
 
 function CheckoutForm({
@@ -75,11 +70,11 @@ function CheckoutForm({
     <form onSubmit={handleSubmit} className="space-y-4">
       <PaymentElement />
       {error && (
-        <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-3">
-          <p className="text-sm text-destructive">{error}</p>
+        <div className="border-destructive/50 bg-destructive/10 rounded-lg border p-3">
+          <p className="text-destructive text-sm">{error}</p>
         </div>
       )}
-      <div className="flex gap-3 justify-end">
+      <div className="flex justify-end gap-3">
         <Button type="button" variant="outline" onClick={onCancel} disabled={isProcessing}>
           Cancelar
         </Button>
@@ -131,14 +126,16 @@ export function PaymentForm(props: PaymentFormProps) {
         setError('No se pudo iniciar el pago. Inténtelo nuevamente.');
         setIsLoading(false);
       });
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [props.invoiceId, props.accessToken]);
 
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-8">
-        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-        <span className="ml-2 text-muted-foreground">Preparando el pago...</span>
+        <Loader2 className="text-muted-foreground h-6 w-6 animate-spin" />
+        <span className="text-muted-foreground ml-2">Preparando el pago...</span>
       </div>
     );
   }
@@ -146,8 +143,8 @@ export function PaymentForm(props: PaymentFormProps) {
   if (error) {
     return (
       <div className="space-y-4">
-        <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-4">
-          <p className="text-sm text-destructive">{error}</p>
+        <div className="border-destructive/50 bg-destructive/10 rounded-lg border p-4">
+          <p className="text-destructive text-sm">{error}</p>
         </div>
         <Button variant="outline" onClick={props.onCancel}>
           Cancelar

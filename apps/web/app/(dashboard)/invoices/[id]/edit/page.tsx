@@ -49,7 +49,7 @@ export default async function InvoiceEditPage({ params }: InvoiceEditPageProps) 
       clients={clients}
       taxRates={taxRates}
       currency={invoice.currency}
-      businessName={businessProfile?.businessName || 'Your Business'}
+      businessName={businessProfile?.businessName || 'Grupo Movensa'}
     />
   );
 }

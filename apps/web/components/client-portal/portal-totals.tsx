@@ -15,14 +15,16 @@ interface PortalTotalsProps {
 }
 
 function formatCurrency(amount: number, currency: string): string {
-  const parts = new Intl.NumberFormat('en-US', {
+  const parts = new Intl.NumberFormat('es-CR', {
     style: 'currency',
     currency,
   }).formatToParts(amount);
-  return parts.map((p, i) => {
-    if (p.type === 'currency' && parts[i + 1]?.type !== 'literal') return p.value + ' ';
-    return p.value;
-  }).join('');
+  return parts
+    .map((p, i) => {
+      if (p.type === 'currency' && parts[i + 1]?.type !== 'literal') return p.value + ' ';
+      return p.value;
+    })
+    .join('');
 }
 
 export function PortalTotals({
@@ -83,8 +85,10 @@ export function PortalTotals({
       {deposit?.required && deposit.amount > 0 && (
         <div className="mt-3 rounded-lg border border-dashed p-3">
           <p className="text-sm font-medium">Depósito requerido</p>
-          <p className="text-xs text-muted-foreground">
-            {deposit.type === 'percentage' ? `${deposit.value}%` : formatCurrency(deposit.value, currency)}{' '}
+          <p className="text-muted-foreground text-xs">
+            {deposit.type === 'percentage'
+              ? `${deposit.value}%`
+              : formatCurrency(deposit.value, currency)}{' '}
             ({formatCurrency(deposit.amount, currency)}) due upon acceptance
           </p>
         </div>

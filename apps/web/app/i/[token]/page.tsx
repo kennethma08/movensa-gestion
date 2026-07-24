@@ -1,7 +1,11 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { getInvoiceByAccessToken, trackInvoiceView, type PublicInvoiceData } from '@/lib/invoices/portal-actions';
+import {
+  getInvoiceByAccessToken,
+  trackInvoiceView,
+  type PublicInvoiceData,
+} from '@/lib/invoices/portal-actions';
 import { InvoicePortalView } from '@/components/client-portal/invoice-portal-view';
 import { InvoiceStatusBadge } from '@/components/client-portal/invoice-portal-header';
 import { InvoicePortalSkeleton } from '@/components/client-portal/invoice-portal-skeleton';
@@ -26,7 +30,7 @@ export default function InvoicePortalPage({ params }: InvoicePortalPageProps) {
       const result = await getInvoiceByAccessToken(token);
 
       if (!result.success) {
-        setError('error' in result ? String(result.error) : 'Invoice not found');
+        setError('error' in result ? String(result.error) : 'Factura no encontrada');
         setLoading(false);
         return;
       }
@@ -48,15 +52,25 @@ export default function InvoicePortalPage({ params }: InvoicePortalPageProps) {
   if (error || !invoice) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-gray-100/80 dark:bg-neutral-950">
-        <div className="mx-auto max-w-md rounded-lg border bg-card p-8 text-center">
-          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-muted">
-            <svg className="h-6 w-6 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        <div className="bg-card mx-auto max-w-md rounded-lg border p-8 text-center">
+          <div className="bg-muted mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full">
+            <svg
+              className="text-muted-foreground h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              />
             </svg>
           </div>
           <h1 className="text-xl font-semibold">Factura no encontrada</h1>
-          <p className="mt-2 text-sm text-muted-foreground">
-            This invoice may have been deleted or the link is invalid.
+          <p className="text-muted-foreground mt-2 text-sm">
+            Esta factura pudo haber sido eliminada o el enlace no es válido.
           </p>
         </div>
       </div>

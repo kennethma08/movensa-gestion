@@ -6,16 +6,31 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { DataTableColumnHeader } from '@/components/ui/data-table/data-table-column-header';
 import { DataTableRowActions, RowAction } from '@/components/ui/data-table/data-table-row-actions';
 import { InvoiceListItem } from '@/lib/invoices/types';
-import { AlertCircle, Pencil, Send, Link2, Copy, Download, Banknote, RefreshCw, Trash2 } from 'lucide-react';
+import {
+  AlertCircle,
+  Pencil,
+  Send,
+  Link2,
+  Copy,
+  Download,
+  Banknote,
+  RefreshCw,
+  Trash2,
+} from 'lucide-react';
 
 const statusColors: Record<string, string> = {
-  draft: 'border-gray-300 text-gray-600 bg-gray-50 dark:border-gray-600 dark:text-gray-400 dark:bg-gray-900',
+  draft:
+    'border-gray-300 text-gray-600 bg-gray-50 dark:border-gray-600 dark:text-gray-400 dark:bg-gray-900',
   sent: 'border-blue-300 text-blue-600 bg-blue-50 dark:border-blue-600 dark:text-blue-400 dark:bg-blue-950',
-  viewed: 'border-yellow-300 text-yellow-700 bg-yellow-50 dark:border-yellow-600 dark:text-yellow-400 dark:bg-yellow-950',
-  partial: 'border-amber-300 text-amber-600 bg-amber-50 dark:border-amber-600 dark:text-amber-400 dark:bg-amber-950',
+  viewed:
+    'border-yellow-300 text-yellow-700 bg-yellow-50 dark:border-yellow-600 dark:text-yellow-400 dark:bg-yellow-950',
+  partial:
+    'border-amber-300 text-amber-600 bg-amber-50 dark:border-amber-600 dark:text-amber-400 dark:bg-amber-950',
   paid: 'border-green-300 text-green-600 bg-green-50 dark:border-green-600 dark:text-green-400 dark:bg-green-950',
-  overdue: 'border-red-300 text-red-600 bg-red-50 dark:border-red-600 dark:text-red-400 dark:bg-red-950',
-  voided: 'border-gray-300 text-gray-500 bg-gray-100 dark:border-gray-600 dark:text-gray-400 dark:bg-gray-900',
+  overdue:
+    'border-red-300 text-red-600 bg-red-50 dark:border-red-600 dark:text-red-400 dark:bg-red-950',
+  voided:
+    'border-gray-300 text-gray-500 bg-gray-100 dark:border-gray-600 dark:text-gray-400 dark:bg-gray-900',
 };
 
 const statusLabels: Record<string, string> = {
@@ -29,14 +44,16 @@ const statusLabels: Record<string, string> = {
 };
 
 function formatCurrency(amount: number, currency: string = 'USD'): string {
-  const parts = new Intl.NumberFormat('en-US', {
+  const parts = new Intl.NumberFormat('es-CR', {
     style: 'currency',
     currency,
   }).formatToParts(amount);
-  return parts.map((p, i) => {
-    if (p.type === 'currency' && parts[i + 1]?.type !== 'literal') return p.value + ' ';
-    return p.value;
-  }).join('');
+  return parts
+    .map((p, i) => {
+      if (p.type === 'currency' && parts[i + 1]?.type !== 'literal') return p.value + ' ';
+      return p.value;
+    })
+    .join('');
 }
 
 function formatDate(dateString: string): string {
@@ -60,10 +77,19 @@ interface InvoiceColumnsOptions {
   recurringInvoiceIds?: Set<string>;
 }
 
-export function getInvoiceColumns(options: InvoiceColumnsOptions = {}): ColumnDef<InvoiceListItem>[] {
+export function getInvoiceColumns(
+  options: InvoiceColumnsOptions = {}
+): ColumnDef<InvoiceListItem>[] {
   const {
-    onView, onEdit, onDelete, onDuplicate, onDownload,
-    onSend, onCopyLink, onRecordPayment, onRecurringSettings,
+    onView,
+    onEdit,
+    onDelete,
+    onDuplicate,
+    onDownload,
+    onSend,
+    onCopyLink,
+    onRecordPayment,
+    onRecurringSettings,
     recurringInvoiceIds,
   } = options;
 
@@ -95,16 +121,14 @@ export function getInvoiceColumns(options: InvoiceColumnsOptions = {}): ColumnDe
     {
       id: 'Invoice ID',
       accessorKey: 'invoiceNumber',
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Factura" />
-      ),
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Factura" />,
       cell: ({ row }) => {
         const isRecurring = recurringInvoiceIds?.has(row.original.id);
         return (
           <div className="flex items-center gap-1.5">
             <button
               type="button"
-              className="font-medium text-primary hover:underline text-left"
+              className="text-primary text-left font-medium hover:underline"
               onClick={(e) => {
                 e.stopPropagation();
                 onView?.(row.original);
@@ -114,7 +138,7 @@ export function getInvoiceColumns(options: InvoiceColumnsOptions = {}): ColumnDe
             </button>
             {isRecurring && (
               <span title="Factura recurrente">
-                <RefreshCw className="h-3.5 w-3.5 text-muted-foreground" />
+                <RefreshCw className="text-muted-foreground h-3.5 w-3.5" />
               </span>
             )}
           </div>
@@ -123,9 +147,7 @@ export function getInvoiceColumns(options: InvoiceColumnsOptions = {}): ColumnDe
     },
     {
       accessorKey: 'status',
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Estado" />
-      ),
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Estado" />,
       cell: ({ row }) => {
         const status = row.getValue('status') as string;
         const isOverdue = row.original.isOverdue && status !== 'paid' && status !== 'voided';
@@ -152,9 +174,7 @@ export function getInvoiceColumns(options: InvoiceColumnsOptions = {}): ColumnDe
     },
     {
       accessorKey: 'client',
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Cliente" />
-      ),
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Cliente" />,
       cell: ({ row }) => {
         const client = row.original.client;
         const initials = client.name
@@ -166,14 +186,12 @@ export function getInvoiceColumns(options: InvoiceColumnsOptions = {}): ColumnDe
 
         return (
           <div className="flex items-center gap-3">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-xs font-medium text-primary">
+            <div className="bg-primary/10 text-primary flex h-8 w-8 items-center justify-center rounded-full text-xs font-medium">
               {initials}
             </div>
             <div>
               <div className="font-medium">{client.name}</div>
-              {client.email && (
-                <div className="text-sm text-muted-foreground">{client.email}</div>
-              )}
+              {client.email && <div className="text-muted-foreground text-sm">{client.email}</div>}
             </div>
           </div>
         );
@@ -189,9 +207,7 @@ export function getInvoiceColumns(options: InvoiceColumnsOptions = {}): ColumnDe
     },
     {
       accessorKey: 'total',
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Monto" />
-      ),
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Monto" />,
       cell: ({ row }) => {
         const total = row.getValue('total') as number;
         const amountDue = row.original.amountDue;
@@ -218,15 +234,9 @@ export function getInvoiceColumns(options: InvoiceColumnsOptions = {}): ColumnDe
     {
       id: 'Issued Date',
       accessorKey: 'issueDate',
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Fecha de emisión" />
-      ),
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Fecha de emisión" />,
       cell: ({ row }) => {
-        return (
-          <div className="text-muted-foreground">
-            {formatDate(row.original.issueDate)}
-          </div>
-        );
+        return <div className="text-muted-foreground">{formatDate(row.original.issueDate)}</div>;
       },
     },
     {
@@ -236,11 +246,7 @@ export function getInvoiceColumns(options: InvoiceColumnsOptions = {}): ColumnDe
         <DataTableColumnHeader column={column} title="Fecha de vencimiento" />
       ),
       cell: ({ row }) => {
-        return (
-          <div className="text-muted-foreground">
-            {formatDate(row.original.dueDate)}
-          </div>
-        );
+        return <div className="text-muted-foreground">{formatDate(row.original.dueDate)}</div>;
       },
     },
     {
@@ -312,12 +318,7 @@ export function getInvoiceColumns(options: InvoiceColumnsOptions = {}): ColumnDe
           });
         }
 
-        return (
-          <DataTableRowActions
-            row={invoice}
-            actions={actions}
-          />
-        );
+        return <DataTableRowActions row={invoice} actions={actions} />;
       },
     },
   ];

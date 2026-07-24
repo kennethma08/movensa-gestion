@@ -30,32 +30,32 @@ interface ContractSigningViewProps {
 
 const statusConfig: Record<string, { label: string; className: string; icon: React.ReactNode }> = {
   draft: {
-    label: 'Draft',
+    label: 'Borrador',
     className: 'border-gray-300 text-gray-600 bg-gray-50',
     icon: <FileText className="h-3 w-3" />,
   },
   sent: {
-    label: 'Sent',
+    label: 'Enviado',
     className: 'border-blue-300 text-blue-600 bg-blue-50',
     icon: <Mail className="h-3 w-3" />,
   },
   viewed: {
-    label: 'Viewed',
+    label: 'Visto',
     className: 'border-yellow-300 text-yellow-700 bg-yellow-50',
     icon: <Eye className="h-3 w-3" />,
   },
   pending: {
-    label: 'Pending',
+    label: 'Pendiente',
     className: 'border-amber-300 text-amber-600 bg-amber-50',
     icon: <Hourglass className="h-3 w-3" />,
   },
   signed: {
-    label: 'Signed',
+    label: 'Firmado',
     className: 'border-green-300 text-green-600 bg-green-50',
     icon: <CheckCircle2 className="h-3 w-3" />,
   },
   expired: {
-    label: 'Expired',
+    label: 'Vencido',
     className: 'border-red-300 text-red-600 bg-red-50',
     icon: <Clock className="h-3 w-3" />,
   },
@@ -89,7 +89,9 @@ export function ContractSigningView({
         router.refresh();
       } catch (error) {
         console.error('Failed to sign contract:', error);
-        setSignError('No se pudo firmar el contrato. Inténtelo nuevamente o comuníquese directamente con la empresa.');
+        setSignError(
+          'No se pudo firmar el contrato. Inténtelo nuevamente o comuníquese directamente con la empresa.'
+        );
       }
     });
   };
@@ -97,21 +99,18 @@ export function ContractSigningView({
   const showSignedView = isSigned || contract.status === 'signed' || contract.status === 'pending';
 
   return (
-    <div className="flex min-h-screen items-start justify-center bg-gray-100/80 px-4 py-8 dark:bg-neutral-950 sm:py-12">
-      <div className="w-full max-w-[860px] overflow-hidden rounded-2xl border bg-card shadow-lg">
+    <div className="flex min-h-screen items-start justify-center bg-gray-100/80 px-4 py-8 sm:py-12 dark:bg-neutral-950">
+      <div className="bg-card w-full max-w-[860px] overflow-hidden rounded-2xl border shadow-lg">
         {/* Header */}
         <div className="p-6 pb-4">
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-lg font-semibold">{contract.contractName}</h2>
-              <p className="text-sm text-muted-foreground">
-                For {contract.clientName} &middot; Created {formatDate(contract.createdAt)}
+              <p className="text-muted-foreground text-sm">
+                Para {contract.clientName} &middot; Creado el {formatDate(contract.createdAt)}
               </p>
             </div>
-            <Badge
-              variant="outline"
-              className={`gap-1 ${config.className}`}
-            >
+            <Badge variant="outline" className={`gap-1 ${config.className}`}>
               {config.icon}
               {config.label}
             </Badge>
@@ -122,43 +121,45 @@ export function ContractSigningView({
 
         {/* Body */}
         <div className="bg-muted/20">
-          <div className="p-6 space-y-6">
+          <div className="space-y-6 p-6">
             {/* Contract Details */}
             <div>
-              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-3">Detalles</p>
+              <p className="text-muted-foreground mb-3 text-xs font-semibold uppercase tracking-widest">
+                Detalles
+              </p>
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 <div>
-                  <p className="text-xs text-muted-foreground mb-0.5">Cliente</p>
-                  <p className="font-medium text-sm">{contract.clientName}</p>
+                  <p className="text-muted-foreground mb-0.5 text-xs">Cliente</p>
+                  <p className="text-sm font-medium">{contract.clientName}</p>
                 </div>
                 {contract.quoteName && (
                   <div>
-                    <p className="text-xs text-muted-foreground mb-0.5">Cotización relacionada</p>
-                    <p className="font-medium text-sm">{contract.quoteName}</p>
+                    <p className="text-muted-foreground mb-0.5 text-xs">Cotización relacionada</p>
+                    <p className="text-sm font-medium">{contract.quoteName}</p>
                   </div>
                 )}
                 <div>
-                  <p className="text-xs text-muted-foreground mb-0.5">Enviado</p>
-                  <p className="font-medium text-sm">
+                  <p className="text-muted-foreground mb-0.5 text-xs">Enviado</p>
+                  <p className="text-sm font-medium">
                     {contract.sentAt ? formatDate(contract.sentAt) : 'No enviado'}
                   </p>
                 </div>
                 <div>
-                  <p className="text-xs text-muted-foreground mb-0.5">Visto</p>
-                  <p className="font-medium text-sm">
+                  <p className="text-muted-foreground mb-0.5 text-xs">Visto</p>
+                  <p className="text-sm font-medium">
                     {contract.viewedAt ? formatDate(contract.viewedAt) : 'No visto'}
                   </p>
                 </div>
                 <div>
-                  <p className="text-xs text-muted-foreground mb-0.5">Firmado</p>
-                  <p className="font-medium text-sm">
+                  <p className="text-muted-foreground mb-0.5 text-xs">Firmado</p>
+                  <p className="text-sm font-medium">
                     {contract.signedAt ? formatDate(contract.signedAt) : 'No firmado'}
                   </p>
                 </div>
                 {contract.signerIpAddress && (
                   <div>
-                    <p className="text-xs text-muted-foreground mb-0.5">IP del cliente</p>
-                    <p className="font-medium text-sm font-mono">{contract.signerIpAddress}</p>
+                    <p className="text-muted-foreground mb-0.5 text-xs">IP del cliente</p>
+                    <p className="font-mono text-sm font-medium">{contract.signerIpAddress}</p>
                   </div>
                 )}
               </div>
@@ -169,18 +170,22 @@ export function ContractSigningView({
               <>
                 <Separator className="bg-border/60" />
                 <div>
-                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-3">Firmas</p>
+                  <p className="text-muted-foreground mb-3 text-xs font-semibold uppercase tracking-widest">
+                    Firmas
+                  </p>
                   <div className="grid gap-4 sm:grid-cols-2">
                     {/* Client Signature */}
-                    <div className="rounded-lg border bg-background p-4">
-                      <p className="text-xs font-medium text-muted-foreground mb-2">Firma del cliente</p>
+                    <div className="bg-background rounded-lg border p-4">
+                      <p className="text-muted-foreground mb-2 text-xs font-medium">
+                        Firma del cliente
+                      </p>
                       {contract.signatureData ? (
                         <>
                           {contract.signatureData.type === 'drawn' ? (
                             // eslint-disable-next-line @next/next/no-img-element
                             <img
                               src={contract.signatureData.value}
-                              alt="Client Signature"
+                              alt="Firma del cliente"
                               className="max-h-16"
                             />
                           ) : (
@@ -191,28 +196,30 @@ export function ContractSigningView({
                               {contract.signatureData.value}
                             </p>
                           )}
-                          <p className="text-xs text-muted-foreground mt-2">
+                          <p className="text-muted-foreground mt-2 text-xs">
                             Firmado por {contract.signatureData.name} el{' '}
                             {formatDate(new Date(contract.signatureData.date))}
                           </p>
                         </>
                       ) : (
-                        <div className="h-16 border-2 border-dashed rounded flex items-center justify-center text-sm text-muted-foreground">
+                        <div className="text-muted-foreground flex h-16 items-center justify-center rounded border-2 border-dashed text-sm">
                           Firma pendiente
                         </div>
                       )}
                     </div>
 
                     {/* Business Signature */}
-                    <div className="rounded-lg border bg-background p-4">
-                      <p className="text-xs font-medium text-muted-foreground mb-2">Firma de la empresa</p>
+                    <div className="bg-background rounded-lg border p-4">
+                      <p className="text-muted-foreground mb-2 text-xs font-medium">
+                        Firma de la empresa
+                      </p>
                       {contract.countersignatureData ? (
                         <>
                           {contract.countersignatureData.type === 'drawn' ? (
                             // eslint-disable-next-line @next/next/no-img-element
                             <img
                               src={contract.countersignatureData.value}
-                              alt="Business Signature"
+                              alt="Firma de la empresa"
                               className="max-h-16"
                             />
                           ) : (
@@ -223,13 +230,13 @@ export function ContractSigningView({
                               {contract.countersignatureData.value}
                             </p>
                           )}
-                          <p className="text-xs text-muted-foreground mt-2">
+                          <p className="text-muted-foreground mt-2 text-xs">
                             Contrafirmado por {contract.countersignatureData.name} el{' '}
                             {formatDate(new Date(contract.countersignatureData.date))}
                           </p>
                         </>
                       ) : (
-                        <div className="h-16 border-2 border-dashed rounded flex items-center justify-center text-sm text-muted-foreground">
+                        <div className="text-muted-foreground flex h-16 items-center justify-center rounded border-2 border-dashed text-sm">
                           Contrafirma pendiente
                         </div>
                       )}
@@ -243,13 +250,11 @@ export function ContractSigningView({
 
             {/* Contract Content */}
             <div>
-              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-3">Contenido del contrato</p>
-              <div className="rounded-lg border bg-background p-4 [&_.ProseMirror]:!min-h-[100px] [&_.ProseMirror]:!max-h-[400px] [&_.ProseMirror]:overflow-y-auto [&_.prose]:!prose-sm">
-                <ContractEditor
-                  key={contract.id}
-                  content={contract.content}
-                  editable={false}
-                />
+              <p className="text-muted-foreground mb-3 text-xs font-semibold uppercase tracking-widest">
+                Contenido del contrato
+              </p>
+              <div className="bg-background [&_.prose]:!prose-sm rounded-lg border p-4 [&_.ProseMirror]:!max-h-[400px] [&_.ProseMirror]:!min-h-[100px] [&_.ProseMirror]:overflow-y-auto">
+                <ContractEditor key={contract.id} content={contract.content} editable={false} />
               </div>
             </div>
 
@@ -271,11 +276,10 @@ export function ContractSigningView({
               <>
                 <Separator className="bg-border/60" />
                 <div>
-                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-3">Su firma</p>
-                  <SignaturePad
-                    onSignatureChange={setSignature}
-                    signerName={contract.clientName}
-                  />
+                  <p className="text-muted-foreground mb-3 text-xs font-semibold uppercase tracking-widest">
+                    Su firma
+                  </p>
+                  <SignaturePad onSignatureChange={setSignature} signerName={contract.clientName} />
                 </div>
               </>
             )}
@@ -288,19 +292,19 @@ export function ContractSigningView({
             <Separator />
             <div className="p-4">
               {signError && (
-                <div className="mb-3 rounded-lg border border-destructive/50 bg-destructive/10 p-3">
-                  <p className="text-sm text-destructive">{signError}</p>
+                <div className="border-destructive/50 bg-destructive/10 mb-3 rounded-lg border p-3">
+                  <p className="text-destructive text-sm">{signError}</p>
                 </div>
               )}
               <button
                 onClick={handleSign}
                 disabled={!signature || isPending}
-                className="flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-primary text-sm font-medium text-primary-foreground transition-colors disabled:opacity-50"
+                className="bg-primary text-primary-foreground flex h-12 w-full items-center justify-center gap-2 rounded-lg text-sm font-medium transition-colors disabled:opacity-50"
               >
                 {isPending ? (
                   <>
                     <Loader2 className="h-4 w-4 animate-spin" />
-                    Signing...
+                    Firmando...
                   </>
                 ) : (
                   <>
@@ -309,22 +313,22 @@ export function ContractSigningView({
                   </>
                 )}
               </button>
-              <p className="mt-3 text-center text-[11px] text-muted-foreground">
-                By signing, you agree to all terms above. Your signature, timestamp,
-                and IP address will be recorded.
+              <p className="text-muted-foreground mt-3 text-center text-[11px]">
+                Al firmar, acepta todos los términos anteriores. Se registrarán su firma, la fecha,
+                la hora y la dirección IP.
               </p>
             </div>
           </>
         )}
 
-        {/* Powered By Footer */}
+        {/* Branded footer */}
         <div className="px-6 pb-5 pt-2">
           <div className="flex items-center justify-center gap-2">
-            <div className="h-px flex-1 bg-border/40" />
-            <p className="whitespace-nowrap text-[10px] text-muted-foreground/50">
-              Powered by Oreko
+            <div className="bg-border/40 h-px flex-1" />
+            <p className="text-muted-foreground/50 whitespace-nowrap text-[10px]">
+              Gestión Grupo Movensa
             </p>
-            <div className="h-px flex-1 bg-border/40" />
+            <div className="bg-border/40 h-px flex-1" />
           </div>
         </div>
       </div>

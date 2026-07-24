@@ -19,10 +19,14 @@ export async function GET(
 ) {
   try {
     // Rate limit PDF downloads
-    const clientIp = _request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || _request.headers.get('x-real-ip') || 'unknown';
+    const clientIp =
+      _request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+      _request.headers.get('x-real-ip') ||
+      'unknown';
     const { checkRateLimit } = await import('@/lib/rate-limit');
     const rl = await checkRateLimit(`pdf-download:${clientIp}`, { limit: 10, windowMs: 60000 });
-    if (rl.limited) return new NextResponse('Too many requests', { status: 429 });
+    if (rl.limited)
+      return new NextResponse('Demasiadas solicitudes. Inténtelo más tarde.', { status: 429 });
 
     const { contractId } = await params;
     const accessToken = _request.nextUrl.searchParams.get('token');
@@ -36,20 +40,20 @@ export async function GET(
         select: { id: true },
       });
       if (!instance) {
-        return new NextResponse('Unauthorized', { status: 401 });
+        return new NextResponse('Acceso no autorizado', { status: 401 });
       }
       data = await getContractPdfDataByToken(accessToken);
     } else {
       // Authenticated user access
       const session = await auth();
       if (!session?.user?.id) {
-        return new NextResponse('Unauthorized', { status: 401 });
+        return new NextResponse('Acceso no autorizado', { status: 401 });
       }
       data = await getContractPdfData(contractId);
     }
 
     if (!data) {
-      return new NextResponse('Contract not found', { status: 404 });
+      return new NextResponse('Contrato no encontrado', { status: 404 });
     }
 
     const html = generateContractPdfHtml(data);
@@ -58,12 +62,12 @@ export async function GET(
       footerTemplate: `
         <div style="width: 100%; font-size: 9px; padding: 5px 15mm; color: #9ca3af; display: flex; justify-content: space-between;">
           <span>${data.contractName}</span>
-          <span>Page <span class="pageNumber"></span> of <span class="totalPages"></span></span>
+          <span>Página <span class="pageNumber"></span> de <span class="totalPages"></span></span>
         </div>
       `,
     });
 
-    const filename = `Contract-${data.contractName.replace(/[^a-zA-Z0-9\-_ ]/g, '').replace(/\s+/g, '-')}.pdf`;
+    const filename = `Contrato-${data.contractName.replace(/[^a-zA-Z0-9\-_ ]/g, '').replace(/\s+/g, '-')}.pdf`;
 
     return new NextResponse(new Uint8Array(pdfBuffer), {
       headers: {
@@ -76,6 +80,6 @@ export async function GET(
     });
   } catch (error) {
     logger.error({ err: error }, 'Error generating contract PDF');
-    return new NextResponse('Failed to generate PDF', { status: 500 });
+    return new NextResponse('No se pudo generar el PDF', { status: 500 });
   }
 }

@@ -69,9 +69,7 @@ export function SignaturePad({ onChange, className }: SignaturePadProps) {
     setHasDrawn(true);
   };
 
-  const draw = (
-    e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>
-  ) => {
+  const draw = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
     if (!isDrawing) return;
     const ctx = canvasRef.current?.getContext('2d');
     if (!ctx) return;
@@ -127,40 +125,37 @@ export function SignaturePad({ onChange, className }: SignaturePadProps) {
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="typed" className="gap-2">
             <Type className="h-4 w-4" />
-            Type
+            Escribir
           </TabsTrigger>
           <TabsTrigger value="drawn" className="gap-2">
             <PenTool className="h-4 w-4" />
-            Draw
+            Dibujar
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="typed" className="space-y-3 mt-3">
+        <TabsContent value="typed" className="mt-3 space-y-3">
           <div className="space-y-2">
             <Label htmlFor="typed-sig">Escriba su firma</Label>
             <Input
               id="typed-sig"
               value={typedSignature}
               onChange={(e) => setTypedSignature(e.target.value)}
-              placeholder="Type your signature"
-              className="text-2xl h-14"
+              placeholder="Escriba su firma"
+              className="h-14 text-2xl"
               style={{ fontFamily: "'Brush Script MT', cursive" }}
             />
           </div>
           {typedSignature && (
-            <div className="border rounded-lg p-4 bg-muted/30">
-              <p className="text-xs text-muted-foreground mb-1">Vista previa:</p>
-              <p
-                className="text-3xl"
-                style={{ fontFamily: "'Brush Script MT', cursive" }}
-              >
+            <div className="bg-muted/30 rounded-lg border p-4">
+              <p className="text-muted-foreground mb-1 text-xs">Vista previa:</p>
+              <p className="text-3xl" style={{ fontFamily: "'Brush Script MT', cursive" }}>
                 {typedSignature}
               </p>
             </div>
           )}
         </TabsContent>
 
-        <TabsContent value="drawn" className="space-y-3 mt-3">
+        <TabsContent value="drawn" className="mt-3 space-y-3">
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <Label>Dibuje su firma</Label>
@@ -175,12 +170,12 @@ export function SignaturePad({ onChange, className }: SignaturePadProps) {
                 Limpiar
               </Button>
             </div>
-            <div className="relative overflow-hidden rounded-lg border-2 border-dashed border-primary/30 bg-white">
+            <div className="border-primary/30 relative overflow-hidden rounded-lg border-2 border-dashed bg-white">
               <canvas
                 ref={canvasRef}
                 width={500}
                 height={200}
-                className="w-full h-[200px] cursor-crosshair touch-none"
+                className="h-[200px] w-full cursor-crosshair touch-none"
                 onMouseDown={startDrawing}
                 onMouseMove={draw}
                 onMouseUp={stopDrawing}
@@ -191,9 +186,7 @@ export function SignaturePad({ onChange, className }: SignaturePadProps) {
               />
               {!hasDrawn && (
                 <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-                  <p className="text-sm text-muted-foreground">
-                    Draw your signature here
-                  </p>
+                  <p className="text-muted-foreground text-sm">Dibuje su firma aquí</p>
                 </div>
               )}
             </div>

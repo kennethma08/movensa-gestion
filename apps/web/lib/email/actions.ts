@@ -83,7 +83,9 @@ export async function getEmailTemplateById(id: string): Promise<EmailTemplateDet
 }
 
 // Get active template by type
-export async function getActiveTemplateByType(type: EmailTemplateType): Promise<EmailTemplateDetail | null> {
+export async function getActiveTemplateByType(
+  type: EmailTemplateType
+): Promise<EmailTemplateDetail | null> {
   const { workspaceId } = await getCurrentUserWorkspace();
 
   const template = await prisma.emailTemplate.findFirst({
@@ -275,13 +277,10 @@ function processTemplate(template: string, variables: EmailVariables): string {
   });
 
   // Handle simple conditionals {{#if variable}}...{{/if}}
-  result = result.replace(
-    /{{#if\s+(\w+)}}([\s\S]*?){{\/if}}/g,
-    (_, varName, content) => {
-      const value = variables[varName as keyof EmailVariables];
-      return value ? content : '';
-    }
-  );
+  result = result.replace(/{{#if\s+(\w+)}}([\s\S]*?){{\/if}}/g, (_, varName, content) => {
+    const value = variables[varName as keyof EmailVariables];
+    return value ? content : '';
+  });
 
   return result;
 }
@@ -315,14 +314,23 @@ export async function sendTemplatedEmail(params: {
 
   const processedSubject = processTemplate(subject, variables);
   const processedBody = processTemplate(body, variables);
+  const quotePdfButton =
+    type === 'quote_sent' && variables.quotePdfUrl
+      ? `<p style="margin: 20px 0 0;">
+          <a href="${escapeHtml(String(variables.quotePdfUrl))}" style="border: 1px solid #d1d5db; color: #111827; padding: 11px 20px; text-decoration: none; border-radius: 999px; display: inline-block; font-weight: 700;">
+            Descargar cotización en PDF
+          </a>
+        </p>`
+      : '';
 
   // Wrap body in email layout
   const html = `
-    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+    <div lang="es" style="font-family: Arial, sans-serif; max-width: 620px; margin: 0 auto; color: #232323; line-height: 1.6;">
       ${processedBody}
+      ${processedBody.includes('{{quotePdfUrl}}') || processedBody.includes('Descargar PDF') ? '' : quotePdfButton}
       <hr style="margin: 24px 0; border: none; border-top: 1px solid #eee;" />
-      <p style="color: #666; font-size: 14px;">
-        Sent via Oreko on behalf of ${escapeHtml(String(variables.businessName || ''))}
+      <p style="color: #666; font-size: 13px;">
+        Enviado por ${escapeHtml(String(variables.businessName || 'Grupo Movensa'))}.
       </p>
     </div>
   `;

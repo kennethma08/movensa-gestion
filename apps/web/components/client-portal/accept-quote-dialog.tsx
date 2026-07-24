@@ -45,14 +45,16 @@ export function AcceptQuoteDialog({
   const hasTerms = !!quote.terms;
 
   const formatCurrency = (amount: number) => {
-    const parts = new Intl.NumberFormat('en-US', {
+    const parts = new Intl.NumberFormat('es-CR', {
       style: 'currency',
       currency: quote.currency,
     }).formatToParts(amount);
-    return parts.map((p, i) => {
-      if (p.type === 'currency' && parts[i + 1]?.type !== 'literal') return p.value + ' ';
-      return p.value;
-    }).join('');
+    return parts
+      .map((p, i) => {
+        if (p.type === 'currency' && parts[i + 1]?.type !== 'literal') return p.value + ' ';
+        return p.value;
+      })
+      .join('');
   };
 
   const depositAmount = quote.settings.depositRequired
@@ -64,9 +66,7 @@ export function AcceptQuoteDialog({
     : 0;
 
   const canSubmit =
-    signerName.trim().length > 0 &&
-    (!requiresSignature || signatureData) &&
-    agreedToTerms;
+    signerName.trim().length > 0 && (!requiresSignature || signatureData) && agreedToTerms;
 
   const handleSubmit = async () => {
     if (!canSubmit) return;
@@ -106,36 +106,32 @@ export function AcceptQuoteDialog({
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-lg max-h-[90vh] flex flex-col">
+      <DialogContent className="flex max-h-[90vh] flex-col sm:max-w-lg">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <CheckCircle2 className="h-5 w-5 text-green-600" />
             Aceptar cotización
           </DialogTitle>
           <DialogDescription>
-            Review the details below and sign to accept this quote.
+            Revise los detalles y firme para aceptar esta cotización.
           </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-6 py-4 overflow-y-auto flex-1">
+        <div className="flex-1 space-y-6 overflow-y-auto py-4">
           {/* Quote Summary */}
-          <div className="rounded-lg bg-muted/50 p-4">
+          <div className="bg-muted/50 rounded-lg p-4">
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Total de la cotización</span>
-              <span className="font-semibold">
-                {formatCurrency(quote.totals.total)}
-              </span>
+              <span className="font-semibold">{formatCurrency(quote.totals.total)}</span>
             </div>
             {quote.settings.depositRequired && depositAmount > 0 && (
               <div className="mt-2 flex justify-between border-t pt-2 text-sm">
                 <span className="text-muted-foreground">
-                  Deposit due now
+                  Anticipo requerido al aceptar
                   {quote.settings.depositType === 'percentage' &&
                     ` (${quote.settings.depositValue}%)`}
                 </span>
-                <span className="font-semibold text-primary">
-                  {formatCurrency(depositAmount)}
-                </span>
+                <span className="text-primary font-semibold">{formatCurrency(depositAmount)}</span>
               </div>
             )}
           </div>
@@ -175,9 +171,11 @@ export function AcceptQuoteDialog({
 
               {/* Terms */}
               {quote.terms && (
-                <div className="rounded-lg border bg-muted/30 p-3 max-h-40 overflow-y-auto">
-                  <p className="text-xs font-medium text-muted-foreground mb-1">Términos y condiciones</p>
-                  <p className="text-sm whitespace-pre-wrap">{quote.terms}</p>
+                <div className="bg-muted/30 max-h-40 overflow-y-auto rounded-lg border p-3">
+                  <p className="text-muted-foreground mb-1 text-xs font-medium">
+                    Términos y condiciones
+                  </p>
+                  <p className="whitespace-pre-wrap text-sm">{quote.terms}</p>
                 </div>
               )}
 
@@ -190,11 +188,9 @@ export function AcceptQuoteDialog({
                   disabled={isSubmitting}
                 />
                 <div className="grid gap-1.5 leading-none">
-                  <Label
-                    htmlFor="agree-terms"
-                    className="text-sm font-normal leading-snug"
-                  >
-                    He leído y acepto los términos y condiciones{quote.terms ? ' anteriores' : ' indicados en esta cotización'}.
+                  <Label htmlFor="agree-terms" className="text-sm font-normal leading-snug">
+                    He leído y acepto los términos y condiciones
+                    {quote.terms ? ' anteriores' : ' indicados en esta cotización'}.
                   </Label>
                 </div>
               </div>

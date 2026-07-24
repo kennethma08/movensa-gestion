@@ -35,11 +35,20 @@ export interface SigningCertificateData {
 }
 
 export function generateSigningCertificateHtml(data: SigningCertificateData): string {
+  const eventLabels: Record<string, string> = {
+    created: 'Creado',
+    sent: 'Enviado',
+    viewed: 'Visto',
+    accepted: 'Aceptado',
+    signed: 'Firmado',
+    declined: 'Denegado',
+    pdf_downloaded: 'PDF descargado',
+  };
   const eventsHtml = data.events
     .map(
       (e) => `
       <tr>
-        <td style="padding: 8px 12px; border-bottom: 1px solid #e5e7eb;">${escapeHtml(e.type)}</td>
+        <td style="padding: 8px 12px; border-bottom: 1px solid #e5e7eb;">${escapeHtml(eventLabels[e.type] || e.type)}</td>
         <td style="padding: 8px 12px; border-bottom: 1px solid #e5e7eb;">${escapeHtml(e.timestamp)}</td>
         <td style="padding: 8px 12px; border-bottom: 1px solid #e5e7eb; font-size: 11px;">${escapeHtml(e.ipAddress || 'N/A')}</td>
       </tr>`
@@ -48,13 +57,13 @@ export function generateSigningCertificateHtml(data: SigningCertificateData): st
 
   const signatureSection = data.signatureImageUrl
     ? `<div style="margin: 16px 0; padding: 16px; border: 1px solid #d1d5db; border-radius: 8px; background: #fff; text-align: center;">
-        <p style="font-size: 12px; color: #6b7280; margin-bottom: 8px;">Signature</p>
-        <img src="${data.signatureImageUrl}" alt="Signature" style="max-height: 80px;" />
+        <p style="font-size: 12px; color: #6b7280; margin-bottom: 8px;">Firma</p>
+        <img src="${data.signatureImageUrl}" alt="Firma" style="max-height: 80px;" />
        </div>`
     : '';
 
   return `<!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
   <meta charset="utf-8">
   <style>
@@ -73,48 +82,52 @@ export function generateSigningCertificateHtml(data: SigningCertificateData): st
 </head>
 <body>
   <div class="container">
-    <h1>Signing Certificate</h1>
+    <h1>Certificado de firma electrónica</h1>
     <p style="color: #6b7280; margin-top: 0;">
-      ${escapeHtml(data.documentType === 'quote' ? 'Quote' : 'Contract')}
+      ${escapeHtml(data.documentType === 'quote' ? 'Cotización' : 'Contrato')}
       <strong>${escapeHtml(data.documentNumber)}</strong>
-      <span class="badge badge-signed" style="margin-left: 8px;">Signed</span>
+      <span class="badge badge-signed" style="margin-left: 8px;">Firmado</span>
     </p>
 
-    <h2>Document Details</h2>
+    <h2>Detalles del documento</h2>
     <table class="detail-table">
-      <tr><td>Document</td><td>${escapeHtml(data.documentTitle)}</td></tr>
-      <tr><td>Reference</td><td>${escapeHtml(data.documentNumber)}</td></tr>
-      <tr><td>Business</td><td>${escapeHtml(data.businessName)}</td></tr>
-      <tr><td>Client</td><td>${escapeHtml(data.clientName)}</td></tr>
+      <tr><td>Documento</td><td>${escapeHtml(data.documentTitle)}</td></tr>
+      <tr><td>Referencia</td><td>${escapeHtml(data.documentNumber)}</td></tr>
+      <tr><td>Empresa</td><td>${escapeHtml(data.businessName)}</td></tr>
+      <tr><td>Cliente</td><td>${escapeHtml(data.clientName)}</td></tr>
     </table>
 
-    <h2>Signer Details</h2>
+    <h2>Datos del firmante</h2>
     <table class="detail-table">
-      <tr><td>Name</td><td>${escapeHtml(data.signerName)}</td></tr>
-      <tr><td>Email</td><td>${escapeHtml(data.clientEmail)}</td></tr>
-      <tr><td>Signed At</td><td>${escapeHtml(data.signedAt)}</td></tr>
-      <tr><td>IP Address</td><td>${escapeHtml(data.ipAddress)}</td></tr>
-      <tr><td>User Agent</td><td style="font-size: 11px;">${escapeHtml(data.userAgent)}</td></tr>
+      <tr><td>Nombre</td><td>${escapeHtml(data.signerName)}</td></tr>
+      <tr><td>Correo electrónico</td><td>${escapeHtml(data.clientEmail)}</td></tr>
+      <tr><td>Fecha de firma</td><td>${escapeHtml(data.signedAt)}</td></tr>
+      <tr><td>Dirección IP</td><td>${escapeHtml(data.ipAddress)}</td></tr>
+      <tr><td>Navegador</td><td style="font-size: 11px;">${escapeHtml(data.userAgent)}</td></tr>
     </table>
 
     ${signatureSection}
 
-    ${data.documentHash ? `
-    <h2>Document Integrity</h2>
+    ${
+      data.documentHash
+        ? `
+    <h2>Integridad del documento</h2>
     <table class="detail-table">
-      <tr><td>Algorithm</td><td>SHA-256</td></tr>
+      <tr><td>Algoritmo</td><td>SHA-256</td></tr>
       <tr><td>Hash</td><td style="font-family: 'Courier New', monospace; font-size: 11px; word-break: break-all;">${escapeHtml(data.documentHash)}</td></tr>
     </table>
-    <p style="font-size: 11px; color: #6b7280; margin-top: 8px;">This SHA-256 hash can be used to verify the document has not been modified since signing.</p>
-    ` : ''}
+    <p style="font-size: 11px; color: #6b7280; margin-top: 8px;">Este código SHA-256 permite verificar que el documento no se modificó después de la firma.</p>
+    `
+        : ''
+    }
 
-    <h2>Audit Trail</h2>
+    <h2>Registro de auditoría</h2>
     <table style="font-size: 13px;">
       <thead>
         <tr style="background: #f9fafb;">
-          <th style="padding: 8px 12px; text-align: left; border-bottom: 2px solid #e5e7eb;">Event</th>
-          <th style="padding: 8px 12px; text-align: left; border-bottom: 2px solid #e5e7eb;">Timestamp</th>
-          <th style="padding: 8px 12px; text-align: left; border-bottom: 2px solid #e5e7eb;">IP Address</th>
+          <th style="padding: 8px 12px; text-align: left; border-bottom: 2px solid #e5e7eb;">Evento</th>
+          <th style="padding: 8px 12px; text-align: left; border-bottom: 2px solid #e5e7eb;">Fecha y hora</th>
+          <th style="padding: 8px 12px; text-align: left; border-bottom: 2px solid #e5e7eb;">Dirección IP</th>
         </tr>
       </thead>
       <tbody>
@@ -123,8 +136,8 @@ export function generateSigningCertificateHtml(data: SigningCertificateData): st
     </table>
 
     <div class="footer">
-      <p>This signing certificate was generated by Oreko and contains a record of the electronic signing process.</p>
-      <p>Generated: ${escapeHtml(new Date().toISOString())}</p>
+      <p>Este certificado contiene el registro del proceso de firma electrónica gestionado por Grupo Movensa.</p>
+      <p>Generado: ${escapeHtml(new Intl.DateTimeFormat('es-CR', { dateStyle: 'long', timeStyle: 'medium', timeZone: 'America/Costa_Rica' }).format(new Date()))}</p>
     </div>
   </div>
 </body>

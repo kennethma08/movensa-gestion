@@ -19,11 +19,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import {
-  createWebhook,
-  updateWebhook,
-  deleteWebhook,
-} from '@/lib/settings/actions';
+import { createWebhook, updateWebhook, deleteWebhook } from '@/lib/settings/actions';
 import type { WebhookData, WebhookEvent } from '@/lib/settings/types';
 import { WEBHOOK_EVENT_LABELS } from '@/lib/settings/types';
 import { toast } from 'sonner';
@@ -85,9 +81,7 @@ export function WebhooksManager({ initialData }: WebhooksManagerProps) {
     const current = editingWebhook.events;
     setEditingWebhook({
       ...editingWebhook,
-      events: current.includes(event)
-        ? current.filter((e) => e !== event)
-        : [...current, event],
+      events: current.includes(event) ? current.filter((e) => e !== event) : [...current, event],
     });
   };
 
@@ -209,13 +203,14 @@ export function WebhooksManager({ initialData }: WebhooksManagerProps) {
             <div>
               <CardTitle>Webhooks</CardTitle>
               <CardDescription>
-                Send real-time HTTP notifications to external services when events occur in your workspace.
+                Envíe notificaciones HTTP en tiempo real a servicios externos cuando ocurran
+                eventos.
               </CardDescription>
             </div>
             {!editingWebhook && (
               <Button onClick={handleAddNew} size="sm">
                 <Plus className="mr-2 h-4 w-4" />
-                Add Webhook
+                Agregar webhook
               </Button>
             )}
           </div>
@@ -225,24 +220,24 @@ export function WebhooksManager({ initialData }: WebhooksManagerProps) {
           {editingWebhook && (
             <div className="mb-6 rounded-lg border p-4">
               <div className="mb-4 text-sm font-medium">
-                {editingWebhook.id ? 'Edit Webhook' : 'New Webhook'}
+                {editingWebhook.id ? 'Editar webhook' : 'Nuevo webhook'}
               </div>
               <div className="space-y-4">
                 <div className="grid gap-4 md:grid-cols-2">
                   <div className="space-y-2">
-                    <Label htmlFor="webhook-name">Name *</Label>
+                    <Label htmlFor="webhook-name">Nombre *</Label>
                     <Input
                       id="webhook-name"
                       value={editingWebhook.name}
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                         setEditingWebhook({ ...editingWebhook, name: e.target.value })
                       }
-                      placeholder="e.g., Slack Notifications"
+                      placeholder="Ej.: notificaciones externas"
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="webhook-url">Endpoint URL *</Label>
+                    <Label htmlFor="webhook-url">URL del punto de conexión *</Label>
                     <Input
                       id="webhook-url"
                       type="url"
@@ -256,23 +251,23 @@ export function WebhooksManager({ initialData }: WebhooksManagerProps) {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="webhook-secret">Signing Secret</Label>
+                  <Label htmlFor="webhook-secret">Secreto de firma</Label>
                   <Input
                     id="webhook-secret"
                     value={editingWebhook.secret}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                       setEditingWebhook({ ...editingWebhook, secret: e.target.value })
                     }
-                    placeholder="Optional secret for verifying webhook signatures"
+                    placeholder="Secreto opcional para verificar las firmas"
                   />
-                  <p className="text-xs text-muted-foreground">
-                    Used to sign webhook payloads so you can verify they came from Oreko.
+                  <p className="text-muted-foreground text-xs">
+                    Se utiliza para firmar los datos enviados y comprobar su origen.
                   </p>
                 </div>
 
                 {/* Event Selection */}
                 <div className="space-y-3">
-                  <Label>Events *</Label>
+                  <Label>Eventos *</Label>
                   {Object.entries(EVENT_GROUPS).map(([group, events]) => (
                     <div key={group} className="space-y-2">
                       <div className="flex items-center gap-2">
@@ -319,7 +314,7 @@ export function WebhooksManager({ initialData }: WebhooksManagerProps) {
                     }
                   />
                   <Label htmlFor="webhook-active" className="cursor-pointer">
-                    Active
+                    Activo
                   </Label>
                 </div>
 
@@ -331,11 +326,11 @@ export function WebhooksManager({ initialData }: WebhooksManagerProps) {
                     disabled={isSaving}
                   >
                     <X className="mr-1 h-4 w-4" />
-                    Cancel
+                    Cancelar
                   </Button>
                   <Button onClick={handleSave} disabled={isSaving}>
                     <Check className="mr-1 h-4 w-4" />
-                    {isSaving ? 'Saving...' : 'Save'}
+                    {isSaving ? 'Guardando...' : 'Guardar'}
                   </Button>
                 </div>
               </div>
@@ -344,39 +339,40 @@ export function WebhooksManager({ initialData }: WebhooksManagerProps) {
 
           {/* Webhooks List */}
           {webhooks.length === 0 ? (
-            <p className="py-8 text-center text-muted-foreground">
-              No webhooks configured. Add one to start receiving event notifications.
+            <p className="text-muted-foreground py-8 text-center">
+              No hay webhooks configurados. Agregue uno para recibir notificaciones de eventos.
             </p>
           ) : (
             <div className="space-y-2">
               {webhooks.map((webhook) => (
                 <div
                   key={webhook.id}
-                  className={`rounded-lg border p-4 ${
-                    !webhook.isActive ? 'opacity-60' : ''
-                  }`}
+                  className={`rounded-lg border p-4 ${!webhook.isActive ? 'opacity-60' : ''}`}
                 >
                   <div className="flex items-start justify-between">
-                    <div className="space-y-1.5 min-w-0 flex-1">
-                      <div className="flex items-center gap-2 flex-wrap">
+                    <div className="min-w-0 flex-1 space-y-1.5">
+                      <div className="flex flex-wrap items-center gap-2">
                         <span className="font-medium">{webhook.name}</span>
                         {webhook.isActive ? (
-                          <Badge variant="default" className="bg-emerald-500/10 text-emerald-600 border-emerald-200">
-                            Active
+                          <Badge
+                            variant="default"
+                            className="border-emerald-200 bg-emerald-500/10 text-emerald-600"
+                          >
+                            Activo
                           </Badge>
                         ) : (
-                          <Badge variant="outline">Inactive</Badge>
+                          <Badge variant="outline">Inactivo</Badge>
                         )}
                       </div>
-                      <p className="truncate text-sm text-muted-foreground font-mono">
+                      <p className="text-muted-foreground truncate font-mono text-sm">
                         {webhook.url}
                       </p>
                       {webhook.secret && (
-                        <p className="text-xs text-muted-foreground font-mono">
-                          Secret: {webhook.secret}
+                        <p className="text-muted-foreground font-mono text-xs">
+                          Secreto: {webhook.secret}
                         </p>
                       )}
-                      <div className="flex items-center gap-1.5 flex-wrap">
+                      <div className="flex flex-wrap items-center gap-1.5">
                         {webhook.events.map((event: WebhookEvent) => (
                           <Badge key={event} variant="outline" className="text-xs">
                             {WEBHOOK_EVENT_LABELS[event]}
@@ -384,12 +380,8 @@ export function WebhooksManager({ initialData }: WebhooksManagerProps) {
                         ))}
                       </div>
                     </div>
-                    <div className="flex items-center gap-1 ml-2">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => handleEdit(webhook)}
-                      >
+                    <div className="ml-2 flex items-center gap-1">
+                      <Button variant="ghost" size="icon" onClick={() => handleEdit(webhook)}>
                         <Pencil className="h-4 w-4" />
                       </Button>
                       <Button
@@ -413,20 +405,20 @@ export function WebhooksManager({ initialData }: WebhooksManagerProps) {
       <AlertDialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Webhook</AlertDialogTitle>
+            <AlertDialogTitle>Eliminar webhook</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete this webhook? Event notifications will
-              stop being sent to this endpoint. This action cannot be undone.
+              ¿Está seguro de que desea eliminar este webhook? Las notificaciones dejarán de
+              enviarse a este punto de conexión. Esta acción no se puede deshacer.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel disabled={isDeleting}>Cancelar</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDelete}
               disabled={isDeleting}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              {isDeleting ? 'Deleting...' : 'Delete'}
+              {isDeleting ? 'Eliminando...' : 'Eliminar'}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

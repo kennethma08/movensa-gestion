@@ -1,5 +1,10 @@
 import { getClientsForSelect } from '@/lib/clients/actions';
-import { getTaxRates, getNumberSequences, getBusinessProfile, getWorkspaceCurrency } from '@/lib/settings/actions';
+import {
+  getTaxRates,
+  getNumberSequences,
+  getBusinessProfile,
+  getWorkspaceCurrency,
+} from '@/lib/settings/actions';
 
 import { NewInvoiceForm } from './new-invoice-form';
 
@@ -33,7 +38,7 @@ export default async function NewInvoicePage() {
       taxRates={taxRates}
       currency={workspaceCurrency}
       nextInvoiceNumber={nextInvoiceNumber}
-      businessName={businessProfile?.businessName || 'Your Business'}
+      businessName={businessProfile?.businessName || 'Grupo Movensa'}
     />
   );
 }

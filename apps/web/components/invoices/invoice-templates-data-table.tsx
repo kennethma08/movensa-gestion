@@ -3,14 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ColumnDef } from '@tanstack/react-table';
-import {
-  Receipt,
-  Plus,
-  Trash2,
-  Copy,
-  Loader2,
-  ChevronDown,
-} from 'lucide-react';
+import { Receipt, Plus, Trash2, Copy, Loader2, ChevronDown } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -39,10 +32,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import {
-  Dialog,
-  DialogContent,
-} from '@/components/ui/dialog';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -69,11 +59,15 @@ const paymentTermsLabel: Record<string, string> = {
 type TemplateLineItem = InvoiceTemplateLineItem;
 
 function formatCurrency(amount: number, currency: string = 'USD') {
-  const parts = new Intl.NumberFormat('en-US', { style: 'currency', currency }).formatToParts(amount);
-  return parts.map((p, i) => {
-    if (p.type === 'currency' && parts[i + 1]?.type !== 'literal') return p.value + ' ';
-    return p.value;
-  }).join('');
+  const parts = new Intl.NumberFormat('es-CR', { style: 'currency', currency }).formatToParts(
+    amount
+  );
+  return parts
+    .map((p, i) => {
+      if (p.type === 'currency' && parts[i + 1]?.type !== 'literal') return p.value + ' ';
+      return p.value;
+    })
+    .join('');
 }
 
 interface InvoiceTemplatesDataTableProps {
@@ -198,10 +192,14 @@ export function InvoiceTemplatesDataTable({ data }: InvoiceTemplatesDataTablePro
     setEditLineItems([...editLineItems, newItem]);
   };
 
-  const handleUpdateLineItem = (id: string, field: keyof TemplateLineItem, value: string | number | boolean) => {
-    setEditLineItems(editLineItems.map((item) =>
-      item.id === id ? { ...item, [field]: value } : item
-    ));
+  const handleUpdateLineItem = (
+    id: string,
+    field: keyof TemplateLineItem,
+    value: string | number | boolean
+  ) => {
+    setEditLineItems(
+      editLineItems.map((item) => (item.id === id ? { ...item, [field]: value } : item))
+    );
   };
 
   const handleRemoveLineItem = (id: string) => {
@@ -277,13 +275,11 @@ export function InvoiceTemplatesDataTable({ data }: InvoiceTemplatesDataTablePro
     },
     {
       accessorKey: 'name',
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Nombre" />
-      ),
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Nombre" />,
       cell: ({ row }) => (
         <button
           type="button"
-          className="font-medium text-primary hover:underline text-left"
+          className="text-primary text-left font-medium hover:underline"
           onClick={() => handleOpenEdit(row.original)}
         >
           {row.original.name}
@@ -292,9 +288,7 @@ export function InvoiceTemplatesDataTable({ data }: InvoiceTemplatesDataTablePro
     },
     {
       accessorKey: 'paymentTerms',
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Condiciones de pago" />
-      ),
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Condiciones de pago" />,
       cell: ({ row }) => (
         <Badge variant="outline" className="text-xs">
           {paymentTermsLabel[row.original.paymentTerms] ?? row.original.paymentTerms}
@@ -303,9 +297,7 @@ export function InvoiceTemplatesDataTable({ data }: InvoiceTemplatesDataTablePro
     },
     {
       accessorKey: 'usageCount',
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Usos" />
-      ),
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Usos" />,
       cell: ({ row }) => (
         <div className="text-muted-foreground">
           {row.original.usageCount} vez{row.original.usageCount !== 1 ? 'es' : ''}
@@ -314,13 +306,9 @@ export function InvoiceTemplatesDataTable({ data }: InvoiceTemplatesDataTablePro
     },
     {
       accessorKey: 'updatedAt',
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Actualizada" />
-      ),
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Actualizada" />,
       cell: ({ row }) => (
-        <div className="text-muted-foreground">
-          {formatDate(row.original.updatedAt)}
-        </div>
+        <div className="text-muted-foreground">{formatDate(row.original.updatedAt)}</div>
       ),
     },
     {
@@ -331,10 +319,12 @@ export function InvoiceTemplatesDataTable({ data }: InvoiceTemplatesDataTablePro
           onView={(t) => handleOpenEdit(t)}
           onEdit={(t) => handleOpenEdit(t)}
           onDuplicate={(t) => {
-            duplicateInvoiceTemplate(t.id).then(() => {
-              toast.success('Plantilla duplicada');
-              router.refresh();
-            }).catch(() => toast.error('No se pudo duplicar'));
+            duplicateInvoiceTemplate(t.id)
+              .then(() => {
+                toast.success('Plantilla duplicada');
+                router.refresh();
+              })
+              .catch(() => toast.error('No se pudo duplicar'));
           }}
           onDelete={(t) => setDeleteId(t.id)}
         />
@@ -344,7 +334,7 @@ export function InvoiceTemplatesDataTable({ data }: InvoiceTemplatesDataTablePro
 
   const emptyState = (
     <div className="flex flex-col items-center justify-center py-16">
-      <Receipt className="h-12 w-12 text-muted-foreground mb-4" />
+      <Receipt className="text-muted-foreground mb-4 h-12 w-12" />
       <h3 className="text-lg font-medium">No hay plantillas de factura</h3>
       <p className="text-muted-foreground mb-4">
         Cree su primera plantilla para agilizar la facturación.
@@ -358,7 +348,7 @@ export function InvoiceTemplatesDataTable({ data }: InvoiceTemplatesDataTablePro
 
   return (
     <>
-      <div className="flex items-center justify-between mb-4">
+      <div className="mb-4 flex items-center justify-between">
         <div />
         <Button onClick={handleOpenCreate} size="sm">
           <Plus className="mr-2 h-4 w-4" />
@@ -367,24 +357,15 @@ export function InvoiceTemplatesDataTable({ data }: InvoiceTemplatesDataTablePro
       </div>
 
       {selectedRows.length > 0 && (
-        <div className="flex items-center gap-2 mb-4">
-          <span className="text-sm text-muted-foreground">
+        <div className="mb-4 flex items-center gap-2">
+          <span className="text-muted-foreground text-sm">
             {selectedRows.length} seleccionada(s)
           </span>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleBulkDuplicate}
-          >
+          <Button variant="outline" size="sm" onClick={handleBulkDuplicate}>
             <Copy className="mr-2 h-4 w-4" />
             Duplicar
           </Button>
-          <Button
-            variant="destructive"
-            size="sm"
-            onClick={handleBulkDelete}
-            disabled={isDeleting}
-          >
+          <Button variant="destructive" size="sm" onClick={handleBulkDelete} disabled={isDeleting}>
             <Trash2 className="mr-2 h-4 w-4" />
             Eliminar seleccionadas
           </Button>
@@ -402,8 +383,11 @@ export function InvoiceTemplatesDataTable({ data }: InvoiceTemplatesDataTablePro
       />
 
       {/* Edit Template Dialog - Invoice Builder Style */}
-      <Dialog open={!!editingTemplate || isCreating} onOpenChange={(open) => !open && handleCloseEdit()}>
-        <DialogContent className="!flex !flex-col !max-w-[860px] !max-h-[90vh] !p-0 !gap-0 overflow-hidden">
+      <Dialog
+        open={!!editingTemplate || isCreating}
+        onOpenChange={(open) => !open && handleCloseEdit()}
+      >
+        <DialogContent className="!flex !max-h-[90vh] !max-w-[860px] !flex-col !gap-0 overflow-hidden !p-0">
           {/* Header */}
           <div className="p-8 pb-2">
             <h2 className="text-2xl font-bold tracking-tight">
@@ -420,7 +404,7 @@ export function InvoiceTemplatesDataTable({ data }: InvoiceTemplatesDataTablePro
 
           {/* Scrollable Body */}
           <div className="flex-1 overflow-y-auto">
-            <div className="p-8 space-y-8">
+            <div className="space-y-8 p-8">
               {/* Template Name */}
               <div className="space-y-3">
                 <Label className="text-base font-semibold">Nombre de la plantilla</Label>
@@ -437,56 +421,98 @@ export function InvoiceTemplatesDataTable({ data }: InvoiceTemplatesDataTablePro
                 <DropdownMenuTrigger asChild>
                   <button
                     type="button"
-                    className="inline-flex items-center gap-1.5 text-sm font-semibold hover:opacity-70 transition-opacity"
+                    className="inline-flex items-center gap-1.5 text-sm font-semibold transition-opacity hover:opacity-70"
                   >
                     Agregar opciones
                     <ChevronDown className="h-4 w-4" />
                   </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start" className="w-[200px]">
-                  <DropdownMenuItem disabled={showDiscount} onClick={() => setShowDiscount(true)}>Descuento</DropdownMenuItem>
-                  <DropdownMenuItem disabled={showTax} onClick={() => setShowTax(true)}>Impuesto</DropdownMenuItem>
-                  <DropdownMenuItem disabled={showLateFee} onClick={() => setShowLateFee(true)}>Cargo por mora</DropdownMenuItem>
-                  <DropdownMenuItem disabled={showNotes} onClick={() => setShowNotes(true)}>Notas</DropdownMenuItem>
+                  <DropdownMenuItem disabled={showDiscount} onClick={() => setShowDiscount(true)}>
+                    Descuento
+                  </DropdownMenuItem>
+                  <DropdownMenuItem disabled={showTax} onClick={() => setShowTax(true)}>
+                    Impuesto
+                  </DropdownMenuItem>
+                  <DropdownMenuItem disabled={showLateFee} onClick={() => setShowLateFee(true)}>
+                    Cargo por mora
+                  </DropdownMenuItem>
+                  <DropdownMenuItem disabled={showNotes} onClick={() => setShowNotes(true)}>
+                    Notas
+                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
 
               {/* Enhancement Sections */}
               {showDiscount && (
-                <div className="space-y-2 rounded-lg border p-4 bg-muted/20">
+                <div className="bg-muted/20 space-y-2 rounded-lg border p-4">
                   <div className="flex items-center justify-between">
                     <Label className="text-sm font-semibold">Descuento</Label>
-                    <button type="button" className="text-xs text-muted-foreground hover:text-destructive" onClick={() => setShowDiscount(false)}>Quitar</button>
+                    <button
+                      type="button"
+                      className="text-muted-foreground hover:text-destructive text-xs"
+                      onClick={() => setShowDiscount(false)}
+                    >
+                      Quitar
+                    </button>
                   </div>
-                  <p className="text-xs text-muted-foreground">El descuento se aplicará al crear facturas desde esta plantilla.</p>
+                  <p className="text-muted-foreground text-xs">
+                    El descuento se aplicará al crear facturas desde esta plantilla.
+                  </p>
                 </div>
               )}
 
               {showTax && (
-                <div className="space-y-2 rounded-lg border p-4 bg-muted/20">
+                <div className="bg-muted/20 space-y-2 rounded-lg border p-4">
                   <div className="flex items-center justify-between">
                     <Label className="text-sm font-semibold">Impuesto</Label>
-                    <button type="button" className="text-xs text-muted-foreground hover:text-destructive" onClick={() => setShowTax(false)}>Quitar</button>
+                    <button
+                      type="button"
+                      className="text-muted-foreground hover:text-destructive text-xs"
+                      onClick={() => setShowTax(false)}
+                    >
+                      Quitar
+                    </button>
                   </div>
-                  <p className="text-xs text-muted-foreground">Se aplicarán las tasas configuradas al crear la factura.</p>
+                  <p className="text-muted-foreground text-xs">
+                    Se aplicarán las tasas configuradas al crear la factura.
+                  </p>
                 </div>
               )}
 
               {showLateFee && (
-                <div className="space-y-2 rounded-lg border p-4 bg-muted/20">
+                <div className="bg-muted/20 space-y-2 rounded-lg border p-4">
                   <div className="flex items-center justify-between">
                     <Label className="text-sm font-semibold">Cargo por mora</Label>
-                    <button type="button" className="text-xs text-muted-foreground hover:text-destructive" onClick={() => setShowLateFee(false)}>Quitar</button>
+                    <button
+                      type="button"
+                      className="text-muted-foreground hover:text-destructive text-xs"
+                      onClick={() => setShowLateFee(false)}
+                    >
+                      Quitar
+                    </button>
                   </div>
-                  <p className="text-xs text-muted-foreground">Los cargos por mora se configuran en pagos y se aplican a facturas vencidas.</p>
+                  <p className="text-muted-foreground text-xs">
+                    Los cargos por mora se configuran en pagos y se aplican a facturas vencidas.
+                  </p>
                 </div>
               )}
 
               {showNotes && (
-                <div className="space-y-3 rounded-lg border p-4 bg-muted/20">
+                <div className="bg-muted/20 space-y-3 rounded-lg border p-4">
                   <div className="flex items-center justify-between">
                     <Label className="text-sm font-semibold">Notas y condiciones</Label>
-                    <button type="button" className="text-xs text-muted-foreground hover:text-destructive" onClick={() => { setShowNotes(false); setEditNotes(''); setEditTerms(''); }}>Quitar</button>
+                    <button
+                      type="button"
+                      className="text-muted-foreground hover:text-destructive text-xs"
+                      onClick={() => {
+                        setShowNotes(false);
+                        setEditNotes('');
+                        setEditTerms('');
+                      }}
+                    >
+                      Quitar
+                    </button>
                   </div>
                   <div className="space-y-2">
                     <Input
@@ -507,18 +533,18 @@ export function InvoiceTemplatesDataTable({ data }: InvoiceTemplatesDataTablePro
 
               {/* Items Section */}
               <div>
-                <h3 className="text-base font-semibold mb-4">Conceptos</h3>
+                <h3 className="mb-4 text-base font-semibold">Conceptos</h3>
 
                 {/* Items Table Header */}
                 {editLineItems.length > 0 && (
-                  <div className="grid grid-cols-[1fr,100px,70px,32px] gap-3 mb-3 px-3">
-                    <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest">
+                  <div className="mb-3 grid grid-cols-[1fr,100px,70px,32px] gap-3 px-3">
+                    <span className="text-muted-foreground text-[11px] font-semibold uppercase tracking-widest">
                       Items
                     </span>
-                    <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest">
+                    <span className="text-muted-foreground text-[11px] font-semibold uppercase tracking-widest">
                       Precio
                     </span>
-                    <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest">
+                    <span className="text-muted-foreground text-[11px] font-semibold uppercase tracking-widest">
                       Cant.
                     </span>
                     <span />
@@ -526,20 +552,20 @@ export function InvoiceTemplatesDataTable({ data }: InvoiceTemplatesDataTablePro
                 )}
 
                 {/* Line Items */}
-                <div className="space-y-0 mb-5">
+                <div className="mb-5 space-y-0">
                   {editLineItems.map((item, index) => (
                     <div
                       key={item.id}
                       className={cn(
-                        'group px-3 py-3 transition-colors hover:bg-muted/30',
-                        index !== editLineItems.length - 1 && 'border-b border-border/40'
+                        'hover:bg-muted/30 group px-3 py-3 transition-colors',
+                        index !== editLineItems.length - 1 && 'border-border/40 border-b'
                       )}
                     >
-                      <div className="grid grid-cols-[1fr,100px,70px,32px] gap-3 items-center">
+                      <div className="grid grid-cols-[1fr,100px,70px,32px] items-center gap-3">
                         <Input
                           value={item.name}
                           onChange={(e) => handleUpdateLineItem(item.id, 'name', e.target.value)}
-                          className="h-9 border-0 shadow-none px-0 text-sm font-medium focus-visible:ring-0 !bg-transparent"
+                          className="h-9 border-0 !bg-transparent px-0 text-sm font-medium shadow-none focus-visible:ring-0"
                           placeholder="Nombre del concepto"
                         />
                         <Input
@@ -547,7 +573,9 @@ export function InvoiceTemplatesDataTable({ data }: InvoiceTemplatesDataTablePro
                           min="0"
                           step="0.01"
                           value={item.rate || ''}
-                          onChange={(e) => handleUpdateLineItem(item.id, 'rate', parseFloat(e.target.value) || 0)}
+                          onChange={(e) =>
+                            handleUpdateLineItem(item.id, 'rate', parseFloat(e.target.value) || 0)
+                          }
                           className="h-9 text-sm"
                           placeholder="0"
                         />
@@ -555,14 +583,16 @@ export function InvoiceTemplatesDataTable({ data }: InvoiceTemplatesDataTablePro
                           type="number"
                           min="0"
                           value={item.qty || ''}
-                          onChange={(e) => handleUpdateLineItem(item.id, 'qty', parseInt(e.target.value) || 0)}
+                          onChange={(e) =>
+                            handleUpdateLineItem(item.id, 'qty', parseInt(e.target.value) || 0)
+                          }
                           className="h-9 text-sm"
                           placeholder="1"
                         />
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="h-7 w-7 opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-destructive"
+                          className="text-muted-foreground hover:text-destructive h-7 w-7 opacity-0 transition-opacity group-hover:opacity-100"
                           onClick={() => handleRemoveLineItem(item.id)}
                         >
                           <Trash2 className="h-3.5 w-3.5" />
@@ -570,8 +600,10 @@ export function InvoiceTemplatesDataTable({ data }: InvoiceTemplatesDataTablePro
                       </div>
                       <Input
                         value={item.description}
-                        onChange={(e) => handleUpdateLineItem(item.id, 'description', e.target.value)}
-                        className="h-7 text-xs text-muted-foreground border-0 shadow-none px-0 mt-0.5 focus-visible:ring-0 !bg-transparent"
+                        onChange={(e) =>
+                          handleUpdateLineItem(item.id, 'description', e.target.value)
+                        }
+                        className="text-muted-foreground mt-0.5 h-7 border-0 !bg-transparent px-0 text-xs shadow-none focus-visible:ring-0"
                         placeholder="Agregar una descripción..."
                       />
                     </div>
@@ -581,7 +613,7 @@ export function InvoiceTemplatesDataTable({ data }: InvoiceTemplatesDataTablePro
                 {/* Add Items Button */}
                 <Button
                   variant="outline"
-                  className="w-full h-11 border-dashed border-2 text-sm font-medium text-muted-foreground hover:text-primary hover:border-primary/40 hover:bg-primary-50/50 transition-all"
+                  className="text-muted-foreground hover:text-primary hover:border-primary/40 hover:bg-primary-50/50 h-11 w-full border-2 border-dashed text-sm font-medium transition-all"
                   onClick={handleAddLineItem}
                 >
                   <Plus className="mr-2 h-4 w-4" />
@@ -592,7 +624,7 @@ export function InvoiceTemplatesDataTable({ data }: InvoiceTemplatesDataTablePro
               {/* Payment Method Section */}
               <div className="space-y-2">
                 <h3 className="text-base font-semibold">Método de pago</h3>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-muted-foreground text-sm">
                   Payment methods are setup in your settings page.
                 </p>
               </div>
@@ -621,25 +653,20 @@ export function InvoiceTemplatesDataTable({ data }: InvoiceTemplatesDataTablePro
                 {!isCreating ? (
                   <button
                     type="button"
-                    className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-destructive transition-colors"
+                    className="text-muted-foreground hover:text-destructive flex items-center gap-1.5 text-sm transition-colors"
                     onClick={handleDeleteFromDialog}
                   >
                     <Trash2 className="h-4 w-4" />
                     Eliminar plantilla
                   </button>
-                ) : <div />}
+                ) : (
+                  <div />
+                )}
                 <div className="flex items-center gap-2">
-                  <Button
-                    variant="outline"
-                    onClick={handleCloseEdit}
-                    disabled={isSaving}
-                  >
+                  <Button variant="outline" onClick={handleCloseEdit} disabled={isSaving}>
                     Cancelar
                   </Button>
-                  <Button
-                    onClick={handleSaveTemplate}
-                    disabled={isSaving}
-                  >
+                  <Button onClick={handleSaveTemplate} disabled={isSaving}>
                     {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                     {isCreating ? 'Crear plantilla' : 'Guardar plantilla'}
                   </Button>
@@ -656,7 +683,8 @@ export function InvoiceTemplatesDataTable({ data }: InvoiceTemplatesDataTablePro
           <AlertDialogHeader>
             <AlertDialogTitle>Eliminar plantilla</AlertDialogTitle>
             <AlertDialogDescription>
-              ¿Confirma que desea eliminar esta plantilla de factura? Esta acción no se puede deshacer.
+              ¿Confirma que desea eliminar esta plantilla de factura? Esta acción no se puede
+              deshacer.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

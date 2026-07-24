@@ -28,9 +28,12 @@ export async function sendSigningOtp(input: {
     const ip = await getClientIp();
 
     // Rate limit: 5 OTP sends per 10 minutes per IP
-    const rateLimitResult = await checkRateLimit(`otp-send:${ip}`, { limit: 5, windowMs: 10 * 60 * 1000 });
+    const rateLimitResult = await checkRateLimit(`otp-send:${ip}`, {
+      limit: 5,
+      windowMs: 10 * 60 * 1000,
+    });
     if (rateLimitResult.limited) {
-      return { success: false, error: 'Too many verification requests. Please wait a few minutes.' };
+      return { success: false, error: 'Se solicitaron demasiados códigos. Espere unos minutos.' };
     }
 
     let clientEmail: string;
@@ -41,7 +44,11 @@ export async function sendSigningOtp(input: {
     if (input.type === 'quote') {
       // Bug #155: Only allow OTP for quotes in signable status
       const quote = await prisma.quote.findFirst({
-        where: { accessToken: input.accessToken, deletedAt: null, status: { in: ['sent', 'viewed'] } },
+        where: {
+          accessToken: input.accessToken,
+          deletedAt: null,
+          status: { in: ['sent', 'viewed'] },
+        },
         select: {
           id: true,
           client: { select: { email: true, name: true } },
@@ -55,7 +62,7 @@ export async function sendSigningOtp(input: {
       });
 
       if (!quote) {
-        return { success: false, error: 'Document not found' };
+        return { success: false, error: 'Documento no encontrado.' };
       }
 
       clientEmail = quote.client.email;
@@ -66,7 +73,11 @@ export async function sendSigningOtp(input: {
       // MEDIUM #19: Filter out soft-deleted contract instances
       // Bug #155: Only allow OTP for contracts in signable status
       const contract = await prisma.contractInstance.findFirst({
-        where: { accessToken: input.accessToken, deletedAt: null, status: { in: ['sent', 'viewed'] } },
+        where: {
+          accessToken: input.accessToken,
+          deletedAt: null,
+          status: { in: ['sent', 'viewed'] },
+        },
         select: {
           id: true,
           client: { select: { email: true, name: true } },
@@ -80,7 +91,7 @@ export async function sendSigningOtp(input: {
       });
 
       if (!contract || !contract.client) {
-        return { success: false, error: 'Document not found' };
+        return { success: false, error: 'Documento no encontrado.' };
       }
 
       clientEmail = contract.client.email;
@@ -97,34 +108,37 @@ export async function sendSigningOtp(input: {
     const emailResult = await sendEmail({
       to: clientEmail,
       // Low #33: Don't expose OTP code in subject line (visible in notifications/previews)
-      subject: 'Your Oreko verification code',
+      subject: `Código de verificación de ${businessName}`,
       html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2>Verify your identity</h2>
+        <div lang="es" style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2>Verifique su identidad</h2>
           <!-- Low #34: Escape client/business names to prevent XSS in email -->
-          <p>Hi ${clientName.replace(/</g, '&lt;').replace(/>/g, '&gt;')},</p>
-          <p>${businessName.replace(/</g, '&lt;').replace(/>/g, '&gt;')} has requested your signature on a document. To verify your identity, please enter this code:</p>
+          <p>Hola ${clientName.replace(/</g, '&lt;').replace(/>/g, '&gt;')},</p>
+          <p>${businessName.replace(/</g, '&lt;').replace(/>/g, '&gt;')} solicitó su firma en un documento. Para verificar su identidad, ingrese este código:</p>
           <div style="margin: 24px 0; text-align: center;">
             <span style="font-size: 32px; font-weight: bold; letter-spacing: 8px; background: #f3f4f6; padding: 16px 32px; border-radius: 8px; display: inline-block;">
               ${code}
             </span>
           </div>
-          <p style="color: #666; font-size: 14px;">This code expires in 10 minutes. If you did not request this, you can safely ignore this email.</p>
+          <p style="color: #666; font-size: 14px;">Este código vence en 10 minutos. Si no realizó esta solicitud, puede ignorar este correo.</p>
           <hr style="margin: 24px 0; border: none; border-top: 1px solid #eee;" />
-          <p style="color: #666; font-size: 12px;">Sent via Oreko</p>
+          <p style="color: #666; font-size: 12px;">Enviado por ${businessName.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</p>
         </div>
       `,
       tags: [{ name: 'type', value: 'signing_otp' }],
     });
 
     if (!emailResult.success) {
-      return { success: false, error: 'Failed to send verification email. Please try again.' };
+      return {
+        success: false,
+        error: 'No se pudo enviar el correo de verificación. Inténtelo nuevamente.',
+      };
     }
 
     return { success: true };
   } catch (error) {
     logger.error({ err: error }, 'Error sending signing OTP');
-    return { success: false, error: 'Failed to send verification code' };
+    return { success: false, error: 'No se pudo enviar el código de verificación.' };
   }
 }
 
@@ -141,9 +155,12 @@ export async function verifySigningOtpAction(input: {
     const ip = await getClientIp();
 
     // Rate limit: 10 verify attempts per 10 minutes per IP
-    const rateLimitResult = await checkRateLimit(`otp-verify:${ip}`, { limit: 10, windowMs: 10 * 60 * 1000 });
+    const rateLimitResult = await checkRateLimit(`otp-verify:${ip}`, {
+      limit: 10,
+      windowMs: 10 * 60 * 1000,
+    });
     if (rateLimitResult.limited) {
-      return { success: false, error: 'Too many attempts. Please wait a few minutes.' };
+      return { success: false, error: 'Demasiados intentos. Espere unos minutos.' };
     }
 
     // Look up document ID from access token
@@ -154,7 +171,7 @@ export async function verifySigningOtpAction(input: {
         where: { accessToken: input.accessToken, deletedAt: null },
         select: { id: true },
       });
-      if (!quote) return { success: false, error: 'Document not found' };
+      if (!quote) return { success: false, error: 'Documento no encontrado.' };
       documentId = quote.id;
     } else {
       // MEDIUM #19: Filter out soft-deleted contract instances
@@ -162,7 +179,7 @@ export async function verifySigningOtpAction(input: {
         where: { accessToken: input.accessToken, deletedAt: null },
         select: { id: true },
       });
-      if (!contract) return { success: false, error: 'Document not found' };
+      if (!contract) return { success: false, error: 'Documento no encontrado.' };
       documentId = contract.id;
     }
 
@@ -170,13 +187,13 @@ export async function verifySigningOtpAction(input: {
     const result = await verifySigningOtp(otpKey, input.code, input.email);
 
     if (!result.valid) {
-      return { success: false, error: result.error || 'Invalid code' };
+      return { success: false, error: result.error || 'Código no válido.' };
     }
 
     return { success: true };
   } catch (error) {
     logger.error({ err: error }, 'Error verifying signing OTP');
-    return { success: false, error: 'Verification failed' };
+    return { success: false, error: 'No se pudo completar la verificación.' };
   }
 }
 

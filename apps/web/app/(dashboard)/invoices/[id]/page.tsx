@@ -39,31 +39,63 @@ export async function generateMetadata({ params }: InvoiceDetailPageProps) {
   }
   try {
     const invoice = await getInvoice(id);
-    return { title: invoice ? `${invoice.title} - ${invoice.invoiceNumber}` : 'Detalles de la factura' };
+    return {
+      title: invoice ? `${invoice.title} - ${invoice.invoiceNumber}` : 'Detalles de la factura',
+    };
   } catch {
     return { title: 'Factura no encontrada' };
   }
 }
 
 const statusColors: Record<string, { bg: string; text: string; icon: React.ReactNode }> = {
-  draft: { bg: 'bg-gray-100 dark:bg-gray-800', text: 'text-gray-700 dark:text-gray-300', icon: <Edit className="h-4 w-4" /> },
-  sent: { bg: 'bg-blue-100 dark:bg-blue-900', text: 'text-blue-700 dark:text-blue-300', icon: <Send className="h-4 w-4" /> },
-  viewed: { bg: 'bg-yellow-100 dark:bg-yellow-900', text: 'text-yellow-700 dark:text-yellow-300', icon: <Clock className="h-4 w-4" /> },
-  partial: { bg: 'bg-purple-100 dark:bg-purple-900', text: 'text-purple-700 dark:text-purple-300', icon: <Banknote className="h-4 w-4" /> },
-  paid: { bg: 'bg-green-100 dark:bg-green-900', text: 'text-green-700 dark:text-green-300', icon: <CheckCircle className="h-4 w-4" /> },
-  overdue: { bg: 'bg-red-100 dark:bg-red-900', text: 'text-red-700 dark:text-red-300', icon: <AlertCircle className="h-4 w-4" /> },
-  voided: { bg: 'bg-gray-200 dark:bg-gray-800', text: 'text-gray-500 dark:text-gray-400', icon: <Ban className="h-4 w-4" /> },
+  draft: {
+    bg: 'bg-gray-100 dark:bg-gray-800',
+    text: 'text-gray-700 dark:text-gray-300',
+    icon: <Edit className="h-4 w-4" />,
+  },
+  sent: {
+    bg: 'bg-blue-100 dark:bg-blue-900',
+    text: 'text-blue-700 dark:text-blue-300',
+    icon: <Send className="h-4 w-4" />,
+  },
+  viewed: {
+    bg: 'bg-yellow-100 dark:bg-yellow-900',
+    text: 'text-yellow-700 dark:text-yellow-300',
+    icon: <Clock className="h-4 w-4" />,
+  },
+  partial: {
+    bg: 'bg-purple-100 dark:bg-purple-900',
+    text: 'text-purple-700 dark:text-purple-300',
+    icon: <Banknote className="h-4 w-4" />,
+  },
+  paid: {
+    bg: 'bg-green-100 dark:bg-green-900',
+    text: 'text-green-700 dark:text-green-300',
+    icon: <CheckCircle className="h-4 w-4" />,
+  },
+  overdue: {
+    bg: 'bg-red-100 dark:bg-red-900',
+    text: 'text-red-700 dark:text-red-300',
+    icon: <AlertCircle className="h-4 w-4" />,
+  },
+  voided: {
+    bg: 'bg-gray-200 dark:bg-gray-800',
+    text: 'text-gray-500 dark:text-gray-400',
+    icon: <Ban className="h-4 w-4" />,
+  },
 };
 
 function formatCurrency(amount: number, currency: string = 'USD'): string {
-  const parts = new Intl.NumberFormat('en-US', {
+  const parts = new Intl.NumberFormat('es-CR', {
     style: 'currency',
     currency,
   }).formatToParts(amount);
-  return parts.map((p, i) => {
-    if (p.type === 'currency' && parts[i + 1]?.type !== 'literal') return p.value + ' ';
-    return p.value;
-  }).join('');
+  return parts
+    .map((p, i) => {
+      if (p.type === 'currency' && parts[i + 1]?.type !== 'literal') return p.value + ' ';
+      return p.value;
+    })
+    .join('');
 }
 
 export default async function InvoiceDetailPage({ params }: InvoiceDetailPageProps) {
@@ -80,8 +112,8 @@ export default async function InvoiceDetailPage({ params }: InvoiceDetailPagePro
     console.error('Failed to load invoice:', error);
     return (
       <div className="flex flex-col items-center justify-center py-16">
-        <AlertCircle className="h-12 w-12 text-destructive mb-4" />
-        <h2 className="text-xl font-semibold mb-2">No se pudo cargar la factura</h2>
+        <AlertCircle className="text-destructive mb-4 h-12 w-12" />
+        <h2 className="mb-2 text-xl font-semibold">No se pudo cargar la factura</h2>
         <p className="text-muted-foreground mb-4">
           Ocurrió un error al cargar esta factura. Inténtelo nuevamente.
         </p>
@@ -101,10 +133,15 @@ export default async function InvoiceDetailPage({ params }: InvoiceDetailPagePro
 
   const isOverdue = isInvoiceOverdue(invoice.dueDate, invoice.status);
   const daysUntilDue = getDaysUntilDue(invoice.dueDate);
-  const displayStatus = isOverdue && invoice.status !== 'paid' && invoice.status !== 'voided'
-    ? 'overdue'
-    : invoice.status;
-  const defaultStyle = { bg: 'bg-gray-100', text: 'text-gray-700', icon: <Edit className="h-4 w-4" /> };
+  const displayStatus =
+    isOverdue && invoice.status !== 'paid' && invoice.status !== 'voided'
+      ? 'overdue'
+      : invoice.status;
+  const defaultStyle = {
+    bg: 'bg-gray-100',
+    text: 'text-gray-700',
+    icon: <Edit className="h-4 w-4" />,
+  };
   const statusStyle = statusColors[displayStatus] ?? defaultStyle;
   // Voided invoices owe nothing regardless of DB value
   const displayAmountDue = invoice.status === 'voided' ? 0 : invoice.totals.amountDue;
@@ -123,14 +160,17 @@ export default async function InvoiceDetailPage({ params }: InvoiceDetailPagePro
               {displayStatus}
             </span>
             {recurringSettings?.enabled && (
-              <Badge variant="outline" className="gap-1 border-violet-300 text-violet-600 bg-violet-50 dark:border-violet-600 dark:text-violet-400 dark:bg-violet-950">
+              <Badge
+                variant="outline"
+                className="gap-1 border-violet-300 bg-violet-50 text-violet-600 dark:border-violet-600 dark:bg-violet-950 dark:text-violet-400"
+              >
                 <RefreshCw className="h-3 w-3" />
                 Recurrencia
               </Badge>
             )}
           </div>
           <p className="text-muted-foreground">
-            {invoice.invoiceNumber} &bull; Issued on{' '}
+            {invoice.invoiceNumber} &bull; Emitida el{' '}
             {new Date(invoice.issueDate).toLocaleDateString()}
           </p>
         </div>
@@ -156,13 +196,13 @@ export default async function InvoiceDetailPage({ params }: InvoiceDetailPagePro
               <CardTitle>Vista previa de la factura</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="rounded-lg border bg-card p-8">
+              <div className="bg-card rounded-lg border p-8">
                 {/* Header */}
                 <div className="mb-8 flex justify-between">
                   <div>
                     <h2 className="text-2xl font-bold">{invoice.title}</h2>
-                    <p className="text-sm text-muted-foreground">
-                      Invoice #{invoice.invoiceNumber}
+                    <p className="text-muted-foreground text-sm">
+                      Factura #{invoice.invoiceNumber}
                     </p>
                   </div>
                   <div className="text-right text-sm">
@@ -171,7 +211,9 @@ export default async function InvoiceDetailPage({ params }: InvoiceDetailPagePro
                       {new Date(invoice.issueDate).toLocaleDateString()}
                     </p>
                     <p className="mt-2 font-medium">Fecha de vencimiento</p>
-                    <p className={`${isOverdue ? 'text-red-600 font-semibold' : 'text-muted-foreground'}`}>
+                    <p
+                      className={`${isOverdue ? 'font-semibold text-red-600' : 'text-muted-foreground'}`}
+                    >
                       {new Date(invoice.dueDate).toLocaleDateString()}
                       {isOverdue && ` (${Math.abs(daysUntilDue)} days overdue)`}
                     </p>
@@ -197,9 +239,7 @@ export default async function InvoiceDetailPage({ params }: InvoiceDetailPagePro
                             <td className="px-4 py-3">
                               <p className="font-medium">{item.name}</p>
                               {item.description && (
-                                <p className="text-sm text-muted-foreground">
-                                  {item.description}
-                                </p>
+                                <p className="text-muted-foreground text-sm">{item.description}</p>
                               )}
                             </td>
                             <td className="px-4 py-3 text-right">{item.quantity}</td>
@@ -226,7 +266,9 @@ export default async function InvoiceDetailPage({ params }: InvoiceDetailPagePro
                     {invoice.totals.discountAmount > 0 && (
                       <div className="flex justify-between text-sm text-green-600">
                         <span>Descuento</span>
-                        <span>-{formatCurrency(invoice.totals.discountAmount, invoice.currency)}</span>
+                        <span>
+                          -{formatCurrency(invoice.totals.discountAmount, invoice.currency)}
+                        </span>
                       </div>
                     )}
                     {invoice.totals.taxTotal > 0 && (
@@ -243,9 +285,13 @@ export default async function InvoiceDetailPage({ params }: InvoiceDetailPagePro
                       <>
                         <div className="flex justify-between text-sm text-green-600">
                           <span>Monto pagado</span>
-                          <span>-{formatCurrency(invoice.totals.amountPaid, invoice.currency)}</span>
+                          <span>
+                            -{formatCurrency(invoice.totals.amountPaid, invoice.currency)}
+                          </span>
                         </div>
-                        <div className={`flex justify-between border-t pt-2 font-bold ${invoice.totals.amountDue > 0 ? 'text-orange-600' : 'text-green-600'}`}>
+                        <div
+                          className={`flex justify-between border-t pt-2 font-bold ${invoice.totals.amountDue > 0 ? 'text-orange-600' : 'text-green-600'}`}
+                        >
                           <span>Saldo pendiente</span>
                           <span>{formatCurrency(invoice.totals.amountDue, invoice.currency)}</span>
                         </div>
@@ -258,7 +304,7 @@ export default async function InvoiceDetailPage({ params }: InvoiceDetailPagePro
                 {invoice.notes && (
                   <div className="mt-8 border-t pt-4">
                     <h3 className="mb-2 font-semibold">Notas</h3>
-                    <p className="text-sm text-muted-foreground">{invoice.notes}</p>
+                    <p className="text-muted-foreground text-sm">{invoice.notes}</p>
                   </div>
                 )}
 
@@ -266,7 +312,7 @@ export default async function InvoiceDetailPage({ params }: InvoiceDetailPagePro
                 {invoice.terms && (
                   <div className="mt-4">
                     <h3 className="mb-2 font-semibold">Términos y condiciones</h3>
-                    <p className="text-sm text-muted-foreground">{invoice.terms}</p>
+                    <p className="text-muted-foreground text-sm">{invoice.terms}</p>
                   </div>
                 )}
               </div>
@@ -283,13 +329,13 @@ export default async function InvoiceDetailPage({ params }: InvoiceDetailPagePro
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <p className="text-sm text-muted-foreground">Valor total</p>
+                <p className="text-muted-foreground text-sm">Valor total</p>
                 <p data-testid="invoice-total" className="text-2xl font-bold">
                   {formatCurrency(invoice.totals.total, invoice.currency)}
                 </p>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Estado</p>
+                <p className="text-muted-foreground text-sm">Estado</p>
                 <span
                   className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium ${statusStyle.bg} ${statusStyle.text}`}
                 >
@@ -298,24 +344,27 @@ export default async function InvoiceDetailPage({ params }: InvoiceDetailPagePro
                 </span>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Saldo pendiente</p>
-                <p data-testid="amount-due" className={`text-xl font-bold ${displayAmountDue > 0 ? 'text-orange-600' : 'text-green-600'}`}>
+                <p className="text-muted-foreground text-sm">Saldo pendiente</p>
+                <p
+                  data-testid="amount-due"
+                  className={`text-xl font-bold ${displayAmountDue > 0 ? 'text-orange-600' : 'text-green-600'}`}
+                >
                   {formatCurrency(displayAmountDue, invoice.currency)}
                 </p>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Fecha de vencimiento</p>
+                <p className="text-muted-foreground text-sm">Fecha de vencimiento</p>
                 <p className={`font-medium ${isOverdue ? 'text-red-600' : ''}`}>
                   {new Date(invoice.dueDate).toLocaleDateString()}
                   {!isOverdue && daysUntilDue >= 0 && (
-                    <span className="text-sm text-muted-foreground ml-1">
-                      ({daysUntilDue === 0 ? 'Due today' : `${daysUntilDue} days left`})
+                    <span className="text-muted-foreground ml-1 text-sm">
+                      ({daysUntilDue === 0 ? 'Vence hoy' : `Faltan ${daysUntilDue} días`})
                     </span>
                   )}
                 </p>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Conceptos</p>
+                <p className="text-muted-foreground text-sm">Conceptos</p>
                 <p className="font-medium">{invoice.lineItems.length}</p>
               </div>
             </CardContent>
@@ -331,10 +380,10 @@ export default async function InvoiceDetailPage({ params }: InvoiceDetailPagePro
                 <>
                   <p className="font-medium">{invoice.client.name}</p>
                   {invoice.client.company && invoice.client.company !== invoice.client.name && (
-                    <p className="text-sm text-muted-foreground">{invoice.client.company}</p>
+                    <p className="text-muted-foreground text-sm">{invoice.client.company}</p>
                   )}
                   {invoice.client.email && (
-                    <p className="text-sm text-muted-foreground">{invoice.client.email}</p>
+                    <p className="text-muted-foreground text-sm">{invoice.client.email}</p>
                   )}
                 </>
               ) : (
@@ -343,7 +392,7 @@ export default async function InvoiceDetailPage({ params }: InvoiceDetailPagePro
               <Button variant="outline" size="sm" className="mt-4 w-full" asChild>
                 <Link href={`/clients/${invoice.clientId}`}>
                   <ExternalLink className="mr-2 h-4 w-4" />
-                  View Client
+                  Ver cliente
                 </Link>
               </Button>
             </CardContent>
@@ -389,7 +438,7 @@ export default async function InvoiceDetailPage({ params }: InvoiceDetailPagePro
                   </div>
                 </div>
               ) : (
-                <p className="text-sm text-muted-foreground">
+                <p className="text-muted-foreground text-sm">
                   Not configured. Click the settings button to enable recurring.
                 </p>
               )}
@@ -397,20 +446,22 @@ export default async function InvoiceDetailPage({ params }: InvoiceDetailPagePro
           </Card>
 
           {/* Payment Actions */}
-          {invoice.status !== 'draft' && invoice.status !== 'voided' && invoice.totals.amountDue > 0 && (
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-base">Registrar pago</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <RecordPaymentButton
-                  invoiceId={invoice.id}
-                  amountDue={invoice.totals.amountDue}
-                  currency={invoice.currency}
-                />
-              </CardContent>
-            </Card>
-          )}
+          {invoice.status !== 'draft' &&
+            invoice.status !== 'voided' &&
+            invoice.totals.amountDue > 0 && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-base">Registrar pago</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <RecordPaymentButton
+                    invoiceId={invoice.id}
+                    amountDue={invoice.totals.amountDue}
+                    currency={invoice.currency}
+                  />
+                </CardContent>
+              </Card>
+            )}
 
           {/* Credit Notes */}
           {invoice.status !== 'draft' && (
@@ -427,7 +478,7 @@ export default async function InvoiceDetailPage({ params }: InvoiceDetailPagePro
               </CardHeader>
               <CardContent>
                 {creditNotes.length === 0 ? (
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-muted-foreground text-sm">
                     No credit notes issued for this invoice.
                   </p>
                 ) : (
@@ -447,9 +498,7 @@ export default async function InvoiceDetailPage({ params }: InvoiceDetailPagePro
                 <CardTitle className="text-base">Notas internas</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-muted-foreground">
-                  {invoice.internalNotes}
-                </p>
+                <p className="text-muted-foreground text-sm">{invoice.internalNotes}</p>
               </CardContent>
             </Card>
           )}
@@ -472,21 +521,25 @@ async function InvoiceActivity({ invoiceId }: { invoiceId: string }) {
   });
 
   const getEventIcon = (eventType: string) => {
-    if (eventType.includes('sent') || eventType.includes('status_changed_to_sent')) return <Send className="h-4 w-4 text-blue-500" />;
+    if (eventType.includes('sent') || eventType.includes('status_changed_to_sent'))
+      return <Send className="h-4 w-4 text-blue-500" />;
     if (eventType.includes('paid')) return <CheckCircle className="h-4 w-4 text-green-500" />;
     if (eventType.includes('viewed')) return <Clock className="h-4 w-4 text-yellow-500" />;
     if (eventType.includes('voided')) return <Ban className="h-4 w-4 text-gray-500" />;
     if (eventType.includes('payment')) return <Banknote className="h-4 w-4 text-green-500" />;
-    return <Clock className="h-4 w-4 text-muted-foreground" />;
+    return <Clock className="text-muted-foreground h-4 w-4" />;
   };
 
   const getEventLabel = (eventType: string) => {
     if (eventType === 'sent' || eventType === 'status_changed_to_sent') return 'Factura enviada';
     if (eventType === 'viewed' || eventType === 'status_changed_to_viewed') return 'Factura vista';
     if (eventType === 'paid' || eventType === 'status_changed_to_paid') return 'Factura pagada';
-    if (eventType === 'partial' || eventType === 'status_changed_to_partial') return 'Pago parcial registrado';
-    if (eventType === 'voided' || eventType === 'status_changed_to_voided') return 'Factura anulada';
-    if (eventType === 'overdue' || eventType === 'status_changed_to_overdue') return 'Factura vencida';
+    if (eventType === 'partial' || eventType === 'status_changed_to_partial')
+      return 'Pago parcial registrado';
+    if (eventType === 'voided' || eventType === 'status_changed_to_voided')
+      return 'Factura anulada';
+    if (eventType === 'overdue' || eventType === 'status_changed_to_overdue')
+      return 'Factura vencida';
     if (eventType.includes('payment')) return 'Pago registrado';
     if (eventType.includes('created')) return 'Factura creada';
     return eventType.replace(/_/g, ' ').replace(/status changed to /i, 'Estado cambiado a ');
@@ -499,9 +552,7 @@ async function InvoiceActivity({ invoiceId }: { invoiceId: string }) {
       </CardHeader>
       <CardContent>
         {events.length === 0 ? (
-          <p className="text-sm text-muted-foreground">
-            No activity yet.
-          </p>
+          <p className="text-muted-foreground text-sm">No activity yet.</p>
         ) : (
           <div className="space-y-3">
             {events.map((event: { id: string; eventType: string; createdAt: Date }) => (
@@ -509,8 +560,8 @@ async function InvoiceActivity({ invoiceId }: { invoiceId: string }) {
                 <div className="mt-0.5">{getEventIcon(event.eventType)}</div>
                 <div className="flex-1">
                   <p className="text-sm">{getEventLabel(event.eventType)}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {new Date(event.createdAt).toLocaleDateString('en-US', {
+                  <p className="text-muted-foreground text-xs">
+                    {new Date(event.createdAt).toLocaleDateString('es-CR', {
                       year: 'numeric',
                       month: 'short',
                       day: 'numeric',

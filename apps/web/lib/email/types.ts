@@ -94,6 +94,7 @@ export interface EmailVariables {
   quoteName?: string;
   quoteNumber?: string;
   quoteUrl?: string;
+  quotePdfUrl?: string;
   quoteTotal?: string;
   quoteValidUntil?: string;
 
@@ -126,7 +127,10 @@ export const DEFAULT_TEMPLATES: Record<
 <p>{{businessName}} le ha enviado una cotización: <strong>{{quoteName}}</strong></p>
 {{#if message}}<p>{{message}}</p>{{/if}}
 {{#if quoteValidUntil}}<p>Esta cotización es válida hasta el {{quoteValidUntil}}.</p>{{/if}}
-<p><a href="{{quoteUrl}}" style="background-color: #3B82F6; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">Ver cotización</a></p>`,
+<p>
+  <a href="{{quoteUrl}}" style="background-color: #F97316; color: white; padding: 12px 22px; text-decoration: none; border-radius: 999px; display: inline-block; font-weight: 700;">Ver cotización</a>
+  <a href="{{quotePdfUrl}}" style="border: 1px solid #D1D5DB; color: #111827; padding: 11px 22px; margin-left: 8px; text-decoration: none; border-radius: 999px; display: inline-block; font-weight: 700;">Descargar PDF</a>
+</p>`,
   },
   quote_accepted: {
     name: 'Cotización aceptada',

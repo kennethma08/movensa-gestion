@@ -19,10 +19,14 @@ export async function GET(
 ) {
   try {
     // Rate limit PDF downloads
-    const clientIp = _request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || _request.headers.get('x-real-ip') || 'unknown';
+    const clientIp =
+      _request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+      _request.headers.get('x-real-ip') ||
+      'unknown';
     const { checkRateLimit } = await import('@/lib/rate-limit');
     const rl = await checkRateLimit(`pdf-download:${clientIp}`, { limit: 10, windowMs: 60000 });
-    if (rl.limited) return new NextResponse('Too many requests', { status: 429 });
+    if (rl.limited)
+      return new NextResponse('Demasiadas solicitudes. Inténtelo más tarde.', { status: 429 });
 
     const { invoiceId } = await params;
     const accessToken = _request.nextUrl.searchParams.get('token');
@@ -38,7 +42,7 @@ export async function GET(
         select: { id: true },
       });
       if (!invoice) {
-        return new NextResponse('Unauthorized', { status: 401 });
+        return new NextResponse('Acceso no autorizado', { status: 401 });
       }
       data = await getInvoicePdfDataByToken(accessToken);
       actorType = 'client';
@@ -47,14 +51,14 @@ export async function GET(
       // Authenticated user access
       const session = await auth();
       if (!session?.user) {
-        return new NextResponse('Unauthorized', { status: 401 });
+        return new NextResponse('Acceso no autorizado', { status: 401 });
       }
       actorId = session.user.id;
       data = await getInvoicePdfData(invoiceId);
     }
 
     if (!data) {
-      return new NextResponse('Invoice not found', { status: 404 });
+      return new NextResponse('Factura no encontrada', { status: 404 });
     }
 
     const html = generateInvoicePdfHtml(data);
@@ -63,25 +67,27 @@ export async function GET(
       footerTemplate: `
         <div style="width: 100%; font-size: 9px; padding: 5px 15mm; color: #9ca3af; display: flex; justify-content: space-between;">
           <span>${data.invoiceNumber}</span>
-          <span>Page <span class="pageNumber"></span> of <span class="totalPages"></span></span>
+          <span>Página <span class="pageNumber"></span> de <span class="totalPages"></span></span>
         </div>
       `,
     });
 
-    const filename = `Invoice-${data.invoiceNumber.replace(/[^a-zA-Z0-9\-_]/g, '')}.pdf`;
+    const filename = `Factura-${data.invoiceNumber.replace(/[^a-zA-Z0-9\-_]/g, '')}.pdf`;
 
     // Audit trail: log PDF download event
-    prisma.invoiceEvent.create({
-      data: {
-        invoiceId,
-        eventType: 'pdf_downloaded',
-        actorType,
-        actorId: actorId ?? 'anonymous',
-        metadata: { format: 'pdf', filename },
-        ipAddress: _request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || null,
-        userAgent: _request.headers.get('user-agent') || null,
-      },
-    }).catch(() => {}); // Fire and forget — don't block download
+    prisma.invoiceEvent
+      .create({
+        data: {
+          invoiceId,
+          eventType: 'pdf_downloaded',
+          actorType,
+          actorId: actorId ?? 'anonymous',
+          metadata: { format: 'pdf', filename },
+          ipAddress: _request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || null,
+          userAgent: _request.headers.get('user-agent') || null,
+        },
+      })
+      .catch(() => {}); // Fire and forget — don't block download
 
     return new NextResponse(new Uint8Array(pdfBuffer), {
       headers: {
@@ -94,6 +100,6 @@ export async function GET(
     });
   } catch (error) {
     logger.error({ err: error }, 'Error generating invoice PDF');
-    return new NextResponse('Failed to generate PDF', { status: 500 });
+    return new NextResponse('No se pudo generar el PDF', { status: 500 });
   }
 }

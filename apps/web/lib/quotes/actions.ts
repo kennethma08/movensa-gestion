@@ -4,7 +4,13 @@ import { randomBytes } from 'crypto';
 import { revalidatePath } from 'next/cache';
 import { prisma, Prisma } from '@oreko/database';
 import { getCurrentUserWorkspace } from '@/lib/workspace/get-current-workspace';
-import type { QuoteDocument, QuoteBlock, ServiceItemBlock, QuoteStatus, QuoteListItem } from './types';
+import type {
+  QuoteDocument,
+  QuoteBlock,
+  ServiceItemBlock,
+  QuoteStatus,
+  QuoteListItem,
+} from './types';
 import { sendTemplatedEmail } from '@/lib/email/actions';
 import { createNotification } from '@/lib/notifications/internal';
 import { ROUTES } from '@/lib/routes';
@@ -20,13 +26,22 @@ function safeParseQuoteSettings(raw: unknown) {
   const settings = (typeof raw === 'object' && raw !== null ? raw : {}) as Record<string, unknown>;
   return {
     blocks: (Array.isArray(settings.blocks) ? settings.blocks : []) as QuoteBlock[],
-    requireSignature: typeof settings.requireSignature === 'boolean' ? settings.requireSignature : true,
-    autoConvertToInvoice: typeof settings.autoConvertToInvoice === 'boolean' ? settings.autoConvertToInvoice : false,
-    depositRequired: typeof settings.depositRequired === 'boolean' ? settings.depositRequired : false,
-    depositType: (settings.depositType === 'percentage' || settings.depositType === 'fixed' ? settings.depositType : 'percentage') as 'percentage' | 'fixed',
+    requireSignature:
+      typeof settings.requireSignature === 'boolean' ? settings.requireSignature : true,
+    autoConvertToInvoice:
+      typeof settings.autoConvertToInvoice === 'boolean' ? settings.autoConvertToInvoice : false,
+    depositRequired:
+      typeof settings.depositRequired === 'boolean' ? settings.depositRequired : false,
+    depositType: (settings.depositType === 'percentage' || settings.depositType === 'fixed'
+      ? settings.depositType
+      : 'percentage') as 'percentage' | 'fixed',
     depositValue: typeof settings.depositValue === 'number' ? settings.depositValue : 50,
-    showLineItemPrices: typeof settings.showLineItemPrices === 'boolean' ? settings.showLineItemPrices : true,
-    allowPartialAcceptance: typeof settings.allowPartialAcceptance === 'boolean' ? settings.allowPartialAcceptance : false,
+    showLineItemPrices:
+      typeof settings.showLineItemPrices === 'boolean' ? settings.showLineItemPrices : true,
+    allowPartialAcceptance:
+      typeof settings.allowPartialAcceptance === 'boolean'
+        ? settings.allowPartialAcceptance
+        : false,
     currency: typeof settings.currency === 'string' ? settings.currency : 'USD',
     taxInclusive: typeof settings.taxInclusive === 'boolean' ? settings.taxInclusive : false,
   };
@@ -123,8 +138,16 @@ export async function getNextQuoteNumber(): Promise<string> {
 
 /** Allowed block types for server-side validation */
 const VALID_BLOCK_TYPES = new Set([
-  'header', 'text', 'service-item', 'service-group',
-  'image', 'divider', 'spacer', 'columns', 'table', 'signature',
+  'header',
+  'text',
+  'service-item',
+  'service-group',
+  'image',
+  'divider',
+  'spacer',
+  'columns',
+  'table',
+  'signature',
 ]);
 
 /**
@@ -146,19 +169,22 @@ export async function createQuote(data: {
 
   // Bug #455: RBAC — viewers cannot create quotes
   if (role === 'viewer') {
-    return { success: false, error: 'Insufficient permissions: viewers cannot create quotes' };
+    return { success: false, error: 'No tiene permisos para crear cotizaciones.' };
   }
 
   // Validate title
   if (!data.title || data.title.length > 500) {
-    return { success: false, error: 'Title is required and must be under 500 characters' };
+    return {
+      success: false,
+      error: 'El título es obligatorio y debe tener menos de 500 caracteres.',
+    };
   }
 
   // Validate block types server-side
   if (data.blocks) {
     for (const block of data.blocks) {
       if (!VALID_BLOCK_TYPES.has(block.type)) {
-        return { success: false, error: `Invalid block type: ${block.type}` };
+        return { success: false, error: `Tipo de bloque no válido: ${block.type}` };
       }
     }
   }
@@ -168,7 +194,7 @@ export async function createQuote(data: {
     where: { id: data.clientId, workspaceId: workspace.id, deletedAt: null },
   });
   if (!client) {
-    return { success: false, error: 'Client not found' };
+    return { success: false, error: 'No se encontró el cliente.' };
   }
 
   // Determine currency: use provided value, or fall back to workspace BusinessProfile, then 'USD'
@@ -202,27 +228,36 @@ export async function createQuote(data: {
   // Validate line item values
   // CR #8: Also reject Infinity/NaN to prevent PDF generation crashes
   for (const block of serviceItems) {
-    if (!Number.isFinite(block.content.rate) || block.content.rate < 0 || block.content.rate > 1_000_000) {
+    if (
+      !Number.isFinite(block.content.rate) ||
+      block.content.rate < 0 ||
+      block.content.rate > 1_000_000
+    ) {
       return { success: false, error: 'Line item rate must be between 0 and 1,000,000' };
     }
-    if (!Number.isFinite(block.content.quantity) || block.content.quantity < 0 || block.content.quantity > 1_000_000) {
+    if (
+      !Number.isFinite(block.content.quantity) ||
+      block.content.quantity < 0 ||
+      block.content.quantity > 1_000_000
+    ) {
       return { success: false, error: 'Line item quantity must be between 0 and 1,000,000' };
     }
   }
 
-  const lineItems = serviceItems
-    .map((block, index) => ({
-      name: block.content.name,
-      description: block.content.description || null,
-      quantity: block.content.quantity,
-      rate: block.content.rate,
-      amount: Math.round(block.content.quantity * block.content.rate * 100) / 100,
-      taxRate: block.content.taxRate,
-      taxAmount: block.content.taxRate
-        ? Math.round(block.content.quantity * block.content.rate * (block.content.taxRate / 100) * 100) / 100
-        : 0,
-      sortOrder: index,
-    }));
+  const lineItems = serviceItems.map((block, index) => ({
+    name: block.content.name,
+    description: block.content.description || null,
+    quantity: block.content.quantity,
+    rate: block.content.rate,
+    amount: Math.round(block.content.quantity * block.content.rate * 100) / 100,
+    taxRate: block.content.taxRate,
+    taxAmount: block.content.taxRate
+      ? Math.round(
+          block.content.quantity * block.content.rate * (block.content.taxRate / 100) * 100
+        ) / 100
+      : 0,
+    sortOrder: index,
+  }));
 
   // Calculate totals
   const subtotal = Math.round(lineItems.reduce((sum, item) => sum + item.amount, 0) * 100) / 100;
@@ -236,11 +271,13 @@ export async function createQuote(data: {
       projectId: data.projectId || null,
       quoteNumber,
       title: data.title,
-      // Creating a quote never means it was delivered. The sendQuote action is
-      // the only place that promotes it to "sent", and only after email succeeds.
-      status: 'draft',
+      // Una cotización guardada queda lista para revisión interna. La acción
+      // sendQuote es la única que la marca como enviada después de entregar el correo.
+      status: 'under_review',
       currency,
-      expirationDate: data.expirationDate ? new Date(data.expirationDate) : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+      expirationDate: data.expirationDate
+        ? new Date(data.expirationDate)
+        : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
       accessToken: generateAccessToken(),
       notes: data.notes || null,
       terms: data.terms || null,
@@ -277,7 +314,10 @@ export async function createQuote(data: {
   revalidatePath(ROUTES.dashboard);
 
   try {
-    domainEvents.emit({ type: 'quote.created', payload: { quoteId: quote.id, workspaceId: workspace.id } });
+    domainEvents.emit({
+      type: 'quote.created',
+      payload: { quoteId: quote.id, workspaceId: workspace.id },
+    });
   } catch {}
 
   return {
@@ -322,12 +362,12 @@ export async function updateQuote(
 
   // Bug #455: RBAC — viewers cannot update quotes
   if (role === 'viewer') {
-    return { success: false as const, error: 'Insufficient permissions: viewers cannot edit quotes' };
+    return { success: false as const, error: 'No tiene permisos para editar cotizaciones.' };
   }
 
   // Validate title length if provided
   if (data.title !== undefined && data.title.length > 500) {
-    return { success: false as const, error: 'Title must be less than 500 characters' };
+    return { success: false as const, error: 'El título debe tener menos de 500 caracteres.' };
   }
 
   // CR #10: Verify quote belongs to workspace (include deletedAt filter)
@@ -340,12 +380,15 @@ export async function updateQuote(
   });
 
   if (!existingQuote) {
-    return { success: false as const, error: 'Quote not found' };
+    return { success: false as const, error: 'No se encontró la cotización.' };
   }
 
   // Bug #11: Prevent modifications to signed/accepted quotes
   if (['accepted', 'converted'].includes(existingQuote.status) || existingQuote.signedAt) {
-    return { success: false as const, error: 'Cannot modify a quote that has been accepted or signed' };
+    return {
+      success: false as const,
+      error: 'No se puede modificar una cotización aceptada o firmada.',
+    };
   }
 
   // Bug #49: Extract service items recursively (includes items inside service-group blocks)
@@ -370,11 +413,22 @@ export async function updateQuote(
   // Validate line item values
   if (serviceBlocks) {
     for (const block of serviceBlocks) {
-      if (!Number.isFinite(block.content.rate) || block.content.rate < 0 || block.content.rate > 1_000_000) {
+      if (
+        !Number.isFinite(block.content.rate) ||
+        block.content.rate < 0 ||
+        block.content.rate > 1_000_000
+      ) {
         return { success: false as const, error: 'Line item rate must be between 0 and 1,000,000' };
       }
-      if (!Number.isFinite(block.content.quantity) || block.content.quantity < 0 || block.content.quantity > 1_000_000) {
-        return { success: false as const, error: 'Line item quantity must be between 0 and 1,000,000' };
+      if (
+        !Number.isFinite(block.content.quantity) ||
+        block.content.quantity < 0 ||
+        block.content.quantity > 1_000_000
+      ) {
+        return {
+          success: false as const,
+          error: 'Line item quantity must be between 0 and 1,000,000',
+        };
       }
     }
   }
@@ -387,17 +441,24 @@ export async function updateQuote(
     amount: Math.round(block.content.quantity * block.content.rate * 100) / 100,
     taxRate: block.content.taxRate,
     taxAmount: block.content.taxRate
-      ? Math.round(block.content.quantity * block.content.rate * (block.content.taxRate / 100) * 100) / 100
+      ? Math.round(
+          block.content.quantity * block.content.rate * (block.content.taxRate / 100) * 100
+        ) / 100
       : 0,
     sortOrder: index,
   }));
 
   // Calculate totals
-  const subtotal = Math.round((lineItems?.reduce((sum, item) => sum + item.amount, 0) || 0) * 100) / 100;
-  let taxTotal = Math.round((lineItems?.reduce((sum, item) => sum + item.taxAmount, 0) || 0) * 100) / 100;
+  const subtotal =
+    Math.round((lineItems?.reduce((sum, item) => sum + item.amount, 0) || 0) * 100) / 100;
+  let taxTotal =
+    Math.round((lineItems?.reduce((sum, item) => sum + item.taxAmount, 0) || 0) * 100) / 100;
 
   // Bug #123: Validate discount values server-side
-  const mergedSettings = { ...(existingQuote.settings as Record<string, unknown>), ...data.settings };
+  const mergedSettings = {
+    ...(existingQuote.settings as Record<string, unknown>),
+    ...data.settings,
+  };
   const discountType = mergedSettings.discountType as string | undefined;
   const discountValue = Number(mergedSettings.discountValue) || 0;
   if (discountValue < 0) {
@@ -438,6 +499,9 @@ export async function updateQuote(
       return tx.quote.update({
         where: { id: quoteId },
         data: {
+          // Al guardar una cotización antigua que aún esté en borrador, pásela a
+          // revisión. Guardar sin enviar no debe dejar documentos como borradores.
+          ...(existingQuote.status === 'draft' && { status: 'under_review' }),
           title: data.title,
           ...(data.projectId !== undefined && { projectId: data.projectId }),
           currency: data.currency || undefined,
@@ -493,7 +557,10 @@ export async function updateQuote(
     };
   } catch (error) {
     logger.error({ err: error }, 'Failed to update quote');
-    return { success: false as const, error: 'Failed to save quote. Please try again.' };
+    return {
+      success: false as const,
+      error: 'No se pudo guardar la cotización. Inténtelo nuevamente.',
+    };
   }
 }
 
@@ -657,23 +724,27 @@ export async function getQuotes(options?: {
   ]);
 
   return {
-    quotes: quotes.map((quote): QuoteListItem => ({
-      id: quote.id,
-      quoteNumber: quote.quoteNumber,
-      title: quote.title ?? '',
-      status: quote.status as QuoteStatus,
-      total: toNumber(quote.total),
-      currency: quote.currency,
-      issueDate: (quote.issueDate ?? new Date()).toISOString().split('T')[0]!,
-      expirationDate: quote.expirationDate?.toISOString().split('T')[0] || null,
-      client: quote.client ? {
-        id: quote.client.id,
-        name: quote.client.name,
-        email: quote.client.email,
-        company: quote.client.company,
-      } : null,
-      createdAt: quote.createdAt.toISOString(),
-    })),
+    quotes: quotes.map(
+      (quote): QuoteListItem => ({
+        id: quote.id,
+        quoteNumber: quote.quoteNumber,
+        title: quote.title ?? '',
+        status: quote.status as QuoteStatus,
+        total: toNumber(quote.total),
+        currency: quote.currency,
+        issueDate: (quote.issueDate ?? new Date()).toISOString().split('T')[0]!,
+        expirationDate: quote.expirationDate?.toISOString().split('T')[0] || null,
+        client: quote.client
+          ? {
+              id: quote.client.id,
+              name: quote.client.name,
+              email: quote.client.email,
+              company: quote.client.company,
+            }
+          : null,
+        createdAt: quote.createdAt.toISOString(),
+      })
+    ),
     total,
   };
 }
@@ -695,7 +766,10 @@ export async function deleteQuote(quoteId: string) {
   });
 
   if (linkedInvoice) {
-    return { success: false, error: 'Cannot delete a quote that has a linked invoice. Delete or void the invoice first.' };
+    return {
+      success: false,
+      error: 'Cannot delete a quote that has a linked invoice. Delete or void the invoice first.',
+    };
   }
 
   // Bug #79: Clean up signature data before soft-deleting
@@ -769,7 +843,7 @@ export async function duplicateQuote(quoteId: string) {
       terms: original.terms,
       settings: original.settings as Prisma.InputJsonValue,
       lineItems: {
-        create: original.lineItems.map((item: typeof original.lineItems[number]) => ({
+        create: original.lineItems.map((item: (typeof original.lineItems)[number]) => ({
           name: item.name,
           description: item.description,
           quantity: item.quantity,
@@ -854,7 +928,10 @@ export async function updateQuoteStatus(
     });
   } catch (error) {
     logger.error({ err: error, quoteId, status }, 'Failed to update quote status');
-    return { success: false, error: 'No se pudo cambiar el estado de la cotización. Inténtelo nuevamente.' };
+    return {
+      success: false,
+      error: 'No se pudo cambiar el estado de la cotización. Inténtelo nuevamente.',
+    };
   }
 
   revalidatePath(ROUTES.quotes);
@@ -863,9 +940,15 @@ export async function updateQuoteStatus(
 
   try {
     if (status === 'accepted') {
-      domainEvents.emit({ type: 'quote.accepted', payload: { quoteId, workspaceId: workspace.id } });
+      domainEvents.emit({
+        type: 'quote.accepted',
+        payload: { quoteId, workspaceId: workspace.id },
+      });
     } else if (status === 'declined') {
-      domainEvents.emit({ type: 'quote.declined', payload: { quoteId, workspaceId: workspace.id } });
+      domainEvents.emit({
+        type: 'quote.declined',
+        payload: { quoteId, workspaceId: workspace.id },
+      });
     }
   } catch {}
 
@@ -889,7 +972,7 @@ export async function sendQuote(quoteId: string, emailOptions?: SendEmailOptions
 
   // Bug #455: RBAC — viewers cannot send quotes
   if (role === 'viewer') {
-    return { success: false, error: 'Insufficient permissions: viewers cannot send quotes' };
+    return { success: false, error: 'No tiene permisos para enviar cotizaciones.' };
   }
 
   // Get quote with client details
@@ -905,37 +988,50 @@ export async function sendQuote(quoteId: string, emailOptions?: SendEmailOptions
   });
 
   if (!quote) {
-    return { success: false, error: 'Quote not found' };
+    return { success: false, error: 'No se encontró la cotización.' };
   }
 
   // HIGH #8: Validate that the current status allows transition to 'sent'
   const validSendStatuses = ['draft', 'under_review', 'sent', 'viewed']; // Can send/resend from these states
   if (!validSendStatuses.includes(quote.status)) {
-    return { success: false, error: 'Cannot send a quote with status: ' + quote.status };
+    return {
+      success: false,
+      error: `No se puede enviar una cotización con estado ${quote.status}.`,
+    };
   }
 
   if (!quote.client?.email) {
-    return { success: false, error: 'Client email is required to send quote' };
+    return {
+      success: false,
+      error: 'El cliente debe tener un correo electrónico para enviar la cotización.',
+    };
   }
 
   // Prevent sending empty quotes
   if (Math.abs(toNumber(quote.total)) < 0.01) {
-    return { success: false, error: 'Cannot send a quote with zero total. Add line items first.' };
+    return {
+      success: false,
+      error: 'No se puede enviar una cotización con total cero. Agregue al menos un concepto.',
+    };
   }
 
   const baseUrl = getBaseUrl();
   const quoteUrl = `${baseUrl}/q/${quote.accessToken}`;
+  const quotePdfUrl = `${baseUrl}/api/download/quote/${quote.id}?token=${quote.accessToken}`;
 
   // Validate and limit email recipients
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   let emailRecipients: string[];
   if (emailOptions?.recipients?.length) {
     if (emailOptions.recipients.length > 10) {
-      return { success: false, error: 'Maximum 10 recipients allowed' };
+      return { success: false, error: 'Se permite un máximo de 10 destinatarios.' };
     }
-    const invalidEmails = emailOptions.recipients.filter(e => !emailRegex.test(e));
+    const invalidEmails = emailOptions.recipients.filter((e) => !emailRegex.test(e));
     if (invalidEmails.length > 0) {
-      return { success: false, error: `Invalid email addresses: ${invalidEmails.join(', ')}` };
+      return {
+        success: false,
+        error: `Correos electrónicos no válidos: ${invalidEmails.join(', ')}`,
+      };
     }
     emailRecipients = emailOptions.recipients;
   } else {
@@ -949,14 +1045,28 @@ export async function sendQuote(quoteId: string, emailOptions?: SendEmailOptions
       to: emailRecipients,
       variables: {
         businessName: workspace.name,
-        businessEmail: (await prisma.businessProfile.findUnique({ where: { workspaceId: workspace.id }, select: { email: true } }))?.email || '',
+        businessEmail:
+          (
+            await prisma.businessProfile.findUnique({
+              where: { workspaceId: workspace.id },
+              select: { email: true },
+            })
+          )?.email || '',
         clientName: quote.client.name,
         clientEmail: quote.client.email,
-        quoteName: quote.title || `Quote ${quote.quoteNumber}`,
+        quoteName: quote.title || `Cotización ${quote.quoteNumber}`,
         quoteNumber: quote.quoteNumber,
         quoteUrl,
+        quotePdfUrl,
         quoteTotal: formatCurrency(toNumber(quote.total), quote.currency),
-        quoteValidUntil: quote.expirationDate ? quote.expirationDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : undefined,
+        quoteValidUntil: quote.expirationDate
+          ? quote.expirationDate.toLocaleDateString('es-CR', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+              timeZone: 'America/Costa_Rica',
+            })
+          : undefined,
         message: emailOptions?.message || undefined,
       },
       customSubject: emailOptions?.subject || undefined,
@@ -964,11 +1074,17 @@ export async function sendQuote(quoteId: string, emailOptions?: SendEmailOptions
     emailSent = emailResult.success;
     if (!emailResult.success) {
       logger.error({ err: emailResult.error }, 'Failed to send quote email');
-      return { success: false, error: 'Email could not be sent. Please check your email settings.' };
+      return {
+        success: false,
+        error: 'No se pudo enviar el correo. Revise la configuración de correo electrónico.',
+      };
     }
   } catch (err) {
     logger.error({ err }, 'Failed to send quote email');
-    return { success: false, error: 'Email could not be sent. Please check your email settings.' };
+    return {
+      success: false,
+      error: 'No se pudo enviar el correo. Revise la configuración de correo electrónico.',
+    };
   }
 
   // Update quote status to sent (only after email succeeds)
@@ -1014,7 +1130,10 @@ export async function sendQuote(quoteId: string, emailOptions?: SendEmailOptions
   revalidatePath(ROUTES.dashboard);
 
   try {
-    domainEvents.emit({ type: 'quote.sent', payload: { quoteId, workspaceId: workspace.id, clientEmail: quote.client.email } });
+    domainEvents.emit({
+      type: 'quote.sent',
+      payload: { quoteId, workspaceId: workspace.id, clientEmail: quote.client.email },
+    });
   } catch {}
 
   return { success: true, recipientEmail: quote.client.email, emailSent };
