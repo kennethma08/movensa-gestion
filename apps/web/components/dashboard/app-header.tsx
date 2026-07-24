@@ -19,7 +19,11 @@ import {
   Banknote,
   XCircle,
 } from 'lucide-react';
-import { markAllNotificationsRead, markNotificationRead, type NotificationData } from '@/lib/notifications/actions';
+import {
+  markAllNotificationsRead,
+  markNotificationRead,
+  type NotificationData,
+} from '@/lib/notifications/actions';
 
 import { ThemeToggle } from '@/components/shared/theme-toggle';
 import { SearchCommand } from '@/components/shared/search-command';
@@ -91,31 +95,65 @@ function formatTimeAgo(date: Date, now: Date | null): string {
 }
 
 function getNotificationReference(notification: NotificationData): string {
-  const match = notification.title.match(/(?:Quote|Invoice|Contract|Cotización|Factura|Contrato)\s+([A-Z0-9-]+)/i);
+  const match = notification.title.match(
+    /(?:Quote|Invoice|Contract|Cotización|Factura|Contrato)\s+([A-Z0-9-]+)/i
+  );
   return match?.[1] ? ` ${match[1]}` : '';
 }
 
-function localizeNotification(notification: NotificationData): { title: string; message: string | null } {
+function localizeNotification(notification: NotificationData): {
+  title: string;
+  message: string | null;
+} {
   const reference = getNotificationReference(notification);
   const recipient = notification.message?.replace(/^(?:Sent to|Enviada a)\s+/i, '').trim();
 
   const labels: Record<string, { title: string; message: string }> = {
-    quote_sent: { title: `Cotización${reference} enviada`, message: recipient ? `Enviada a ${recipient}` : 'La cotización fue enviada.' },
-    quote_viewed: { title: `Cotización${reference} vista`, message: 'El cliente abrió la cotización.' },
-    quote_accepted: { title: `Cotización${reference} aceptada`, message: 'El cliente aceptó la cotización.' },
-    quote_declined: { title: `Cotización${reference} rechazada`, message: 'El cliente rechazó la cotización.' },
-    invoice_sent: { title: `Factura${reference} enviada`, message: recipient ? `Enviada a ${recipient}` : 'La factura fue enviada.' },
+    quote_sent: {
+      title: `Cotización${reference} enviada`,
+      message: recipient ? `Enviada a ${recipient}` : 'La cotización fue enviada.',
+    },
+    quote_viewed: {
+      title: `Cotización${reference} vista`,
+      message: 'El cliente abrió la cotización.',
+    },
+    quote_accepted: {
+      title: `Cotización${reference} aceptada`,
+      message: 'El cliente aceptó la cotización.',
+    },
+    quote_declined: {
+      title: `Cotización${reference} rechazada`,
+      message: 'El cliente rechazó la cotización.',
+    },
+    invoice_sent: {
+      title: `Factura${reference} enviada`,
+      message: recipient ? `Enviada a ${recipient}` : 'La factura fue enviada.',
+    },
     invoice_viewed: { title: `Factura${reference} vista`, message: 'El cliente abrió la factura.' },
-    invoice_paid: { title: `Factura${reference} pagada`, message: 'El pago de la factura fue registrado.' },
-    invoice_overdue: { title: `Factura${reference} vencida`, message: 'La factura tiene un saldo pendiente vencido.' },
-    contract_sent: { title: `Contrato${reference} enviado`, message: 'El contrato fue enviado al cliente.' },
-    contract_signed: { title: `Contrato${reference} firmado`, message: 'El cliente firmó el contrato.' },
+    invoice_paid: {
+      title: `Factura${reference} pagada`,
+      message: 'El pago de la factura fue registrado.',
+    },
+    invoice_overdue: {
+      title: `Factura${reference} vencida`,
+      message: 'La factura tiene un saldo pendiente vencido.',
+    },
+    contract_sent: {
+      title: `Contrato${reference} enviado`,
+      message: 'El contrato fue enviado al cliente.',
+    },
+    contract_signed: {
+      title: `Contrato${reference} firmado`,
+      message: 'El cliente firmó el contrato.',
+    },
   };
 
-  return labels[notification.type] || {
-    title: notification.title,
-    message: notification.message,
-  };
+  return (
+    labels[notification.type] || {
+      title: notification.title,
+      message: notification.message,
+    }
+  );
 }
 
 const pathNameMap: Record<string, string> = {
@@ -136,12 +174,17 @@ const pathNameMap: Record<string, string> = {
   account: 'Cuenta',
   business: 'Datos del negocio',
   branding: 'Marca',
+  appearance: 'Apariencia',
   team: 'Equipo',
   workspace: 'Espacio de trabajo',
   billing: 'Facturación y suscripción',
   'tax-rates': 'Impuestos',
+  'custom-fields': 'Campos personalizados',
   emails: 'Plantillas de correo',
   payments: 'Configuración de pagos',
+  webhooks: 'Webhooks',
+  integrations: 'Integraciones',
+  api: 'Claves API',
   editor: 'Editor',
 };
 
@@ -174,7 +217,7 @@ function generateBreadcrumbs(pathname: string) {
       // Capitalize first letter of each word
       label = segment
         .split(/[-_.]/)
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
         .join(' ');
     }
 
@@ -245,7 +288,6 @@ export function AppHeader({ user, unreadCount = 0, notifications = [] }: AppHead
               ))}
             </BreadcrumbList>
           </Breadcrumb>
-
         </div>
 
         {/* Right: Actions */}
@@ -268,9 +310,9 @@ export function AppHeader({ user, unreadCount = 0, notifications = [] }: AppHead
             className="hidden md:flex"
             onClick={() => setCommandOpen(true)}
           >
-            <Search className="h-4 w-4 mr-2" />
+            <Search className="mr-2 h-4 w-4" />
             <span>Buscar</span>
-            <kbd className="ml-4 rounded bg-muted px-2 py-0.5 text-xs text-muted-foreground">
+            <kbd className="bg-muted text-muted-foreground ml-4 rounded px-2 py-0.5 text-xs">
               ⌘K
             </kbd>
           </Button>
@@ -287,7 +329,7 @@ export function AppHeader({ user, unreadCount = 0, notifications = [] }: AppHead
               <Button variant="ghost" size="icon" className="relative" aria-label="Notificaciones">
                 <Bell className="h-4 w-4" />
                 {unreadCount > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-destructive text-[10px] font-bold text-destructive-foreground">
+                  <span className="bg-destructive text-destructive-foreground absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full text-[10px] font-bold">
                     {unreadCount > 9 ? '9+' : unreadCount}
                   </span>
                 )}
@@ -300,7 +342,7 @@ export function AppHeader({ user, unreadCount = 0, notifications = [] }: AppHead
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="h-auto p-0 text-xs text-muted-foreground hover:text-foreground"
+                    className="text-muted-foreground hover:text-foreground h-auto p-0 text-xs"
                     onClick={() => markAllNotificationsRead()}
                   >
                     Marcar todo como leído
@@ -311,9 +353,9 @@ export function AppHeader({ user, unreadCount = 0, notifications = [] }: AppHead
               <div className="max-h-80 overflow-y-auto">
                 {notifications.length === 0 ? (
                   <div className="flex flex-col items-center justify-center py-8 text-center">
-                    <Bell className="h-8 w-8 text-muted-foreground mb-2" />
+                    <Bell className="text-muted-foreground mb-2 h-8 w-8" />
                     <p className="text-sm font-medium">No hay notificaciones nuevas</p>
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-muted-foreground text-xs">
                       Aquí aparecerán las novedades de su gestión
                     </p>
                   </div>
@@ -324,7 +366,7 @@ export function AppHeader({ user, unreadCount = 0, notifications = [] }: AppHead
                     return (
                       <DropdownMenuItem
                         key={notification.id}
-                        className="flex items-start gap-3 p-3 cursor-pointer"
+                        className="flex cursor-pointer items-start gap-3 p-3"
                         onClick={() => {
                           if (!notification.isRead) {
                             markNotificationRead(notification.id);
@@ -335,21 +377,25 @@ export function AppHeader({ user, unreadCount = 0, notifications = [] }: AppHead
                         }}
                       >
                         <div className="mt-0.5 shrink-0">
-                          <IconComponent className="h-4 w-4 text-muted-foreground" />
+                          <IconComponent className="text-muted-foreground h-4 w-4" />
                         </div>
-                        <div className="flex-1 min-w-0">
-                          <p className={`text-sm truncate ${!notification.isRead ? 'font-semibold' : ''}`}>
+                        <div className="min-w-0 flex-1">
+                          <p
+                            className={`truncate text-sm ${!notification.isRead ? 'font-semibold' : ''}`}
+                          >
                             {localized.title}
                           </p>
                           {localized.message && (
-                            <p className="text-xs text-muted-foreground truncate">{localized.message}</p>
+                            <p className="text-muted-foreground truncate text-xs">
+                              {localized.message}
+                            </p>
                           )}
-                          <p className="text-xs text-muted-foreground mt-0.5">
+                          <p className="text-muted-foreground mt-0.5 text-xs">
                             {formatTimeAgo(notification.createdAt, currentTime)}
                           </p>
                         </div>
                         {!notification.isRead && (
-                          <div className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-primary" />
+                          <div className="bg-primary mt-1.5 h-2 w-2 shrink-0 rounded-full" />
                         )}
                       </DropdownMenuItem>
                     );
@@ -383,7 +429,7 @@ export function AppHeader({ user, unreadCount = 0, notifications = [] }: AppHead
                 </Avatar>
                 <div className="flex flex-col">
                   <span className="text-sm font-medium">{user.name || 'Usuario'}</span>
-                  <span className="text-xs text-muted-foreground">{user.email}</span>
+                  <span className="text-muted-foreground text-xs">{user.email}</span>
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />

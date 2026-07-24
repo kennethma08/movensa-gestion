@@ -36,7 +36,7 @@ async function getActiveWorkspace() {
   });
 
   if (!workspace) {
-    throw new Error('Workspace not found');
+    throw new Error('No se encontró el espacio de trabajo');
   }
 
   return {
@@ -109,10 +109,10 @@ export async function createInvoice(data: CreateInvoiceData) {
 
   // MEDIUM #13: Basic input validation
   if (!data.clientId || typeof data.clientId !== 'string') {
-    return { success: false, error: 'Client is required' };
+    return { success: false, error: 'Debe seleccionar un cliente' };
   }
   if (!data.lineItems || !Array.isArray(data.lineItems) || data.lineItems.length === 0) {
-    return { success: false, error: 'At least one line item is required' };
+    return { success: false, error: 'Agregue al menos un concepto' };
   }
 
   // Verify client belongs to workspace
@@ -120,7 +120,7 @@ export async function createInvoice(data: CreateInvoiceData) {
     where: { id: data.clientId, workspaceId: workspace.id, deletedAt: null },
   });
   if (!client) {
-    return { success: false, error: 'Client not found' };
+    return { success: false, error: 'No se encontró el cliente' };
   }
 
   // Use custom invoice number if provided, otherwise auto-generate
@@ -131,7 +131,7 @@ export async function createInvoice(data: CreateInvoiceData) {
       where: { workspaceId: workspace.id, invoiceNumber: data.invoiceNumber },
     });
     if (existing) {
-      return { success: false, error: 'Invoice number already exists' };
+      return { success: false, error: 'El número de factura ya existe' };
     }
     invoiceNumber = data.invoiceNumber;
   } else {
@@ -151,22 +151,22 @@ export async function createInvoice(data: CreateInvoiceData) {
   // Validate line item values
   for (const item of data.lineItems) {
     if (!Number.isFinite(item.rate) || item.rate < 0 || item.rate > 1_000_000) {
-      return { success: false, error: 'Line item rate must be between 0 and 1,000,000' };
+      return { success: false, error: 'La tarifa debe estar entre 0 y 1 000 000' };
     }
     if (!Number.isFinite(item.quantity) || item.quantity < 0 || item.quantity > 1_000_000) {
-      return { success: false, error: 'Line item quantity must be between 0 and 1,000,000' };
+      return { success: false, error: 'La cantidad debe estar entre 0 y 1 000 000' };
     }
   }
 
   // Bug #17: Validate discount values before calculating totals
   if (data.discountType === 'percentage' && data.discountValue != null) {
     if (data.discountValue < 0 || data.discountValue > 100) {
-      return { success: false, error: 'Discount percentage must be between 0 and 100' };
+      return { success: false, error: 'El porcentaje de descuento debe estar entre 0 y 100' };
     }
   }
   if (data.discountType === 'fixed' && data.discountValue != null) {
     if (data.discountValue < 0) {
-      return { success: false, error: 'Discount amount cannot be negative' };
+      return { success: false, error: 'El descuento no puede ser negativo' };
     }
     // Cap fixed discount at subtotal (calculateTotals also clamps, but reject early for clarity)
     const preliminarySubtotal = data.lineItems.reduce(
@@ -469,7 +469,7 @@ export async function updateInvoice(invoiceId: string, data: UpdateInvoiceData) 
 
   // Bug #456: RBAC — viewers cannot update invoices
   if (role === 'viewer') {
-    return { success: false, error: 'Insufficient permissions: viewers cannot edit invoices' };
+    return { success: false, error: 'No tiene permisos para editar facturas' };
   }
 
   const existingInvoice = await prisma.invoice.findFirst({
@@ -482,12 +482,12 @@ export async function updateInvoice(invoiceId: string, data: UpdateInvoiceData) 
   });
 
   if (!existingInvoice) {
-    return { success: false, error: 'Invoice not found' };
+    return { success: false, error: 'No se encontró la factura' };
   }
 
   // Can only update draft invoices
   if (existingInvoice.status !== 'draft') {
-    return { success: false, error: 'Can only edit draft invoices' };
+    return { success: false, error: 'Solo se pueden editar facturas en borrador' };
   }
 
   let subtotal = toNumber(existingInvoice.subtotal);
@@ -510,10 +510,10 @@ export async function updateInvoice(invoiceId: string, data: UpdateInvoiceData) 
   if (data.lineItems) {
     for (const item of data.lineItems) {
       if (item.rate < 0) {
-        return { success: false, error: 'Line item rate cannot be negative' };
+        return { success: false, error: 'La tarifa no puede ser negativa' };
       }
       if (item.quantity < 0) {
-        return { success: false, error: 'Line item quantity cannot be negative' };
+        return { success: false, error: 'La cantidad no puede ser negativa' };
       }
     }
     const totals = calculateTotals(data.lineItems, { type: discountType, value: discountValue });
@@ -766,7 +766,7 @@ export async function updateInvoiceStatus(invoiceId: string, status: InvoiceStat
   if (role === 'viewer') {
     return {
       success: false,
-      error: 'Insufficient permissions: viewers cannot change invoice status',
+      error: 'No tiene permisos para cambiar el estado de la factura',
     };
   }
 
@@ -779,7 +779,7 @@ export async function updateInvoiceStatus(invoiceId: string, status: InvoiceStat
   });
 
   if (!invoice) {
-    return { success: false, error: 'Invoice not found' };
+    return { success: false, error: 'No se encontró la factura' };
   }
 
   // Validate status transitions
@@ -807,13 +807,14 @@ export async function updateInvoiceStatus(invoiceId: string, status: InvoiceStat
   if (status === 'paid' && amountPaid < total) {
     return {
       success: false,
-      error: `Cannot mark as paid: amount paid ($${amountPaid.toFixed(2)}) is less than total ($${total.toFixed(2)})`,
+      error: `No se puede marcar como pagada: el monto abonado (${amountPaid.toFixed(2)}) es menor que el total (${total.toFixed(2)})`,
     };
   }
   if (status === 'partial' && (amountPaid <= 0 || amountPaid >= total)) {
     return {
       success: false,
-      error: 'Cannot mark as partial: amount paid must be between $0 and the total',
+      error:
+        'No se puede marcar como parcial: el monto abonado debe ser mayor que cero y menor que el total',
     };
   }
 
@@ -894,11 +895,11 @@ export async function sendInvoice(invoiceId: string, emailOptions?: SendEmailOpt
   });
 
   if (!invoice) {
-    return { success: false, error: 'Invoice not found', emailSent: false };
+    return { success: false, error: 'No se encontró la factura', emailSent: false };
   }
 
   if (!invoice.client?.email) {
-    return { success: false, error: 'Client has no email address', emailSent: false };
+    return { success: false, error: 'El cliente no tiene correo electrónico', emailSent: false };
   }
 
   // Try sending email FIRST — only update status if email succeeds
@@ -947,7 +948,7 @@ export async function sendInvoice(invoiceId: string, emailOptions?: SendEmailOpt
       logger.error({ err: emailResult.error }, 'Failed to send invoice email');
       return {
         success: false,
-        error: 'Email could not be sent. Please check your email settings.',
+        error: 'No se pudo enviar el correo. Revise la configuración de correo.',
         emailSent: false,
       };
     }
@@ -999,7 +1000,7 @@ export async function deleteInvoice(invoiceId: string) {
   const { role } = await getCurrentUserWorkspace();
 
   if (role === 'viewer') {
-    return { success: false, error: 'Insufficient permissions: viewers cannot delete invoices' };
+    return { success: false, error: 'No tiene permisos para eliminar facturas' };
   }
 
   const invoice = await prisma.invoice.findFirst({
@@ -1011,12 +1012,15 @@ export async function deleteInvoice(invoiceId: string) {
   });
 
   if (!invoice) {
-    return { success: false, error: 'Invoice not found' };
+    return { success: false, error: 'No se encontró la factura' };
   }
 
   // Can only delete draft invoices
   if (invoice.status !== 'draft') {
-    return { success: false, error: 'Can only delete draft invoices. Use void for sent invoices.' };
+    return {
+      success: false,
+      error: 'Solo puede eliminar facturas en borrador. Anule las facturas que ya fueron enviadas.',
+    };
   }
 
   await prisma.invoice.update({
@@ -1046,7 +1050,7 @@ export async function recordPayment(
 
   // Bug #456: RBAC — viewers cannot record payments
   if (role === 'viewer') {
-    return { success: false, error: 'Insufficient permissions: viewers cannot record payments' };
+    return { success: false, error: 'No tiene permisos para registrar pagos' };
   }
 
   const invoice = await prisma.invoice.findFirst({
@@ -1058,25 +1062,25 @@ export async function recordPayment(
   });
 
   if (!invoice) {
-    return { success: false, error: 'Invoice not found' };
+    return { success: false, error: 'No se encontró la factura' };
   }
 
   if (invoice.status === 'voided') {
-    return { success: false, error: 'Cannot record payment for voided invoice' };
+    return { success: false, error: 'No se puede registrar un pago en una factura anulada' };
   }
 
   // Bug #125: Prevent payment on already-paid invoices
   if (invoice.status === 'paid') {
-    return { success: false, error: 'This invoice is already fully paid' };
+    return { success: false, error: 'Esta factura ya está pagada por completo' };
   }
 
   if (data.amount <= 0) {
-    return { success: false, error: 'Payment amount must be greater than zero' };
+    return { success: false, error: 'El monto del pago debe ser mayor que cero' };
   }
 
   // Bug #130: Validate amount is a finite number (prevents NaN, Infinity)
   if (!Number.isFinite(data.amount)) {
-    return { success: false, error: 'Payment amount must be a valid number' };
+    return { success: false, error: 'El monto del pago debe ser un número válido' };
   }
 
   // Bug #125: Prevent overpayment
@@ -1187,7 +1191,7 @@ export async function duplicateInvoice(invoiceId: string) {
 
   // Bug #456: RBAC — viewers cannot duplicate invoices
   if (role === 'viewer') {
-    return { success: false, error: 'Insufficient permissions: viewers cannot duplicate invoices' };
+    return { success: false, error: 'No tiene permisos para duplicar facturas' };
   }
 
   const original = await prisma.invoice.findFirst({
@@ -1204,7 +1208,7 @@ export async function duplicateInvoice(invoiceId: string) {
   });
 
   if (!original) {
-    return { success: false, error: 'Invoice not found' };
+    return { success: false, error: 'No se encontró la factura' };
   }
 
   const invoiceNumber = await generateInvoiceNumber(workspace.id);

@@ -100,13 +100,13 @@ export async function verifySigningOtp(
   }
 
   if (!record) {
-    return { valid: false, error: 'No verification code found. Please request a new one.' };
+    return { valid: false, error: 'No se encontró un código de verificación. Solicite uno nuevo.' };
   }
 
   if (Date.now() > record.expiresAt) {
     if (fromRedis) await redisDel(key);
     else inMemoryStore.delete(key);
-    return { valid: false, error: 'Verification code has expired. Please request a new one.' };
+    return { valid: false, error: 'El código de verificación venció. Solicite uno nuevo.' };
   }
 
   if (record.attempts >= MAX_ATTEMPTS) {

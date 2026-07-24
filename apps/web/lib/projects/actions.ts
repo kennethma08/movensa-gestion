@@ -21,7 +21,7 @@ async function getActiveWorkspace() {
   });
 
   if (!workspace) {
-    throw new Error('Workspace not found');
+    throw new Error('No se encontró el espacio de trabajo');
   }
 
   return {
@@ -55,7 +55,7 @@ export async function createProject(data: CreateProjectInput) {
 
   // MEDIUM #25: Viewers cannot create projects
   if (role === 'viewer') {
-    throw new Error('Insufficient permissions');
+    throw new Error('No tiene permisos para crear proyectos');
   }
 
   const validated = createProjectSchema.parse(data);
@@ -70,7 +70,7 @@ export async function createProject(data: CreateProjectInput) {
   });
 
   if (!client) {
-    throw new Error('Client not found');
+    throw new Error('No se encontró el cliente');
   }
 
   const project = await prisma.project.create({
@@ -232,7 +232,7 @@ export async function getProject(projectId: string) {
   });
 
   if (!project) {
-    throw new Error('Project not found');
+    throw new Error('No se encontró el proyecto');
   }
 
   // Convert Prisma Decimal objects to plain numbers for client components
@@ -253,15 +253,12 @@ export async function getProject(projectId: string) {
 /**
  * Update a project
  */
-export async function updateProject(
-  projectId: string,
-  data: UpdateProjectInput
-) {
+export async function updateProject(projectId: string, data: UpdateProjectInput) {
   const { workspace, role } = await getActiveWorkspace();
 
   // MEDIUM #25: Viewers cannot update projects
   if (role === 'viewer') {
-    throw new Error('Insufficient permissions');
+    throw new Error('No tiene permisos para modificar proyectos');
   }
 
   const validated = updateProjectSchema.parse(data);
@@ -275,7 +272,7 @@ export async function updateProject(
   });
 
   if (!project) {
-    throw new Error('Project not found');
+    throw new Error('No se encontró el proyecto');
   }
 
   const updated = await prisma.project.update({
@@ -308,7 +305,7 @@ export async function deleteProject(projectId: string) {
 
   // MEDIUM #25: Viewers cannot delete projects
   if (role === 'viewer') {
-    throw new Error('Insufficient permissions');
+    throw new Error('No tiene permisos para eliminar proyectos');
   }
 
   const project = await prisma.project.findFirst({
@@ -320,7 +317,7 @@ export async function deleteProject(projectId: string) {
   });
 
   if (!project) {
-    throw new Error('Project not found');
+    throw new Error('No se encontró el proyecto');
   }
 
   await prisma.project.update({
@@ -406,7 +403,7 @@ export async function getProjectStats(projectId: string) {
   });
 
   if (!project) {
-    throw new Error('Project not found');
+    throw new Error('No se encontró el proyecto');
   }
 
   // Calculate quote stats
@@ -416,10 +413,7 @@ export async function getProjectStats(projectId: string) {
     sent: project.quotes.filter((q) => q.status === 'sent').length,
     accepted: project.quotes.filter((q) => q.status === 'accepted').length,
     expired: project.quotes.filter((q) => q.status === 'expired').length,
-    totalValue: project.quotes.reduce(
-      (sum, q) => sum + toNumber(q.total),
-      0
-    ),
+    totalValue: project.quotes.reduce((sum, q) => sum + toNumber(q.total), 0),
     acceptedValue: project.quotes
       .filter((q) => q.status === 'accepted')
       .reduce((sum, q) => sum + toNumber(q.total), 0),
@@ -428,24 +422,20 @@ export async function getProjectStats(projectId: string) {
   // Calculate invoice stats
   const invoiceStats = {
     total: project.invoices.length,
-    pending: project.invoices.filter((i) =>
-      ['draft', 'sent', 'viewed'].includes(i.status)
-    ).length,
+    pending: project.invoices.filter((i) => ['draft', 'sent', 'viewed'].includes(i.status)).length,
     paid: project.invoices.filter((i) => i.status === 'paid').length,
-    overdue: project.invoices.filter((i) => i.status !== 'paid' && i.status !== 'voided' && i.status !== 'draft' && i.dueDate && new Date(i.dueDate) < new Date()).length,
+    overdue: project.invoices.filter(
+      (i) =>
+        i.status !== 'paid' &&
+        i.status !== 'voided' &&
+        i.status !== 'draft' &&
+        i.dueDate &&
+        new Date(i.dueDate) < new Date()
+    ).length,
     partial: project.invoices.filter((i) => i.status === 'partial').length,
-    totalValue: project.invoices.reduce(
-      (sum, i) => sum + toNumber(i.total),
-      0
-    ),
-    totalPaid: project.invoices.reduce(
-      (sum, i) => sum + toNumber(i.amountPaid),
-      0
-    ),
-    totalDue: project.invoices.reduce(
-      (sum, i) => sum + toNumber(i.amountDue),
-      0
-    ),
+    totalValue: project.invoices.reduce((sum, i) => sum + toNumber(i.total), 0),
+    totalPaid: project.invoices.reduce((sum, i) => sum + toNumber(i.amountPaid), 0),
+    totalDue: project.invoices.reduce((sum, i) => sum + toNumber(i.amountDue), 0),
   };
 
   return {
@@ -535,7 +525,7 @@ export async function getProjectActivity(projectId: string): Promise<ProjectActi
   });
 
   if (!project) {
-    throw new Error('Project not found');
+    throw new Error('No se encontró el proyecto');
   }
 
   const activities: ProjectActivity[] = [];
@@ -636,7 +626,7 @@ export async function getProjectContracts(projectId: string): Promise<ProjectCon
   });
 
   if (!project) {
-    throw new Error('Project not found');
+    throw new Error('No se encontró el proyecto');
   }
 
   return project.contractInstances.map((ci) => ({

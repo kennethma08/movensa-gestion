@@ -44,7 +44,7 @@ export async function getWorkspace(): Promise<WorkspaceData> {
   });
 
   if (!workspace) {
-    throw new Error('Workspace not found');
+    throw new Error('No se encontró el espacio de trabajo');
   }
 
   return {
@@ -62,7 +62,7 @@ export async function updateWorkspaceName(name: string): Promise<void> {
 
   // HIGH #10: Only owner/admin can rename workspace
   if (role === 'viewer' || role === 'editor') {
-    throw new Error('Only admins can rename the workspace');
+    throw new Error('Solo los administradores pueden cambiar el nombre del espacio de trabajo');
   }
 
   await prisma.workspace.update({
@@ -105,13 +105,11 @@ export async function getBusinessProfile(): Promise<BusinessProfileData | null> 
 }
 
 // Update business profile
-export async function updateBusinessProfile(
-  input: UpdateBusinessProfileInput
-): Promise<void> {
+export async function updateBusinessProfile(input: UpdateBusinessProfileInput): Promise<void> {
   const { workspaceId, role } = await getCurrentUserWorkspace();
 
   if (role === 'viewer' || role === 'editor') {
-    throw new Error('Only admins and owners can update business profile');
+    throw new Error('Solo administradores y propietarios pueden modificar los datos del negocio');
   }
 
   const existing = await prisma.businessProfile.findUnique({
@@ -133,7 +131,9 @@ export async function updateBusinessProfile(
         ...(input.currency !== undefined && { currency: input.currency }),
         ...(input.timezone !== undefined && { timezone: input.timezone }),
         ...(input.socialLinks !== undefined && {
-          socialLinks: input.socialLinks ? (input.socialLinks as unknown as Prisma.InputJsonValue) : Prisma.JsonNull,
+          socialLinks: input.socialLinks
+            ? (input.socialLinks as unknown as Prisma.InputJsonValue)
+            : Prisma.JsonNull,
         }),
       },
     });
@@ -146,7 +146,9 @@ export async function updateBusinessProfile(
         phone: input.phone || null,
         website: input.website || null,
         address: input.address ? (input.address as Prisma.InputJsonValue) : Prisma.JsonNull,
-        socialLinks: input.socialLinks ? (input.socialLinks as unknown as Prisma.InputJsonValue) : undefined,
+        socialLinks: input.socialLinks
+          ? (input.socialLinks as unknown as Prisma.InputJsonValue)
+          : undefined,
         taxId: input.taxId || null,
         currency: input.currency || 'USD',
         timezone: input.timezone || 'UTC',
@@ -162,7 +164,7 @@ export async function updateBusinessProfile(
 export async function updateBusinessLogo(logoUrl: string | null): Promise<void> {
   const { workspaceId, role } = await getCurrentUserWorkspace();
   if (role === 'viewer' || role === 'editor') {
-    throw new Error('Only admins and owners can update business logo');
+    throw new Error('Solo administradores y propietarios pueden modificar el logotipo');
   }
 
   const existing = await prisma.businessProfile.findUnique({
@@ -212,12 +214,12 @@ export async function getEmailSettings(): Promise<EmailSettingsData | null> {
 }
 
 // Update email settings
-export async function updateEmailSettings(
-  input: UpdateEmailSettingsInput
-): Promise<void> {
+export async function updateEmailSettings(input: UpdateEmailSettingsInput): Promise<void> {
   const { workspaceId, role } = await getCurrentUserWorkspace();
   if (role === 'viewer' || role === 'editor') {
-    throw new Error('Only admins and owners can update email settings');
+    throw new Error(
+      'Solo administradores y propietarios pueden modificar la configuración de correo'
+    );
   }
 
   const existing = await prisma.businessProfile.findUnique({
@@ -277,12 +279,10 @@ export async function getBrandingSettings(): Promise<BrandingSettingsData | null
 }
 
 // Update branding settings
-export async function updateBrandingSettings(
-  input: UpdateBrandingSettingsInput
-): Promise<void> {
+export async function updateBrandingSettings(input: UpdateBrandingSettingsInput): Promise<void> {
   const { workspaceId, role } = await getCurrentUserWorkspace();
   if (role === 'viewer' || role === 'editor') {
-    throw new Error('Only admins and owners can update branding settings');
+    throw new Error('Solo administradores y propietarios pueden modificar la identidad visual');
   }
 
   const existing = await prisma.brandingSettings.findUnique({
@@ -350,12 +350,12 @@ export async function getPaymentSettings(): Promise<PaymentSettingsData | null> 
 }
 
 // Update payment settings
-export async function updatePaymentSettings(
-  input: UpdatePaymentSettingsInput
-): Promise<void> {
+export async function updatePaymentSettings(input: UpdatePaymentSettingsInput): Promise<void> {
   const { workspaceId, role } = await getCurrentUserWorkspace();
   if (role === 'viewer' || role === 'editor') {
-    throw new Error('Only admins and owners can modify payment settings');
+    throw new Error(
+      'Solo administradores y propietarios pueden modificar la configuración de pagos'
+    );
   }
 
   const existing = await prisma.paymentSettings.findUnique({
@@ -424,7 +424,7 @@ export async function createTaxRate(input: CreateTaxRateInput): Promise<{ id: st
 
   // MEDIUM #10: Validate rate bounds
   if (input.rate < 0 || input.rate > 100) {
-    throw new Error('Tax rate must be between 0 and 100');
+    throw new Error('La tasa de impuesto debe estar entre 0 y 100');
   }
 
   // Bug #87: Wrap default swap + create in a transaction to prevent race conditions
@@ -461,7 +461,7 @@ export async function updateTaxRate(input: UpdateTaxRateInput): Promise<void> {
 
   // MEDIUM #10: Validate rate bounds
   if (input.rate !== undefined && (input.rate < 0 || input.rate > 100)) {
-    throw new Error('Tax rate must be between 0 and 100');
+    throw new Error('La tasa de impuesto debe estar entre 0 y 100');
   }
 
   // Verify ownership
@@ -470,7 +470,7 @@ export async function updateTaxRate(input: UpdateTaxRateInput): Promise<void> {
   });
 
   if (!existing) {
-    throw new Error('Tax rate not found');
+    throw new Error('No se encontró la tasa de impuesto');
   }
 
   // If setting as default, unset other defaults
@@ -506,7 +506,7 @@ export async function deleteTaxRate(id: string): Promise<void> {
   });
 
   if (!existing) {
-    throw new Error('Tax rate not found');
+    throw new Error('No se encontró la tasa de impuesto');
   }
 
   // Check if in use (only count active/non-deleted rate cards)
@@ -595,10 +595,7 @@ const numberSequenceSchema = z.object({
 });
 
 // Update number sequence
-export async function updateNumberSequence(
-  input: UpdateNumberSequenceInput
-): Promise<void> {
-
+export async function updateNumberSequence(input: UpdateNumberSequenceInput): Promise<void> {
   // Validate input with Zod
   const validated = numberSequenceSchema.parse(input);
 
@@ -606,7 +603,7 @@ export async function updateNumberSequence(
 
   // Bug #149: Viewers cannot change numbering settings
   if (role === 'viewer') {
-    throw new Error('Viewers cannot update number sequences');
+    throw new Error('No tiene permisos para modificar las secuencias de numeración');
   }
 
   const existing = await prisma.numberSequence.findFirst({
@@ -711,7 +708,7 @@ export async function updateMemberRole(
 ): Promise<{ success: boolean; error?: string }> {
   // Validate role at runtime (TypeScript types are erased, server actions accept any value)
   const validRoles = ['viewer', 'member', 'admin', 'owner'] as const;
-  if (!validRoles.includes(newRole as typeof validRoles[number])) {
+  if (!validRoles.includes(newRole as (typeof validRoles)[number])) {
     return { success: false, error: 'Invalid role' };
   }
 
@@ -790,7 +787,17 @@ export async function updateMemberRole(
   });
 
   // Bug #74: Audit log for role changes
-  logger.info({ workspaceId, changedBy: userId, targetMemberId: memberId, targetUserId: targetMember.userId, oldRole, newRole }, '[AUDIT] Member role changed');
+  logger.info(
+    {
+      workspaceId,
+      changedBy: userId,
+      targetMemberId: memberId,
+      targetUserId: targetMember.userId,
+      oldRole,
+      newRole,
+    },
+    '[AUDIT] Member role changed'
+  );
 
   revalidatePath(ROUTES.settingsTeam);
 
@@ -811,7 +818,7 @@ export async function inviteMember(
 
   // Validate role at runtime (TypeScript types are erased, server actions accept any value)
   const validRoles = ['viewer', 'member', 'admin', 'owner'] as const;
-  if (!validRoles.includes(role as typeof validRoles[number])) {
+  if (!validRoles.includes(role as (typeof validRoles)[number])) {
     return { success: false, error: 'Invalid role' };
   }
 
@@ -1046,7 +1053,10 @@ export async function resendInvitation(
 
   // Rate limit to prevent email spam
   const { checkRateLimit } = await import('@/lib/rate-limit');
-  const rateLimitResult = await checkRateLimit(`resend-invite:${userId}`, { limit: 5, windowMs: 300000 });
+  const rateLimitResult = await checkRateLimit(`resend-invite:${userId}`, {
+    limit: 5,
+    windowMs: 300000,
+  });
   if (rateLimitResult.limited) {
     return { success: false, error: 'Too many resend attempts. Please try again later.' };
   }
@@ -1112,7 +1122,10 @@ export async function acceptInvitation(
 
   // Rate limit by user ID to prevent brute-force token enumeration
   const { checkRateLimit } = await import('@/lib/rate-limit');
-  const rateLimitResult = await checkRateLimit(`accept-invite:${session.user.id}`, { limit: 10, windowMs: 60000 });
+  const rateLimitResult = await checkRateLimit(`accept-invite:${session.user.id}`, {
+    limit: 10,
+    windowMs: 60000,
+  });
   if (rateLimitResult.limited) {
     return { success: false, error: 'Too many attempts. Please try again later.' };
   }
@@ -1250,9 +1263,10 @@ export async function getWorkspaceSettings(): Promise<WorkspaceSettings | null> 
 }
 
 // Update workspace settings
-export async function updateWorkspaceSettings(
-  input: { name?: string; slug?: string }
-): Promise<{ success: boolean; error?: string }> {
+export async function updateWorkspaceSettings(input: {
+  name?: string;
+  slug?: string;
+}): Promise<{ success: boolean; error?: string }> {
   const { workspaceId } = await getCurrentUserWorkspace();
 
   // Verify current user is owner
@@ -1264,11 +1278,36 @@ export async function updateWorkspaceSettings(
   // Bug #19: Validate slug against reserved system routes
   if (input.slug) {
     const reservedSlugs = [
-      'api', 'admin', 'auth', 'login', 'register', 'settings', 'dashboard',
-      'onboarding', 'quotes', 'invoices', 'clients', 'projects', 'analytics',
-      'help', 'templates', 'contracts', 'rate-cards', 'q', 'i', 'p', 'c',
-      'invite', 'verify-email', 'reset-password', 'forgot-password',
-      'public', 'static', 'assets', '_next', 'favicon.ico',
+      'api',
+      'admin',
+      'auth',
+      'login',
+      'register',
+      'settings',
+      'dashboard',
+      'onboarding',
+      'quotes',
+      'invoices',
+      'clients',
+      'projects',
+      'analytics',
+      'help',
+      'templates',
+      'contracts',
+      'rate-cards',
+      'q',
+      'i',
+      'p',
+      'c',
+      'invite',
+      'verify-email',
+      'reset-password',
+      'forgot-password',
+      'public',
+      'static',
+      'assets',
+      '_next',
+      'favicon.ico',
     ];
     if (reservedSlugs.includes(input.slug.toLowerCase())) {
       return { success: false, error: 'This slug is reserved and cannot be used' };
@@ -1301,9 +1340,13 @@ export async function updateWorkspaceSettings(
       // Bug #81: Clean up old slug history entries (keep last 90 days only)
       const cutoff = new Date();
       cutoff.setDate(cutoff.getDate() - 90);
-      await prisma.workspaceSlugHistory.deleteMany({
-        where: { workspaceId, changedAt: { lt: cutoff } },
-      }).catch(() => { /* non-critical cleanup */ });
+      await prisma.workspaceSlugHistory
+        .deleteMany({
+          where: { workspaceId, changedAt: { lt: cutoff } },
+        })
+        .catch(() => {
+          /* non-critical cleanup */
+        });
     }
   }
 
@@ -1349,7 +1392,10 @@ export async function deleteWorkspace(): Promise<{ success: boolean; error?: str
     },
   });
   if (activePayments > 0) {
-    return { success: false, error: 'Cannot delete workspace with pending payments. Please resolve all payments first.' };
+    return {
+      success: false,
+      error: 'Cannot delete workspace with pending payments. Please resolve all payments first.',
+    };
   }
 
   // Bug #87: Cascade soft-delete to all workspace entities
@@ -1563,7 +1609,8 @@ export async function getIntegrations(): Promise<IntegrationData[]> {
       id: 'webhooks',
       name: 'Webhooks',
       provider: 'webhooks',
-      description: 'Envíe notificaciones de eventos en tiempo real cuando ocurra una acción, como aceptar una cotización o pagar una factura.',
+      description:
+        'Envíe notificaciones de eventos en tiempo real cuando ocurra una acción, como aceptar una cotización o pagar una factura.',
       isConnected: false,
       isAvailable: true,
       connectedAt: null,
@@ -1573,7 +1620,8 @@ export async function getIntegrations(): Promise<IntegrationData[]> {
       id: 'zapier',
       name: 'Zapier',
       provider: 'zapier',
-      description: 'Conecte Movensa Gestión con miles de aplicaciones mediante Zapier y utilice un webhook como activador.',
+      description:
+        'Conecte Movensa Gestión con miles de aplicaciones mediante Zapier y utilice un webhook como activador.',
       isConnected: false,
       isAvailable: true,
       connectedAt: null,
@@ -1583,7 +1631,8 @@ export async function getIntegrations(): Promise<IntegrationData[]> {
       id: 'n8n',
       name: 'n8n',
       provider: 'n8n',
-      description: 'Cree automatizaciones alojadas por su organización y utilice los webhooks como activadores en n8n.',
+      description:
+        'Cree automatizaciones alojadas por su organización y utilice los webhooks como activadores en n8n.',
       isConnected: false,
       isAvailable: true,
       connectedAt: null,
@@ -1593,7 +1642,8 @@ export async function getIntegrations(): Promise<IntegrationData[]> {
       id: 'make',
       name: 'Make (Integromat)',
       provider: 'make',
-      description: 'Cree escenarios visuales en Make y conecte los eventos del sistema con otros servicios mediante webhooks.',
+      description:
+        'Cree escenarios visuales en Make y conecte los eventos del sistema con otros servicios mediante webhooks.',
       isConnected: false,
       isAvailable: true,
       connectedAt: null,
@@ -1635,18 +1685,18 @@ export async function createWebhook(input: {
   const { workspaceId, role } = await getCurrentUserWorkspace();
 
   if (role === 'viewer') {
-    throw new Error('Viewers cannot create webhooks');
+    throw new Error('No tiene permisos para crear webhooks');
   }
 
   // Bug #91: Validate URL scheme is http: or https: only
   try {
     const parsed = new URL(input.url.trim());
     if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
-      throw new Error('Webhook URL must use http or https protocol');
+      throw new Error('La dirección del webhook debe utilizar el protocolo HTTP o HTTPS');
     }
   } catch (e) {
     if (e instanceof Error && e.message.includes('protocol')) throw e;
-    throw new Error('Webhook URL must be a valid http or https URL');
+    throw new Error('La dirección del webhook debe ser una URL HTTP o HTTPS válida');
   }
 
   // Generate a signing secret if none provided
@@ -1678,7 +1728,7 @@ export async function updateWebhook(input: {
   const { workspaceId, role } = await getCurrentUserWorkspace();
 
   if (role === 'viewer') {
-    throw new Error('Viewers cannot update webhooks');
+    throw new Error('No tiene permisos para modificar webhooks');
   }
 
   // Verify the webhook belongs to this workspace
@@ -1687,7 +1737,7 @@ export async function updateWebhook(input: {
   });
 
   if (!existing) {
-    throw new Error('Webhook not found');
+    throw new Error('No se encontró el webhook');
   }
 
   // Bug #91: Validate URL scheme on update too
@@ -1695,11 +1745,11 @@ export async function updateWebhook(input: {
     try {
       const parsed = new URL(input.url.trim());
       if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
-        throw new Error('Webhook URL must use http or https protocol');
+        throw new Error('La dirección del webhook debe utilizar el protocolo HTTP o HTTPS');
       }
     } catch (e) {
       if (e instanceof Error && e.message.includes('protocol')) throw e;
-      throw new Error('Webhook URL must be a valid http or https URL');
+      throw new Error('La dirección del webhook debe ser una URL HTTP o HTTPS válida');
     }
   }
 
@@ -1722,7 +1772,7 @@ export async function deleteWebhook(id: string): Promise<void> {
   const { workspaceId, role } = await getCurrentUserWorkspace();
 
   if (role === 'viewer') {
-    throw new Error('Viewers cannot delete webhooks');
+    throw new Error('No tiene permisos para eliminar webhooks');
   }
 
   // Verify the webhook belongs to this workspace
@@ -1731,7 +1781,7 @@ export async function deleteWebhook(id: string): Promise<void> {
   });
 
   if (!existing) {
-    throw new Error('Webhook not found');
+    throw new Error('No se encontró el webhook');
   }
 
   await prisma.webhookEndpoint.delete({
@@ -1747,14 +1797,13 @@ export async function deleteWebhook(id: string): Promise<void> {
 
 // Get all settings
 export async function getAllSettings(): Promise<AllSettings> {
-  const [businessProfile, branding, payment, taxRates, numberSequences] =
-    await Promise.all([
-      getBusinessProfile(),
-      getBrandingSettings(),
-      getPaymentSettings(),
-      getTaxRates(),
-      getNumberSequences(),
-    ]);
+  const [businessProfile, branding, payment, taxRates, numberSequences] = await Promise.all([
+    getBusinessProfile(),
+    getBrandingSettings(),
+    getPaymentSettings(),
+    getTaxRates(),
+    getNumberSequences(),
+  ]);
 
   return {
     businessProfile,

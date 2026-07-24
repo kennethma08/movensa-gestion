@@ -63,7 +63,7 @@ async function getActiveWorkspace() {
   });
 
   if (!workspace) {
-    throw new Error('Workspace not found');
+    throw new Error('No se encontró el espacio de trabajo');
   }
 
   return {
@@ -94,7 +94,9 @@ async function generateQuoteNumber(workspaceId: string): Promise<string> {
     });
 
     if (updated.currentValue > 2_000_000_000) {
-      throw new Error('Quote number sequence approaching overflow. Contact support.');
+      throw new Error(
+        'La numeración de cotizaciones está por alcanzar su límite. Contacte a soporte.'
+      );
     }
 
     return {
@@ -757,7 +759,7 @@ export async function deleteQuote(quoteId: string) {
   const { role } = await getCurrentUserWorkspace();
 
   if (role === 'viewer') {
-    return { success: false, error: 'Insufficient permissions: viewers cannot delete quotes' };
+    return { success: false, error: 'No tiene permisos para eliminar cotizaciones.' };
   }
 
   // Check for linked invoices
@@ -768,7 +770,8 @@ export async function deleteQuote(quoteId: string) {
   if (linkedInvoice) {
     return {
       success: false,
-      error: 'Cannot delete a quote that has a linked invoice. Delete or void the invoice first.',
+      error:
+        'No se puede eliminar una cotización vinculada a una factura. Elimine o anule primero la factura.',
     };
   }
 
@@ -803,7 +806,7 @@ export async function duplicateQuote(quoteId: string) {
 
   // Bug #455: RBAC — viewers cannot duplicate quotes
   if (role === 'viewer') {
-    return { success: false, error: 'Insufficient permissions: viewers cannot duplicate quotes' };
+    return { success: false, error: 'No tiene permisos para duplicar cotizaciones.' };
   }
 
   const original = await prisma.quote.findFirst({
@@ -818,7 +821,7 @@ export async function duplicateQuote(quoteId: string) {
   });
 
   if (!original) {
-    throw new Error('Quote not found');
+    throw new Error('No se encontró la cotización');
   }
 
   const quoteNumber = await generateQuoteNumber(workspace.id);
@@ -829,7 +832,7 @@ export async function duplicateQuote(quoteId: string) {
       clientId: original.clientId,
       projectId: original.projectId,
       quoteNumber,
-      title: `${original.title || 'Untitled'} (Copy)`,
+      title: `${original.title || 'Sin título'} (Copia)`,
       status: 'draft',
       currency: original.currency,
       accessToken: generateAccessToken(),

@@ -364,7 +364,11 @@ export async function getClientActivity(clientId: string): Promise<ClientActivit
     today.setHours(0, 0, 0, 0);
     const dueDay = new Date(invoice.dueDate);
     dueDay.setHours(0, 0, 0, 0);
-    const isOverdue = invoice.status !== 'paid' && invoice.status !== 'voided' && invoice.status !== 'draft' && dueDay < today;
+    const isOverdue =
+      invoice.status !== 'paid' &&
+      invoice.status !== 'voided' &&
+      invoice.status !== 'draft' &&
+      dueDay < today;
     if (isOverdue) {
       activities.push({
         id: `invoice-overdue-${invoice.id}`,
@@ -389,17 +393,17 @@ export async function getClientActivity(clientId: string): Promise<ClientActivit
 export async function createClient(input: CreateClientInput): Promise<{ id: string }> {
   const { workspaceId, role } = await getCurrentUserWorkspace();
   if (role === 'viewer') {
-    throw new Error('Viewers cannot create clients');
+    throw new Error('No tiene permisos para crear clientes');
   }
 
   // MEDIUM #8: Basic input validation
   if (!input.name || typeof input.name !== 'string' || !input.name.trim()) {
-    throw new Error('Client name is required');
+    throw new Error('El nombre del cliente es obligatorio');
   }
   if (input.email !== undefined && input.email !== null && input.email !== '') {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(input.email)) {
-      throw new Error('Invalid email address');
+      throw new Error('El correo electrónico no es válido');
     }
   }
 
@@ -408,10 +412,11 @@ export async function createClient(input: CreateClientInput): Promise<{ id: stri
     type: input.type || 'individual',
     website: input.website,
     tags: input.tags || [],
-    contacts: input.contacts?.map((contact) => ({
-      ...contact,
-      id: nanoid(),
-    })) || [],
+    contacts:
+      input.contacts?.map((contact) => ({
+        ...contact,
+        id: nanoid(),
+      })) || [],
   };
 
   const client = await prisma.client.create({
@@ -423,7 +428,9 @@ export async function createClient(input: CreateClientInput): Promise<{ id: stri
       company: input.company || null,
       taxId: input.taxId || null,
       address: input.address ? (input.address as Prisma.InputJsonValue) : Prisma.JsonNull,
-      billingAddress: input.billingAddress ? (input.billingAddress as Prisma.InputJsonValue) : Prisma.JsonNull,
+      billingAddress: input.billingAddress
+        ? (input.billingAddress as Prisma.InputJsonValue)
+        : Prisma.JsonNull,
       notes: input.notes || null,
       metadata: metadata as Prisma.InputJsonValue,
     },
@@ -442,19 +449,19 @@ export async function createClient(input: CreateClientInput): Promise<{ id: stri
 export async function updateClient(input: UpdateClientInput): Promise<{ id: string }> {
   const { workspaceId, role } = await getCurrentUserWorkspace();
   if (role === 'viewer') {
-    throw new Error('Viewers cannot update clients');
+    throw new Error('No tiene permisos para modificar clientes');
   }
 
   // MEDIUM #9: Basic input validation
   if (input.name !== undefined) {
     if (typeof input.name !== 'string' || !input.name.trim()) {
-      throw new Error('Client name cannot be empty');
+      throw new Error('El nombre del cliente no puede estar vacío');
     }
   }
   if (input.email !== undefined && input.email !== null && input.email !== '') {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(input.email)) {
-      throw new Error('Invalid email address');
+      throw new Error('El correo electrónico no es válido');
     }
   }
 
@@ -500,7 +507,9 @@ export async function updateClient(input: UpdateClientInput): Promise<{ id: stri
     updateData.address = input.address ? (input.address as Prisma.InputJsonValue) : Prisma.JsonNull;
   }
   if (input.billingAddress !== undefined) {
-    updateData.billingAddress = input.billingAddress ? (input.billingAddress as Prisma.InputJsonValue) : Prisma.JsonNull;
+    updateData.billingAddress = input.billingAddress
+      ? (input.billingAddress as Prisma.InputJsonValue)
+      : Prisma.JsonNull;
   }
 
   const client = await prisma.client.update({
@@ -520,7 +529,7 @@ export async function deleteClient(id: string): Promise<void> {
 
   // Only editors and above can delete clients
   if (role === 'viewer') {
-    throw new Error('Insufficient permissions: viewers cannot delete clients');
+    throw new Error('No tiene permisos para eliminar clientes');
   }
 
   // Verify ownership
@@ -549,7 +558,7 @@ export async function deleteClients(ids: string[]): Promise<{ deleted: number }>
   const { workspaceId, role } = await getCurrentUserWorkspace();
 
   if (role === 'viewer') {
-    throw new Error('Insufficient permissions: viewers cannot delete clients');
+    throw new Error('No tiene permisos para eliminar clientes');
   }
 
   const result = await prisma.client.updateMany({
@@ -637,7 +646,7 @@ export async function importClients(
 
   // Bug #154: Limit array size to prevent abuse
   if (data.length > 500) {
-    throw new Error('Maximum 500 clients per import');
+    throw new Error('Se permite importar un máximo de 500 clientes por archivo');
   }
 
   const result: ClientImportResult = {
@@ -725,12 +734,17 @@ export async function importClients(
 }
 
 // Search clients (for autocomplete)
-export async function searchClients(query: string, limit = 10): Promise<Array<{
-  id: string;
-  name: string;
-  email: string;
-  company: string | null;
-}>> {
+export async function searchClients(
+  query: string,
+  limit = 10
+): Promise<
+  Array<{
+    id: string;
+    name: string;
+    email: string;
+    company: string | null;
+  }>
+> {
   const { workspaceId } = await getCurrentUserWorkspace();
   const cappedLimit = Math.min(Math.max(1, limit), 50);
 
@@ -758,12 +772,14 @@ export async function searchClients(query: string, limit = 10): Promise<Array<{
 }
 
 // Get all clients for dropdowns (minimal data)
-export async function getClientsForSelect(): Promise<Array<{
-  id: string;
-  name: string;
-  email: string | null;
-  company: string | null;
-}>> {
+export async function getClientsForSelect(): Promise<
+  Array<{
+    id: string;
+    name: string;
+    email: string | null;
+    company: string | null;
+  }>
+> {
   const { workspaceId } = await getCurrentUserWorkspace();
 
   const clients = await prisma.client.findMany({

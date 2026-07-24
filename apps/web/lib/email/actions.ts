@@ -119,7 +119,7 @@ export async function createEmailTemplate(
 
   // HIGH #12: Viewers cannot create email templates
   if (role === 'viewer') {
-    throw new Error('Insufficient permissions');
+    throw new Error('No tiene permisos para crear plantillas de correo');
   }
 
   // MEDIUM #15: Basic input validation
@@ -174,7 +174,7 @@ export async function updateEmailTemplate(
 
   // HIGH #12: Viewers cannot update email templates
   if (role === 'viewer') {
-    throw new Error('Insufficient permissions');
+    throw new Error('No tiene permisos para modificar plantillas de correo');
   }
 
   // MEDIUM #15: Basic input validation
@@ -235,7 +235,7 @@ export async function deleteEmailTemplate(id: string): Promise<void> {
 
   // HIGH #12: Viewers cannot delete email templates
   if (role === 'viewer') {
-    throw new Error('Insufficient permissions');
+    throw new Error('No tiene permisos para eliminar plantillas de correo');
   }
 
   const existing = await prisma.emailTemplate.findFirst({

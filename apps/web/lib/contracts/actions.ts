@@ -89,7 +89,10 @@ export async function getContractTemplates(
       include: {
         _count: { select: { instances: true } },
       },
-      orderBy: { [(['name', 'createdAt', 'updatedAt', 'status'].includes(sortBy) ? sortBy : 'createdAt')]: sortOrder },
+      orderBy: {
+        [['name', 'createdAt', 'updatedAt', 'status'].includes(sortBy) ? sortBy : 'createdAt']:
+          sortOrder,
+      },
       skip: (page - 1) * limit,
       take: limit,
     }),
@@ -158,12 +161,12 @@ export async function createContractTemplate(
 
   // HIGH #11: Viewers cannot create contract templates
   if (role === 'viewer') {
-    throw new Error('Insufficient permissions');
+    throw new Error('No tiene permisos para crear plantillas de contrato');
   }
 
   // MEDIUM #12: Basic input validation
   if (!input.name || typeof input.name !== 'string' || !input.name.trim()) {
-    throw new Error('Contract template name is required');
+    throw new Error('El nombre de la plantilla de contrato es obligatorio');
   }
 
   const contract = await prisma.contract.create({
@@ -205,12 +208,12 @@ export async function updateContractTemplate(
 
   // HIGH #11: Viewers cannot update contract templates
   if (role === 'viewer') {
-    throw new Error('Insufficient permissions');
+    throw new Error('No tiene permisos para modificar plantillas de contrato');
   }
 
   // MEDIUM #12: Basic input validation
   if (input.name !== undefined && (typeof input.name !== 'string' || !input.name.trim())) {
-    throw new Error('Contract template name cannot be empty');
+    throw new Error('El nombre de la plantilla de contrato no puede estar vacío');
   }
 
   // Verify the contract belongs to the workspace
@@ -219,7 +222,7 @@ export async function updateContractTemplate(
   });
 
   if (!existing) {
-    throw new Error('Contract template not found');
+    throw new Error('No se encontró la plantilla de contrato');
   }
 
   const contract = await prisma.contract.update({
@@ -228,7 +231,9 @@ export async function updateContractTemplate(
       ...(input.name !== undefined && { name: input.name }),
       ...(input.content !== undefined && { content: input.content }),
       ...(input.isTemplate !== undefined && { isTemplate: input.isTemplate }),
-      ...(input.variables !== undefined && { variables: input.variables as unknown as Prisma.InputJsonValue }),
+      ...(input.variables !== undefined && {
+        variables: input.variables as unknown as Prisma.InputJsonValue,
+      }),
     },
     include: {
       _count: { select: { instances: true } },
@@ -260,7 +265,7 @@ export async function deleteContractTemplate(id: string): Promise<void> {
 
   // HIGH #11: Viewers cannot delete contract templates
   if (role === 'viewer') {
-    throw new Error('Insufficient permissions');
+    throw new Error('No tiene permisos para eliminar plantillas de contrato');
   }
 
   const existing = await prisma.contract.findFirst({
@@ -268,7 +273,7 @@ export async function deleteContractTemplate(id: string): Promise<void> {
   });
 
   if (!existing) {
-    throw new Error('Contract template not found');
+    throw new Error('No se encontró la plantilla de contrato');
   }
 
   await prisma.contract.update({
@@ -377,10 +382,10 @@ export async function getContractInstanceById(id: string): Promise<ContractInsta
     sentAt: instance.sentAt,
     viewedAt: instance.viewedAt,
     signedAt: instance.signedAt,
-    signatureData: (instance.signatureData as unknown) as SignatureData | null,
+    signatureData: instance.signatureData as unknown as SignatureData | null,
     signerIpAddress: instance.signerIpAddress,
     countersignedAt: instance.countersignedAt,
-    countersignatureData: (instance.countersignatureData as unknown) as SignatureData | null,
+    countersignatureData: instance.countersignatureData as unknown as SignatureData | null,
     countersignerName: instance.countersignerName,
     pdfUrl: instance.pdfUrl,
     createdAt: instance.createdAt,
@@ -389,7 +394,9 @@ export async function getContractInstanceById(id: string): Promise<ContractInsta
 }
 
 // Get contract instance by access token (for public client view)
-export async function getContractInstanceByToken(token: string): Promise<ContractInstanceDetail | null> {
+export async function getContractInstanceByToken(
+  token: string
+): Promise<ContractInstanceDetail | null> {
   // HIGH #3-7: Add deletedAt check to prevent accessing soft-deleted contract instances
   const instance = await prisma.contractInstance.findFirst({
     where: { accessToken: token, deletedAt: null },
@@ -435,7 +442,9 @@ export async function getContractInstanceByToken(token: string): Promise<Contrac
           signerName: (sigData.signerName as string) || (sigData.name as string) || 'Unknown',
           signedAt: (sigData.signedAt as string) || instance.signedAt.toISOString(),
         });
-        documentIntegrity = verifyDocumentHash(recomputedHash, storedHash) ? 'verified' : 'tampered';
+        documentIntegrity = verifyDocumentHash(recomputedHash, storedHash)
+          ? 'verified'
+          : 'tampered';
       }
     } catch (err) {
       logger.error({ err }, 'Document hash verification failed');
@@ -458,10 +467,10 @@ export async function getContractInstanceByToken(token: string): Promise<Contrac
     sentAt: instance.sentAt,
     viewedAt: instance.viewedAt ?? new Date(),
     signedAt: instance.signedAt,
-    signatureData: (instance.signatureData as unknown) as SignatureData | null,
+    signatureData: instance.signatureData as unknown as SignatureData | null,
     signerIpAddress: instance.signerIpAddress,
     countersignedAt: instance.countersignedAt,
-    countersignatureData: (instance.countersignatureData as unknown) as SignatureData | null,
+    countersignatureData: instance.countersignatureData as unknown as SignatureData | null,
     countersignerName: instance.countersignerName,
     pdfUrl: instance.pdfUrl,
     createdAt: instance.createdAt,
@@ -478,7 +487,7 @@ export async function createContractInstance(
 
   // HIGH #43: Viewers cannot create contract instances
   if (role === 'viewer') {
-    throw new Error('Insufficient permissions');
+    throw new Error('No tiene permisos para crear contratos');
   }
 
   // Get the template
@@ -487,7 +496,7 @@ export async function createContractInstance(
   });
 
   if (!template) {
-    throw new Error('Contract template not found');
+    throw new Error('No se encontró la plantilla de contrato');
   }
 
   // Get the client
@@ -496,7 +505,7 @@ export async function createContractInstance(
   });
 
   if (!client) {
-    throw new Error('Client not found');
+    throw new Error('No se encontró el cliente');
   }
 
   // Get quote if provided
@@ -506,14 +515,16 @@ export async function createContractInstance(
       where: { id: input.quoteId, workspaceId, deletedAt: null },
     });
     if (!quote) {
-      throw new Error('Quote not found');
+      throw new Error('No se encontró la cotización');
     }
   }
 
   // Process template content with variable values
   let content = input.content || template.content;
   if (input.variableValues) {
-    const variables = safeParseVariables(template.variables) as Array<ContractVariable & { name?: string }>;
+    const variables = safeParseVariables(template.variables) as Array<
+      ContractVariable & { name?: string }
+    >;
     for (const variable of variables) {
       // Support both 'key' (type definition) and 'name' (seed data) fields
       const varKey = variable.key || variable.name || '';
@@ -572,10 +583,10 @@ export async function createContractInstance(
     sentAt: instance.sentAt,
     viewedAt: instance.viewedAt,
     signedAt: instance.signedAt,
-    signatureData: (instance.signatureData as unknown) as SignatureData | null,
+    signatureData: instance.signatureData as unknown as SignatureData | null,
     signerIpAddress: instance.signerIpAddress,
     countersignedAt: instance.countersignedAt,
-    countersignatureData: (instance.countersignatureData as unknown) as SignatureData | null,
+    countersignatureData: instance.countersignatureData as unknown as SignatureData | null,
     countersignerName: instance.countersignerName,
     pdfUrl: instance.pdfUrl,
     createdAt: instance.createdAt,
@@ -591,12 +602,15 @@ interface SendEmailOptions {
   message?: string;
 }
 
-export async function sendContractInstance(id: string, emailOptions?: SendEmailOptions): Promise<{ emailSent: boolean }> {
+export async function sendContractInstance(
+  id: string,
+  emailOptions?: SendEmailOptions
+): Promise<{ emailSent: boolean }> {
   const { workspaceId, userId, role } = await getCurrentUserWorkspace();
 
   // HIGH #43: Viewers cannot send contract instances
   if (role === 'viewer') {
-    throw new Error('Insufficient permissions');
+    throw new Error('No tiene permisos para enviar contratos');
   }
 
   // MEDIUM #21: Filter out soft-deleted contract instances
@@ -609,7 +623,7 @@ export async function sendContractInstance(id: string, emailOptions?: SendEmailO
   });
 
   if (!instance) {
-    throw new Error('Contract instance not found');
+    throw new Error('No se encontró el contrato');
   }
 
   // Prevent sending already-signed or voided contracts
@@ -620,10 +634,10 @@ export async function sendContractInstance(id: string, emailOptions?: SendEmailO
   // Bug #85: Validate recipients if custom ones provided
   if (emailOptions?.recipients?.length) {
     if (emailOptions.recipients.length > 10) {
-      throw new Error('Maximum 10 recipients allowed');
+      throw new Error('Se permite un máximo de 10 destinatarios');
     }
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const invalidEmails = emailOptions.recipients.filter(e => !emailRegex.test(e));
+    const invalidEmails = emailOptions.recipients.filter((e) => !emailRegex.test(e));
     if (invalidEmails.length > 0) {
       throw new Error(`Invalid email addresses: ${invalidEmails.join(', ')}`);
     }
@@ -707,12 +721,16 @@ export async function sendContractInstance(id: string, emailOptions?: SendEmailO
 
 // Sign a contract (called from public client view)
 // OTP verification enforced when otpCode is provided in the input.
-export async function signContract(input: SignContractInput & { otpCode?: string }, ipAddress?: string, userAgent?: string): Promise<void> {
+export async function signContract(
+  input: SignContractInput & { otpCode?: string },
+  ipAddress?: string,
+  userAgent?: string
+): Promise<void> {
   // HIGH #13: Rate limit contract signing to prevent abuse
   const rateLimitKey = `sign-contract:${ipAddress || input.token}`;
   const rateLimitResult = await checkRateLimit(rateLimitKey, strictRateLimitOptions);
   if (rateLimitResult.limited) {
-    throw new Error('Too many signing attempts. Please try again later.');
+    throw new Error('Se realizaron demasiados intentos de firma. Inténtelo más tarde.');
   }
 
   const instance = await prisma.contractInstance.findFirst({
@@ -720,11 +738,11 @@ export async function signContract(input: SignContractInput & { otpCode?: string
   });
 
   if (!instance) {
-    throw new Error('Contract not found');
+    throw new Error('No se encontró el contrato');
   }
 
   if (instance.signedAt) {
-    throw new Error('Contract already signed');
+    throw new Error('El contrato ya fue firmado');
   }
 
   // MEDIUM #22: Only allow signing contracts that have been sent or viewed
@@ -743,7 +761,7 @@ export async function signContract(input: SignContractInput & { otpCode?: string
         select: { email: true },
       });
       if (!client?.email) {
-        throw new Error('Could not verify identity — client email not found');
+        throw new Error('No se pudo verificar la identidad porque el cliente no tiene correo');
       }
       const otpResult = await verifySigningOtp(otpKey, input.otpCode, client.email);
       if (!otpResult.valid) {
@@ -813,7 +831,7 @@ export async function signContract(input: SignContractInput & { otpCode?: string
       },
     });
     if (result.count === 0) {
-      throw new Error('Contract was already signed by another request');
+      throw new Error('El contrato ya fue firmado mediante otra solicitud');
     }
   } else {
     // Manual countersign: go to 'pending'
@@ -828,7 +846,7 @@ export async function signContract(input: SignContractInput & { otpCode?: string
       },
     });
     if (result.count === 0) {
-      throw new Error('Contract was already signed by another request');
+      throw new Error('El contrato ya fue firmado mediante otra solicitud');
     }
   }
 
@@ -836,7 +854,9 @@ export async function signContract(input: SignContractInput & { otpCode?: string
   notifyWorkspaceMembers({
     workspaceId: instance.workspaceId,
     type: 'contract_signed',
-    title: autoCountersign ? 'Contrato firmado por ambas partes' : 'Contrato firmado por el cliente',
+    title: autoCountersign
+      ? 'Contrato firmado por ambas partes'
+      : 'Contrato firmado por el cliente',
     message: autoCountersign
       ? 'El cliente firmó el contrato y la contrafirma se agregó automáticamente.'
       : 'El cliente firmó el contrato. Ahora está pendiente de su contrafirma.',
@@ -849,7 +869,7 @@ export async function signContract(input: SignContractInput & { otpCode?: string
 // Countersign a contract (called by business user after client has signed)
 export async function counterSignContract(
   contractId: string,
-  signatureData: SignatureData,
+  signatureData: SignatureData
 ): Promise<{ success: boolean; error?: string }> {
   const { workspaceId, userId } = await getCurrentUserWorkspace();
 
@@ -858,15 +878,15 @@ export async function counterSignContract(
   });
 
   if (!instance) {
-    return { success: false, error: 'Contract not found' };
+    return { success: false, error: 'No se encontró el contrato' };
   }
 
   if (instance.status !== 'pending') {
-    return { success: false, error: 'Contract is not awaiting countersignature' };
+    return { success: false, error: 'El contrato no está pendiente de contrafirma' };
   }
 
   if (!instance.signedAt) {
-    return { success: false, error: 'Client has not signed this contract yet' };
+    return { success: false, error: 'El cliente todavía no ha firmado este contrato' };
   }
 
   const countersignedAt = new Date();
@@ -906,7 +926,7 @@ export async function deleteContractInstance(id: string): Promise<void> {
 
   // HIGH #43: Viewers cannot delete contract instances
   if (role === 'viewer') {
-    throw new Error('Insufficient permissions');
+    throw new Error('No tiene permisos para eliminar contratos');
   }
 
   const instance = await prisma.contractInstance.findFirst({
@@ -914,12 +934,14 @@ export async function deleteContractInstance(id: string): Promise<void> {
   });
 
   if (!instance) {
-    throw new Error('Contract instance not found');
+    throw new Error('No se encontró el contrato');
   }
 
   // Bug #182: Prevent deletion of signed contracts (legal documents)
   if (instance.status === 'signed') {
-    throw new Error('Cannot delete a signed contract. Signed contracts are legal records.');
+    throw new Error(
+      'No se puede eliminar un contrato firmado porque constituye un registro legal.'
+    );
   }
 
   await prisma.contractInstance.update({
@@ -949,9 +971,7 @@ export async function getContractSettings(): Promise<ContractSettingsData> {
 }
 
 // Update contract settings
-export async function updateContractSettings(
-  input: Partial<ContractSettingsData>
-): Promise<void> {
+export async function updateContractSettings(input: Partial<ContractSettingsData>): Promise<void> {
   const { workspaceId } = await getCurrentUserWorkspace();
 
   await prisma.businessProfile.upsert({
@@ -978,7 +998,7 @@ export async function duplicateContractTemplate(id: string): Promise<ContractTem
   });
 
   if (!original) {
-    throw new Error('Contract template not found');
+    throw new Error('No se encontró la plantilla de contrato');
   }
 
   const contract = await prisma.contract.create({
