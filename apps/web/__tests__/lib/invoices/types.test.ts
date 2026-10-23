@@ -145,10 +145,10 @@ describe('PAYMENT_TERMS', () => {
     }
   });
 
-  it('Due on Receipt is first option', () => {
+  it('Pago inmediato is first option', () => {
     const firstTerm = PAYMENT_TERMS[0];
     expect(firstTerm).toBeDefined();
     expect(firstTerm!.value).toBe('due_on_receipt');
-    expect(firstTerm!.label).toBe('Due on Receipt');
+    expect(firstTerm!.label).toBe('Pago inmediato');
   });
 });

@@ -54,36 +54,34 @@ describe('calculateDepositAmount', () => {
 });
 
 describe('formatQuoteCurrency', () => {
-  it('formats USD currency with dollar sign', () => {
-    expect(formatQuoteCurrency(1234.56)).toBe('$ 1,234.56');
+  it('formats USD currency for Costa Rica', () => {
+    expect(formatQuoteCurrency(1234.56)).toBe('USD\u00a01\u00a0234,56');
   });
 
   it('formats zero amount', () => {
-    expect(formatQuoteCurrency(0)).toBe('$ 0.00');
+    expect(formatQuoteCurrency(0)).toBe('USD\u00a00,00');
   });
 
   it('formats negative amounts', () => {
-    expect(formatQuoteCurrency(-100)).toBe('-$ 100.00');
+    expect(formatQuoteCurrency(-100)).toBe('-USD\u00a0100,00');
   });
 
-  it('formats large amounts with commas', () => {
-    expect(formatQuoteCurrency(1000000)).toBe('$ 1,000,000.00');
+  it('formats large amounts with Costa Rican separators', () => {
+    expect(formatQuoteCurrency(1000000)).toBe('USD\u00a01\u00a0000\u00a0000,00');
   });
 
   it('formats EUR currency', () => {
     const result = formatQuoteCurrency(1234.56, 'EUR');
-    expect(result).toContain('1,234.56');
-    expect(result).toContain('€');
+    expect(result).toBe('EUR\u00a01\u00a0234,56');
   });
 
   it('formats GBP currency', () => {
     const result = formatQuoteCurrency(1234.56, 'GBP');
-    expect(result).toContain('1,234.56');
-    expect(result).toContain('£');
+    expect(result).toBe('GBP\u00a01\u00a0234,56');
   });
 
   it('handles small decimal amounts', () => {
-    expect(formatQuoteCurrency(0.01)).toBe('$ 0.01');
+    expect(formatQuoteCurrency(0.01)).toBe('USD\u00a00,01');
   });
 });
 

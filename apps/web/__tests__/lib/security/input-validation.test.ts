@@ -55,7 +55,7 @@ describe('Input Validation & Injection Prevention', () => {
         clientId: 'client-1',
       });
       expect(result.success).toBe(false);
-      expect(result.error).toContain('Title');
+      expect(result.error).toContain('El título es obligatorio');
     });
 
     it('rejects overly long title', async () => {
@@ -76,7 +76,7 @@ describe('Input Validation & Injection Prevention', () => {
         ],
       });
       expect(result.success).toBe(false);
-      expect(result.error).toContain('Invalid block type');
+      expect(result.error).toContain('Tipo de bloque no válido');
     });
 
     it('allows valid block types', async () => {
@@ -98,7 +98,7 @@ describe('Input Validation & Injection Prevention', () => {
       });
       // Should not error about invalid block types
       if (!result.success) {
-        expect(result.error).not.toContain('Invalid block type');
+        expect(result.error).not.toContain('Tipo de bloque no válido');
       }
     });
   });

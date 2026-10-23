@@ -25,9 +25,8 @@ function isOverdue(invoice: Invoice, now: Date = new Date()): boolean {
   // Draft invoices are not overdue (not yet sent)
   if (invoice.status === 'draft') return false;
 
-  const dueDate = new Date(invoice.dueDate);
-  // Set to end of day for comparison (due ON the date means not overdue until the next day)
-  dueDate.setHours(23, 59, 59, 999);
+  // Date-only due dates refer to the business day in Costa Rica, even when tests run in UTC.
+  const dueDate = new Date(`${invoice.dueDate}T23:59:59.999-06:00`);
 
   return now.getTime() > dueDate.getTime();
 }
