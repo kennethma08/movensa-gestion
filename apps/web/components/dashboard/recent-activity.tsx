@@ -114,7 +114,11 @@ export function RecentActivity({ activities, currency = 'USD' }: RecentActivityP
                         <span>
                           {isHydrated
                             ? formatRelativeTime(activity.date)
-                            : formatDate(activity.date, { day: 'numeric', month: 'short' }, 'es-CR')}
+                            : formatDate(activity.date, {
+                                day: 'numeric',
+                                month: 'short',
+                                timeZone: 'America/Costa_Rica',
+                              }, 'es-CR')}
                         </span>
                         {activity.amount && activity.amount > 0 && (
                           <>

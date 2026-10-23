@@ -71,7 +71,7 @@ describe('Settings Actions', () => {
     it('throws when workspace not found', async () => {
       mockPrisma.workspace.findUnique.mockResolvedValue(null);
 
-      await expect(getWorkspace()).rejects.toThrow('Workspace not found');
+      await expect(getWorkspace()).rejects.toThrow('No se encontró el espacio de trabajo');
     });
   });
 
@@ -180,7 +180,7 @@ describe('Settings Actions', () => {
     it('throws when tax rate not found', async () => {
       mockPrisma.taxRate.findFirst.mockResolvedValue(null);
 
-      await expect(deleteTaxRate('nonexistent')).rejects.toThrow('Tax rate not found');
+      await expect(deleteTaxRate('nonexistent')).rejects.toThrow('No se encontró la tasa de impuesto');
     });
 
     it('prevents deleting tax rate in use by rate cards', async () => {

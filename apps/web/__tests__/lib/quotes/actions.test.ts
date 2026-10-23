@@ -107,7 +107,7 @@ describe('Quote Actions', () => {
       });
 
       expect(result.success).toBe(false);
-      expect(result.error).toContain('Title is required');
+      expect(result.error).toContain('El título es obligatorio');
     });
 
     it('rejects title over 500 characters', async () => {
@@ -117,7 +117,7 @@ describe('Quote Actions', () => {
       });
 
       expect(result.success).toBe(false);
-      expect(result.error).toContain('Title is required');
+      expect(result.error).toContain('El título es obligatorio');
     });
 
     it('rejects invalid block types', async () => {
@@ -128,7 +128,7 @@ describe('Quote Actions', () => {
       });
 
       expect(result.success).toBe(false);
-      expect(result.error).toContain('Invalid block type');
+      expect(result.error).toContain('Tipo de bloque no válido');
     });
 
     it('returns error when client not found', async () => {
@@ -140,7 +140,7 @@ describe('Quote Actions', () => {
       });
 
       expect(result.success).toBe(false);
-      expect(result.error).toContain('Client not found');
+      expect(result.error).toContain('No se encontró el cliente');
     });
 
     it('calculates totals from service item blocks', async () => {
@@ -170,7 +170,7 @@ describe('Quote Actions', () => {
       expect(createCall.data.total).toBe(220);
     });
 
-    it('always creates a draft until the email is actually sent', async () => {
+    it('creates a quote under review until the email is actually sent', async () => {
       mockPrisma.client.findFirst.mockResolvedValue({ id: 'client-1', workspaceId: WORKSPACE_ID });
       mockPrisma.quote.create.mockImplementation(async ({ data }: any) => ({
         id: 'quote-1',
@@ -186,7 +186,7 @@ describe('Quote Actions', () => {
         isDraft: false,
       });
 
-      expect(mockPrisma.quote.create.mock.calls[0]![0].data.status).toBe('draft');
+      expect(mockPrisma.quote.create.mock.calls[0]![0].data.status).toBe('under_review');
     });
 
     it('throws when user is not authenticated', async () => {
@@ -221,7 +221,7 @@ describe('Quote Actions', () => {
       const result = await updateQuote('nonexistent', { title: 'Test' });
 
       expect(result.success).toBe(false);
-      expect(result.error).toContain('Quote not found');
+      expect(result.error).toContain('No se encontró la cotización');
     });
 
     it('rejects negative rates in blocks', async () => {
@@ -387,7 +387,7 @@ describe('Quote Actions', () => {
       const result = await deleteQuote('quote-1');
 
       expect(result.success).toBe(false);
-      expect(result.error).toContain('linked invoice');
+      expect(result.error).toContain('vinculada a una factura');
     });
   });
 
@@ -418,14 +418,14 @@ describe('Quote Actions', () => {
       expect(result.quoteId).toBe('quote-dup');
 
       const createCall = mockPrisma.quote.create.mock.calls[0]![0];
-      expect(createCall.data.title).toBe('Original (Copy)');
+      expect(createCall.data.title).toBe('Original (Copia)');
       expect(createCall.data.status).toBe('draft');
     });
 
     it('throws when original not found', async () => {
       mockPrisma.quote.findFirst.mockResolvedValue(null);
 
-      await expect(duplicateQuote('nonexistent')).rejects.toThrow('Quote not found');
+      await expect(duplicateQuote('nonexistent')).rejects.toThrow('No se encontró la cotización');
     });
   });
 

@@ -22,7 +22,7 @@ describe('cn (class name merger)', () => {
 
 describe('formatCurrency', () => {
   it('formats USD currency', () => {
-    expect(formatCurrency(1234.56)).toBe('$ 1,234.56');
+    expect(formatCurrency(1234.56)).toBe('USD\u00a01\u00a0234,56');
   });
 
   it('formats EUR currency', () => {
@@ -31,27 +31,27 @@ describe('formatCurrency', () => {
   });
 
   it('handles zero', () => {
-    expect(formatCurrency(0)).toBe('$ 0.00');
+    expect(formatCurrency(0)).toBe('USD\u00a00,00');
   });
 
   it('handles negative numbers', () => {
-    expect(formatCurrency(-100)).toBe('-$ 100.00');
+    expect(formatCurrency(-100)).toBe('-USD\u00a0100,00');
   });
 });
 
 describe('formatDate', () => {
   it('formats date with default format', () => {
-    const date = new Date('2024-01-15');
-    expect(formatDate(date)).toBe('Jan 15, 2024');
+    const date = new Date('2024-01-15T12:00:00Z');
+    expect(formatDate(date)).toBe('15 ene 2024');
   });
 
   it('formats date string', () => {
-    expect(formatDate('2024-06-20')).toBe('Jun 20, 2024');
+    expect(formatDate('2024-06-20T12:00:00Z')).toBe('20 jun 2024');
   });
 
   it('formats with custom options', () => {
-    const date = new Date('2024-01-15');
-    expect(formatDate(date, { year: 'numeric', month: '2-digit', day: '2-digit' })).toBe('01/15/2024');
+    const date = new Date('2024-01-15T12:00:00Z');
+    expect(formatDate(date, { year: 'numeric', month: '2-digit', day: '2-digit' })).toBe('15/01/2024');
   });
 });
 
@@ -61,6 +61,6 @@ describe('formatRelativeTime', () => {
     date.setHours(date.getHours() - 2);
     const result = formatRelativeTime(date);
     expect(typeof result).toBe('string');
-    expect(result).toContain('hour');
+    expect(result).toContain('hora');
   });
 });

@@ -106,7 +106,7 @@ describe('Invoice Actions', () => {
       });
 
       expect(result.success).toBe(false);
-      expect(result.error).toContain('Client not found');
+      expect(result.error).toContain('No se encontró el cliente');
     });
 
     it('rejects negative rates', async () => {
@@ -120,7 +120,7 @@ describe('Invoice Actions', () => {
       });
 
       expect(result.success).toBe(false);
-      expect(result.error).toContain('rate must be between 0 and 1,000,000');
+      expect(result.error).toContain('La tarifa debe estar entre 0 y 1 000 000');
     });
 
     it('calculates totals from line items', async () => {
@@ -290,7 +290,7 @@ describe('Invoice Actions', () => {
       const result = await updateInvoiceStatus('nonexistent', 'sent');
 
       expect(result.success).toBe(false);
-      expect(result.error).toContain('not found');
+      expect(result.error).toContain('No se encontró la factura');
     });
   });
 

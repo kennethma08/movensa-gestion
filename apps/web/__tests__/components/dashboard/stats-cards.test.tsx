@@ -22,58 +22,56 @@ describe('StatsCards', () => {
   it('renders all four stat cards', () => {
     render(<StatsCards stats={mockStats} />);
 
-    expect(screen.getByText('Revenue this month')).toBeInTheDocument();
-    expect(screen.getByText('Total Revenue')).toBeInTheDocument();
-    expect(screen.getByText('Outstanding')).toBeInTheDocument();
-    expect(screen.getByText('Conversion Rate')).toBeInTheDocument();
+    expect(screen.getByText('Ingresos del mes')).toBeInTheDocument();
+    expect(screen.getByText('Ingresos totales')).toBeInTheDocument();
+    expect(screen.getByText('Pendiente de cobro')).toBeInTheDocument();
+    expect(screen.getByText('Tasa de conversión')).toBeInTheDocument();
   });
 
   it('displays total revenue formatted as currency', () => {
     render(<StatsCards stats={mockStats} />);
 
-    expect(screen.getByText('$ 150,000.00')).toBeInTheDocument();
+    expect(screen.getByText('USD 150 000,00')).toBeInTheDocument();
   });
 
   it('displays this month revenue in description', () => {
     render(<StatsCards stats={mockStats} />);
 
-    expect(screen.getByText('$ 25,000.00')).toBeInTheDocument();
+    expect(screen.getByText('USD 25 000,00')).toBeInTheDocument();
   });
 
   it('displays outstanding amount', () => {
     render(<StatsCards stats={mockStats} />);
 
-    expect(screen.getByText('$ 5,000.00')).toBeInTheDocument();
+    expect(screen.getByText('USD 5 000,00')).toBeInTheDocument();
   });
 
   it('displays overdue amount when present', () => {
     render(<StatsCards stats={mockStats} />);
 
-    expect(screen.getByText('$ 1,000.00 overdue')).toBeInTheDocument();
+    expect(screen.getByText('USD 1 000,00 vencido')).toBeInTheDocument();
   });
 
-  it('shows "No overdue" when no overdue amount', () => {
+  it('shows "Sin saldos vencidos" when no overdue amount', () => {
     const statsWithNoOverdue = { ...mockStats, overdueAmount: 0 };
     render(<StatsCards stats={statsWithNoOverdue} />);
 
-    // Component shows "No overdue" label when overdueAmount is 0
-    expect(screen.getByText('No overdue')).toBeInTheDocument();
-    // But no dollar amount overdue text
-    expect(screen.queryByText(/\$.*overdue/)).not.toBeInTheDocument();
+    expect(screen.getByText('Sin saldos vencidos')).toBeInTheDocument();
+    expect(screen.queryByText(/vencido$/)).not.toBeInTheDocument();
   });
 
   it('displays conversion rate with percentage', () => {
     render(<StatsCards stats={mockStats} />);
 
-    expect(screen.getAllByText('65.5%').length).toBeGreaterThanOrEqual(1);
-    expect(screen.getByText('45 quotes · 32 invoices')).toBeInTheDocument();
+    expect(screen.getByText('65.50%')).toBeInTheDocument();
+    expect(screen.getByText('45 cotizaciones · 32 facturas')).toBeInTheDocument();
   });
 
-  it('formats conversion rate to one decimal place', () => {
+  it('formats conversion rate to two decimal places', () => {
     const statsWithLongDecimal = { ...mockStats, conversionRate: 72.3456 };
     render(<StatsCards stats={statsWithLongDecimal} />);
 
-    expect(screen.getAllByText('72.3%').length).toBeGreaterThanOrEqual(1);
+    expect(screen.getByText('72.35%')).toBeInTheDocument();
   });
 
   it('renders with responsive grid layout', () => {
@@ -116,6 +114,6 @@ describe('StatsCards', () => {
 
     render(<StatsCards stats={largeStats} />);
 
-    expect(screen.getByText('$ 9,999,999.00')).toBeInTheDocument();
+    expect(screen.getByText('USD 9 999 999,00')).toBeInTheDocument();
   });
 });
